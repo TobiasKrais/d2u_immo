@@ -78,7 +78,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->location_plans = preg_grep('/^\s*$/s', explode(",", $input_media_list[3]), PREG_GREP_INVERT);
 			$property->longitude = $form['longitude'];
 			$property->market_type = $form['market_type'];
-			$property->object_archived = array_key_exists('object_archived', $form);
 			$property->object_reserved = array_key_exists('object_reserved', $form);
 			$property->object_sold = array_key_exists('object_sold', $form);
 			$property->object_type = $form['object_type'];
@@ -189,7 +188,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 
 								d2u_addon_backend_helper::form_input('d2u_immo_name', "form[lang][". $rex_clang->getId() ."][name]", $property->name, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_input('d2u_immo_property_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $property->teaser, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_immo_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $property->teaser, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description', "form[lang][". $rex_clang->getId() ."][description]", $property->description, 10, $required, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_location', "form[lang][". $rex_clang->getId() ."][description_location]", $property->description_location, 5, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_equipment', "form[lang][". $rex_clang->getId() ."][description_equipment]", $property->description_equipment, 5, FALSE, $readonly_lang, TRUE);
@@ -468,7 +467,10 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_property_other_data'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, TRUE, TRUE, 'text');
+							$options_status = ['online' => rex_i18n::msg('d2u_immo_status_online'),
+								'offline' => rex_i18n::msg('d2u_immo_status_offline'),
+								'archived' => rex_i18n::msg('d2u_immo_status_archived')];
+							d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$property->online_status], 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_immo_property_internal_object_number', 'form[internal_object_number]', $property->internal_object_number, TRUE, $readonly, 'text');
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $property->priority, TRUE, FALSE, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_available_from', 'form[available_from]', $property->available_from, FALSE, $readonly, 'date');
@@ -476,7 +478,6 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_animals', 'form[animals]', 'true', $property->animals);
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_reserved', 'form[object_reserved]', 'true', $property->object_reserved);
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_sold', 'form[object_sold]', 'true', $property->object_sold);
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_archived', 'form[object_archived]', 'true', $property->object_archived);
 							$options_contacts = [];
 							foreach(Contact::getAll() as $contact) {
 								if($contact->lastname != "") {
@@ -487,6 +488,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_pictures', '1', $property->pictures, $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_ground_plans', '2', $property->ground_plans, $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_location_plans', '3', $property->location_plans, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, TRUE, TRUE, 'text');
 						?>
 					</div>
 				</fieldset>

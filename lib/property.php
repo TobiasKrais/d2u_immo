@@ -324,11 +324,6 @@ class Property {
 	var $object_sold = FALSE;
 	
 	/**
-	 * @var boolean TRUE if object is archived.
-	 */
-	var $object_archived = FALSE;
-	
-	/**
 	 * @var string Unique OpenImmo property identifier
 	 */
 	var $openimmo_object_id = "";
@@ -494,7 +489,6 @@ class Property {
 			$this->longitude = $result->getValue("longitude");
 			$this->market_type = $result->getValue("market_type");
 			$this->name = $result->getValue("name");
-			$this->object_archived = $result->getValue("object_archived") == "1" ? TRUE : FALSE;
 			$this->object_reserved = $result->getValue("object_reserved") == "1" ? TRUE : FALSE;
 			$this->object_sold = $result->getValue("object_sold") == "1" ? TRUE : FALSE;
 			$this->object_type = $result->getValue("object_type");
@@ -670,7 +664,6 @@ class Property {
 	 */
 	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
-			// Without SEO Plugins
 			$d2u_immo = rex_addon::get("d2u_immo");
 				
 			$parameterArray = array();
@@ -742,7 +735,6 @@ class Property {
 					."location_plans = '". implode(",", $this->location_plans) ."', "
 					."longitude = '". $this->longitude ."', "
 					."market_type = '". $this->market_type ."', "
-					."object_archived = ". ($this->object_archived ? 1 : 0) .", "
 					."object_reserved = ". ($this->object_reserved ? 1 : 0) .", "
 					."object_sold = ". ($this->object_sold ? 1 : 0) .", "
 					."object_type = '". $this->object_type ."', "

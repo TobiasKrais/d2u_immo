@@ -34,6 +34,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$category->clang_id = $rex_clang->getId();
 		}
 		$category->name = $form['lang'][$rex_clang->getId()]['name'];
+		$category->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$category->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		
 		if($category->translation_needs_update == "delete") {
@@ -140,6 +141,7 @@ if ($func == 'edit' || $func == 'add') {
 								}
 								
 								d2u_addon_backend_helper::form_input('d2u_immo_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_immo_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, FALSE, $readonly_lang, "text");
 							?>
 						</div>
 					</fieldset>

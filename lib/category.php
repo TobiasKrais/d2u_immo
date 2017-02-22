@@ -30,6 +30,11 @@ class Category {
 	var $name = "";
 	
 	/**
+	 * @var string Short description
+	 */
+	var $teaser = "";
+	
+	/**
 	 * @var string Preview picture file name 
 	 */
 	var $picture = "";
@@ -81,6 +86,7 @@ class Category {
 				$this->parent_category = new Category($result->getValue("parent_category_id"), $clang_id);
 			}
 			$this->name = $result->getValue("name");
+			$this->teaser = $result->getValue("teaser");
 			$this->picture = $result->getValue("picture");
 			$this->priority = $result->getValue("priority");
 			$this->translation_needs_update = $result->getValue("translation_needs_update");
@@ -249,7 +255,6 @@ class Category {
 	 */
 	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
-			// Without SEO Plugins
 			$d2u_immo = rex_addon::get("d2u_immo");
 				
 			$parameterArray = array();
@@ -310,6 +315,7 @@ class Category {
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". htmlspecialchars($this->name) ."', "
+						."teaser = '". htmlspecialchars($this->teaser) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". rex::getUser()->getLogin() ."' ";

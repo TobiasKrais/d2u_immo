@@ -1,0 +1,70 @@
+<?php
+
+if(rex::isBackend() && is_object(rex::getUser())) {
+	rex_perm::register('d2u_immo[]', rex_i18n::msg('d2u_immo_rights_all'));
+	rex_perm::register('d2u_immo[edit_lang]', rex_i18n::msg('d2u_immo_rights_edit_lang'), rex_perm::OPTIONS);
+	rex_perm::register('d2u_immo[edit_tech_data]', rex_i18n::msg('d2u_immo_rights_edit_tech_data'), rex_perm::OPTIONS);
+	rex_perm::register('d2u_immo[settings]', rex_i18n::msg('d2u_immo_rights_settings'));	
+}
+
+if(rex::isBackend()) {
+	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_immo_media_is_in_use');
+}
+
+/**
+ * Checks if media is used by this addon
+ * @param rex_extension_point $ep Redaxo extension point
+ * @return string[] Warning message as array
+ */
+function rex_d2u_immo_media_is_in_use(rex_extension_point $ep) {
+	$warning = $ep->getSubject();
+	$params = $ep->getParams();
+	$filename = addslashes($params['filename']);
+
+	// Contacts
+	$sql_contacts = rex_sql::factory();
+	$sql_contacts->setQuery('SELECT contact_id, firstname, lastname FROM `' . rex::getTablePrefix() . 'd2u_immo_contacts` '
+		.'WHERE picture = "'. $filename .'" ');
+	
+	// Categories
+	$sql_categories = rex_sql::factory();
+	$sql_categories->setQuery('SELECT lang.category_id, name FROM `' . rex::getTablePrefix() . 'd2u_immo_categories_lang` AS lang '
+		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_immo_categories` AS categories ON lang.category_id = categories.category_id '
+		.'WHERE picture = "'. $filename .'" ');  
+
+	// Properties
+	$sql_properties = rex_sql::factory();
+	$sql_properties->setQuery('SELECT lang.property_id, name FROM `' . rex::getTablePrefix() . 'd2u_immo_properties_lang` AS lang '
+		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_immo_properties` AS properties ON lang.property_id = properties.property_id '
+		.'WHERE pictures LIKE "%'. $filename .'%" OR ground_plans LIKE "%'. $filename .'%" OR location_plans LIKE "%'. $filename .'%" OR documents LIKE "%'. $filename .'%"');  
+
+	// Prepare warnings
+	// Categories
+	for($i = 0; $i < $sql_categories->getRows(); $i++) {
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'\')">'.
+			 rex_i18n::msg('d2u_immo_rights_all') ." - ". rex_i18n::msg('d2u_immo_categories') .': '. $sql_categories->getValue('name') . '</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+    }
+	
+	// Contacts
+	for($i = 0; $i < $sql_contacts->getRows(); $i++) {
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/contact&func=edit&entry_id='.
+			$sql_contacts->getValue('contact_id') .'\')">'. rex_i18n::msg('d2u_immo_rights_all') ." - ". rex_i18n::msg('d2u_immo_contacts') .': '. $sql_contacts->getValue('firstname') .' '. $sql_contacts->getValue('lastname') .'</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+    }
+
+	// Properties
+	for($i = 0; $i < $sql_properties->getRows(); $i++) {
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/property&func=edit&entry_id='.
+			$sql_properties->getValue('property_id') .'\')">'. rex_i18n::msg('d2u_immo_rights_all') ." - ". rex_i18n::msg('d2u_immo_properties') .': '. $sql_properties->getValue('name') .'</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+    }
+
+	return $warning;
+}

@@ -30,6 +30,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_c
 	category_id int(10) NOT NULL,
 	clang_id int(10) NOT NULL,
 	name varchar(255) collate utf8_general_ci default NULL,
+	teaser varchar(255) collate utf8_general_ci default NULL,
 	translation_needs_update varchar(7) collate utf8_general_ci default NULL,
 	updatedate int(11) default NULL,
 	updateuser varchar(255) collate utf8_general_ci default NULL,
@@ -99,7 +100,6 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_p
 	animals int(1) default 0,
 	object_reserved int(1) default 0,
 	object_sold int(1) default 0,
-	object_archived int(1) default 0,
 	openimmo_object_id varchar(31) collate utf8_general_ci default NULL,
 	online_status varchar(10) collate utf8_general_ci default 'online',
 	PRIMARY KEY (property_id)
@@ -119,6 +119,35 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_p
 	updateuser varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (property_id, clang_id)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+
+// Create views for url addon
+$sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_immo_url_properties AS
+	SELECT lang.property_id, lang.clang_id, lang.name, CONCAT(lang.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, properties.category_id, lang.updatedate
+	FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties ON lang.property_id = properties.property_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories ON properties.category_id = categories.category_id AND lang.clang_id = categories.clang_id
+	WHERE properties.online_status = "online"');
+$sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_immo_url_categories AS
+	SELECT properties.category_id, categories_lang.clang_id, categories_lang.name, parent_categories.name AS parent_name, CONCAT_WS(" - ", categories_lang.name, parent_categories.name) AS seo_title, categories_lang.teaser AS seo_description, categories_lang.updatedate
+	FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties ON lang.property_id = properties.property_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories_lang ON properties.category_id = categories_lang.category_id AND lang.clang_id = categories_lang.clang_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories AS categories ON categories_lang.category_id = categories.category_id
+	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS parent_categories ON categories.parent_category_id = parent_categories.category_id AND lang.clang_id = parent_categories.clang_id
+	WHERE properties.online_status = "online"');
+// Insert url schemes
+if(rex_addon::get('url')->isAvailable()) {
+	$sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties'");
+	if($sql->getRows() == 0) {
+		$sql->setQuery("INSERT INTO `". rex::getTablePrefix() ."url_generate` (`article_id`, `clang_id`, `url`, `table`, `table_parameters`, `relation_table`, `relation_table_parameters`, `relation_insert`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
+			(". rex_article::getSiteStartArticleId() .", 0, '', '1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties', '{\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_field_1\":\"name\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_field_2\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_field_3\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_id\":\"property_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_clang_id\":\"clang_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_restriction_field\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_restriction_operator\":\"=\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_restriction_value\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_url_param_key\":\"property_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_seo_title\":\"seo_title\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_seo_description\":\"seo_description\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_sitemap_add\":\"1\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_sitemap_frequency\":\"monthly\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_sitemap_priority\":\"1.0\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_sitemap_lastmod\":\"updatedate\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_path_names\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_path_categories\":\"0\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties_relation_field\":\"category_id\"}', '1_xxx_relation_". rex::getTablePrefix() ."d2u_immo_url_categories', '{\"1_xxx_relation_". rex::getTablePrefix() ."d2u_immo_url_categories_field_1\":\"parent_name\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_immo_url_categories_field_2\":\"name\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_immo_url_categories_field_3\":\"\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_immo_url_categories_id\":\"category_id\",\"1_xxx_relation_". rex::getTablePrefix() ."d2u_immo_url_categories_clang_id\":\"clang_id\"}', 'before', UNIX_TIMESTAMP(), 'd2u_immo_addon_installer', UNIX_TIMESTAMP(), 'd2u_immo_addon_installer');");
+	}
+	$sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories'");
+	if($sql->getRows() == 0) {
+		$sql->setQuery("INSERT INTO `". rex::getTablePrefix() ."url_generate` (`article_id`, `clang_id`, `url`, `table`, `table_parameters`, `relation_table`, `relation_table_parameters`, `relation_insert`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
+			(". rex_article::getSiteStartArticleId() .", 0, '', '1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories', '{\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_field_1\":\"parent_name\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_field_2\":\"name\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_field_3\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_id\":\"category_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_clang_id\":\"clang_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_restriction_field\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_restriction_operator\":\"=\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_restriction_value\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_url_param_key\":\"category_id\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_seo_title\":\"seo_title\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_seo_description\":\"seo_description\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_sitemap_add\":\"1\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_sitemap_frequency\":\"always\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_sitemap_priority\":\"0.7\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_sitemap_lastmod\":\"updatedate\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_path_names\":\"\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_path_categories\":\"0\",\"1_xxx_". rex::getTablePrefix() ."d2u_immo_url_categories_relation_field\":\"\"}', '', '[]', 'before', UNIX_TIMESTAMP(), 'd2u_immo_addon_installer', UNIX_TIMESTAMP(), 'd2u_immo_addon_installer');");
+	}
+}
 
 // Standard settings
 if (!$this->hasConfig()) {
