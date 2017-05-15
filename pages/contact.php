@@ -132,7 +132,7 @@ if ($func == 'edit' || $func == 'add') {
 		});
 	</script>
 	<?php
-		print d2u_addon_backend_helper::getCSS('d2u_immo');
+		print d2u_addon_backend_helper::getCSS();
 //		print d2u_addon_backend_helper::getJS();
 }
 

@@ -25,12 +25,8 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->animals = array_key_exists('animals', $form);
 			$property->apartment_type = $form['apartment_type'];
 			$property->available_from = $form['available_from'];
-			if(isset($form['bath'])) {
-				$property->bath = $form['bath'];
-			}
-			if(isset($form['broadband_internet'])) {
-				$property->broadband_internet = $form['broadband_internet'];
-			}
+			$property->bath = isset($form['bath']) ? $form['bath'] : [];
+			$property->broadband_internet = isset($form['broadband_internet']) ? $form['broadband_internet'] : [];
 			$property->cable_sat_tv = array_key_exists('cable_sat_tv', $form);
 			if(isset($form['category_id']) && $form['category_id'] > 0) {
 				$property->category = new Category($form['category_id'], rex_config::get("d2u_immo", "default_lang"));
@@ -47,30 +43,20 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->courtage_incl_vat = array_key_exists('courtage_incl_vat', $form);
 			$property->currency_code = $form['currency_code'];
 			$property->deposit = isset($form['deposit']) ? $form['deposit'] : 0;
-			if(isset($form['elevator'])) {
-				$property->elevator = $form['elevator'];
-			}
+			$property->elevator = isset($form['elevator']) ? $form['elevator'] : [];
 			$property->energy_consumption = $form['energy_consumption'];
 			$property->energy_pass = $form['energy_pass'];
 			$property->energy_pass_valid_until = $form['energy_pass_valid_until'];
-			if(isset($form['firing_type'])) {
-				$property->firing_type = $form['firing_type'];
-			}
+			$property->firing_type = isset($form['firing_type']) ? $form['firing_type'] : [];
 			$property->floor = $form['floor'];
-			if(isset($form['floor_type'])) {
-				$property->floor_type = $form['floor_type'];
-			}
+			$property->floor_type = isset($form['floor_type']) ? $form['floor_type'] : [];
 			$property->ground_plans = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
-			if(isset($form['heating_type'])) {
-				$property->heating_type = $form['heating_type'];
-			}
+			$property->heating_type = isset($form['heating_type']) ? $form['heating_type'] : [];
 			$property->house_number = $form['house_number'];
 			$property->house_type = isset($form['house_type']) ? $form['house_type'] : '';
 			$property->including_warm_water = array_key_exists('including_warm_water', $form);
 			$property->internal_object_number = $form['internal_object_number'];
-			if(isset($form['kitchen'])) {
-				$property->kitchen = $form['kitchen'];
-			}
+			$property->kitchen = isset($form['kitchen']) ? $form['kitchen'] : [];
 			$property->land_area = $form['land_area'];
 			$property->land_type = isset($form['land_type']) ? $form['land_type'] : '';
 			$property->latitude = $form['latitude'];
@@ -153,15 +139,23 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 
 	$func = '';
 }
+// Change online status of machine
+else if($func == 'changestatus') {
+	$property = new Property($entry_id, rex_config::get("d2u_immo", "default_lang"));
+	$property->changeStatus();
+	
+	header("Location: ". rex_url::currentBackendPage());
+	exit;
+}
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_immo_property'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[property_id]" value="<?php echo $entry_id; ?>">
+				<input type="hidden" name="form[property_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$property = new Property($entry_id, $rex_clang->getId());
@@ -507,7 +501,7 @@ if ($func == 'edit' || $func == 'add') {
 	</form>
 	<br>
 	<?php
-		print d2u_addon_backend_helper::getCSS('d2u_immo');
+		print d2u_addon_backend_helper::getCSS();
 		print d2u_addon_backend_helper::getJS();
 	?>
 	<script type="text/javascript">
@@ -612,7 +606,7 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT properties.property_id, lang.name AS propertyname, categories.name AS categoryname, priority '
+	$query = 'SELECT properties.property_id, lang.name AS propertyname, categories.name AS categoryname, online_status, priority '
 		. 'FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
 			. 'ON properties.property_id = lang.property_id AND lang.clang_id = '. rex_config::get("d2u_immo", "default_lang") .' '
@@ -643,9 +637,17 @@ if ($func == '') {
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+ 	$list->removeColumn('online_status');
+    $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###property_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+	$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+
+	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###property_id###']);
+
+	$list->addColumn(rex_i18n::msg('d2u_immo_property_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_immo_property_clone'));
+    $list->setColumnLayout(rex_i18n::msg('d2u_immo_property_clone'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+    $list->setColumnParams(rex_i18n::msg('d2u_immo_property_clone'), ['func' => 'clone', 'entry_id' => '###property_id###']);
 
     $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
     $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);

@@ -9,6 +9,37 @@ if(rex::isBackend() && is_object(rex::getUser())) {
 
 if(rex::isBackend()) {
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_immo_media_is_in_use');
+	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_immo_article_is_in_use');
+}
+
+/**
+ * Checks if article is used by this addon
+ * @param rex_extension_point $ep Redaxo extension point
+ * @return string[] Warning message as array
+ * @throws rex_api_exception If article is used
+ */
+function rex_d2u_immo_article_is_in_use(rex_extension_point $ep) {
+	$warning = [];
+	$params = $ep->getParams();
+	$article_id = $params['id'];
+
+	// Prepare warnings
+	// Settings
+	$addon = rex_addon::get("d2u_immo");
+	if($addon->hasConfig("article_id") && $addon->getConfig("article_id") == $article_id) {
+		$message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/settings\')">'.
+			 rex_i18n::msg('d2u_immo_rights_all') ." - ". rex_i18n::msg('d2u_immo_meta_settings') . '</a>';
+		if(!in_array($message, $warning)) {
+			$warning[] = $message;
+		}
+	}
+
+	if(count($warning) > 0) {
+		throw new rex_api_exception(rex_i18n::msg('d2u_helper_rex_article_cannot_delete')."<br> ".implode("<br>", $warning));
+	}
+	else {
+		return explode("<br>", $warning);
+	}
 }
 
 /**

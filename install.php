@@ -126,7 +126,8 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_immo_url_p
 	FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties ON lang.property_id = properties.property_id
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories ON properties.category_id = categories.category_id AND lang.clang_id = categories.clang_id
-	WHERE properties.online_status = "online"');
+	LEFT JOIN '. rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
+	WHERE clang.status = 1 AND properties.online_status = "online"');
 $sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_immo_url_categories AS
 	SELECT properties.category_id, categories_lang.clang_id, categories_lang.name, parent_categories.name AS parent_name, CONCAT_WS(" - ", categories_lang.name, parent_categories.name) AS seo_title, categories_lang.teaser AS seo_description, categories_lang.updatedate
 	FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
@@ -134,7 +135,8 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. rex::getTablePrefix() .'d2u_immo_url_c
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories_lang ON properties.category_id = categories_lang.category_id AND lang.clang_id = categories_lang.clang_id
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories AS categories ON categories_lang.category_id = categories.category_id
 	LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS parent_categories ON categories.parent_category_id = parent_categories.category_id AND lang.clang_id = parent_categories.clang_id
-	WHERE properties.online_status = "online"');
+	LEFT JOIN '. rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
+	WHERE clang.status = 1 AND properties.online_status = "online"');
 // Insert url schemes
 if(rex_addon::get('url')->isAvailable()) {
 	$sql->setQuery("SELECT * FROM ". rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". rex::getTablePrefix() ."d2u_immo_url_properties'");

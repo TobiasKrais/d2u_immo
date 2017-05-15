@@ -89,7 +89,9 @@ class Category {
 			$this->teaser = $result->getValue("teaser");
 			$this->picture = $result->getValue("picture");
 			$this->priority = $result->getValue("priority");
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 			$this->updatedate = $result->getValue("updatedate");
 			$this->updateuser = $result->getValue("updateuser");
 		}

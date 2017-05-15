@@ -2,6 +2,7 @@ d2u_immo = D2U Immobilien
 d2u_immo_categories = Kategorien
 d2u_immo_contacts = Kontakte
 d2u_immo_properties = Immobilien
+d2u_immo_settings = Einstellungen
 
 d2u_immo_city = Stadt
 d2u_immo_confirm_delete = Wirklich löschen?
@@ -69,6 +70,7 @@ d2u_immo_property_broadband_internet_SDSL = SDSL
 d2u_immo_property_broadband_internet_SKYDSL = SkyDSL
 d2u_immo_property_broadband_internet_VDSL = VDSL
 d2u_immo_property_cable_sat_tv = Kabelanschluss oder Sat Anschluss
+d2u_immo_property_clone = klonen
 d2u_immo_property_cold_rent = Kaltmiete
 d2u_immo_property_condition_type = Zustand des Objektes
 d2u_immo_property_condition_type_ABRISSOBJEKT = Abrissobjekt
@@ -272,3 +274,10 @@ d2u_immo_rights_all = D2U Immobilien Addon
 d2u_immo_rights_edit_tech_data = D2U Immobilien Addon: Editierrechte für allgemeine Daten und sprachübergreifende Inhalte
 d2u_immo_rights_edit_lang = D2U Immobilien Addon: Editierrechte für Übersetzungen und sprachspezifische Inhalte (es gelten die Sprachen der Rolleneinstellungen)
 d2u_immo_rights_settings = D2U Immobilien Addon: Einstellungen
+
+d2u_immo_settings_article = Immobilien Artikel
+d2u_immo_settings_defaultlang = Ausgangssprache
+d2u_immo_settings_default_sort = Sortierung
+d2u_immo_settings_german = Deutsch
+d2u_immo_settings_lang_replacements = Sprachersetzungen
+d2u_immo_settings_lang_replacements_install = Voreingestellte Sprachersetzungen aus folgender Sprache übernehmen:

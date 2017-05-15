@@ -511,7 +511,9 @@ class Property {
 			$this->street = $result->getValue("street");
 			$this->teaser = $result->getValue("teaser");
 			$this->total_area = $result->getValue("total_area");
-			$this->translation_needs_update = $result->getValue("translation_needs_update");
+			if($result->getValue("translation_needs_update") != "") {
+				$this->translation_needs_update = $result->getValue("translation_needs_update");
+			}
 			$this->type_of_use = $result->getValue("type_of_use");
 			$this->updatedate = $result->getValue("updatedate");
 			$this->updateuser = $result->getValue("updateuser");

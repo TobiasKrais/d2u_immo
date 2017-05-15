@@ -11,12 +11,13 @@ page:
         category: { title: 'translate:d2u_immo_categories', icon: rex-icon rex-icon-open-category, perm: d2u_immo }
         contact: { title: 'translate:d2u_immo_contacts', icon: rex-icon rex-icon-user, perm: d2u_immo }
         property: { title: 'translate:d2u_immo_properties', icon: rex-icon fa-home, perm: d2u_immo }
+        settings: { title: 'translate:d2u_immo_settings', icon: rex-icon rex-icon-system, perm: d2u_immo[settings] }
 
 requires:
     redaxo: '>=5.2.0'
     php:
         version: '>=7.0'
     packages:
-        d2u_helper: '>=1.1.0'
+        d2u_helper: '>=1.2'
         phpmailer: '>=2.1'
         sprog: '>=1.0.0beta4'
