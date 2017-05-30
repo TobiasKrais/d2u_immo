@@ -5,8 +5,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 
 	// Linkmap Link and media needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
-
 	$settings['article_id'] = $link_ids["REX_INPUT_LINK"][1];
+
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$settings['even_informative_pdf'] = $input_media['even_informative_pdf'];
 
 	// Checkbox also need special treatment if empty
 	$settings['export_autoexport'] = array_key_exists('export_autoexport', $settings) ? "active" : "inactive";
@@ -103,6 +105,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<?php
 						$options = array('name' => rex_i18n::msg('d2u_immo_name'), 'priority' => rex_i18n::msg('header_priority'));
 						d2u_addon_backend_helper::form_select('d2u_immo_settings_default_sort', 'settings[default_property_sort]', $options, array($this->getConfig('default_property_sort')));
+						d2u_addon_backend_helper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', $this->hasConfig('even_informative_pdf') ? $this->getConfig('even_informative_pdf') : "")
 					?>
 				</div>
 			</fieldset>

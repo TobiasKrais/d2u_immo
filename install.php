@@ -151,6 +151,14 @@ if(rex_addon::get('url')->isAvailable()) {
 	}
 }
 
+// TODO: Image Types
+// d2u_immo_contact
+// d2u_immo_list_tile
+// d2u_immo_preview
+
+// Insert frontend translations
+d2u_immo_lang_helper::factory()->install();
+
 // Standard settings
 if (!$this->hasConfig()) {
 	// Find first Redaxo lang an set later as default lang

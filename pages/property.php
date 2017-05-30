@@ -381,20 +381,6 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'OFEN' => rex_i18n::msg('d2u_immo_property_heating_type_OFEN'),
 								'ZENTRAL' => rex_i18n::msg('d2u_immo_property_heating_type_ZENTRAL')];
 							d2u_addon_backend_helper::form_select('d2u_immo_property_heating_type', 'form[heating_type][]', $options_heating_type, $property->heating_type, 5, TRUE, $readonly);
-							$options_firing_type = ['ALTERNATIV' => rex_i18n::msg('d2u_immo_property_firing_type_ALTERNATIV'),
-								'BLOCK' => rex_i18n::msg('d2u_immo_property_firing_type_BLOCK'),
-								'ELEKTRO' => rex_i18n::msg('d2u_immo_property_firing_type_ELEKTRO'),
-								'WASSER-ELEKTRO' => rex_i18n::msg('d2u_immo_property_firing_type_WASSER-ELEKTRO'),
-								'GAS' => rex_i18n::msg('d2u_immo_property_firing_type_GAS'),
-								'HOLZ' => rex_i18n::msg('d2u_immo_property_firing_type_HOLZ'),
-								'FERN' => rex_i18n::msg('d2u_immo_property_firing_type_FERN'),
-								'FLUESSIGGAS' => rex_i18n::msg('d2u_immo_property_firing_type_FLUESSIGGAS'),
-								'OEL' => rex_i18n::msg('d2u_immo_property_firing_type_OEL'),
-								'PELLET' => rex_i18n::msg('d2u_immo_property_firing_type_PELLET'),
-								'SOLAR' => rex_i18n::msg('d2u_immo_property_firing_type_SOLAR'),
-								'LUFTWP' => rex_i18n::msg('d2u_immo_property_firing_type_LUFTWP'),
-								'ERDWAERME' => rex_i18n::msg('d2u_immo_property_firing_type_ERDWAERME')];
-							d2u_addon_backend_helper::form_select('d2u_immo_property_firing_type', 'form[firing_type][]', $options_firing_type, $property->firing_type, 5, TRUE, $readonly);
 							$options_elevator = ['LASTEN' => rex_i18n::msg('d2u_immo_property_elevator_LASTEN'),
 								'PERSONEN' => rex_i18n::msg('d2u_immo_property_elevator_PERSONEN')];
 							d2u_addon_backend_helper::form_select('d2u_immo_property_elevator', 'form[elevator][]', $options_elevator, $property->elevator, 2, TRUE, $readonly);
@@ -420,6 +406,20 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_immo_property_energy_pass_valid_until', 'form[energy_pass_valid_until]', $property->energy_pass_valid_until, FALSE, $readonly, 'date');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_energy_consumption', 'form[energy_consumption]', $property->energy_consumption, FALSE, $readonly, 'text');
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_energy_including_warm_water', 'form[including_warm_water]', 'true', $property->including_warm_water);
+							$options_firing_type = ['ALTERNATIV' => rex_i18n::msg('d2u_immo_property_firing_type_ALTERNATIV'),
+								'BLOCK' => rex_i18n::msg('d2u_immo_property_firing_type_BLOCK'),
+								'ELEKTRO' => rex_i18n::msg('d2u_immo_property_firing_type_ELEKTRO'),
+								'WASSER-ELEKTRO' => rex_i18n::msg('d2u_immo_property_firing_type_WASSER-ELEKTRO'),
+								'GAS' => rex_i18n::msg('d2u_immo_property_firing_type_GAS'),
+								'HOLZ' => rex_i18n::msg('d2u_immo_property_firing_type_HOLZ'),
+								'FERN' => rex_i18n::msg('d2u_immo_property_firing_type_FERN'),
+								'FLUESSIGGAS' => rex_i18n::msg('d2u_immo_property_firing_type_FLUESSIGGAS'),
+								'OEL' => rex_i18n::msg('d2u_immo_property_firing_type_OEL'),
+								'PELLET' => rex_i18n::msg('d2u_immo_property_firing_type_PELLET'),
+								'SOLAR' => rex_i18n::msg('d2u_immo_property_firing_type_SOLAR'),
+								'LUFTWP' => rex_i18n::msg('d2u_immo_property_firing_type_LUFTWP'),
+								'ERDWAERME' => rex_i18n::msg('d2u_immo_property_firing_type_ERDWAERME')];
+							d2u_addon_backend_helper::form_select('d2u_immo_property_firing_type', 'form[firing_type][]', $options_firing_type, $property->firing_type, 5, TRUE, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -613,10 +613,10 @@ if ($func == '') {
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories '
 			. 'ON properties.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_immo", "default_lang") .' ';
 	if($this->getConfig('default_property_sort') == 'priority') {
-		$query .= 'ORDER BY priority ASC';
+		$query .= 'ORDER BY online_status DESC, priority ASC';
 	}
 	else {
-		$query .= 'ORDER BY propertyname ASC';
+		$query .= 'ORDER BY online_status DESC, propertyname ASC';
 	}
     $list = rex_list::factory($query);
 

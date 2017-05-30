@@ -261,7 +261,7 @@ class Property {
 	/**
 	 * @var string[] Broadband type as described in OpenImmo value of definition "zustand".
 	 */
-	var $condition_type = [];
+	var $condition_type = "";
 	
 	/**
 	 * @var string Type of energy pass. Either "BEDARF" or "VERBRAUCH"
@@ -423,7 +423,7 @@ class Property {
 			}
 			$this->city = $result->getValue("city");
 			$this->cold_rent = $result->getValue("cold_rent");
-			$this->condition_type = preg_grep('/^\s*$/s', explode("|", $result->getValue("condition_type")), PREG_GREP_INVERT);
+			$this->condition_type = $result->getValue("condition_type");
 			$this->construction_year = $result->getValue("construction_year");
 			if($result->getValue("contact_id") > 0) {
 				$this->contact = new Contact($result->getValue("contact_id"));
@@ -590,15 +590,25 @@ class Property {
 	/**
 	 * Get all properties.
 	 * @param int $clang_id Redaxo clang id.
+	 * @param string $market_type KAUF, MIETE_PACHT, ERBPACHT, LEASING or empty (all)
 	 * @param boolean $only_online Show only online properties
 	 * @return Properties[] Array with Property objects.
 	 */
-	public static function getAll($clang_id, $only_online = FALSE) {
-		$query = "SELECT property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties ";
-		if($only_online) {
-			$query .= "WHERE online_status = 'online' ";
+	public static function getAll($clang_id, $market_type = '', $only_online = FALSE) {
+		$query = "SELECT lang.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
+			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
+				."ON lang.property_id = properties.property_id AND lang.clang_id = ". $clang_id ." ";
+		if($only_online || $offer_type != '') {
+			$where = [];
+			if($only_online) {
+				$where[] = "online_status = 'online'";
+			}
+			if($market_type != '') {
+				$where[] = "market_type = '". $market_type ."'";
+			}
+			$query .= "WHERE ". implode(' AND ', $where) ." ";
 		}
-		if(rex_addon::get('d2u_immo')->ghasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
+		if(rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
