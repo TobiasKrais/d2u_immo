@@ -1,13 +1,14 @@
 <?php
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 'save') {
-	$settings = (array) rex_post('settings', 'array', array());
+	$settings = (array) rex_post('settings', 'array', []);
 
 	// Linkmap Link and media needs special treatment
 	$link_ids = filter_input_array(INPUT_POST, array('REX_INPUT_LINK'=> array('filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY)));
 	$settings['article_id'] = $link_ids["REX_INPUT_LINK"][1];
+	$settings['window_advertising_settings_article'] = $link_ids["REX_INPUT_LINK"][2];
 
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
 	$settings['even_informative_pdf'] = $input_media['even_informative_pdf'];
 
 	// Checkbox also need special treatment if empty
@@ -59,7 +60,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 
 						// Default language for translations
 						if(count(rex_clang::getAll()) > 1) {
-							$lang_options = array();
+							$lang_options = [];
 							foreach(rex_clang::getAll() as $rex_clang) {
 								$lang_options[$rex_clang->getId()] = $rex_clang->getName();
 							}
@@ -69,7 +70,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_immo_settings_lang_replacements'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?php echo rex_i18n::msg('d2u_helper_lang_replacements'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
 						foreach(rex_clang::getAll() as $rex_clang) {
@@ -77,12 +78,13 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							print '<dt><label>'. $rex_clang->getName() .'</label></dt>';
 							print '<dd>';
 							print '<select class="form-control" name="settings[lang_replacement_'. $rex_clang->getId() .']">';
-							$replacement_options = array(
-								'd2u_immo_settings_german' => 'german'
-							);
+							$replacement_options = [
+								'd2u_helper_lang_english' => 'english',
+								'd2u_helper_lang_german' => 'german'
+							];
 							foreach($replacement_options as $key => $value) {
 								$selected = $value == $this->getConfig('lang_replacement_'. $rex_clang->getId()) ? ' selected="selected"' : '';
-								print '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_immo_settings_lang_replacements_install') .' '. rex_i18n::msg($key) .'</option>';
+								print '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_helper_lang_replacements_install') .' '. rex_i18n::msg($key) .'</option>';
 							}
 							print '</select>';
 							print '</dl>';
@@ -109,6 +111,18 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					?>
 				</div>
 			</fieldset>
+			<fieldset>
+				<legend><small><i class="rex-icon fa-money"></i></small> <?php echo rex_i18n::msg('d2u_immo_settings_finance_calculator'); ?></legend>
+				<div class="panel-body-wrapper slide">
+					<?php
+						print '<p>'. rex_i18n::msg('d2u_immo_settings_finance_calculator_hint') .'</p>';
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_real_estate_tax', 'settings[finance_calculator_real_estate_tax]', $this->getConfig('finance_calculator_real_estate_tax'), TRUE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_notary_costs', 'settings[finance_calculator_notary_costs]', $this->getConfig('finance_calculator_notary_costs'), TRUE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_interest_rate', 'settings[finance_calculator_interest_rate]', $this->getConfig('finance_calculator_interest_rate'), TRUE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_repayment', 'settings[finance_calculator_repayment]', $this->getConfig('finance_calculator_repayment'), TRUE, FALSE, 'text');
+					?>
+				</div>
+			</fieldset>
 			<?php
 				if(rex_plugin::get('d2u_immo', 'export')->isAvailable()) {
 			?>
@@ -118,6 +132,18 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 						<?php
 						d2u_addon_backend_helper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', $this->getConfig('export_autoexport') == 'active');
 						d2u_addon_backend_helper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', $this->getConfig('export_failure_email'), TRUE, FALSE, 'email');
+						?>
+					</div>
+				</fieldset>
+			<?php
+				}
+				if(rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
+			?>
+				<fieldset>
+					<legend><small><i class="rex-icon fa-desktop"></i></small> <?php echo rex_i18n::msg('d2u_immo_window_advertising'); ?></legend>
+					<div class="panel-body-wrapper slide">
+						<?php
+						d2u_addon_backend_helper::form_linkfield('d2u_immo_window_advertising_settings_article', '2', $this->getConfig('window_advertising_settings_article'), $this->getConfig('default_lang'))
 						?>
 					</div>
 				</fieldset>

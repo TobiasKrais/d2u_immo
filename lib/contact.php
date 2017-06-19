@@ -183,19 +183,19 @@ class Contact {
 				."street = '". $this->street ."', "
 				."zip_code = '". $this->zip_code ."' ";
 
-			if($this->contact_id == 0) {
-				$query = "INSERT INTO ". $query;
-			}
-			else {
-				$query = "UPDATE ". $query ." WHERE contact_id = ". $this->contact_id;
-			}
+		if($this->contact_id == 0) {
+			$query = "INSERT INTO ". $query;
+		}
+		else {
+			$query = "UPDATE ". $query ." WHERE contact_id = ". $this->contact_id;
+		}
 
-			$result = rex_sql::factory();
-			$result->setQuery($query);
-			if($this->contact_id == 0) {
-				$this->contact_id = $result->getLastId();
-				$error = $result->hasError();
-			}
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		if($this->contact_id == 0) {
+			$this->contact_id = $result->getLastId();
+			$error = $result->hasError();
+		}
 		
 		return $error;
 	}

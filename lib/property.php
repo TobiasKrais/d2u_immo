@@ -197,9 +197,9 @@ class Property {
 	var $land_area = 0;
 	
 	/**
-	 * @var string Number of rooms
+	 * @var float Number of rooms
 	 */
-	var $rooms = "";
+	var $rooms = 0;
 	
 	/**
 	 * @var int Year of construction
@@ -209,7 +209,7 @@ class Property {
 	/**
 	 * @var boolean TRUE if property can be used
 	 */
-	var $residential_community_possible = 0;
+	var $flat_sharing_possible = 0;
 	
 	/**
 	 * @var string[] Bath room features as described in OpenImmo value of
@@ -254,12 +254,12 @@ class Property {
 	var $cable_sat_tv = TRUE;
 	
 	/**
-	 * @var string Broadband type as described in OpenImmo value of definition "breitband_zugang".
+	 * @var string[] Broadband type as described in OpenImmo value of definition "breitband_zugang".
 	 */
-	var $broadband_internet = "";
+	var $broadband_internet = [];
 	
 	/**
-	 * @var string[] Broadband type as described in OpenImmo value of definition "zustand".
+	 * @var string Condition type as described in OpenImmo value of definition "zustand".
 	 */
 	var $condition_type = "";
 	
@@ -329,10 +329,15 @@ class Property {
 	var $openimmo_object_id = "";
 	
 	/**
-	 * @var string Property online status. Either "online" or "offline".
+	 * @var string Online status. Either "online", "offline" or "archived".
 	 */
 	var $online_status = "";
-	
+
+	/**
+	 * @var string Online status or window advertising plugin. Either "online" or "offline".
+	 */
+	var $window_advertising_status = "";
+
 	/**
 	 * @var int Unix timestamp for update date.
 	 */
@@ -483,10 +488,10 @@ class Property {
 			$this->kitchen = preg_grep('/^\s*$/s', explode("|", $result->getValue("kitchen")), PREG_GREP_INVERT);
 			$this->land_area = $result->getValue("land_area");
 			$this->land_type = $result->getValue("land_type");
-			$this->latitude = $result->getValue("latitude");
+			$this->latitude = $result->getValue("latitude") == "" ? 0 : $result->getValue("latitude");
 			$this->living_area = $result->getValue("living_area");
 			$this->location_plans = preg_grep('/^\s*$/s', explode(",", $result->getValue("location_plans")), PREG_GREP_INVERT);
-			$this->longitude = $result->getValue("longitude");
+			$this->longitude = $result->getValue("longitude") == "" ? 0 : $result->getValue("longitude");
 			$this->market_type = $result->getValue("market_type");
 			$this->name = $result->getValue("name");
 			$this->object_reserved = $result->getValue("object_reserved") == "1" ? TRUE : FALSE;
@@ -506,8 +511,8 @@ class Property {
 			$this->purchase_price = $result->getValue("purchase_price");
 			$this->purchase_price_m2 = $result->getValue("purchase_price_m2");
 			$this->rented = $result->getValue("rented") == "1" ? TRUE : FALSE;
-			$this->residential_community_possible = $result->getValue("residential_community_possible") == "1" ? TRUE : FALSE;
-			$this->rooms = $result->getValue("rooms");
+			$this->flat_sharing_possible = $result->getValue("flat_sharing_possible") == "1" ? TRUE : FALSE;
+			$this->rooms = ($result->getValue("rooms") == round($result->getValue("rooms")) ? round($result->getValue("rooms")) : $result->getValue("rooms"));
 			$this->street = $result->getValue("street");
 			$this->teaser = $result->getValue("teaser");
 			$this->total_area = $result->getValue("total_area");
@@ -519,9 +524,13 @@ class Property {
 			$this->updateuser = $result->getValue("updateuser");
 			$this->wheelchair_accessable = $result->getValue("wheelchair_accessable") == "1" ? TRUE : FALSE;
 			$this->zip_code = $result->getValue("zip_code");
+			// Window advertising plugin fields
+			if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+				$this->window_advertising_status = $result->getValue("window_advertising_status") == "online" ? TRUE : FALSE;
+			}
 		}
 	}
-	
+
 	/**
 	 * Changes the status of a property
 	 */
@@ -545,6 +554,34 @@ class Property {
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";
+		}
+	}
+	
+	/**
+	 * Changes the status of a property
+	 */
+	public function changeWindowAdvertisingStatus() {
+		if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+			if($this->window_advertising_status == "online") {
+				if($this->property_id > 0) {
+					$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_properties "
+						."SET window_advertising_status = 'offline' "
+						."WHERE property_id = ". $this->property_id;
+					$result = rex_sql::factory();
+					$result->setQuery($query);
+				}
+				$this->window_advertising_status = "offline";
+			}
+			else {
+				if($this->property_id > 0) {
+					$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_properties "
+						."SET window_advertising_status = 'online' "
+						."WHERE property_id = ". $this->property_id;
+					$result = rex_sql::factory();
+					$result->setQuery($query);
+				}
+				$this->window_advertising_status = "online";
+			}
 		}
 	}
 	
@@ -617,10 +654,39 @@ class Property {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$properties = array();
+		$properties = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$properties[] = new Property($result->getValue("property_id"), $clang_id);
 			$result->next();
+		}
+		return $properties;
+	}
+
+	/**
+	 * Get all properties that are selected for window advertising.
+	 * @param int $clang_id Redaxo clang id.
+	 * @return Properties[] Array with Property objects.
+	 */
+	public static function getAllWindowAdvertisingProperties($clang_id) {
+		$properties = [];
+		if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+			$query = "SELECT lang.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
+				."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
+					."ON lang.property_id = properties.property_id AND lang.clang_id = ". $clang_id ." "
+				."WHERE window_advertising_status = 'online' ";
+			if(rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
+				$query .= 'ORDER BY priority ASC';
+			}
+			else {
+				$query .= 'ORDER BY name ASC';
+			}
+			$result = rex_sql::factory();
+			$result->setQuery($query);
+
+			for($i = 0; $i < $result->getRows(); $i++) {
+				$properties[] = new Property($result->getValue("property_id"), $clang_id);
+				$result->next();
+			}
 		}
 		return $properties;
 	}
@@ -678,7 +744,7 @@ class Property {
 		if($this->url == "") {
 			$d2u_immo = rex_addon::get("d2u_immo");
 				
-			$parameterArray = array();
+			$parameterArray = [];
 			$parameterArray['property_id'] = $this->property_id;
 			$this->url = rex_getUrl($d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
@@ -752,6 +818,7 @@ class Property {
 					."object_type = '". $this->object_type ."', "
 					."office_type = '". $this->office_type ."', "
 					."online_status = '". $this->online_status ."', "
+					."window_advertising_status = '". ($this->window_advertising_status ? 'online' : 'offline') ."', "
 					."openimmo_object_id = '". $this->openimmo_object_id ."', "
 					."other_type = '". $this->other_type ."', "
 					."parking_space_duplex = ". $this->parking_space_duplex .", "
@@ -763,8 +830,8 @@ class Property {
 					."purchase_price = ". $this->purchase_price .", "
 					."purchase_price_m2 = ". $this->purchase_price_m2 .", "
 					."rented = ". ($this->rented ? 1 : 0) .", "
-					."residential_community_possible = ". ($this->residential_community_possible ? 1 : 0) .", "
-					."rooms = '". $this->rooms ."', "
+					."flat_sharing_possible = ". ($this->flat_sharing_possible ? 1 : 0) .", "
+					."rooms = ". $this->rooms .", "
 					."street = '". $this->street ."', "
 					."total_area = ". $this->total_area .", "
 					."type_of_use = '". $this->type_of_use ."', "
@@ -835,7 +902,7 @@ class Property {
 			$this->priority = $result->getRows() + 1;
 		}
 
-		$properties = array();
+		$properties = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$properties[$result->getValue("priority")] = $result->getValue("property_id");
 			$result->next();

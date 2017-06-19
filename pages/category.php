@@ -126,15 +126,15 @@ if ($func == 'edit' || $func == 'add') {
 						}
 				?>
 					<fieldset>
-						<legend><?php echo rex_i18n::msg('d2u_immo_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
+						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_immo", "default_lang")) {
 									$options_translations = array();
-									$options_translations["yes"] = rex_i18n::msg('d2u_immo_translation_needs_update');
-									$options_translations["no"] = rex_i18n::msg('d2u_immo_translation_is_uptodate');
-									$options_translations["delete"] = rex_i18n::msg('d2u_immo_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_immo_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($category->translation_needs_update), 1, FALSE, $readonly_lang);
+									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
+									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
+									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($category->translation_needs_update), 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -149,7 +149,7 @@ if ($func == 'edit' || $func == 'add') {
 					}
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_immo_data_all_lang'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_helper_data_all_lang'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB

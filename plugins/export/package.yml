@@ -1,0 +1,23 @@
+package: d2u_immo/export
+version: '1.0.0'
+author: Tobias Krais
+supportpage: http://github.com/tobiaskrais/d2u_immo
+
+page:
+    title: 'translate:d2u_immo_export'
+    perm: d2u_immo[export]
+    icon: rex-icon fa-cloud-upload
+    subpages:
+        export: { title: 'translate:d2u_immo_export', icon: rex-icon fa-cloud-upload, perm: d2u_immo[export] }
+        provider: { title: 'translate:d2u_immo_export_provider', icon: rex-icon fa-cloud, perm: d2u_immo[export_provider] }
+
+requires:
+    redaxo: '>=5.3.0'
+    php:
+        extensions: [xml, zip]
+        version: '>=5.3'
+    packages:
+        cronjob: '>=2.1.1'
+        media_manager: '>=2.3'
+        phpmailer: '>=2.1'
+        sprog: '>=1.0.0'

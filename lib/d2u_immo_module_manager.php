@@ -10,13 +10,13 @@ class D2UImmoModules {
 	 * @return D2UModule[] Modules offered by this addon
 	 */
 	public static function getD2UImmoModules() {
-		$d2u_immo_modules = [];
-		$d2u_immo_modules[] = new D2UModule("70-1",
+		$modules = [];
+		$modules[] = new D2UModule("70-1",
 			"D2U Immo Addon - Hauptausgabe",
 			1);
-		$d2u_immo_modules[] = new D2UModule("70-2",
+		$modules[] = new D2UModule("70-2",
 			"D2U Immo Addon - Infobox Ansprechpartner",
 			1);
-		return $d2u_immo_modules;
+		return $modules;
 	}
 }

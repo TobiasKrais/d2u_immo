@@ -1,0 +1,12 @@
+d2u_immo_window_advertising = Schaufensterwerbung
+d2u_immo_window_advertising_ad = Anzeige
+d2u_immo_window_advertising_ads = Anzeigen
+
+d2u_immo_window_advertising_rights_all = D2U Immobilien Addon: Schaufensterwerbung
+
+d2u_immo_window_advertising_description = Anzeigentext
+d2u_immo_window_advertising_show = Im Schaufenster anzeigen?
+d2u_immo_window_advertising_title = Überschrift
+d2u_immo_window_advertising_no_advertisements_found = Es wurden noch keine Anzeigen angelegt.
+
+d2u_immo_window_advertising_settings_article = Artikel mit Schaufenstertemplate

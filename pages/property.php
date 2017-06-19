@@ -10,10 +10,10 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', array());
+	$input_media_list = (array) rex_post('REX_INPUT_MEDIALIST', 'array', []);
 
 	$success = TRUE;
 	$property = FALSE;
@@ -68,7 +68,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->object_sold = array_key_exists('object_sold', $form);
 			$property->object_type = $form['object_type'];
 			$property->office_type = isset($form['office_type']) ? $form['office_type'] : '';
-			$property->online_status = array_key_exists('online_status', $form) ? 'online' : 'offline';
+			$property->online_status = isset($form['online_status']) ? $form['online_status'] : [];
 			$property->other_type = isset($form['other_type']) ? $form['other_type'] : '';
 			$property->parking_space_duplex = $form['parking_space_duplex'];
 			$property->parking_space_garage = $form['parking_space_garage'];
@@ -80,13 +80,16 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->purchase_price = isset($form['purchase_price']) ? $form['purchase_price'] : 0;
 			$property->purchase_price_m2 = isset($form['purchase_price_m2']) ? $form['purchase_price_m2'] : 0;
 			$property->rented = array_key_exists('rented', $form);
-			$property->residential_community_possible = array_key_exists('residential_community_possible', $form);
+			$property->flat_sharing_possible = array_key_exists('flat_sharing_possible', $form);
 			$property->rooms = $form['rooms'];
 			$property->street = $form['street'];
 			$property->total_area = $form['total_area'];
 			$property->type_of_use = $form['type_of_use'];
 			$property->wheelchair_accessable = array_key_exists('wheelchair_accessable', $form);
 			$property->zip_code = $form['zip_code'];
+			if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+				$property->window_advertising_status = array_key_exists('window_advertising_status', $form) ? TRUE : FALSE;
+			}
 		}
 		else {
 			$property->clang_id = $rex_clang->getId();
@@ -131,7 +134,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$property_id = $entry_id;
 	if($property_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$property_id = $form['property_id'];
 	}
 	$property = new Property($property_id, rex_config::get("d2u_immo", "default_lang"));
@@ -167,15 +170,15 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						}
 				?>
 					<fieldset>
-						<legend><?php echo rex_i18n::msg('d2u_immo_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
+						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_immo", "default_lang")) {
-									$options_translations = array();
-									$options_translations["yes"] = rex_i18n::msg('d2u_immo_translation_needs_update');
-									$options_translations["no"] = rex_i18n::msg('d2u_immo_translation_is_uptodate');
-									$options_translations["delete"] = rex_i18n::msg('d2u_immo_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_immo_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($property->translation_needs_update), 1, FALSE, $readonly_lang);
+									$options_translations = [];
+									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
+									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
+									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, array($property->translation_needs_update), 1, FALSE, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -341,7 +344,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_immo_property_longitude', 'form[longitude]', $property->longitude, FALSE, $readonly, 'text');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_latitude', 'form[latitude]', $property->latitude, FALSE, $readonly, 'text');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_floor', 'form[floor]', $property->floor, FALSE, $readonly, 'number');
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_publish_address', 'form[publish_address]', 'true', $property->publish_address);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_publish_address', 'form[publish_address]', 'true', $property->publish_address, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -349,7 +352,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_property_equipment'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_residential_community_possible', 'form[residential_community_possible]', 'true', $property->residential_community_possible);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_flat_sharing_possible', 'form[flat_sharing_possible]', 'true', $property->flat_sharing_possible, $readonly);
 							$options_bath = ['BIDET' => rex_i18n::msg('d2u_immo_property_bath_BIDET'),
 								'DUSCHE' => rex_i18n::msg('d2u_immo_property_bath_DUSCHE'),
 								'FENSTER' => rex_i18n::msg('d2u_immo_property_bath_FENSTER'),
@@ -384,8 +387,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							$options_elevator = ['LASTEN' => rex_i18n::msg('d2u_immo_property_elevator_LASTEN'),
 								'PERSONEN' => rex_i18n::msg('d2u_immo_property_elevator_PERSONEN')];
 							d2u_addon_backend_helper::form_select('d2u_immo_property_elevator', 'form[elevator][]', $options_elevator, $property->elevator, 2, TRUE, $readonly);
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_wheelchair_accessable', 'form[wheelchair_accessable]', 'true', $property->wheelchair_accessable);
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_cable_sat_tv', 'form[cable_sat_tv]', 'true', $property->cable_sat_tv);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_wheelchair_accessable', 'form[wheelchair_accessable]', 'true', $property->wheelchair_accessable, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_cable_sat_tv', 'form[cable_sat_tv]', 'true', $property->cable_sat_tv, $readonly);
 							$options_broadband_internet = ['ADSL' => rex_i18n::msg('d2u_immo_property_broadband_internet_ADSL'),
 								'DSL' => rex_i18n::msg('d2u_immo_property_broadband_internet_DSL'),
 								'IPTV' => rex_i18n::msg('d2u_immo_property_broadband_internet_IPTV'),
@@ -405,7 +408,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_select('d2u_immo_property_energy_pass_kind', 'form[energy_pass]', $options_energy_pass, [$property->energy_pass], 1, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_immo_property_energy_pass_valid_until', 'form[energy_pass_valid_until]', $property->energy_pass_valid_until, FALSE, $readonly, 'date');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_energy_consumption', 'form[energy_consumption]', $property->energy_consumption, FALSE, $readonly, 'text');
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_energy_including_warm_water', 'form[including_warm_water]', 'true', $property->including_warm_water);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_energy_including_warm_water', 'form[including_warm_water]', 'true', $property->including_warm_water, $readonly);
 							$options_firing_type = ['ALTERNATIV' => rex_i18n::msg('d2u_immo_property_firing_type_ALTERNATIV'),
 								'BLOCK' => rex_i18n::msg('d2u_immo_property_firing_type_BLOCK'),
 								'ELEKTRO' => rex_i18n::msg('d2u_immo_property_firing_type_ELEKTRO'),
@@ -437,7 +440,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_immo_property_additional_costs', 'form[additional_costs]', $property->additional_costs, FALSE, $readonly, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_deposit', 'form[deposit]', $property->deposit, FALSE, $readonly, 'text');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_courtage', 'form[courtage]', $property->courtage, FALSE, $readonly, 'text');
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_courtage_incl_vat', 'form[courtage_incl_vat]', 'true', $property->courtage_incl_vat);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_courtage_incl_vat', 'form[courtage_incl_vat]', 'true', $property->courtage_incl_vat, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -465,13 +468,16 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'offline' => rex_i18n::msg('d2u_immo_status_offline'),
 								'archived' => rex_i18n::msg('d2u_immo_status_archived')];
 							d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$property->online_status], 1, FALSE, $readonly);
+							if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+								d2u_addon_backend_helper::form_checkbox('d2u_immo_window_advertising_show', 'form[window_advertising_status]', 'true', $property->window_advertising_status, $readonly);
+							}
 							d2u_addon_backend_helper::form_input('d2u_immo_property_internal_object_number', 'form[internal_object_number]', $property->internal_object_number, TRUE, $readonly, 'text');
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $property->priority, TRUE, FALSE, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $property->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_available_from', 'form[available_from]', $property->available_from, FALSE, $readonly, 'date');
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_rented', 'form[rented]', 'true', $property->rented);
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_animals', 'form[animals]', 'true', $property->animals);
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_reserved', 'form[object_reserved]', 'true', $property->object_reserved);
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_sold', 'form[object_sold]', 'true', $property->object_sold);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_rented', 'form[rented]', 'true', $property->rented, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_animals', 'form[animals]', 'true', $property->animals, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_reserved', 'form[object_reserved]', 'true', $property->object_reserved, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_sold', 'form[object_sold]', 'true', $property->object_sold, $readonly);
 							$options_contacts = [];
 							foreach(Contact::getAll() as $contact) {
 								if($contact->lastname != "") {
@@ -603,61 +609,4 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		});
 	</script>
 	<?php
-}
-
-if ($func == '') {
-	$query = 'SELECT properties.property_id, lang.name AS propertyname, categories.name AS categoryname, online_status, priority '
-		. 'FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
-			. 'ON properties.property_id = lang.property_id AND lang.clang_id = '. rex_config::get("d2u_immo", "default_lang") .' '
-		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories '
-			. 'ON properties.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_immo", "default_lang") .' ';
-	if($this->getConfig('default_property_sort') == 'priority') {
-		$query .= 'ORDER BY online_status DESC, priority ASC';
-	}
-	else {
-		$query .= 'ORDER BY online_status DESC, propertyname ASC';
-	}
-    $list = rex_list::factory($query);
-
-    $list->addTableAttribute('class', 'table-striped table-hover');
-
-    $tdIcon = '<i class="rex-icon fa-home"></i>';
-    $thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
-    $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);
-    $list->setColumnParams($thIcon, ['func' => 'edit', 'entry_id' => '###property_id###']);
-
-    $list->setColumnLabel('property_id', rex_i18n::msg('id'));
-    $list->setColumnLayout('property_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
-
-    $list->setColumnLabel('propertyname', rex_i18n::msg('d2u_immo_name'));
-    $list->setColumnParams('propertyname', ['func' => 'edit', 'entry_id' => '###property_id###']);
-
-    $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_immo_category'));
-
-	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
-
- 	$list->removeColumn('online_status');
-    $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###property_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
-	$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-
-	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
-    $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###property_id###']);
-
-	$list->addColumn(rex_i18n::msg('d2u_immo_property_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_immo_property_clone'));
-    $list->setColumnLayout(rex_i18n::msg('d2u_immo_property_clone'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('d2u_immo_property_clone'), ['func' => 'clone', 'entry_id' => '###property_id###']);
-
-    $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
-    $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###property_id###']);
-    $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_immo_confirm_delete'));
-
-    $list->setNoRowsMessage(rex_i18n::msg('d2u_immo_category_no_categories_found'));
-
-    $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_immo_properties'), false);
-    $fragment->setVar('content', $list->get(), false);
-    echo $fragment->parse('core/page/section.php');
 }
