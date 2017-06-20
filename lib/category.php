@@ -337,17 +337,6 @@ class Category {
 	}
 	
 	/**
-	 * Set offer type for used properties. Setter only works if used_properties plugin
-	 * is installed.
-	 * @param string $offer_type Offer type. Either "sale" or "rent"
-	 */
-	public function setOfferType($offer_type) {
-		if(rex_plugin::get("d2u_immo", "used_properties")->isAvailable()) {
-			$this->offer_type = $offer_type;
-		}
-	}
-	
-	/**
 	 * Reassigns priority to all Categories in database.
 	 */
 	private function setPriority() {

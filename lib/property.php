@@ -635,7 +635,7 @@ class Property {
 		$query = "SELECT lang.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
 				."ON lang.property_id = properties.property_id AND lang.clang_id = ". $clang_id ." ";
-		if($only_online || $offer_type != '') {
+		if($only_online || $market_type != '') {
 			$where = [];
 			if($only_online) {
 				$where[] = "online_status = 'online'";
