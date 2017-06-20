@@ -53,4 +53,3 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		</div>
 	</div>
 </div>
-<br />
