@@ -67,21 +67,21 @@ if(!function_exists('printPropertylist')) {
 			print '<div class="col-12 col-sm-8 col-lg-9">';
 			print '<div class="row">';
 			print '<div class="col-12"><strong>'. $property->name .'</strong></div>';
-			print '<div class="col-12 col-sm-6 nolink"><b>'. $tag_open .'d2u_immo_form_city'. $tag_close .':</b> '. $property->city .'</div>';
+			print '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_form_city'. $tag_close .':</b> '. $property->city .'</div>';
 			if($property->market_type = "KAUF") {
-				print '<div class="col-12 col-sm-6 nolink"><b>'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</b> '. number_format($property->purchase_price, 0, ",", ".") .',- '. $property->currency_code .'</div>';
+				print '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</b> '. number_format($property->purchase_price, 0, ",", ".") .',- '. $property->currency_code .'</div>';
 			}
 			else if($property->market_type = "MIETE_PACHT" || $property->market_type = "ERBPACHT") {
-				print '<div class="col-12 col-sm-6 nolink"><b>'. $tag_open .'d2u_immo_cold_rent'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ",", ".") .' '. $property->currency_code .'</div>';
+				print '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_cold_rent'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ",", ".") .' '. $property->currency_code .'</div>';
 			}
 			else if($property->market_type = "LEASING") {
-				print '<div class="col-12 col-sm-6 nolink"><b>'. $tag_open .'d2u_immo_leasehold'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ",", ".") .' '. $property->currency_code .'</div>';
+				print '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_leasehold'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ",", ".") .' '. $property->currency_code .'</div>';
 			}
 			if($property->living_area > 0) {
-				print '<div class="col-12 col-sm-6 nolink"><b>'. $tag_open .'d2u_immo_living_area'. $tag_close .':</b> '. $property->living_area .' m²</div>';
+				print '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_living_area'. $tag_close .':</b> '. round($property->living_area) .' m²</div>';
 			}
 			else if($property->land_area > 0) {
-				print '<div class="col-12 col-sm-6 nolink"><b>'. $tag_open .'d2u_immo_land_area'. $tag_close .':</b> '. $property->land_area .' m²</div>';
+				print '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_land_area'. $tag_close .':</b> '. round($property->land_area) .' m²</div>';
 			}
 			print '<div class="col-12 nolink">'. $property->teaser .'</div>';
 			print '</div>';
