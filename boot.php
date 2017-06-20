@@ -3,7 +3,7 @@ if(rex::isBackend() && is_object(rex::getUser())) {
 	rex_perm::register('d2u_immo[]', rex_i18n::msg('d2u_immo_rights_all'));
 	rex_perm::register('d2u_immo[edit_lang]', rex_i18n::msg('d2u_immo_rights_edit_lang'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_immo[edit_data]', rex_i18n::msg('d2u_immo_rights_edit_data'), rex_perm::OPTIONS);
-	rex_perm::register('d2u_immo[settings]', rex_i18n::msg('d2u_immo_rights_settings'));	
+	rex_perm::register('d2u_immo[settings]', rex_i18n::msg('d2u_immo_rights_settings'), rex_perm::OPTIONS);	
 }
 
 if(rex::isBackend()) {
