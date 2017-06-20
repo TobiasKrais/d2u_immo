@@ -316,8 +316,8 @@ class Category {
 				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_immo_categories_lang SET "
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". htmlspecialchars($this->name) ."', "
-						."teaser = '". htmlspecialchars($this->teaser) ."', "
+						."name = '". $this->name ."', "
+						."teaser = '". $this->teaser ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". rex::getUser()->getLogin() ."' ";
