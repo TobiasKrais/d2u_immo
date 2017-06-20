@@ -26,7 +26,7 @@ $d2u_module_manager->showManagerList();
 		ImmobilienGaiser</a>.</li>
 </ul>
 <p>Im D2U Helper Addon kann das "Header Pic Template - 2 Columns" installiert werden. In
-	diesem Template sind alle nötigen Änderungen integriert.</p>
+	diesem Template sind alle nötigen Anpassungen integriert.</p>
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
