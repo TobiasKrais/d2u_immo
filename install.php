@@ -191,16 +191,8 @@ d2u_immo_lang_helper::factory()->install();
 
 // Standard settings
 if (!$this->hasConfig()) {
-	// Find first Redaxo lang an set later as default lang
-	$langs = rex_clang::getAll();
-	$default_clang_id = 1;
-	foreach ($langs as $lang) {
-		$default_clang_id = $lang->getId();
-		break;
-	}
-	
     $this->setConfig('article_id', rex_article::getSiteStartArticleId());
-	$this->setConfig('default_lang', $default_clang_id);
+	$this->setConfig('default_lang', rex_clang::getStartId());
 	$this->setConfig('default_category_sort', "name");
 	$this->setConfig('default_property_sort', "name");
 	$this->setConfig('finance_calculator_real_estate_tax', "0.05");
