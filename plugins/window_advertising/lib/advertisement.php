@@ -162,7 +162,7 @@ class Advertisement {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$advertisements = array();
+		$advertisements = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$advertisements[] = new Advertisement($result->getValue("ad_id"), $clang_id);
 			$result->next();
@@ -179,7 +179,7 @@ class Advertisement {
 		if($this->url == "") {
 			$d2u_immo = rex_addon::get("d2u_immo");
 				
-			$parameterArray = array();
+			$parameterArray = [];
 			$parameterArray['ad_id'] = $this->ad_id;
 			
 			$this->url = rex_getUrl($d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
@@ -270,7 +270,7 @@ class Advertisement {
 			$this->priority = $result->getRows() + 1;
 		}
 
-		$advertisements = array();
+		$advertisements = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$advertisements[$result->getValue("priority")] = $result->getValue("ad_id");
 			$result->next();

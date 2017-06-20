@@ -290,7 +290,7 @@ class SocialExportLinkedIn extends AExport {
 	 * @return Returns an array on success or FALSE on failure.
 	 */
 	private static function http_parse_headers($r) {
-		$o = array();
+		$o = [];
 		$r = substr($r, stripos($r, "\r\n"));
 		$r = explode("\r\n", $r);
 		foreach ($r as $h) {

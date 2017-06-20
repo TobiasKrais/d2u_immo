@@ -141,7 +141,7 @@ class Category {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$categories = array();
+		$categories = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$categories[] = new Category($result->getValue("category_id"), $clang_id);
 			$result->next();
@@ -167,7 +167,7 @@ class Category {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$children =  array();
+		$children =  [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$children[] = new Category($result->getValue("category_id"), $this->clang_id);
 			$result->next();
@@ -214,7 +214,7 @@ class Category {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$properties = array();
+		$properties = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$properties[] = new Property($result->getValue("property_id"), $this->clang_id);
 			$result->next();
@@ -259,7 +259,7 @@ class Category {
 		if($this->url == "") {
 			$d2u_immo = rex_addon::get("d2u_immo");
 				
-			$parameterArray = array();
+			$parameterArray = [];
 			$parameterArray['category_id'] = $this->category_id;
 			
 			$this->url = rex_getUrl($d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
@@ -356,7 +356,7 @@ class Category {
 			$this->priority = $result->getRows() + 1;
 		}
 
-		$categories = array();
+		$categories = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$categories[$result->getValue("priority")] = $result->getValue("category_id");
 			$result->next();

@@ -6,7 +6,7 @@ abstract class AExport {
 	/**
 	 * @var ExportedProperty[] that need to be exported.
 	 */
-	protected $export_properties = array();
+	protected $export_properties = [];
 	
 	/**
 	 * @var Provider Export provider object.

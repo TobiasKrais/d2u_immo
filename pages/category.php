@@ -130,7 +130,7 @@ if ($func == 'edit' || $func == 'add') {
 						<div class="panel-body-wrapper slide">
 							<?php
 								if($rex_clang->getId() != rex_config::get("d2u_immo", "default_lang")) {
-									$options_translations = array();
+									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
@@ -160,7 +160,7 @@ if ($func == 'edit' || $func == 'add') {
 							}
 							
 							$options = array("-1"=>rex_i18n::msg('d2u_immo_category_parent_none'));
-							$selected_values = array();
+							$selected_values = [];
 							foreach(Category::getAll(rex_config::get("d2u_immo", "default_lang")) as $parent_category) {
 								if(!$parent_category->isChild() && $parent_category->category_id != $category->category_id) {
 									$options[$parent_category->category_id] = $parent_category->name;

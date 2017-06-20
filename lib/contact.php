@@ -127,7 +127,7 @@ class Contact {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$contacts = array();
+		$contacts = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$contacts[] = new Contact($result->getValue("contact_id"));
 			$result->next();
@@ -153,7 +153,7 @@ class Contact {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$properties = array();
+		$properties = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$properties[] = new Property($result->getValue("property_id"), $this->clang_id);
 			$result->next();

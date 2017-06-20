@@ -676,7 +676,7 @@ abstract class BaseFacebook
       return false;
     }
 
-    $response_params = array();
+    $response_params = [];
     parse_str($access_token_response, $response_params);
     if (!isset($response_params['access_token'])) {
       return false;
@@ -972,7 +972,7 @@ abstract class BaseFacebook
     if (!empty($parts['query'])) {
       // drop known fb params
       $params = explode('&', $parts['query']);
-      $retained_params = array();
+      $retained_params = [];
       foreach ($params as $param) {
         if ($this->shouldRetainParam($param)) {
           $retained_params[] = $param;

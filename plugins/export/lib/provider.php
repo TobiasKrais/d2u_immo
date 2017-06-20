@@ -360,7 +360,7 @@ class Provider {
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		
-		$providers = array();
+		$providers = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
 			$providers[] = new Provider($result->getValue("provider_id"));
 			$result->next();
