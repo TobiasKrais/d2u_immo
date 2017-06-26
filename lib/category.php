@@ -198,13 +198,23 @@ class Category {
 	
 	/**
 	 * Gets the properties of the category.
+	 * @param string $market_type KAUF, MIETE_PACHT, ERBPACHT, LEASING or empty (all)
+	 * @param boolean $only_online Show only online properties
 	 * @return Property[] Properties in this category
 	 */
-	public function getProperties() {
+	public function getProperties($market_type = '', $only_online = FALSE) {
 		$query = "SELECT lang.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
 			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
 					."ON lang.property_id = properties.property_id "
-			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id .' ';
+			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id ." ";
+		if($only_online || $market_type != '') {
+			if($only_online) {
+				$query .= "AND online_status = 'online' ";
+			}
+			if($market_type != '') {
+				$query .= "AND market_type = '". $market_type ."' ";
+			}
+		}
 		if(rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}

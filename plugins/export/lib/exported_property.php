@@ -204,7 +204,6 @@ class ExportedProperty {
 				."export_action = '". $this->export_action ."', "
 				."provider_import_id = '". $this->provider_import_id ."', "
 				."export_timestamp = '". $this->export_timestamp ."'";
-
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		

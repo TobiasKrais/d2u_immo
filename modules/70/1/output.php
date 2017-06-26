@@ -55,7 +55,7 @@ if(!function_exists('printPropertylist')) {
 				if($property->object_reserved) {
 					print '<div class="reserved">';
 				}
-				print '<img src="index.php?rex_media_type=d2u_immo_overview&rex_media_file='.
+				print '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
 						$property->pictures[0] .'" alt='. $property->name .' class="listpic">';
 				if($property->object_reserved) {
 					print '<span>'. $tag_open .'d2u_immo_object_reserved'. $tag_close .'</span>';
@@ -153,22 +153,25 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	}
 	$property = new Property($property_id, rex_clang::getCurrentId());
 
-	print '<div class="col-12 expose-navi hidden-print">';
-	print '<ul>';
-	print '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
-	print '<li><small><a href="'. $property->getURL(TRUE).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
-	print '<li><small><a href="'. $property->getURL(TRUE).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
-	if($property->market_type == "MIETE_PACHT" && $d2u_immo->hasConfig('even_informative_pdf') && $d2u_immo->getConfig('even_informative_pdf') != '') {
-		print '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
-	}
-	print '</ul>';
-	print '</div>';
+	if($print == "") {
+		print '<div class="col-12 expose-navi hidden-print">';
+		print '<ul>';
+		print '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
+		//	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
+		print '<li><small><a href="javascript:onclick=window.open(\''. $property->getURL(TRUE).'?print=small\', \'_blank\',\'width=500, height=500\');" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
+		print '<li><small><a href="javascript:onclick=window.open(\''. $property->getURL(TRUE).'?print=full\', \'_blank\',\'width=500, height=500\');" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
+		if($property->market_type == "MIETE_PACHT" && $d2u_immo->hasConfig('even_informative_pdf') && $d2u_immo->getConfig('even_informative_pdf') != '') {
+			print '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
+		}
+		print '</ul>';
+		print '</div>';
 
-	print '<div class="col-12 visible-print-inline">';
-	print '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
-	print $tag_open .'d2u_immo_form_phone'. $tag_close .': '. $property->contact->phone .'<br>';
-	print $tag_open .'d2u_immo_form_email'. $tag_close .': '. $property->contact->email .'<p>';
-	print '</div>';
+		print '<div class="col-12 visible-print-inline">';
+		print '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
+		print $tag_open .'d2u_immo_form_phone'. $tag_close .': '. $property->contact->phone .'<br>';
+		print $tag_open .'d2u_immo_form_email'. $tag_close .': '. $property->contact->email .'<p>';
+		print '</div>';
+	}
 	
 	// Tabs
 	if($print == "") {
@@ -211,13 +214,13 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if($property->object_reserved || $property->object_sold) {
 			print '<div class="reserved">';
 		}
-		print '<img src="index.php?rex_media_type=d2u_immo_overview&rex_media_file='.
+		print '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
 				$property->pictures[0] .'" alt="'. $property->name .'" class="overviewpic">';
 		if($property->object_reserved) {
-			print '<span>'. $tag_open .'d2u_immo_object_reserved'. $tag_close .'</span>';
+			print '<span class="hidden-print">'. $tag_open .'d2u_immo_object_reserved'. $tag_close .'</span>';
 		}
 		else if($property->object_sold) {
-			print '<span>'. $tag_open .'d2u_immo_object_sold'. $tag_close .'</span>';										
+			print '<span class="hidden-print">'. $tag_open .'d2u_immo_object_sold'. $tag_close .'</span>';										
 		}
 		if($property->object_reserved || $property->object_sold) {
 			print '</div>'; // <div class="reserved">
@@ -417,7 +420,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-12">&nbsp;</div>';
 	}
 	
-	if(strtoupper($property->object_type) == "HAUS" || strtoupper($property->object_type) == "WOHNUNG" || strtoupper($property->object_type) == "BUERO_PRAXEN") {
+	if((strtoupper($property->object_type) == "HAUS" || strtoupper($property->object_type) == "WOHNUNG" || strtoupper($property->object_type) == "BUERO_PRAXEN")
+		&& (count($property->bath) > 0 || count($property->kitchen) > 0 || count($property->floor_type) > 0 || count($property->elevator) > 0 || $property->cable_sat_tv || count($property->broadband_internet) > 0)) {
 		if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
 			print '<div class="row page-break-avoid">';
 		}
@@ -558,7 +562,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if($print != "full") {
 			print '<div id="tab_pictures" class="tab-pane immo-tab fade">'; // START tab picures
 		}
-		print '<div class="row page-break-avoid">'; // START pictures
+		print '<div class="row">'; // START pictures
 		print '<div class="col-12 visible-print-inline print-border-h">';
 		print "<h2>". $tag_open .'d2u_immo_tab_pictures'. $tag_close ."</h2>";
 		print '</div>';
@@ -569,7 +573,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</div>'; // END pictures
 
 		if(count($property->ground_plans) > 0) {
-			print '<div class="row page-break-avoid">';
+			print '<div class="row">';
 			print '<div class="col-12 print-border-h">';
 			print "<h2>". $tag_open .'d2u_immo_ground_plans'. $tag_close ."</h2>";
 			print '</div>';
@@ -579,7 +583,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		}
 
 		if (count($property->location_plans) > 0) {
-			print '<div class="row page-break-avoid">';
+			print '<div class="row">';
 			print '<div class="col-12 print-border-h">';
 			print "<h2>". $tag_open .'d2u_immo_location_plans'. $tag_close ."</h2>";
 			print '</div>';

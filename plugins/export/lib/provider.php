@@ -256,15 +256,16 @@ class Provider {
 	 * Exports objects for the provider.
 	 */
 	public function export() {
-		if($this->type == "openimmo") {
+		if(strtolower($this->type) == "openimmo") {
 			$openimmo = new OpenImmo($this);
+
 			return $openimmo->export();
 		}
-		else if($this->type == "immobilienscout24") {
+		else if(strtolower($this->type) == "immobilienscout24") {
 			$immobilienscout24 = new ImmobilienScout24($this);
 			return $immobilienscout24->export();
 		}
-		else if($this->type == "facebook") {
+		else if(strtolower($this->type) == "facebook") {
 			// Check requirements
 			if (!function_exists('curl_init')) {
 				return rex_i18n::msg('d2u_immo_export_failure_curl');
@@ -290,10 +291,10 @@ class Provider {
 				exit;
 			}
 		}
-		else if($this->type == "twitter") {
+		else if(strtolower($this->type) == "twitter") {
 			return "Schnittstelle ist nicht programmiert.";
 		}
-		else if($this->type == "linkedin") {
+		else if(strtolower($this->type) == "linkedin") {
 			// Check requirements
 			if (!function_exists('curl_init')) {
 				return rex_i18n::msg('d2u_immo_export_failure_curl');

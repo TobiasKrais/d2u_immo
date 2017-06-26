@@ -33,7 +33,7 @@ class OpenImmo extends AFTPExport {
 		if($error != "") {
 			return $error;
 		}
-		
+	
 		// Create ZIP
 		$this->zip($this->xml_filename);
 		

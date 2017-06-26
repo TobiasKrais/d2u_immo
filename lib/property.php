@@ -596,7 +596,7 @@ class Property {
 	 * @return string OpenImm Object ID
 	 */
 	private function createOpenImmoObjectID() {
-		return "OD2U". date('YmdHis', time()) ."000". rand(1000000000, 9999999999);
+		return "OD2U". date('YmdHis', time()) ."000". rand(10000, 99999). rand(10000, 99999);
 	}
 	
 	/**

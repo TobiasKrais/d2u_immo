@@ -10,7 +10,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_e
 	company_name varchar(100) collate utf8_general_ci default NULL,
 	company_email varchar(255) collate utf8_general_ci default NULL,
 	customer_number varchar(50) collate utf8_general_ci default NULL,
-	media_manager_type varchar(255) collate utf8_general_ci default 'd2u_immo_overview',
+	media_manager_type varchar(255) collate utf8_general_ci default 'd2u_helper_sm',
 	ftp_server varchar(100) collate utf8_general_ci default NULL,
 	ftp_username varchar(50) collate utf8_general_ci default NULL,
 	ftp_password varchar(20) collate utf8_general_ci default NULL,
