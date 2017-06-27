@@ -9,6 +9,11 @@ abstract class AFTPExport extends AExport {
 	protected $cache_path = "";
 	
 	/**
+	 * @var string[] list of documents that need to be added to ZIP export file. 
+	 */
+	protected $documents_for_zip = [];
+	
+	/**
 	 * @var string[] list of files that need to be added to ZIP export file. 
 	 */
 	protected $files_for_zip = [];
@@ -55,6 +60,27 @@ abstract class AFTPExport extends AExport {
 		}
 		return $this->zip_filename;
 	}
+	
+	/**
+	 * Prepares all documents for export.
+	 * @param int $max_attachments Maximum number of attatchments per property
+	 */
+	protected function prepareDocuments($max_attachments) {
+		foreach($this->export_properties as $exported_property) {
+			if($exported_property->export_action == "add" || $exported_property->export_action == "update") {
+				$property = new Property($exported_property->property_id, $this->provider->clang_id);
+				$number_free_docs = $max_attachments - count($property->pictures) - count($property->ground_plans) -count($property->location_plans);
+				if($max_attachments > $number_free_docs) {
+					foreach($property->documents as $document) {
+						if(strlen($document) > 3 && $number_free_docs > 0 && !in_array($document, $this->documents_for_zip)) {
+							$this->documents_for_zip[] = $document;
+							$number_free_docs--;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Creates the scaled image
@@ -81,6 +107,18 @@ abstract class AFTPExport extends AExport {
 				foreach($property->pictures as $picture) {
 					if(strlen($picture) > 3 && $pics_counter < $max_pics) {
 						$this->preparePicture($picture);
+						$pics_counter ++;
+					}
+				}
+				foreach($property->ground_plans as $groundplan) {
+					if(strlen($groundplan) > 3 && $pics_counter < $max_pics) {
+						$this->preparePicture($groundplan);
+						$pics_counter ++;
+					}
+				}
+				foreach($property->location_plans as $location_plan) {
+					if(strlen($location_plan) > 3 && $pics_counter < $max_pics) {
+						$this->preparePicture($location_plan);
 						$pics_counter ++;
 					}
 				}
@@ -130,6 +168,9 @@ abstract class AFTPExport extends AExport {
 		$zip->addFile($this->cache_path . $filename, $filename);
 		foreach($this->files_for_zip as $original_filename => $cachefilename) {
 			$zip->addFile($cachefilename, $original_filename);
+		}
+		foreach($this->documents_for_zip as $filename) {
+			$zip->addFile(rex_url::media($filename), $filename);
 		}
 		$zip->close();
 		return "";

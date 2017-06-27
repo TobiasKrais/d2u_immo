@@ -144,7 +144,7 @@ class SocialExportFacebook extends AExport {
 						'name' => $property->name, // heading
 						'link' => $property->getURL(TRUE),
 						// 'caption' => 'E.g.: Small heading',
-						'description' => $property->teaser]; // post description
+						'description' => $property->getSocialNetworkDescription()]; // post description
 				if(count($property->pictures) > 0) {
 					$news['picture'] = rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0];
 				}

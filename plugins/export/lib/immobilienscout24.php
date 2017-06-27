@@ -28,6 +28,8 @@ class ImmobilienScout24 extends AFTPExport {
 		// Prepare pictures
 		$this->preparePictures($this->max_pics);
 		$this->files_for_zip = array_unique($this->files_for_zip);
+		// Prepare documents
+		$this->prepareDocuments($this->max_pics);
 
 		// Create XML file
 		$error = $this->createXML();

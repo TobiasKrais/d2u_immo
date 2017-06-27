@@ -201,7 +201,7 @@ class SocialExportLinkedIn extends AExport {
 
 					// <description>Price: on request; ... </description>
 					$description = $xml->createElement("description");
-					$description->appendChild($xml->createTextNode($property->teaser));
+					$description->appendChild($xml->createTextNode($property->getSocialNetworkDescription()));
 					$content->appendChild($description);
 
 					// <submitted-url>http://www.meier-krantechnik.de/de/produkte/gebrauchte-krane?action=detail&item=13</submitted-url>

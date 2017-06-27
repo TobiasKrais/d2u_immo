@@ -55,7 +55,7 @@ abstract class AExport {
 	 */
 	protected function preparePicture($pic) {
 		$media = rex_media::get($pic);
-		if($media instanceof rex_media && $media->getSize() < 1572864) {
+		if($media instanceof rex_media && $media->getSize() < 3145728) {
 			$media_manager = rex_media_manager::create($this->provider->media_manager_type, $pic);
 			if(file_exists($media_manager->getCacheFilename())) {
 				// Cached file if successfull
