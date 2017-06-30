@@ -30,7 +30,7 @@ abstract class AFTPExport extends AExport {
 	public function __construct($provider) {
 		parent::__construct($provider);
 		
-		// Set exported used machines without export action to action "update"
+		// Set exported properties without export action to action "update"
 		foreach($this->export_properties as $exported_property) {
 			if($exported_property->export_action == "") {
 				$exported_property->export_action = "update";

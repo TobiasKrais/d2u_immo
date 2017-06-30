@@ -110,6 +110,11 @@ class OpenImmo extends AFTPExport {
 		// TODO: <xsd:element ref="lizenzkennung" minOccurs="0"/>
 
 		foreach($this->export_properties as $export_property) {
+			if($export_property->export_action == "delete") {
+				// Only full export supported. Do not include properties with action "delete"
+				continue;
+			}
+			
 			$property = new Property($export_property->property_id, $this->provider->clang_id);
 			// <immobilie>
 			$immobilie = $xml->createElement("immobilie");
@@ -822,7 +827,7 @@ class OpenImmo extends AFTPExport {
 				$energiepass->appendChild($energiepass_gueltig_bis);
 				// <energieverbrauchkennwert>97</energieverbrauchkennwert>
 				$energiepass_kennwert = $xml->createElement("energieverbrauchkennwert");
-				if($property->energieausweis_art == "BEDARF") {
+				if($property->energy_pass == "BEDARF") {
 					$energiepass_kennwert = $xml->createElement("endenergiebedarf");
 				}
 				$energiepass_kennwert->appendChild($xml->createTextNode($property->energy_consumption));
@@ -894,9 +899,9 @@ class OpenImmo extends AFTPExport {
 			$objekttitel->appendChild($xml->createTextNode($property->name));
 			$freitexte->appendChild($objekttitel);
 			// <dreizeiler>max. dreizeilige Kurzbeschreibung</dreizeiler>
-	//		$dreizeiler = $xml->createElement("dreizeiler");
-	//		$dreizeiler->appendChild($xml->createTextNode($immo->dreizeiler));
-	//		$freitexte->appendChild($dreizeiler);
+			$dreizeiler = $xml->createElement("dreizeiler");
+			$dreizeiler->appendChild($xml->createTextNode($property->teaser));
+			$freitexte->appendChild($dreizeiler);
 			// <lage>Traumhafte Lage</lage>
 			if($property->description_location != "") {
 				$lage = $xml->createElement("lage");

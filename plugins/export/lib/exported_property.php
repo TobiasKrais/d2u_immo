@@ -177,7 +177,7 @@ class ExportedProperty {
 	 * Remove a property from export of all providers.
 	 * @param int $property_id Used property id
 	 */
-	public static function removeMachineFromAllExports($property_id) {
+	public static function removePropertyFromAllExports($property_id) {
 		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_immo_export_properties "
 			."SET export_action = 'delete' "
 			."WHERE property_id = ". $property_id;

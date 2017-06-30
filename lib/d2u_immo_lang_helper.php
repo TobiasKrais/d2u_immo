@@ -4,7 +4,7 @@
  */
 class d2u_immo_lang_helper {
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var string[] Array with english replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
 	protected $replacements_english = [

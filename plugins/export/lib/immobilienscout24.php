@@ -95,6 +95,11 @@ class ImmobilienScout24 extends AFTPExport {
 		$anbieter->appendChild($anbieterID);
 
 		foreach($this->export_properties as $export_property) {
+			if($export_property->export_action == "delete") {
+				// Only full export supported. Do not include properties with action "delete"
+				continue;
+			}
+
 			$property = new Property($export_property->property_id, $this->provider->clang_id);
 			// <WohnungMiete Importmodus="importieren" AnbieterObjektID="(0) WHG-MIETE" GruppierungsID="1" Ueberschrift="(0) WHG-MIETE" Wohnflaeche="70" Nutzflaeche="87" Zimmer="3.0" Aufzug="true" BalkonTerrasse="true" Provisionspflichtig="true" Provision="2,2 MM" Provisionshinweis="-" Waehrung="EUR" AnzahlBadezimmer="1" AnzahlGaragenStellplaetze="1" AnzahlSchlafzimmer="1" Ausstattungsqualitaet="Gehoben" Barrierefrei="true" Baujahr="1988" BetreutesWohnen="false" Einbaukueche="false" Etage="2" Etagenzahl="5" Foerderung="false" FreiAb="Mitte 2009" GaesteWC="false" GartenBenutzung="false" Haustiere="erlaubt" WohnungKategorie="Etagenwohnung" Heizungsart="Zentralheizung" JahrLetzteModernisierung="2001" Keller="true" Objektzustand="Gepflegt" Parkplatz="Carport" StatusHP="aktiv" StatusIS24="aktiv" StatusVBM="aktiv" AktiveGruppen="9;34;51;23;58;59" Adressdruck="true">
 			$objekttyp_wert = "";

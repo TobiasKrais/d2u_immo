@@ -19,3 +19,6 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_categ
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_categories_lang');
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_properties');
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_properties_lang');
+
+// Delete language replacements
+d2u_immo_lang_helper::factory()->uninstall();

@@ -422,7 +422,8 @@ class Provider {
 	 * @return int Number of online properties
 	 */
 	public function getNumberOnlineProperties() {
-		$query = "SELECT COUNT(*) as number FROM ". rex::getTablePrefix() ."d2u_immo_export_properties WHERE provider_id = ". $this->provider_id;
+		$query = "SELECT COUNT(*) as number FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+			. "WHERE provider_id = ". $this->provider_id ." AND export_action <> 'delete'";
 		$result = rex_sql::factory();
 		$result->setQuery($query);
 		

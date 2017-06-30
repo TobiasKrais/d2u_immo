@@ -544,6 +544,11 @@ class Property {
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
+			
+			// Remove from export
+			if(rex_plugin::get("d2u_immo", "export")->isAvailable()) {
+				ExportedProperty::removePropertyFromAllExports($this->property_id);
+			}
 		}
 		else {
 			if($this->property_id > 0) {
