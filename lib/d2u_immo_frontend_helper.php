@@ -13,7 +13,6 @@ class d2u_immo_frontend_helper {
 		// Prepare objects first for sorting in correct order
 		$category = FALSE;
 		$property = FALSE;
-		$used_machine = FALSE;
 		$url_data = [];
 		if(rex_addon::get("url")->isAvailable()) {
 			$url_data = UrlGenerator::getData();
