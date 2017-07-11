@@ -338,6 +338,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-6">'. $tag_open .'d2u_immo_total_area'. $tag_close .':</div>';
 		print '<div class="col-6">'. $property->total_area .'&nbsp;m²</div>';
 	}
+	if($property->land_area > 0) {
+		print '<div class="col-6">'. $tag_open .'d2u_immo_land_area'. $tag_close .':</div>';
+		print '<div class="col-6">'. round($property->land_area) .'&nbsp;m²</div>';
+	}
 
 	if(count($property->documents) > 0 || ($property->market_type == "MIETE_PACHT" && $d2u_immo->hasConfig('even_informative_pdf') && $d2u_immo->getConfig('even_informative_pdf') != '')) {
 		print '<div class="col-12"><ul>';
