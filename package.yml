@@ -24,9 +24,9 @@ requires:
     php:
         version: '>=7.0'
     packages:
-        d2u_helper: '>=1.2'
+        d2u_helper: '>=1.2.1'
         media_manager: '>=2.2'
-        redactor2: '>=3.0'
+        tinymce: '>=0.10'
         sprog: '>=1.0.0'
         url: '>=1.0.0beta4'
         yform: '>=2.0'
