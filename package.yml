@@ -26,7 +26,7 @@ requires:
     packages:
         d2u_helper: '>=1.2.1'
         media_manager: '>=2.2'
-        tinymce: '>=0.10'
+        tinymce4: '>=0.10'
         sprog: '>=1.0.0'
         url: '>=1.0.0beta4'
         yform: '>=2.0'
