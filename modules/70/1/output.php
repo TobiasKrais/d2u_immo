@@ -553,9 +553,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-12 print-border">'. $property->courtage .' '. $tag_open .'d2u_immo_courtage_incl_vat'. $tag_close .'</div>';
 	}
 	print '<div class="col-12 visible-print-inline">&nbsp;</div>';
-	if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
-		print '</div>';
-	}
+
 	print '</div>'; // END row overview
 	if($print == "") {
 		print '</div>'; // END tab overview
