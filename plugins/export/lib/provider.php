@@ -254,6 +254,7 @@ class Provider {
 
 	/**
 	 * Exports objects for the provider.
+	 * @return string Error message
 	 */
 	public function export() {
 		if(strtolower($this->type) == "openimmo") {
@@ -275,6 +276,8 @@ class Provider {
 			}
 			
 			// Export
+			return "Facebook Export needs upgrade to newer Graph API (currently 2.3). Export aborted.";
+/*
 			$facebook = new SocialExportFacebook($this);
 			if($facebook->isUserLoggedIn()) {
 				return $facebook->export();
@@ -290,6 +293,7 @@ class Provider {
 				}
 				exit;
 			}
+ */
 		}
 		else if(strtolower($this->type) == "twitter") {
 			return "Schnittstelle ist nicht programmiert.";

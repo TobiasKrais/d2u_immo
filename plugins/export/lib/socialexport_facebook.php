@@ -22,10 +22,10 @@ class SocialExportFacebook extends AExport {
 		
 		$this->export_properties = ExportedProperty::getAll($this->provider);
 		
-		$this->facebook = new Facebook(array(
+		$this->facebook = new Facebook([
 			'appId'  => $this->provider->social_app_id,
 			'secret' => $this->provider->social_app_secret
-		));
+		]);
 	}	
 	
 	/**
@@ -58,10 +58,10 @@ class SocialExportFacebook extends AExport {
 	 */
 	function getLoginURL() {
 		if($this->provider->facebook_pageid != "") {
-			return $this->facebook->getLoginUrl(array('scope' => 'email, manage_pages, publish_actions, publish_pages'));
+			return $this->facebook->getLoginUrl(['scope' => 'email, manage_pages, publish_actions, publish_pages']);
 		}
 		else {
-			return $this->facebook->getLoginUrl(array('scope' => 'email, manage_pages, publish_actions'));
+			return $this->facebook->getLoginUrl(['scope' => 'email, manage_pages, publish_actions']);
 		}
 	}
 
