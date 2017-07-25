@@ -630,7 +630,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 					zoom: 15,
 					center: myLatlng,
 					mapTypeId: google.maps.MapTypeId.<?php print ($print == "full" ? "ROADMAP" : "HYBRID"); ?>
-				}
+				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
 				var marker = new google.maps.Marker({
@@ -649,7 +649,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				var address = "<?php print $property->street ." ". $property->house_number .", ". $property->zip_code ." ". $property->city; ?>";
 				if (geocoder) {
 					geocoder.geocode( { 'address': address}, function(results, status) {
-						if (status == google.maps.GeocoderStatus.OK) {
+						if (status === google.maps.GeocoderStatus.OK) {
 							myLatlng = results[0].geometry.location;
 							map.setCenter(myLatlng);
 							var marker = new google.maps.Marker({
@@ -665,7 +665,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				var myOptions = {
 					zoom: 15,
 					mapTypeId: google.maps.MapTypeId.<?php print ($print == "full" ? "ROADMAP" : "HYBRID"); ?>
-				}
+				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 			<?php
 				}
@@ -720,14 +720,14 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				var idx = zahl.indexOf('.');
 
 				// fill missing zero
-				zahl += (idx == -1 ? '.' : '' ) + f.toString().substring(1);
+				zahl += (idx === -1 ? '.' : '' ) + f.toString().substring(1);
 
 				var sign = zahl < 0;
 				if(sign) zahl = zahl.substring(1);
 				idx = zahl.indexOf('.');
 
 				// decimal place
-				if( idx == -1) {
+				if( idx === -1) {
 					idx = zahl.length;
 				}
 				else {
@@ -1104,7 +1104,7 @@ else {
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var target_url = e.target.toString();
 		var target_anchor = target_url.substr(target_url.indexOf("#")).toString();
-		if(target_anchor == "#tab_map") {
+		if(target_anchor === "#tab_map") {
 			google.maps.event.trigger(map, 'resize');
 			map.setCenter(myLatlng);
 		}
