@@ -914,6 +914,12 @@ class Property {
 				$this->property_id = $result->getLastId();
 				$error = $result->hasError();
 			}
+			
+			// Remove from export
+			if(rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_property->online_status == "online" && $this->online_status != online) {
+				ExportedProperty::removePropertyFromAllExports($this->property_id);
+			}
+
 		}
 		
 		if($error == 0) {

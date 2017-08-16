@@ -173,7 +173,7 @@ class Provider {
 		
 		foreach($providers as $provider) {
 			if($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime("-1 week")) {
-				if($provider->type == "openimmo") {
+				if(strtolower($provider->type) == "openimmo") {
 					$openimmo = new OpenImmo($provider);
 					$openimmo_error = $openimmo->export();
 					if($openimmo_error != "") {
@@ -185,7 +185,7 @@ class Provider {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_immo_export_success');
 					}
 				}
-				else if($provider->type == "immobilienscout24") {
+				else if(strtolower($provider->type) == "immobilienscout24") {
 					$immobilienscout24 = new ImmobilienScout24($provider);
 					$immobilienscout24_error = $immobilienscout24->export();
 					if($immobilienscout24_error != "") {
@@ -197,7 +197,7 @@ class Provider {
 						$message[] = $provider->name .": ". rex_i18n::msg('d2u_immo_export_success');
 					}
 				}
-				else if($provider->type == "linkedin") {
+				else if(strtolower($provider->type) == "linkedin") {
 					$linkedin = new SocialExportLinkedIn($provider);
 					if($linkedin->hasAccessToken()) {
 						$linkedin_error = $linkedin->export();

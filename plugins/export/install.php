@@ -26,7 +26,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_e
 	linkedin_groupid varchar(255) collate utf8_general_ci default NULL,
 	twitter_id varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (provider_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
  
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_export_properties (
 	property_id int(10) NOT NULL,
@@ -35,7 +35,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_e
 	provider_import_id varchar(255) collate utf8_general_ci default NULL,
 	export_timestamp int(11) NULL,
 	PRIMARY KEY (property_id, provider_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
 // Insert frontend translations
 export_lang_helper::factory()->install();

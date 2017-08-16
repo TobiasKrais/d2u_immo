@@ -8,7 +8,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_w
 	picture varchar(255) collate utf8_general_ci default NULL,
 	online_status varchar(10) collate utf8_general_ci default 'online',
 	PRIMARY KEY (ad_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_window_advertising_lang (
 	ad_id int(10) unsigned NOT NULL auto_increment,
 	clang_id int(10) NOT NULL,
@@ -18,7 +18,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_w
 	updatedate int(11) default NULL,
 	updateuser varchar(255) collate utf8_general_ci default NULL,
 	PRIMARY KEY (ad_id, clang_id)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;");
 
 $sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_immo_properties LIKE 'window_advertising_status';");
 if($sql->getRows() == 0) {

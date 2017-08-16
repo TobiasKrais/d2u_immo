@@ -186,7 +186,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 
 								d2u_addon_backend_helper::form_input('d2u_immo_name', "form[lang][". $rex_clang->getId() ."][name]", $property->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_input('d2u_immo_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $property->teaser, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description', "form[lang][". $rex_clang->getId() ."][description]", $property->description, 10, $required, $readonly_lang, TRUE);
+								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description', "form[lang][". $rex_clang->getId() ."][description]", $property->description, 10, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_location', "form[lang][". $rex_clang->getId() ."][description_location]", $property->description_location, 5, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_equipment', "form[lang][". $rex_clang->getId() ."][description_equipment]", $property->description_equipment, 5, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_others', "form[lang][". $rex_clang->getId() ."][description_others]", $property->description_others, 5, FALSE, $readonly_lang, TRUE);
