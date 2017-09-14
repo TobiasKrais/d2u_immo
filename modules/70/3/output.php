@@ -96,22 +96,22 @@ else {
 
 // Tabs
 print '<div class="col-12">';
-print '<ul class="nav nav-pills hidden-print">';
+print '<ul class="nav nav-pills d-print-none">';
 $tab_active = TRUE;
 if(count($properties_sale) > 0) {
-	print '<li class="nav-item"><a data-toggle="tab" href="#tab_sale"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
+	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
 	$tab_active = FALSE;
 }
 if(count($properties_rent) > 0) {
-	print '<li class="nav-item"><a data-toggle="tab" href="#tab_rent"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
+	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_rent">'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
 	$tab_active = FALSE;
 }
 if(count($properties_leasing) > 0) {
-	print '<li class="nav-item"><a data-toggle="tab" href="#tab_leasing"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
+	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasing">'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
 	$tab_active = FALSE;
 }
 if(count($properties_leasehold) > 0) {
-	print '<li class="nav-item"><a data-toggle="tab" href="#tab_leasehold"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
+	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasehold">'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
 	$tab_active = FALSE;
 }
 print '</ul>';
@@ -121,25 +121,25 @@ print '<div class="col-12">';
 print '<div class="tab-content">';
 $tab_active = TRUE;
 if(count($properties_sale) > 0) {
-	print '<div id="tab_sale" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+	print '<div id="tab_sale" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_sale);
 	print '</div>';
 	$tab_active = FALSE;
 }
 if(count($properties_rent) > 0) {
-	print '<div id="tab_rent" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+	print '<div id="tab_rent" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_rent);
 	print '</div>';
 	$tab_active = FALSE;
 }
 if(count($properties_leasing) > 0) {
-	print '<div id="tab_leasing" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+	print '<div id="tab_leasing" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_leasing);
 	print '</div>';
 	$tab_active = FALSE;
 }
 if(count($properties_leasehold) > 0) {
-	print '<div id="tab_leasehold" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+	print '<div id="tab_leasehold" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_leasehold);
 	print '</div>';
 	$tab_active = FALSE;

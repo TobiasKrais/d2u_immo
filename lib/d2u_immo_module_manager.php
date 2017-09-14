@@ -13,13 +13,13 @@ class D2UImmoModules {
 		$modules = [];
 		$modules[] = new D2UModule("70-1",
 			"D2U Immo Addon - Hauptausgabe",
-			1);
+			2);
 		$modules[] = new D2UModule("70-2",
 			"D2U Immo Addon - Infobox Ansprechpartner",
 			1);
 		$modules[] = new D2UModule("70-3",
 			"D2U Immo Addon - Ausgabe Kategorie",
-			1);
+			2);
 		return $modules;
 	}
 }

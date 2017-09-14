@@ -64,7 +64,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 							foreach(rex_clang::getAll() as $rex_clang) {
 								$lang_options[$rex_clang->getId()] = $rex_clang->getName();
 							}
-							d2u_addon_backend_helper::form_select('d2u_helper_defaultlang', 'settings[default_lang]', $lang_options, array($this->getConfig('default_lang')));
+							d2u_addon_backend_helper::form_select('d2u_helper_defaultlang', 'settings[default_lang]', $lang_options, [$this->getConfig('default_lang')]);
 						}
 					?>
 				</div>
@@ -105,8 +105,8 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-module"></i></small> <?php echo rex_i18n::msg('d2u_immo_properties'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						$options = array('name' => rex_i18n::msg('d2u_immo_name'), 'priority' => rex_i18n::msg('header_priority'));
-						d2u_addon_backend_helper::form_select('d2u_immo_settings_default_sort', 'settings[default_property_sort]', $options, array($this->getConfig('default_property_sort')));
+						$options = ['name' => rex_i18n::msg('d2u_immo_name'), 'priority' => rex_i18n::msg('header_priority')];
+						d2u_addon_backend_helper::form_select('d2u_immo_settings_default_sort', 'settings[default_property_sort]', $options, [$this->getConfig('default_property_sort')]);
 						d2u_addon_backend_helper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', $this->hasConfig('even_informative_pdf') ? $this->getConfig('even_informative_pdf') : "")
 					?>
 				</div>

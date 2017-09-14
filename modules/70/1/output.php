@@ -154,7 +154,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	$property = new Property($property_id, rex_clang::getCurrentId());
 
 	if($print == "") {
-		print '<div class="col-12 expose-navi hidden-print">';
+		print '<div class="col-12 expose-navi d-print-none">';
 		print '<ul>';
 		print '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
 		//	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
@@ -166,7 +166,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</ul>';
 		print '</div>';
 
-		print '<div class="col-12 visible-print-inline">';
+		print '<div class="col-12 d-print-inline">';
 		print '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
 		print $tag_open .'d2u_immo_form_phone'. $tag_close .': '. $property->contact->phone .'<br>';
 		print $tag_open .'d2u_immo_form_email'. $tag_close .': '. $property->contact->email .'<p>';
@@ -175,18 +175,18 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	
 	// Tabs
 	if($print == "") {
-		print '<div class="col-12 hidden-print">';
+		print '<div class="col-12 d-print-none">';
 		print '<ul class="nav nav-pills" id="expose_tabs">';
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="active"><span class="icon home hidden-md-up"></span><span class="hidden-sm-down">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></a></li>';
 		if(count($property->pictures) > 0) {
-			print '<li class="nav-item"><a data-toggle="tab" href="#tab_pictures"><span class="icon pic hidden-md-up"></span><span class="hidden-sm-down">'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</span></a></li>';
+			print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</span></a></li>';
 		}
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_map"><span class="icon map hidden-md-up"></span><span class="hidden-sm-down">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></a></li>';
 		if($property->market_type == "KAUF") {
-			print '<li class="nav-item"><a data-toggle="tab" href="#tab_calculator"><span class="icon money hidden-md-up"></span><span class="hidden-sm-down">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></a></li>';
+			print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></a></li>';
 		}
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_request"><span class="icon request hidden-md-up"></span><span class="hidden-sm-down">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></a></li>';
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_recommendation"><span class="icon forward hidden-md-up"></span><span class="hidden-sm-down">'. $tag_open .'d2u_immo_tab_recommendation'. $tag_close .'<span></a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_request"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_recommendation"><span class="icon forward d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_recommendation'. $tag_close .'<span></a></li>';
 		print '</ul>';
 		print '</div>';
 	}
@@ -194,7 +194,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	if($print == "") {
 		print '<div class="col-12">'; // START div containing tab content
 		print '<div class="tab-content">'; // START tab content
-		print '<div id="tab_overview" class="tab-pane immo-tab fade in active show">'; // START tab overview
+		print '<div id="tab_overview" class="tab-pane fade active show immo-tab">'; // START tab overview
 	}
 	
 	// Overview
@@ -203,7 +203,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	print '<div class="col-12 print-border-h">';
 	print '<h1>'. $property->name .'</h1>';
 	print '</div>';
-	print '<div class="col-12 print-border visible-print-inline">';
+	print '<div class="col-12 print-border d-print-inline">';
 	print '<p>'. $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city .'</p>';
 	print '</div>';
 	print '<div class="col-12 print-border">'; // START overview picture and short info
@@ -217,10 +217,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
 				$property->pictures[0] .'" alt="'. $property->name .'" class="overviewpic">';
 		if($property->object_reserved) {
-			print '<span class="hidden-print">'. $tag_open .'d2u_immo_object_reserved'. $tag_close .'</span>';
+			print '<span class="d-print-none">'. $tag_open .'d2u_immo_object_reserved'. $tag_close .'</span>';
 		}
 		else if($property->object_sold) {
-			print '<span class="hidden-print">'. $tag_open .'d2u_immo_object_sold'. $tag_close .'</span>';										
+			print '<span class="d-print-none">'. $tag_open .'d2u_immo_object_sold'. $tag_close .'</span>';										
 		}
 		if($property->object_reserved || $property->object_sold) {
 			print '</div>'; // <div class="reserved">
@@ -552,7 +552,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	else {
 		print '<div class="col-12 print-border">'. $property->courtage .' '. $tag_open .'d2u_immo_courtage_incl_vat'. $tag_close .'</div>';
 	}
-	print '<div class="col-12 visible-print-inline">&nbsp;</div>';
+	print '<div class="col-12 d-print-inline">&nbsp;</div>';
 
 	print '</div>'; // END row overview
 	if($print == "") {
@@ -565,10 +565,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div id="tab_pictures" class="tab-pane immo-tab fade">'; // START tab picures
 		}
 		print '<div class="row">'; // START pictures
-		print '<div class="col-12 visible-print-inline print-border-h">';
+		print '<div class="col-12 d-print-inline print-border-h">';
 		print "<h2>". $tag_open .'d2u_immo_tab_pictures'. $tag_close ."</h2>";
 		print '</div>';
-		print '<div class="col-12 hidden-print">';
+		print '<div class="col-12 d-print-none">';
 		print "<h2>". $property->name ."</h2>";
 		print '</div>';
 		echo printImages($property->pictures);
@@ -580,7 +580,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print "<h2>". $tag_open .'d2u_immo_ground_plans'. $tag_close ."</h2>";
 			print '</div>';
 			echo printImages($property->ground_plans);
-			print '<div class="col-12 visible-print-inline">&nbsp;</div>';
+			print '<div class="col-12 d-print-inline">&nbsp;</div>';
 			print '</div>';			
 		}
 
@@ -590,7 +590,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print "<h2>". $tag_open .'d2u_immo_location_plans'. $tag_close ."</h2>";
 			print '</div>';
 			echo printImages($property->location_plans);	
-			print '<div class="col-12 visible-print-inline">&nbsp;</div>';
+			print '<div class="col-12 d-print-inline">&nbsp;</div>';
 			print '</div>';
 		}
 		if($print != "full") {
@@ -609,12 +609,12 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div id="tab_map" class="tab-pane immo-tab fade page-break-avoid">'; // START tab map
 		}
 		print '<div class="row page-break-avoid">';
-		print '<div class="col-12 visible-print-inline print-border-h">';
+		print '<div class="col-12 d-print-inline print-border-h">';
 		print "<h2>". $tag_open .'d2u_immo_tab_map'. $tag_close ."</h2>";
 		print '</div>';
 		print '<div class="col-12 print-border">';
-		print '<h2 class="hidden-print">'. $property->name .'</h2>';
-		print '<p class="hidden-print">'. $property->street ." ". $property->house_number ."<br /> ". $property->zip_code ." ". $property->city ."</p>";
+		print '<h2 class="d-print-none">'. $property->name .'</h2>';
+		print '<p class="d-print-none">'. $property->street ." ". $property->house_number ."<br /> ". $property->zip_code ." ". $property->city ."</p>";
 ?>
 		<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?php echo $api_key; ?>"></script> 
 		<div id="map_canvas" style="display: block; <?php print ($print != '' ? 'width: 900px' : 'width: 100%'); ?>; height: 500px"></div> 
@@ -678,7 +678,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '</div>';  // END tab map
 		}
 		else {
-			print '<div class="col-12 visible-print-inline">&nbsp;</div>';
+			print '<div class="col-12 d-print-inline">&nbsp;</div>';
 		}
 	}
 	// End Map
@@ -765,8 +765,9 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				if(darlehen < 0)
 					darlehen = 0;
 
-				if(isNaN(darlehen))
+				if(isNaN(darlehen)) {
 					alert("Bitte geben Sie nur Zahlen, Punkt oder Komma ein.");
+				}
 				document.getElementById("kaufpreis").value = formatZahl(kaufpreis);
 				document.getElementById("preis_grunderwerbsteuer").firstChild.nodeValue = 
 						formatZahl(kaufpreis * grundsteuer);
@@ -924,8 +925,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				</table>
 			</fieldset>
 			<br />
-			<input name="berechnen" id="berechnen" value="<?php print $tag_open .'d2u_immo_finance_calc_calculate'. $tag_close; ?>" type="submit" onClick="javascript:recalc(); return false;" class="hidden-print">
-			<input name="drucken" id="drucken" value="<?php print $tag_open .'d2u_immo_print'. $tag_close; ?>" onClick="javascript:window.print(); return false;" type="submit" class="hidden-print">
+			<input name="berechnen" id="berechnen" value="<?php print $tag_open .'d2u_immo_finance_calc_calculate'. $tag_close; ?>" type="submit" onClick="javascript:recalc(); return false;" class="d-print-none">
+			<input name="drucken" id="drucken" value="<?php print $tag_open .'d2u_immo_print'. $tag_close; ?>" onClick="javascript:window.print(); return false;" type="submit" class="d-print-none">
 		</form>
 
 <?php
@@ -1025,7 +1026,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</div>'; // END div containing tab content
 	}
 
-	print '<div class="col-12 visible-print-inline">';
+	print '<div class="col-12 d-print-inline">';
 	print '<p>'. $tag_open .'d2u_immo_print_foot'. $tag_close .'</p>';
 	print '<p>'. $tag_open .'d2u_immo_print_foot_greetings'. $tag_close .'</p>';
 	print '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'</p>';
@@ -1041,22 +1042,22 @@ else {
 
 	// Tabs
 	print '<div class="col-12">';
-	print '<ul class="nav nav-pills hidden-print">';
+	print '<ul class="nav nav-pills d-print-none">';
 	$tab_active = TRUE;
 	if(count($properties_sale) > 0) {
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_sale"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
 		$tab_active = FALSE;
 	}
 	if(count($properties_rent) > 0) {
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_rent"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_rent">'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
 		$tab_active = FALSE;
 	}
 	if(count($properties_leasing) > 0) {
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_leasing"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasing">'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
 		$tab_active = FALSE;
 	}
 	if(count($properties_leasehold) > 0) {
-		print '<li class="nav-item"><a data-toggle="tab" href="#tab_leasehold"'. ($tab_active ? ' class="active"' : '') .'>'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasehold">'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
 		$tab_active = FALSE;
 	}
 	print '</ul>';
@@ -1066,25 +1067,25 @@ else {
 	print '<div class="tab-content">';
 	$tab_active = TRUE;
 	if(count($properties_sale) > 0) {
-		print '<div id="tab_sale" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+		print '<div id="tab_sale" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_sale);
 		print '</div>';
 		$tab_active = FALSE;
 	}
 	if(count($properties_rent) > 0) {
-		print '<div id="tab_rent" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+		print '<div id="tab_rent" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_rent);
 		print '</div>';
 		$tab_active = FALSE;
 	}
 	if(count($properties_leasing) > 0) {
-		print '<div id="tab_leasing" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+		print '<div id="tab_leasing" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_leasing);
 		print '</div>';
 		$tab_active = FALSE;
 	}
 	if(count($properties_leasehold) > 0) {
-		print '<div id="tab_leasehold" class="tab-pane immo-tab fade'. ($tab_active ? ' in active show' : '') .'">';
+		print '<div id="tab_leasehold" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_leasehold);
 		print '</div>';
 		$tab_active = FALSE;
