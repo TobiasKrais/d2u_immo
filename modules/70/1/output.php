@@ -699,7 +699,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			// Removes thousand separator, substutiutes decimal separator
 			function substractNumber(number_string) {
 				number_string = number_string.trim();
-				number_string = number_string.replace(".", "");
+				number_string = number_string.replace(".", ""); // Thousand separator
+				number_string = number_string.replace(".", ""); // Million separator
 				number_string = number_string.replace(",", ".");
 				number_string = number_string.replace(/[^\d\.,]/g, "");
 				return number_string;
@@ -759,12 +760,13 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 
 				// Neue Werte berechnen
 				var gesamtkosten = (kaufpreis * (provision + notarkosten + grundsteuer + 1));
+
 				gesamtkosten += (sonstiges * 1);
 
 				var darlehen = gesamtkosten - eigenkapital;
+
 				if(darlehen < 0)
 					darlehen = 0;
-
 				if(isNaN(darlehen)) {
 					alert("Bitte geben Sie nur Zahlen, Punkt oder Komma ein.");
 				}
