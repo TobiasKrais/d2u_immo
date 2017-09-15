@@ -30,6 +30,19 @@ $d2u_module_manager->showManagerList();
 <h2>Support</h2>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.0.3 (NEXT):</p>
+<ul>
+	<li>Update auf URL Addon 1.0.0beta5.</li>
+	<li>Bugfix Finanzierungsrechner bei Summen über 1.000.000,-.</li>
+</ul>
+<p>1.0.2:</p>
+<ul>
+	<li>Update auf Bootstrap 4beta.</li>
+</ul>
+<p>1.0.1:</p>
+<ul>
+	<li>Bugfix Version, besonders den Export betreffend.</li>
+</ul>
 <p>1.0.0:</p>
 <ul>
 	<li>Initiale Version.</li>
