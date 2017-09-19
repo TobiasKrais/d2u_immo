@@ -30,7 +30,7 @@ if(rex_addon::get("url")->isAvailable()) {
 d2u_immo_lang_helper::factory()->install();
 
 // Update modules
-if(class_exists(D2UModuleManager) && class_exists(D2UImmoModules)) {
+if(class_exists(D2UModuleManager)) {
 	$modules = [];
 	$modules[] = new D2UModule("70-1",
 		"D2U Immo Addon - Hauptausgabe",
