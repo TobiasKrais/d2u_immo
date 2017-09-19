@@ -9,7 +9,7 @@ class D2UImmoModules {
 	 * Get modules offered by this addon.
 	 * @return D2UModule[] Modules offered by this addon
 	 */
-	public static function getD2UImmoModules() {
+	public static function getModules() {
 		$modules = [];
 		$modules[] = new D2UModule("70-1",
 			"D2U Immo Addon - Hauptausgabe",

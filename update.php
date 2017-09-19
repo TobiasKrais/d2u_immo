@@ -31,6 +31,17 @@ d2u_immo_lang_helper::factory()->install();
 
 // Update modules
 if(class_exists(D2UModuleManager) && class_exists(D2UImmoModules)) {
-	$d2u_module_manager = new D2UModuleManager(D2UImmoModules::getD2UImmoModules(), "", "d2u_immo");
+	$modules = [];
+	$modules[] = new D2UModule("70-1",
+		"D2U Immo Addon - Hauptausgabe",
+		3);
+	$modules[] = new D2UModule("70-2",
+		"D2U Immo Addon - Infobox Ansprechpartner",
+		1);
+	$modules[] = new D2UModule("70-3",
+		"D2U Immo Addon - Ausgabe Kategorie",
+		2);
+
+	$d2u_module_manager = new D2UModuleManager($modules, "", "d2u_immo");
 	$d2u_module_manager->autoupdate();
 }
