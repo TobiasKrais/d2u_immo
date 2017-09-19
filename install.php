@@ -179,7 +179,9 @@ if($sql->getRows() == 0) {
 }
 
 // Insert frontend translations
-d2u_immo_lang_helper::factory()->install();
+if(class_exists(d2u_immo_lang_helper)) {
+	d2u_immo_lang_helper::factory()->install();
+}
 
 // Standard settings
 if (!$this->hasConfig()) {
