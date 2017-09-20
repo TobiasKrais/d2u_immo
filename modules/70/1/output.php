@@ -616,7 +616,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<h2 class="d-print-none">'. $property->name .'</h2>';
 		print '<p class="d-print-none">'. $property->street ." ". $property->house_number ."<br /> ". $property->zip_code ." ". $property->city ."</p>";
 ?>
-		<script type="text/javascript" src="https://maps.google.com/maps/api/js?key=<?php echo $api_key; ?>"></script> 
+		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo $api_key; ?>"></script> 
 		<div id="map_canvas" style="display: block; <?php print ($print != '' ? 'width: 900px' : 'width: 100%'); ?>; height: 500px"></div> 
 		<script type="text/javascript">
 			var map;

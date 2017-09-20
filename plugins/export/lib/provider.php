@@ -439,8 +439,7 @@ class Provider {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$d2u_immo = rex_addon::get('d2u_immo');
-		$this->clang_id = $this->clang_id == 0 ? $d2u_immo->getConfig('default_lang') : $this->clang_id;
+		$this->clang_id = $this->clang_id == 0 ? rex_config::get("d2u_helper", "default_lang") : $this->clang_id;
 
 		$query = rex::getTablePrefix() ."d2u_immo_export_provider SET "
 				."name = '". $this->name ."', "

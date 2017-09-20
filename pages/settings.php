@@ -56,16 +56,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?php echo rex_i18n::msg('d2u_immo_settings'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						d2u_addon_backend_helper::form_linkfield('d2u_immo_settings_article', '1', $this->getConfig('article_id'), $this->getConfig('default_lang'));
-
-						// Default language for translations
-						if(count(rex_clang::getAll()) > 1) {
-							$lang_options = [];
-							foreach(rex_clang::getAll() as $rex_clang) {
-								$lang_options[$rex_clang->getId()] = $rex_clang->getName();
-							}
-							d2u_addon_backend_helper::form_select('d2u_helper_defaultlang', 'settings[default_lang]', $lang_options, [$this->getConfig('default_lang')]);
-						}
+						d2u_addon_backend_helper::form_linkfield('d2u_immo_settings_article', '1', $this->getConfig('article_id'), rex_config::get("d2u_helper", "default_lang"));
 					?>
 				</div>
 			</fieldset>
@@ -143,7 +134,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<legend><small><i class="rex-icon fa-desktop"></i></small> <?php echo rex_i18n::msg('d2u_immo_window_advertising'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-						d2u_addon_backend_helper::form_linkfield('d2u_immo_window_advertising_settings_article', '2', $this->getConfig('window_advertising_settings_article'), $this->getConfig('default_lang'))
+						d2u_addon_backend_helper::form_linkfield('d2u_immo_window_advertising_settings_article', '2', $this->getConfig('window_advertising_settings_article'), rex_config::get("d2u_helper", "default_lang"))
 						?>
 					</div>
 				</fieldset>

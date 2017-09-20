@@ -29,7 +29,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->broadband_internet = isset($form['broadband_internet']) ? $form['broadband_internet'] : [];
 			$property->cable_sat_tv = array_key_exists('cable_sat_tv', $form);
 			if(isset($form['category_id']) && $form['category_id'] > 0) {
-				$property->category = new Category($form['category_id'], rex_config::get("d2u_immo", "default_lang"));
+				$property->category = new Category($form['category_id'], rex_config::get("d2u_helper", "default_lang"));
 			}
 			$property->city = $form['city'];
 			$property->cold_rent = isset($form['cold_rent']) ? $form['cold_rent'] : 0;
@@ -137,14 +137,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$property_id = $form['property_id'];
 	}
-	$property = new Property($property_id, rex_config::get("d2u_immo", "default_lang"));
+	$property = new Property($property_id, rex_config::get("d2u_helper", "default_lang"));
 	$property->delete();
 
 	$func = '';
 }
 // Change online status of machine
 else if($func == 'changestatus') {
-	$property = new Property($entry_id, rex_config::get("d2u_immo", "default_lang"));
+	$property = new Property($entry_id, rex_config::get("d2u_helper", "default_lang"));
 	$property->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
@@ -162,7 +162,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$property = new Property($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() == rex_config::get("d2u_immo", "default_lang") ? TRUE : FALSE;
+						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 
 						$readonly_lang = TRUE;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_immo[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
@@ -173,7 +173,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 						<legend><?php echo rex_i18n::msg('d2u_helper_text_lang') .' "'. $rex_clang->getName() .'"'; ?></legend>
 						<div class="panel-body-wrapper slide">
 							<?php
-								if($rex_clang->getId() != rex_config::get("d2u_immo", "default_lang")) {
+								if($rex_clang->getId() != rex_config::get("d2u_helper", "default_lang")) {
 									$options_translations = [];
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
@@ -198,7 +198,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					}
 					
 					// Do not use last object from translations, because you don't know if it exists in DB
-					$property = new Property($entry_id, rex_config::get("d2u_immo", "default_lang"));
+					$property = new Property($entry_id, rex_config::get("d2u_helper", "default_lang"));
 					$readonly = TRUE;
 					if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
 						$readonly = FALSE;
@@ -210,7 +210,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							$options_categories = [];
-							foreach(Category::getAll(rex_config::get("d2u_immo", "default_lang")) as $category) {
+							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								if($category->name != "") {
 									$options_categories[$category->category_id] = $category->name;
 								}

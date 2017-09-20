@@ -2,14 +2,12 @@
 $func = rex_request('func', 'string');
 $property_id = rex_request('property_id', 'int');
 
-$d2u_immo = rex_addon::get('d2u_immo');
-
 /*
  * Do actions
  */
 if ($func == 'online' || $func == 'offline') {
 	// Change status
-	$property = new Property($property_id, $d2u_immo->getConfig('default_lang'));
+	$property = new Property($property_id, rex_config::get("d2u_helper", "default_lang"));
 	$property->changeWindowAdvertisingStatus();
 
 	header("Location: ". rex_url::currentBackendPage());
@@ -17,7 +15,7 @@ if ($func == 'online' || $func == 'offline') {
 }
 
 print '<table class="table table-striped table-hover">';
-$properties = Property::getAll($d2u_immo->getConfig('default_lang'), '', TRUE);
+$properties = Property::getAll(rex_config::get("d2u_helper", "default_lang"), '', TRUE);
 
 print "<thead>";
 print "<tr>";

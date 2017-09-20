@@ -37,12 +37,11 @@ else if ($func == 'export') {
 }
 
 // Fetch providers
-$d2u_immo = rex_addon::get('d2u_immo');
 $providers = Provider::getAll();
 
 print '<table class="table table-striped table-hover">';
 if(count($providers) > 0) {
-	$properties = Property::getAll($d2u_immo->getConfig('default_lang'), '', TRUE);
+	$properties = Property::getAll(rex_config::get("d2u_helper", "default_lang"), '', TRUE);
 
 	print "<thead>";
 	print "<tr>";
