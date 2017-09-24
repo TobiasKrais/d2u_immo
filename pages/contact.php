@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
@@ -49,12 +49,12 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$contact_id = $entry_id;
 	if($contact_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$contact_id = $form['contact_id'];
 	}
 	$contact = new Contact($contact_id);
 	
-	// Check if category is used
+	// Check if object is used
 	$uses_properties = $contact->getProperties();
 	
 	// If not used, delete
@@ -69,7 +69,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		}
 		$message .= '</ul>';
 
-		print rex_view::error(rex_i18n::msg('d2u_immo_could_not_delete') . $message);
+		print rex_view::error(rex_i18n::msg('d2u_helper_could_not_delete') . $message);
 	}
 	
 	$func = '';

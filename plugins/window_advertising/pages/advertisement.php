@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
-	$form = (array) rex_post('form', 'array', array());
+	$form = (array) rex_post('form', 'array', []);
 print_r($form);
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
@@ -64,7 +64,7 @@ print_r($form);
 else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$ad_id = $entry_id;
 	if($ad_id == 0) {
-		$form = (array) rex_post('form', 'array', array());
+		$form = (array) rex_post('form', 'array', []);
 		$ad_id = $form['ad_id'];
 	}
 	$advertisement = new Advertisement($ad_id, rex_config::get("d2u_helper", "default_lang"));
@@ -135,8 +135,8 @@ if ($func == 'edit' || $func == 'add') {
 							
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $advertisement->priority, TRUE, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_immo_pic', '1', $advertisement->picture, $readonly);
-							$options_status = ['online' => rex_i18n::msg('d2u_immo_status_online'),
-								'offline' => rex_i18n::msg('d2u_immo_status_offline')];
+							$options_status = ['online' => rex_i18n::msg('clang_online'),
+								'offline' => rex_i18n::msg('clang_offline')];
 							d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$advertisement->online_status], 1, FALSE, $readonly);
 						?>
 					</div>

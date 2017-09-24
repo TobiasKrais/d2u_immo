@@ -464,8 +464,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_property_other_data'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$options_status = ['online' => rex_i18n::msg('d2u_immo_status_online'),
-								'offline' => rex_i18n::msg('d2u_immo_status_offline'),
+							$options_status = ['online' => rex_i18n::msg('clang_online'),
+								'offline' => rex_i18n::msg('clang_offline'),
 								'archived' => rex_i18n::msg('d2u_immo_status_archived')];
 							d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$property->online_status], 1, FALSE, $readonly);
 							if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
