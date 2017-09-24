@@ -53,8 +53,12 @@ if(count($providers) > 0) {
 	print "<tr>";
 	print "<td>&nbsp;</td>";
 	foreach ($providers as $provider) {
-		print "<td><a href='". rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$provider->provider_id)) ."'>"
-			. "<button class='btn btn-apply'>". rex_i18n::msg('d2u_immo_export_start') ."</button></a></td>";
+		print "<td>";
+		if($provider->isExportPossible()) {
+			print "<a href='". rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$provider->provider_id)) ."'>"
+				. "<button class='btn btn-apply'>". rex_i18n::msg('d2u_immo_export_start') ."</button></a>";
+		}
+		print "</td>";
 	}
 	print "</tr>";
 	print "<tr>";

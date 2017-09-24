@@ -14,8 +14,7 @@ class Provider {
 	var $name = "";
 	
 	/**
-	 * @var string Provider interface name. Current implemented types are:
-	 * europemachinery, machinerypark, mascus, facebook, twitter and linkedin.
+	 * @var string Provider interface name.
 	 */
 	var $type = "";
 		
@@ -172,7 +171,7 @@ class Provider {
 		$error = FALSE;
 		
 		foreach($providers as $provider) {
-			if($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime("-1 week")) {
+			if($provider->isExportPossible() && ($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime("-1 week"))) {
 				if(strtolower($provider->type) == "openimmo") {
 					$openimmo = new OpenImmo($provider);
 					$openimmo_error = $openimmo->export();
@@ -239,7 +238,7 @@ class Provider {
 	 * Deletes the object.
 	 */
 	public function delete() {
-		// First delete exported used machines
+		// First delete exported objects
 		$exported_properties = ExportedProperty::getAll($this);
 		foreach($exported_properties as $exported_property) {
 			$exported_property->delete();
@@ -375,11 +374,11 @@ class Provider {
 	
 	/**
 	 * Checks if an export is needed. This is the case if:
-	 * a) A machine needs to be deleted from export
-	 * b) A machine is updated after the last export
-	 * @return int Timestamp of latest machine update.
+	 * a) An object needs to be deleted from export
+	 * b) An object is updated after the last export
+	 * @return int Timestamp of latest object update.
 	 */
-	private function isExportNeeded() {
+	public function isExportNeeded() {
 		$query = "SELECT export_action FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
 			."WHERE provider_id = ". $this->provider_id ." AND export_action = 'delete'";
 		$result = rex_sql::factory();
@@ -400,6 +399,23 @@ class Provider {
 			return TRUE;
 		}
 		
+		return FALSE;
+	}
+
+	/**
+	 * Checks if an export is possible. This is the case if there are objects
+	 * set for export.
+	 * @return int Timestamp of latest object update.
+	 */
+	public function isExportPossible() {
+		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+			."WHERE provider_id = ". $this->provider_id;
+		$result = rex_sql::factory();
+		$result->setQuery($query);
+		
+		if($result->getRows() > 0) {
+			return TRUE;
+		}
 		return FALSE;
 	}
 
