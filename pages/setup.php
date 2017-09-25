@@ -34,6 +34,7 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>Update auf URL Addon 1.0.0beta5.</li>
 	<li>Bugfix Finanzierungsrechner bei Summen über 1.000.000,-.</li>
+	<li>Bugfix wenn Standardsprache die zweite Sprache ist.</li>
 </ul>
 <p>1.0.2:</p>
 <ul>
