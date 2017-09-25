@@ -22,6 +22,7 @@ print_r($form);
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($advertisement === FALSE) {
 			$advertisement = new Advertisement($ad_id, $rex_clang->getId());
+			$advertisement->ad_id = $ad_id; // Ensure correct ID in case first language has no object
 			$advertisement->priority = $form['priority'];
 			$advertisement->picture = $input_media[1];
 			$advertisement->online_status = array_key_exists('online_status', $form) ? 'online' : 'offline';

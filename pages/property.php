@@ -21,6 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($property === FALSE) {
 			$property = new Property($property_id, $rex_clang->getId());
+			$property->property_id = $property_id; // Ensure correct ID in case first language has no object
 			$property->additional_costs = isset($form['additional_costs']) ? $form['additional_costs'] : 0;
 			$property->animals = array_key_exists('animals', $form);
 			$property->apartment_type = $form['apartment_type'];

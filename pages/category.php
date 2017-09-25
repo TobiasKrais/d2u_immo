@@ -21,6 +21,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($category === FALSE) {
 			$category = new Category($category_id, $rex_clang->getId());
+			$category->category_id = $category_id; // Ensure correct ID in case first language has no object
 			if(isset($form['parent_category_id']) && $form['parent_category_id'] > 0) {
 				$category->parent_category = new Category($form['parent_category_id'], $rex_clang->getId());
 			}
