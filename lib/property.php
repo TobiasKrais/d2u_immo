@@ -423,8 +423,8 @@ class Property {
 			$this->bath = preg_grep('/^\s*$/s', explode("|", $result->getValue("bath")), PREG_GREP_INVERT);
 			$this->broadband_internet = preg_grep('/^\s*$/s', explode("|", $result->getValue("broadband_internet")), PREG_GREP_INVERT);
 			$this->cable_sat_tv = $result->getValue("cable_sat_tv") == "1" ? TRUE : FALSE;
-			if($result->getValue("category_id") > 0) {
-				$this->category = new Category($result->getValue("category_id"), $clang_id);
+			if($result->getValue("property_id") > 0) {
+				$this->category = new Category($result->getValue("property_id"), $clang_id);
 			}
 			$this->city = $result->getValue("city");
 			$this->cold_rent = $result->getValue("cold_rent");
@@ -610,22 +610,22 @@ class Property {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		if($delete_all) {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang "
-				."WHERE property_id = ". $this->property_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
-
+		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang "
+			."WHERE property_id = ". $this->property_id
+			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
+		$result_lang = rex_sql::factory();
+		$result_lang->setQuery($query_lang);
+		
+		// If no more lang objects are available, delete
+		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang "
+			."WHERE property_id = ". $this->property_id;
+		$result_main = rex_sql::factory();
+		$result_main->setQuery($query_main);
+		if($result_main->getRows() == 0) {
 			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_properties "
 				."WHERE property_id = ". $this->property_id;
 			$result = rex_sql::factory();
 			$result->setQuery($query);
-		}
-		else {
-			$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang "
-				."WHERE property_id = ". $this->property_id ." AND clang_id = ". $this->clang_id;
-			$result_lang = rex_sql::factory();
-			$result_lang->setQuery($query_lang);
 		}
 	}
 	
@@ -846,7 +846,7 @@ class Property {
 					."bath = '|". implode("|", $this->bath) ."|', "
 					."broadband_internet = '|". implode("|", $this->broadband_internet) ."|', "
 					."cable_sat_tv = ". ($this->cable_sat_tv ? 1 : 0) .", "
-					."category_id = ". ($this->category !== FALSE ? $this->category->category_id : 0) .", "
+					."property_id = ". ($this->category !== FALSE ? $this->category->property_id : 0) .", "
 					."city = '". $this->city ."', "
 					."cold_rent = ". $this->cold_rent .", "
 					."condition_type = '". $this->condition_type ."', "
