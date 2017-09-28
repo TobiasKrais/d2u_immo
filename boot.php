@@ -60,7 +60,8 @@ function rex_d2u_immo_clang_deleted(rex_extension_point $ep) {
 	$properties = Property::getAll($clang_id, '', FALSE);
 	foreach ($properties as $property) {
 		$property->delete(FALSE);
-	}	
+	}
+	
 	// Delete language settings
 	if(rex_config::has('d2u_immo', 'lang_replacement_'. $clang_id)) {
 		rex_config::remove('d2u_immo', 'lang_replacement_'. $clang_id);
