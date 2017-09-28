@@ -73,6 +73,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$category_id = $form['category_id'];
 	}
 	$category = new Category($category_id, rex_config::get("d2u_helper", "default_lang"));
+	$category->category_id = $category_id; // Ensure correct ID in case language has no object
 	
 	// Check if category is used
 	$uses_properties = $category->getProperties();
@@ -80,17 +81,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	// If not used, delete
 	if(count($uses_properties) == 0 && count($uses_categories) == 0) {
-		foreach(rex_clang::getAll() as $rex_clang) {
-			if($category === FALSE) {
-				$category = new Category($category_id, $rex_clang->getId());
-				// If object is not found in language, set category_id anyway to be able to delete
-				$category->category_id = $category_id;
-			}
-			else {
-				$category->clang_id = $rex_clang->getId();
-			}
-			$category->delete();
-		}
+		$category->delete(TRUE);
 	}
 	else {
 		$message = '<ul>';

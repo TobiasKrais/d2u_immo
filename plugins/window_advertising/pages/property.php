@@ -8,6 +8,7 @@ $property_id = rex_request('property_id', 'int');
 if ($func == 'online' || $func == 'offline') {
 	// Change status
 	$property = new Property($property_id, rex_config::get("d2u_helper", "default_lang"));
+	$property->property_id = $property_id; // Ensure correct ID in case language has no object
 	$property->changeWindowAdvertisingStatus();
 
 	header("Location: ". rex_url::currentBackendPage());

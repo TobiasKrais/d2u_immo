@@ -69,6 +69,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$ad_id = $form['ad_id'];
 	}
 	$advertisement = new Advertisement($ad_id, rex_config::get("d2u_helper", "default_lang"));
+	$advertisement->ad_id = $ad_id; // Ensure correct ID in case language has no object
 	$advertisement->delete();
 	
 	$func = '';
@@ -76,6 +77,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$advertisement = new Advertisement($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$advertisement->ad_id = $ad_id; // Ensure correct ID in case language has no object
 	$advertisement->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
