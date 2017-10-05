@@ -267,12 +267,10 @@ class Category {
 	 */
 	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
-			$d2u_immo = rex_addon::get("d2u_immo");
-				
 			$parameterArray = [];
 			$parameterArray['category_id'] = $this->category_id;
 			
-			$this->url = rex_getUrl($d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = rex_getUrl(rex_config::get('d2u_immo', 'article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
@@ -371,7 +369,7 @@ class Category {
 			$categories[$result->getValue("priority")] = $result->getValue("category_id");
 			$result->next();
 		}
-		array_splice($categories, ($this->priority - 1), 0, array($this->category_id));
+		array_splice($categories, ($this->priority - 1), 0, [$this->category_id]);
 
 		// Save all prios
 		foreach($categories as $prio => $category_id) {
