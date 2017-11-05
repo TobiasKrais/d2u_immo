@@ -13,7 +13,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$contact = new Contact($form['contact_id']);
 	$contact->city = $form['city'];
@@ -105,7 +105,7 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_immo_contact_phone', 'form[phone]', $contact->phone, TRUE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_immo_contact_mobile', 'form[mobile]', $contact->mobile, FALSE, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_immo_contact_fax', 'form[fax]', $contact->fax, FALSE, $readonly);
-							d2u_addon_backend_helper::form_mediafield('d2u_immo_pic', '1', $contact->picture, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $contact->picture, $readonly);
 						?>
 					</div>
 				</fieldset>

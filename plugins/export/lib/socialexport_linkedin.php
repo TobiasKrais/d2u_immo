@@ -188,7 +188,7 @@ class SocialExportLinkedIn extends AExport {
 
 					// <comment>Bester Kran auf dem Markt</comment>
 					$comment = $xml->createElement("comment");
-					$comment->appendChild($xml->createTextNode(Wildcard::get('d2u_immo_export_linkedin_comment_text', $this->provider->clang_id)));
+					$comment->appendChild($xml->createTextNode(Sprog\Wildcard::get('d2u_immo_export_linkedin_comment_text', $this->provider->clang_id)));
 					$share->appendChild($comment);
 
 					// <content>
@@ -235,8 +235,8 @@ class SocialExportLinkedIn extends AExport {
 				}
 				// Post on group stream: prepare XML
 				else {
-					$title_text = $this->provider->company_name ." ". Wildcard::get('d2u_immo_export_linkedin_offers', $this->provider->clang_id) .": ". $property->name;
-					$summary_text = Wildcard::get('d2u_immo_export_linkedin_details', $this->provider->clang_id) ." ". $property->getURL(TRUE) ;
+					$title_text = $this->provider->company_name ." ". Sprog\Wildcard::get('d2u_immo_export_linkedin_offers', $this->provider->clang_id) .": ". $property->name;
+					$summary_text = Sprog\Wildcard::get('d2u_immo_export_linkedin_details', $this->provider->clang_id) ." ". $property->getURL(TRUE) ;
 
 					// <post>
 					$post = $xml->createElement("post");

@@ -488,7 +488,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								}
 							}
 							d2u_addon_backend_helper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, ($property->contact === FALSE ? [] : [$property->contact->contact_id]), 1, FALSE, $readonly);
-							d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_pictures', '1', $property->pictures, $readonly);
+							d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', '1', $property->pictures, $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_ground_plans', '2', $property->ground_plans, $readonly);
 							d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_location_plans', '3', $property->location_plans, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, TRUE, TRUE, 'text');

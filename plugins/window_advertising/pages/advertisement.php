@@ -137,7 +137,7 @@ if ($func == 'edit' || $func == 'add') {
 							}
 							
 							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $advertisement->priority, TRUE, $readonly, 'number');
-							d2u_addon_backend_helper::form_mediafield('d2u_immo_pic', '1', $advertisement->picture, $readonly);
+							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $advertisement->picture, $readonly);
 							$options_status = ['online' => rex_i18n::msg('clang_online'),
 								'offline' => rex_i18n::msg('clang_offline')];
 							d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$advertisement->online_status], 1, FALSE, $readonly);

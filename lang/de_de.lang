@@ -15,7 +15,6 @@ d2u_immo_name = Name
 d2u_immo_no_selection = Keine Auswahl
 d2u_immo_status = Online Status
 d2u_immo_status_archived = Archiviert
-d2u_immo_pic = Bild
 d2u_immo_teaser = Kurzbeschreibung
 
 d2u_immo_category = Kategorie
@@ -246,7 +245,6 @@ d2u_immo_property_parking_space_duplex = Anzahl Duplex Parkplätze
 d2u_immo_property_parking_space_garage = Anzahl Garagenparkplätze
 d2u_immo_property_parking_space_simple = Anzahl Stellplätze
 d2u_immo_property_parking_space_undergroundcarpark = Anzahl Tiefgaragenparkplätze
-d2u_immo_property_pictures = Bilder
 d2u_immo_property_prices = Preise
 d2u_immo_property_publish_address = Adresse anzeigen?
 d2u_immo_property_purchase_price = Kaufpreis

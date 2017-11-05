@@ -28,6 +28,6 @@ requires:
         media_manager: '>=2.2'
         tinymce4: '>=0.10'
         sprog: '>=1.0.0'
-        url: '>=1.0.0beta5'
+        url: '>=1.0.0'
         yform: '>=2.0'
         yrewrite: '>=2.0.1'
