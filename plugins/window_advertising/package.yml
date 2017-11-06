@@ -8,8 +8,8 @@ page:
     perm: d2u_immo[window_advertising]
     icon: rex-icon fa-desktop
     subpages:
-        property: { title: 'translate:d2u_immo_properties', icon: rex-icon fa-home, perm: d2u_immo[window_advertising] }
-        advertisement: { title: 'translate:d2u_immo_window_advertising_ads', icon: rex-icon fa-desktop, perm: d2u_immo[window_advertising] }
+        property: { title: 'translate:d2u_immo_properties', icon: rex-icon fa-home, perm: d2u_immo[edit_data] }
+        advertisement: { title: 'translate:d2u_immo_window_advertising_ads', icon: rex-icon fa-desktop }
 
 requires:
     redaxo: '>=5.3.0'

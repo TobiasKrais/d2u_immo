@@ -37,6 +37,7 @@ $d2u_module_manager->showManagerList();
 	<li>Bugfix Finanzierungsrechner bei Summen über 1.000.000,-.</li>
 	<li>Bugfix wenn Standardsprache die zweite Sprache ist.</li>
 	<li>Bugfix wenn Standardsprache gelöscht wird.</li>
+	<li>Editierrechte für Übersetzer eingeschränkt.</li>
 </ul>
 <p>1.0.2:</p>
 <ul>
