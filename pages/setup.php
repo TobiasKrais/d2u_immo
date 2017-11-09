@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.3 (NEXT):</p>
 <ul>
-	<li>Update auf URL Addon 1.0.0.</li>
+	<li>Update auf URL Addon 1.0.1.</li>
 	<li>Bugfix Finanzierungsrechner bei Summen über 1.000.000,-.</li>
 	<li>Bugfix wenn Standardsprache die zweite Sprache ist.</li>
 	<li>Bugfix wenn Standardsprache gelöscht wird.</li>
