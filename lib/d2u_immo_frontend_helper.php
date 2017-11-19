@@ -22,14 +22,14 @@ class d2u_immo_frontend_helper {
 			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 				$property_id = UrlGenerator::getId();
 			}
-			$property = new Property($property_id, rex_clang::getCurrentId());
+			$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
 		}
 		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "category_id")) {
 			$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
 			if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 				$category_id = UrlGenerator::getId();
 			}
-			$category = new Category($category_id, rex_clang::getCurrentId());
+			$category = new D2U_Immo\Category($category_id, rex_clang::getCurrentId());
 		}
 
 		// Breadcrumbs

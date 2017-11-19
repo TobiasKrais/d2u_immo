@@ -12,7 +12,7 @@ if($message != "") {
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
 	$form = (array) rex_post('form', 'array', []);
 
-	$provider = new Provider($form['provider_id']);
+	$provider = new D2U_Immo\Provider($form['provider_id']);
 	$provider->name = $form['name'];
 	$provider->type = $form['type'];
 	$provider->clang_id = $form['clang_id'];
@@ -56,7 +56,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$provider_id = $form['entry_id'];
 	}
 	if($provider_id > 0) {
-		$provider = new Provider($provider_id);
+		$provider = new D2U_Immo\Provider($provider_id);
 		$provider->delete();
 	}
 	$func = '';
@@ -74,7 +74,7 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_export_basic_settings'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$provider = new Provider($entry_id);
+							$provider = new D2U_Immo\Provider($entry_id);
 							$readonly = FALSE;
 							
 							d2u_addon_backend_helper::form_input('d2u_immo_name', 'form[name]', $provider->name, TRUE, $readonly, 'text');

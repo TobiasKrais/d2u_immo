@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * LinkedIn export.
  */
@@ -28,7 +30,7 @@ class SocialExportLinkedIn extends AExport {
 	 * @return string callback URL
 	 */
 	public function getCallbackURL() {
-		return rex::getServer() ."redaxo/". rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id], FALSE);
+		return \rex::getServer() ."redaxo/". \rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id], FALSE);
 	}
 
 	/**
@@ -126,11 +128,11 @@ class SocialExportLinkedIn extends AExport {
 				$linkedin_email = $email->item(0)->nodeValue;
 			}
 			if($linkedin_email == "") {
-				return rex_i18n::msg('d2u_immo_export_linkedin_mail_failed');
+				return \rex_i18n::msg('d2u_immo_export_linkedin_mail_failed');
 			}
 			if(strtolower($linkedin_email) != strtolower($this->provider->linkedin_email)) {
 				unset($_SESSION['linkedin']);
-				return rex_i18n::msg('d2u_immo_export_linkedin_login_again');
+				return \rex_i18n::msg('d2u_immo_export_linkedin_login_again');
 			}
 			else {
 				return TRUE;
@@ -212,7 +214,7 @@ class SocialExportLinkedIn extends AExport {
 					// <submitted-image-url>http://www.meier-krantechnik.de/index.php?rex_img_type=d2u_baumaschinen_list&amp;rex_img_file=sjjdc_826.jpg</submitted-image-url>
 					if(count($property->pictures) > 0) {
 						$submitted_image_url = $xml->createElement("submitted-image-url");
-						$submitted_image_url->appendChild($xml->createTextNode(rex::getServer() .'index.php?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0]));
+						$submitted_image_url->appendChild($xml->createTextNode(\rex::getServer() .'index.php?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0]));
 						$content->appendChild($submitted_image_url);
 					}
 
@@ -276,7 +278,7 @@ class SocialExportLinkedIn extends AExport {
 						$exported_property->save();
 					}
 				} catch (OAuthException $e) {
-					return rex_i18n::msg("d2u_immo_export_linkedin_upload_failed") ." ". $e;
+					return \rex_i18n::msg("d2u_immo_export_linkedin_upload_failed") ." ". $e;
 				}
 			}
 		}

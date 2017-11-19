@@ -5,10 +5,12 @@
  * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
  */
 
+namespace D2U_Immo;
+
 /**
  * Immo Category
  */
-class Category {
+class Category implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Database ID
 	 */
@@ -71,12 +73,12 @@ class Category {
 	 */
 	 public function __construct($category_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_categories AS categories "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_categories_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_categories AS categories "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_categories_lang AS lang "
 					."ON categories.category_id = lang.category_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE categories.category_id = ". $category_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -103,21 +105,21 @@ class Category {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_categories_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_categories_lang "
 			."WHERE category_id = ". $this->category_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_categories_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_categories_lang "
 			."WHERE category_id = ". $this->category_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_categories "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_categories "
 				."WHERE category_id = ". $this->category_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -128,17 +130,17 @@ class Category {
 	 * @return Category[] Array with Category objects.
 	 */
 	public static function getAll($clang_id) {
-		$query = "SELECT lang.category_id FROM ". rex::getTablePrefix() ."d2u_immo_categories_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_categories AS categories "
+		$query = "SELECT lang.category_id FROM ". \rex::getTablePrefix() ."d2u_immo_categories_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_categories AS categories "
 				."ON lang.category_id = categories.category_id "
 			."WHERE clang_id = ". $clang_id ." ";
-		if(rex_addon::get('d2u_immo')->hasConfig('default_category_sort') && rex_addon::get('d2u_immo')->getConfig('default_category_sort') == 'priority') {
+		if(\rex_addon::get('d2u_immo')->hasConfig('default_category_sort') && \rex_addon::get('d2u_immo')->getConfig('default_category_sort') == 'priority') {
 			$query .= 'ORDER BY priority';
 		}
 		else {
 			$query .= 'ORDER BY name';
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$categories = [];
@@ -162,9 +164,9 @@ class Category {
 	 * @return Category[] Child categories.
 	 */
 	public function getChildren() {
-		$query = "SELECT category_id FROM ". rex::getTablePrefix() ."d2u_immo_categories "
+		$query = "SELECT category_id FROM ". \rex::getTablePrefix() ."d2u_immo_categories "
 			."WHERE parent_category_id = ". $this->category_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$children =  [];
@@ -180,7 +182,7 @@ class Category {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. \rex::getServerName() .'</title>';
 	}
 	
 	/**
@@ -203,8 +205,8 @@ class Category {
 	 * @return Property[] Properties in this category
 	 */
 	public function getProperties($market_type = '', $only_online = FALSE) {
-		$query = "SELECT lang.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
+		$query = "SELECT lang.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_properties AS properties "
 					."ON lang.property_id = properties.property_id "
 			."WHERE category_id = ". $this->category_id ." AND clang_id = ". $this->clang_id ." ";
 		if($only_online || $market_type != '') {
@@ -215,13 +217,13 @@ class Category {
 				$query .= "AND market_type = '". $market_type ."' ";
 			}
 		}
-		if(rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
+		if(\rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && \rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
 			$query .= 'ORDER BY name ASC';
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$properties = [];
@@ -238,7 +240,7 @@ class Category {
 	 */
 	public function getMetaAlternateHreflangTags() {
 		$hreflang_tags = "";
-		foreach(rex_clang::getAll() as $rex_clang) {
+		foreach(\rex_clang::getAll() as $rex_clang) {
 			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
 				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->name) .'">';
 			}
@@ -260,6 +262,38 @@ class Category {
 		return '<meta name="description" content="'. $this->teaser .'">';
 	}
 	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Category[] Array with Category objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT category_id FROM '. \rex::getTablePrefix() .'d2u_immo_categories_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.category_id FROM '. \rex::getTablePrefix() .'d2u_immo_categories AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS target_lang '
+						.'ON main.category_id = target_lang.category_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS default_lang '
+						.'ON main.category_id = default_lang.category_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.category_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Category($result->getValue("category_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
+	
 	/*
 	 * Returns the URL of this object.
 	 * @param string $including_domain TRUE if Domain name should be included
@@ -270,11 +304,11 @@ class Category {
 			$parameterArray = [];
 			$parameterArray['category_id'] = $this->category_id;
 			
-			$this->url = rex_getUrl(rex_config::get('d2u_immo', 'article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = \rex_getUrl(\rex_config::get('d2u_immo', 'article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
-			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url);
+			return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url);
 		}
 		else {
 			return $this->url;
@@ -297,7 +331,7 @@ class Category {
 		}
 
 		if($this->category_id == 0 || $pre_save_category != $this) {
-			$query = rex::getTablePrefix() ."d2u_immo_categories SET "
+			$query = \rex::getTablePrefix() ."d2u_immo_categories SET "
 					."parent_category_id = ". ($this->parent_category === FALSE ? 0 : $this->parent_category->category_id) .", "
 					."priority = ". $this->priority .", "
 					."picture = '". $this->picture ."' ";
@@ -309,7 +343,7 @@ class Category {
 				$query = "UPDATE ". $query ." WHERE category_id = ". $this->category_id;
 			}
 
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->category_id == 0) {
 				$this->category_id = $result->getLastId();
@@ -321,24 +355,24 @@ class Category {
 			// Save the language specific part
 			$pre_save_category = new Category($this->category_id, $this->clang_id);
 			if($pre_save_category != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_immo_categories_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_categories_lang SET "
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."name = '". $this->name ."', "
 						."teaser = '". $this->teaser ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
-						."updateuser = '". rex::getUser()->getLogin() ."' ";
+						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
 		}
 		
 		// Update URLs
-		if(rex_addon::get("url")->isAvailable()) {
-			UrlGenerator::generatePathFile([]);
+		if(\rex_addon::get("url")->isAvailable()) {
+			\UrlGenerator::generatePathFile([]);
 		}
 		
 		return $error;
@@ -349,9 +383,9 @@ class Category {
 	 */
 	private function setPriority() {
 		// Pull prios from database
-		$query = "SELECT category_id, priority FROM ". rex::getTablePrefix() ."d2u_immo_categories "
+		$query = "SELECT category_id, priority FROM ". \rex::getTablePrefix() ."d2u_immo_categories "
 			."WHERE category_id <> ". $this->category_id ." ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When priority is too small, set at beginning
@@ -373,10 +407,10 @@ class Category {
 
 		// Save all prios
 		foreach($categories as $prio => $category_id) {
-			$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_categories "
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_categories "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE category_id = ". $category_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}

@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * OpenImmo export class
  */
@@ -64,7 +66,7 @@ class ImmobilienScout24 extends AFTPExport {
 		$publish = TRUE;
 
 		// <?xml version="1.0" encoding="UTF-8">
-		$xml = new DOMDocument("1.0", "UTF-8");
+		$xml = new \DOMDocument("1.0", "UTF-8");
 		$xml->formatOutput = true;
 		// <IS24ImmobilienTransfer xmlns="http://www.immobilienscout24.de/immobilientransfer" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.immobilienscout24.de/immobilientransfer is24immotransfer.xsd" EmailBeiFehler="schnittstellen@is24.de" ErstellerSoftware="SUPER-Makler" ErstellerSoftwareVersion="HOUSE-OF-CREAKTIV">
 		$is24 = $xml->createElement("IS24ImmobilienTransfer");
@@ -419,9 +421,9 @@ class ImmobilienScout24 extends AFTPExport {
 			}
 			// Dokumente auslesen
 			foreach($property->documents as $dokument) {
-				$anhang_media = rex_media::get($dokument);
+				$anhang_media = \rex_media::get($dokument);
 				// Pruefen, ob Datei in Datenbank existiert
-				if($anhang_media instanceof rex_media && $zaehler < $this->max_pics) {
+				if($anhang_media instanceof \rex_media && $zaehler < $this->max_pics) {
 					if(strpos($anhang_media->getType(), "pdf") !== FALSE) {
 						$objekt_anhaenge[$zaehler] = ["video" => $dokument];
 					}
@@ -445,9 +447,9 @@ class ImmobilienScout24 extends AFTPExport {
 
 			foreach($objekt_anhaenge as $objekt_anhang) {
 				foreach($objekt_anhang as $media_type => $filename) {
-					$anhang_media = rex_media::get($filename);
+					$anhang_media = \rex_media::get($filename);
 					// Pruefen, ob Datei in Datenbank existiert
-					if($anhang_media instanceof rex_media) {
+					if($anhang_media instanceof \rex_media) {
 						$anhang = $xml->createElement("MultimediaAnhang");
 						$anhang_art = $xml->createAttribute("AnhangArt");
 						$anhang_art->appendChild($xml->createTextNode($media_type));
@@ -1138,14 +1140,14 @@ class ImmobilienScout24 extends AFTPExport {
 		// write XML file
 		try {
 			if($xml->save($this->cache_path . $this->xml_filename) === FALSE) {
-				return rex_i18n::msg('d2u_immo_export_xml_cannot_create');
+				return \rex_i18n::msg('d2u_immo_export_xml_cannot_create');
 			}
 			else {
 				return "";
 			}
 		}
 		catch(Exception $e) {
-			return rex_i18n::msg('d2u_machinery_export_xml_cannot_create') . " - ". $e->getMessage();
+			return \rex_i18n::msg('d2u_machinery_export_xml_cannot_create') . " - ". $e->getMessage();
 		}
 	}
 }

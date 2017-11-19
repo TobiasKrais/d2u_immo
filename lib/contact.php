@@ -5,6 +5,8 @@
  * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
  */
 
+namespace D2U_Immo;
+
 /**
  * Immo contact
  */
@@ -84,9 +86,9 @@ class Contact {
 	 * @param int $contact_id Contact ID.
 	 */
 	 public function __construct($contact_id) {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_contacts "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_contacts "
 				."WHERE contact_id = ". $contact_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -112,9 +114,9 @@ class Contact {
 	 * Deletes the object.
 	 */
 	public function delete() {
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_contacts "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_contacts "
 			."WHERE contact_id = ". $this->contact_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 	}
 
@@ -123,8 +125,8 @@ class Contact {
 	 * @return Contact[] Array with Contact objects.
 	 */
 	public static function getAll() {
-		$query = "SELECT contact_id FROM ". rex::getTablePrefix() ."d2u_immo_contacts ORDER BY lastname";
-		$result = rex_sql::factory();
+		$query = "SELECT contact_id FROM ". \rex::getTablePrefix() ."d2u_immo_contacts ORDER BY lastname";
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$contacts = [];
@@ -140,17 +142,17 @@ class Contact {
 	 * @return Property[] Properties
 	 */
 	public function getProperties() {
-		$query = "SELECT properties.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
-				."ON properties.property_id = lang.property_id AND lang.clang_id = ". rex_config::get("d2u_helper", "default_lang") ." "
+		$query = "SELECT properties.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_properties AS properties "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
+				."ON properties.property_id = lang.property_id AND lang.clang_id = ". \rex_config::get("d2u_helper", "default_lang") ." "
 			."WHERE contact_id = ". $this->contact_id ." ";
-		if(rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
+		if(\rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && \rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
 			$query .= 'ORDER BY name ASC';
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$properties = [];
@@ -168,7 +170,7 @@ class Contact {
 	public function save() {
 		$error = 0;
 
-		$query = rex::getTablePrefix() ."d2u_immo_contacts SET "
+		$query = \rex::getTablePrefix() ."d2u_immo_contacts SET "
 				."city = '". $this->city ."', "
 				."company = '". $this->company ."', "
 				."country_code = '". $this->country_code ."', "
@@ -190,7 +192,7 @@ class Contact {
 			$query = "UPDATE ". $query ." WHERE contact_id = ". $this->contact_id;
 		}
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		if($this->contact_id == 0) {
 			$this->contact_id = $result->getLastId();

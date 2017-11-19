@@ -5,6 +5,8 @@
  * @author <a href="http://www.design-to-use.de">www.design-to-use.de</a>
  */
 
+namespace D2U_Immo;
+
 /**
  * Exported property object.
  */
@@ -42,10 +44,10 @@ class ExportedProperty {
 	 * @param int $provider_id Provider ID.
 	 */
 	 public function __construct($property_id, $provider_id) {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 				."WHERE property_id = ". $property_id ." "
 					."AND provider_id = ". $provider_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -97,9 +99,9 @@ class ExportedProperty {
 	 * Deletes the object.
 	 */
 	public function delete() {
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			."WHERE property_id = ". $this->property_id ." AND provider_id = ". $this->provider_id;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query);
 	}
 	
@@ -110,11 +112,11 @@ class ExportedProperty {
 	 * @return ExportedProperty[] Array with exported properties objects.
 	 */
 	public static function getAll($provider = FALSE) {
-		$query = "SELECT property_id, provider_id FROM ". rex::getTablePrefix() ."d2u_immo_export_properties AS export";
+		$query = "SELECT property_id, provider_id FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties AS export";
 		if ($provider !== FALSE && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 
 		$exported_properties = [];
@@ -142,19 +144,19 @@ class ExportedProperty {
 	 * Remove all properties to export for given provider.
 	 */
 	public static function removeAllDeletedFromExport() {
-		$query= "SELECT exported_properties.property_id FROM ". rex::getTablePrefix() ."d2u_immo_export_properties AS exported_properties "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_used_properties AS used_properties "
+		$query= "SELECT exported_properties.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties AS exported_properties "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_used_properties AS used_properties "
 				."ON exported_properties.property_id = properties.property_id "
 			."WHERE properties.property_id IS NULL "
 			."GROUP BY exported_properties.property_id";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		for($i= 0; $i < $result->getRows(); $i++) {
-			$query_update = "UPDATE ". rex::getTablePrefix() ."d2u_immo_export_properties "
+			$query_update = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 				."SET export_action = 'delete' "
 				."WHERE property_id = ". $result->getValue("exported_properties.property_id");
-			$result_update = rex_sql::factory();
+			$result_update = \rex_sql::factory();
 			$result_update->setQuery($query_update);
 			
 			$result->next();
@@ -166,10 +168,10 @@ class ExportedProperty {
 	 * @param int $provider_id Provider ID
 	 */
 	public static function removeAllFromExport($provider_id) {
-		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			."SET export_action = 'delete' "
 			."WHERE provider_id = ". $provider_id;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 	}
 	
@@ -178,10 +180,10 @@ class ExportedProperty {
 	 * @param int $property_id Used property id
 	 */
 	public static function removePropertyFromAllExports($property_id) {
-		$query_lang = "UPDATE ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query_lang = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			."SET export_action = 'delete' "
 			."WHERE property_id = ". $property_id;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 	}
 
@@ -198,13 +200,13 @@ class ExportedProperty {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_immo_export_properties SET "
+		$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_export_properties SET "
 				."property_id = ". $this->property_id .", "
 				."provider_id = ". $this->provider_id .", "
 				."export_action = '". $this->export_action ."', "
 				."provider_import_id = '". $this->provider_import_id ."', "
 				."export_timestamp = '". $this->export_timestamp ."'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		return !$result->hasError();

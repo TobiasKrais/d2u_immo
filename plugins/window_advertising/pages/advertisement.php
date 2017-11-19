@@ -11,7 +11,7 @@ if($message != "") {
 // save settings
 if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
 	$form = (array) rex_post('form', 'array', []);
-print_r($form);
+
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
 
@@ -21,7 +21,7 @@ print_r($form);
 
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($advertisement === FALSE) {
-			$advertisement = new Advertisement($ad_id, $rex_clang->getId());
+			$advertisement = new D2U_Immo\Advertisement($ad_id, $rex_clang->getId());
 			$advertisement->ad_id = $ad_id; // Ensure correct ID in case first language has no object
 			$advertisement->priority = $form['priority'];
 			$advertisement->picture = $input_media[1];
@@ -68,7 +68,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$ad_id = $form['ad_id'];
 	}
-	$advertisement = new Advertisement($ad_id, rex_config::get("d2u_helper", "default_lang"));
+	$advertisement = new D2U_Immo\Advertisement($ad_id, rex_config::get("d2u_helper", "default_lang"));
 	$advertisement->ad_id = $ad_id; // Ensure correct ID in case language has no object
 	$advertisement->delete();
 	
@@ -76,7 +76,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 // Change online status of machine
 else if($func == 'changestatus') {
-	$advertisement = new Advertisement($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$advertisement = new D2U_Immo\Advertisement($entry_id, rex_config::get("d2u_helper", "default_lang"));
 	$advertisement->ad_id = $ad_id; // Ensure correct ID in case language has no object
 	$advertisement->changeStatus();
 	
@@ -94,7 +94,7 @@ if ($func == 'edit' || $func == 'add') {
 				<input type="hidden" name="form[ad_id]" value="<?php echo $entry_id; ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
-						$advertisement = new Advertisement($entry_id, $rex_clang->getId());
+						$advertisement = new D2U_Immo\Advertisement($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 						
 						$readonly_lang = TRUE;
@@ -130,7 +130,7 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
-							$advertisement = new Advertisement($entry_id, rex_config::get("d2u_helper", "default_lang"));
+							$advertisement = new D2U_Immo\Advertisement($entry_id, rex_config::get("d2u_helper", "default_lang"));
 							$readonly = TRUE;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
 								$readonly = FALSE;

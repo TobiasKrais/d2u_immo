@@ -20,7 +20,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$property_id = $form['property_id'];
 	foreach(rex_clang::getAll() as $rex_clang) {
 		if($property === FALSE) {
-			$property = new Property($property_id, $rex_clang->getId());
+			$property = new D2U_Immo\Property($property_id, $rex_clang->getId());
 			$property->property_id = $property_id; // Ensure correct ID in case first language has no object
 			$property->additional_costs = isset($form['additional_costs']) ? $form['additional_costs'] : 0;
 			$property->animals = array_key_exists('animals', $form);
@@ -30,14 +30,14 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->broadband_internet = isset($form['broadband_internet']) ? $form['broadband_internet'] : [];
 			$property->cable_sat_tv = array_key_exists('cable_sat_tv', $form);
 			if(isset($form['category_id']) && $form['category_id'] > 0) {
-				$property->category = new Category($form['category_id'], rex_config::get("d2u_helper", "default_lang"));
+				$property->category = new D2U_Immo\Category($form['category_id'], rex_config::get("d2u_helper", "default_lang"));
 			}
 			$property->city = $form['city'];
 			$property->cold_rent = isset($form['cold_rent']) ? $form['cold_rent'] : 0;
 			$property->condition_type = $form['condition_type'];
 			$property->construction_year = $form['construction_year'];
 			if(isset($form['contact_id']) && $form['contact_id'] > 0) {
-				$property->contact = new Contact($form['contact_id']);
+				$property->contact = new D2U_Immo\Contact($form['contact_id']);
 			}
 			$property->country_code = $form['country_code'];
 			$property->courtage = $form['courtage'];
@@ -138,7 +138,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$property_id = $form['property_id'];
 	}
-	$property = new Property($property_id, rex_config::get("d2u_helper", "default_lang"));
+	$property = new D2U_Immo\Property($property_id, rex_config::get("d2u_helper", "default_lang"));
 	$property->property_id = $property_id; // Ensure correct ID in case language has no object
 	$property->delete();
 
@@ -146,7 +146,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 // Change online status of machine
 else if($func == 'changestatus') {
-	$property = new Property($entry_id, rex_config::get("d2u_helper", "default_lang"));
+	$property = new D2U_Immo\Property($entry_id, rex_config::get("d2u_helper", "default_lang"));
 	$property->property_id = $property_id; // Ensure correct ID in case language has no object
 	$property->changeStatus();
 	
@@ -164,7 +164,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				<input type="hidden" name="form[property_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
-						$property = new Property($entry_id, $rex_clang->getId());
+						$property = new D2U_Immo\Property($entry_id, $rex_clang->getId());
 						$required = $rex_clang->getId() == rex_config::get("d2u_helper", "default_lang") ? TRUE : FALSE;
 
 						$readonly_lang = TRUE;
@@ -201,7 +201,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					}
 					
 					// Do not use last object from translations, because you don't know if it exists in DB
-					$property = new Property($entry_id, rex_config::get("d2u_helper", "default_lang"));
+					$property = new D2U_Immo\Property($entry_id, rex_config::get("d2u_helper", "default_lang"));
 					$readonly = TRUE;
 					if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
 						$readonly = FALSE;
@@ -213,7 +213,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							$options_categories = [];
-							foreach(Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
+							foreach(D2U_Immo\Category::getAll(rex_config::get("d2u_helper", "default_lang")) as $category) {
 								if($category->name != "") {
 									$options_categories[$category->category_id] = $category->name;
 								}
@@ -482,7 +482,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_reserved', 'form[object_reserved]', 'true', $property->object_reserved, $readonly);
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_sold', 'form[object_sold]', 'true', $property->object_sold, $readonly);
 							$options_contacts = [];
-							foreach(Contact::getAll() as $contact) {
+							foreach(D2U_Immo\Contact::getAll() as $contact) {
 								if($contact->lastname != "") {
 									$options_contacts[$contact->contact_id] = $contact->lastname .", ". $contact->firstname;
 								}

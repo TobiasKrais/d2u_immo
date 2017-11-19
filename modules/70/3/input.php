@@ -4,7 +4,7 @@
 		<?php
 		// Gruppen
 		$query = 'SELECT category_id, name  '.
-				'FROM '. rex::getTablePrefix() .'d2u_immo_categories_lang '.
+				'FROM '. \rex::getTablePrefix() .'d2u_immo_categories_lang '.
 				'WHERE clang_id = '. rex_clang::getCurrentId() .' '.
 				'ORDER BY name';
 		$result = rex_sql::factory();

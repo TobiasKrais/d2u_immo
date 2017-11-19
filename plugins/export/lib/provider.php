@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * Provider export configurations.
  */
@@ -125,9 +127,9 @@ class Provider {
 	 * @param int $provider_id Object id
 	 */
 	public function __construct($provider_id) {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_export_provider WHERE provider_id = ". $provider_id;
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_export_provider WHERE provider_id = ". $provider_id;
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -181,7 +183,7 @@ class Provider {
 						$error = TRUE;
 					}
 					else {
-						$message[] = $provider->name .": ". rex_i18n::msg('d2u_immo_export_success');
+						$message[] = $provider->name .": ". \rex_i18n::msg('d2u_immo_export_success');
 					}
 				}
 				else if(strtolower($provider->type) == "immobilienscout24") {
@@ -193,7 +195,7 @@ class Provider {
 						$error = TRUE;
 					}
 					else {
-						$message[] = $provider->name .": ". rex_i18n::msg('d2u_immo_export_success');
+						$message[] = $provider->name .": ". \rex_i18n::msg('d2u_immo_export_success');
 					}
 				}
 				else if(strtolower($provider->type) == "linkedin") {
@@ -206,7 +208,7 @@ class Provider {
 							$error = TRUE;
 						}
 						else {
-							$message[] = $provider->name .": ". rex_i18n::msg('d2u_immo_export_success');
+							$message[] = $provider->name .": ". \rex_i18n::msg('d2u_immo_export_success');
 						}
 					}
 				}
@@ -214,13 +216,13 @@ class Provider {
 		}
 		
 		// Send report
-		$d2u_immo = rex_addon::get("d2u_immo");
+		$d2u_immo = \rex_addon::get("d2u_immo");
 		if($d2u_immo->hasConfig('export_failure_email') && $error) {
-			$mail = new rex_mailer();
+			$mail = new \rex_mailer();
 			$mail->IsHTML(true);
 			$mail->CharSet = "utf-8";
 			$mail->AddAddress(trim($d2u_immo->getConfig('export_failure_email')));
-			$mail->Subject = rex_i18n::msg('d2u_immo_export_failure_report');
+			$mail->Subject = \rex_i18n::msg('d2u_immo_export_failure_report');
 			$mail->Body = implode("<br>", $message);
 			$mail->Send();
 		}
@@ -229,7 +231,7 @@ class Provider {
 			return false;
 		}
 		else {
-			print rex_i18n::msg('d2u_immo_export_success');
+			print \rex_i18n::msg('d2u_immo_export_success');
 			return true;
 		}
 	}
@@ -245,9 +247,9 @@ class Provider {
 		}
 		
 		// Next delete object
-		$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_export_provider "
+		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_export_provider "
 			."WHERE provider_id = ". $this->provider_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 	}
 
@@ -268,10 +270,10 @@ class Provider {
 		else if(strtolower($this->type) == "facebook") {
 			// Check requirements
 			if (!function_exists('curl_init')) {
-				return rex_i18n::msg('d2u_immo_export_failure_curl');
+				return \rex_i18n::msg('d2u_immo_export_failure_curl');
 			}
 			else if (!function_exists('json_decode')) {
-				return rex_i18n::msg('d2u_immo_export_failure_json');				
+				return \rex_i18n::msg('d2u_immo_export_failure_json');				
 			}
 			
 			// Export
@@ -300,10 +302,10 @@ class Provider {
 		else if(strtolower($this->type) == "linkedin") {
 			// Check requirements
 			if (!function_exists('curl_init')) {
-				return rex_i18n::msg('d2u_immo_export_failure_curl');
+				return \rex_i18n::msg('d2u_immo_export_failure_curl');
 			}
 			else if (!class_exists('oauth')) {
-				return rex_i18n::msg('d2u_immo_export_failure_oauth');				
+				return \rex_i18n::msg('d2u_immo_export_failure_oauth');				
 			}
 
 			$linkedin = new SocialExportLinkedIn($this);
@@ -340,7 +342,7 @@ class Provider {
 				if($is_logged_in === FALSE) {
 					// Wrong user? Logout and inform user
 					$linkedin->logout();
-					return rex_i18n('d2u_immo_export_linkedin_login_again');
+					return \rex_i18n('d2u_immo_export_linkedin_login_again');
 				}
 				else if($is_logged_in === TRUE) {
 					// Correct user? Perform export
@@ -359,9 +361,9 @@ class Provider {
 	 * @return Provider[] Array with Provider objects.
 	 */
 	public static function getAll() {
-		$query = "SELECT provider_id FROM ". rex::getTablePrefix() ."d2u_immo_export_provider "
+		$query = "SELECT provider_id FROM ". \rex::getTablePrefix() ."d2u_immo_export_provider "
 			."ORDER BY name";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$providers = [];
@@ -379,20 +381,20 @@ class Provider {
 	 * @return int Timestamp of latest object update.
 	 */
 	public function isExportNeeded() {
-		$query = "SELECT export_action FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query = "SELECT export_action FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			."WHERE provider_id = ". $this->provider_id ." AND export_action = 'delete'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
 			return TRUE;
 		}
 		
-		$query = "SELECT properties.updatedate, export.export_timestamp FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS properties "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_export_properties AS export ON properties.property_id = export.property_id "
+		$query = "SELECT properties.updatedate, export.export_timestamp FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS properties "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_export_properties AS export ON properties.property_id = export.property_id "
 			."WHERE provider_id = ". $this->provider_id ." AND clang_id = ". $this->clang_id ." "
 			."ORDER BY properties.updatedate DESC LIMIT 0, 1";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0 && $result->getValue("updatedate") > $result->getValue("export_timestamp")) {
@@ -408,9 +410,9 @@ class Provider {
 	 * @return int Timestamp of latest object update.
 	 */
 	public function isExportPossible() {
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			."WHERE provider_id = ". $this->provider_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
@@ -424,10 +426,10 @@ class Provider {
 	 * @return int Timestamp of last successful export.
 	 */
 	public function getLastExportTimestamp() {
-		$query = "SELECT export_timestamp FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query = "SELECT export_timestamp FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			."WHERE provider_id = ". $this->provider_id ." "
 			."ORDER BY export_timestamp DESC LIMIT 0, 1";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$time = 0;
@@ -442,9 +444,9 @@ class Provider {
 	 * @return int Number of online properties
 	 */
 	public function getNumberOnlineProperties() {
-		$query = "SELECT COUNT(*) as number FROM ". rex::getTablePrefix() ."d2u_immo_export_properties "
+		$query = "SELECT COUNT(*) as number FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			. "WHERE provider_id = ". $this->provider_id ." AND export_action <> 'delete'";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		return $result->getValue("number");
@@ -455,9 +457,9 @@ class Provider {
 	 * @return boolean TRUE if successful
 	 */
 	public function save() {
-		$this->clang_id = $this->clang_id == 0 ? rex_config::get("d2u_helper", "default_lang") : $this->clang_id;
+		$this->clang_id = $this->clang_id == 0 ? \rex_config::get("d2u_helper", "default_lang") : $this->clang_id;
 
-		$query = rex::getTablePrefix() ."d2u_immo_export_provider SET "
+		$query = \rex::getTablePrefix() ."d2u_immo_export_provider SET "
 				."name = '". $this->name ."', "
 				."type = '". $this->type ."', "
 				."clang_id = ". $this->clang_id .", "
@@ -487,7 +489,7 @@ class Provider {
 			$query = "UPDATE ". $query ." WHERE provider_id = ". $this->provider_id;
 		}
 
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		if($this->provider_id == 0) {
 			$this->provider_id = $result->getLastId();

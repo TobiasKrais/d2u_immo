@@ -8,25 +8,25 @@ $property_id = rex_request('property_id', 'int');
  */
 if ($func == 'online') {
 	// Add to next export
-	$export_property = new ExportedProperty($property_id, $provider_id);
+	$export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
 	$export_property->addToExport();
 }
 else if ($func == 'offline') {
 	// Remove to next export
-	$export_property = new ExportedProperty($property_id, $provider_id);
+	$export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
 	$export_property->removeFromExport();
 }
 else if ($func == 'all_online') {
 	// Add all to next export
-	ExportedProperty::addAllToExport($provider_id);
+	D2U_Immo\ExportedProperty::addAllToExport($provider_id);
 }
 else if ($func == 'all_offline') {
 	// Remove all from next export
-	ExportedProperty::removeAllFromExport($provider_id);
+	D2U_Immo\ExportedProperty::removeAllFromExport($provider_id);
 }
 else if ($func == 'export') {
 	// Export
-	$provider = new Provider($provider_id);
+	$provider = new D2U_Immo\Provider($provider_id);
 	$error = $provider->export();
 	if($error != "") {
 		print rex_view::error($provider->name .": ". $error);
@@ -37,11 +37,11 @@ else if ($func == 'export') {
 }
 
 // Fetch providers
-$providers = Provider::getAll();
+$providers = D2U_Immo\Provider::getAll();
 
 print '<table class="table table-striped table-hover">';
 if(count($providers) > 0) {
-	$properties = Property::getAll(rex_config::get("d2u_helper", "default_lang"), '', TRUE);
+	$properties = D2U_Immo\Property::getAll(rex_config::get("d2u_helper", "default_lang"), '', TRUE);
 
 	print "<thead>";
 	print "<tr>";
@@ -103,7 +103,7 @@ if(count($providers) > 0) {
 			print "<tr>";
 			print "<td>". $property->name ."</td>";
 			foreach ($providers as $provider) {
-				$exported_property = new ExportedProperty($property->property_id, $provider->provider_id);
+				$exported_property = new D2U_Immo\ExportedProperty($property->property_id, $provider->provider_id);
 				if($exported_property->isSetForExport()) {
 					print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'offline', 'provider_id'=>$provider->provider_id, 'property_id'=>$property->property_id))
 						.'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';

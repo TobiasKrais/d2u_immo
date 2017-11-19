@@ -1,8 +1,10 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * Property objects.
  */
-class Property {
+class Property implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var int Probperty ID.
 	 */
@@ -405,12 +407,12 @@ class Property {
 	 */
 	 public function __construct($property_id, $clang_id) {
 		$this->clang_id = $clang_id;
-		$query = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
+		$query = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_properties AS properties "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
 					."ON properties.property_id = lang.property_id "
 					."AND clang_id = ". $this->clang_id ." "
 				."WHERE properties.property_id = ". $property_id;
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		$num_rows = $result->getRows();
 
@@ -443,7 +445,7 @@ class Property {
 					'@redaxo://(\d+)(?:-(\d+))?/?@i',
 					create_function(
 							'$matches',
-							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
+							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
 					),
 					htmlspecialchars_decode($result->getValue("description"))
 			);
@@ -451,7 +453,7 @@ class Property {
 					'@redaxo://(\d+)(?:-(\d+))?/?@i',
 					create_function(
 							'$matches',
-							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
+							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
 					),
 					htmlspecialchars_decode($result->getValue("description_equipment"))
 			);
@@ -459,7 +461,7 @@ class Property {
 					'@redaxo://(\d+)(?:-(\d+))?/?@i',
 					create_function(
 							'$matches',
-							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
+							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
 					),
 					htmlspecialchars_decode($result->getValue("description_location"))
 			);
@@ -467,7 +469,7 @@ class Property {
 					'@redaxo://(\d+)(?:-(\d+))?/?@i',
 					create_function(
 							'$matches',
-							'return rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
+							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
 					),
 					htmlspecialchars_decode($result->getValue("description_others"))
 			);
@@ -525,7 +527,7 @@ class Property {
 			$this->wheelchair_accessable = $result->getValue("wheelchair_accessable") == "1" ? TRUE : FALSE;
 			$this->zip_code = $result->getValue("zip_code");
 			// Window advertising plugin fields
-			if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+			if(\rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
 				$this->window_advertising_status = $result->getValue("window_advertising_status") == "online" ? TRUE : FALSE;
 			}
 		}
@@ -537,25 +539,25 @@ class Property {
 	public function changeStatus() {
 		if($this->online_status == "online") {
 			if($this->property_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_properties "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties "
 					."SET online_status = 'offline' "
 					."WHERE property_id = ". $this->property_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "offline";
 			
 			// Remove from export
-			if(rex_plugin::get("d2u_immo", "export")->isAvailable()) {
+			if(\rex_plugin::get("d2u_immo", "export")->isAvailable()) {
 				ExportedProperty::removePropertyFromAllExports($this->property_id);
 			}
 		}
 		else {
 			if($this->property_id > 0) {
-				$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_properties "
+				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties "
 					."SET online_status = 'online' "
 					."WHERE property_id = ". $this->property_id;
-				$result = rex_sql::factory();
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 			}
 			$this->online_status = "online";
@@ -566,23 +568,23 @@ class Property {
 	 * Changes the status of a property
 	 */
 	public function changeWindowAdvertisingStatus() {
-		if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+		if(\rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
 			if($this->window_advertising_status == "online") {
 				if($this->property_id > 0) {
-					$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_properties "
+					$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties "
 						."SET window_advertising_status = 'offline' "
 						."WHERE property_id = ". $this->property_id;
-					$result = rex_sql::factory();
+					$result = \rex_sql::factory();
 					$result->setQuery($query);
 				}
 				$this->window_advertising_status = "offline";
 			}
 			else {
 				if($this->property_id > 0) {
-					$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_properties "
+					$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties "
 						."SET window_advertising_status = 'online' "
 						."WHERE property_id = ". $this->property_id;
-					$result = rex_sql::factory();
+					$result = \rex_sql::factory();
 					$result->setQuery($query);
 				}
 				$this->window_advertising_status = "online";
@@ -610,21 +612,21 @@ class Property {
 	 * FALSE, only this translation will be deleted.
 	 */
 	public function delete($delete_all = TRUE) {
-		$query_lang = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang "
+		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang "
 			."WHERE property_id = ". $this->property_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
-		$result_lang = rex_sql::factory();
+		$result_lang = \rex_sql::factory();
 		$result_lang->setQuery($query_lang);
 		
 		// If no more lang objects are available, delete
-		$query_main = "SELECT * FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang "
+		$query_main = "SELECT * FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang "
 			."WHERE property_id = ". $this->property_id;
-		$result_main = rex_sql::factory();
+		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
 		if($result_main->getRows() == 0) {
-			$query = "DELETE FROM ". rex::getTablePrefix() ."d2u_immo_properties "
+			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_properties "
 				."WHERE property_id = ". $this->property_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}
@@ -637,8 +639,8 @@ class Property {
 	 * @return Properties[] Array with Property objects.
 	 */
 	public static function getAll($clang_id, $market_type = '', $only_online = FALSE) {
-		$query = "SELECT lang.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
-			."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
+		$query = "SELECT lang.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
+			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_properties AS properties "
 				."ON lang.property_id = properties.property_id AND lang.clang_id = ". $clang_id ." ";
 		if($only_online || $market_type != '') {
 			$where = [];
@@ -650,13 +652,13 @@ class Property {
 			}
 			$query .= "WHERE ". implode(' AND ', $where) ." ";
 		}
-		if(rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
+		if(\rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && \rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
 			$query .= 'ORDER BY priority ASC';
 		}
 		else {
 			$query .= 'ORDER BY name ASC';
 		}
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		$properties = [];
@@ -674,18 +676,18 @@ class Property {
 	 */
 	public static function getAllWindowAdvertisingProperties($clang_id) {
 		$properties = [];
-		if(rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
-			$query = "SELECT lang.property_id FROM ". rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
-				."LEFT JOIN ". rex::getTablePrefix() ."d2u_immo_properties AS properties "
+		if(\rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+			$query = "SELECT lang.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
+				."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_properties AS properties "
 					."ON lang.property_id = properties.property_id AND lang.clang_id = ". $clang_id ." "
 				."WHERE window_advertising_status = 'online' ";
-			if(rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
+			if(\rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && \rex_addon::get('d2u_immo')->getConfig('default_property_sort') == 'priority') {
 				$query .= 'ORDER BY priority ASC';
 			}
 			else {
 				$query .= 'ORDER BY name ASC';
 			}
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 
 			for($i = 0; $i < $result->getRows(); $i++) {
@@ -710,7 +712,7 @@ class Property {
 	 */
 	public function getMetaAlternateHreflangTags() {
 		$hreflang_tags = "";
-		foreach(rex_clang::getAll() as $rex_clang) {
+		foreach(\rex_clang::getAll() as $rex_clang) {
 			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
 				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->category->name .': '. $this->name) .'">';
 			}
@@ -797,8 +799,40 @@ class Property {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. $this->category->name .' / '. rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. $this->category->name .' / '. \rex::getServerName() .'</title>';
 	}
+	
+	/**
+	 * Get objects concerning translation updates
+	 * @param int $clang_id Redaxo language ID
+	 * @param string $type 'update' or 'missing'
+	 * @return Country[] Array with country objects.
+	 */
+	public static function getTranslationHelperObjects($clang_id, $type) {
+		$query = 'SELECT property_id FROM '. \rex::getTablePrefix() .'d2u_immo_properties_lang '
+				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
+				.'ORDER BY name';
+		if($type == 'missing') {
+			$query = 'SELECT main.property_id FROM '. \rex::getTablePrefix() .'d2u_immo_properties AS main '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_properties_lang AS target_lang '
+						.'ON main.property_id = target_lang.property_id AND target_lang.clang_id = '. $clang_id .' '
+					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_properties_lang AS default_lang '
+						.'ON main.property_id = default_lang.property_id AND default_lang.clang_id = '. \rex_config::get('d2u_helper', 'default_lang') .' '
+					."WHERE target_lang.property_id IS NULL "
+					.'ORDER BY default_lang.name';
+			$clang_id = \rex_config::get('d2u_helper', 'default_lang');
+		}
+		$result = \rex_sql::factory();
+		$result->setQuery($query);
+
+		$objects = [];
+		for($i = 0; $i < $result->getRows(); $i++) {
+			$objects[] = new Property($result->getValue("property_id"), $clang_id);
+			$result->next();
+		}
+		
+		return $objects;
+    }
 	
 	/**
 	 * Returns the URL of this object.
@@ -807,15 +841,15 @@ class Property {
 	 */
 	public function getURL($including_domain = FALSE) {
 		if($this->url == "") {
-			$d2u_immo = rex_addon::get("d2u_immo");
+			$d2u_immo = \rex_addon::get("d2u_immo");
 				
 			$parameterArray = [];
 			$parameterArray['property_id'] = $this->property_id;
-			$this->url = rex_getUrl($d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
+			$this->url = \rex_getUrl($d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, "&");
 		}
 
 		if($including_domain) {
-			return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url) ;
+			return str_replace(\rex::getServer(). '/', \rex::getServer(), \rex::getServer() . $this->url) ;
 		}
 		else {
 			return $this->url;
@@ -838,7 +872,7 @@ class Property {
 		}
 
 		if($this->property_id == 0 || $pre_save_property != $this) {
-			$query = rex::getTablePrefix() ."d2u_immo_properties SET "
+			$query = \rex::getTablePrefix() ."d2u_immo_properties SET "
 					."additional_costs = ". $this->additional_costs .", "
 					."animals = ". ($this->animals ? 1 : 0) .", "
 					."apartment_type = '". $this->apartment_type ."', "
@@ -846,7 +880,7 @@ class Property {
 					."bath = '|". implode("|", $this->bath) ."|', "
 					."broadband_internet = '|". implode("|", $this->broadband_internet) ."|', "
 					."cable_sat_tv = ". ($this->cable_sat_tv ? 1 : 0) .", "
-					."property_id = ". ($this->category !== FALSE ? $this->category->property_id : 0) .", "
+					."category_id = ". ($this->category !== FALSE ? $this->category->category_id : 0) .", "
 					."city = '". $this->city ."', "
 					."cold_rent = ". $this->cold_rent .", "
 					."condition_type = '". $this->condition_type ."', "
@@ -908,7 +942,7 @@ class Property {
 			else {
 				$query = "UPDATE ". $query ." WHERE property_id = ". $this->property_id;
 			}
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 			if($this->property_id == 0) {
 				$this->property_id = $result->getLastId();
@@ -916,7 +950,7 @@ class Property {
 			}
 			
 			// Remove from export
-			if(rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_property->online_status == "online" && $this->online_status != online) {
+			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_property->online_status == "online" && $this->online_status != online) {
 				ExportedProperty::removePropertyFromAllExports($this->property_id);
 			}
 
@@ -926,7 +960,7 @@ class Property {
 			// Save the language specific part
 			$pre_save_property = new Property($this->property_id, $this->clang_id);
 			if($pre_save_property != $this) {
-				$query = "REPLACE INTO ". rex::getTablePrefix() ."d2u_immo_properties_lang SET "
+				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_properties_lang SET "
 						."property_id = '". $this->property_id ."', "
 						."clang_id = '". $this->clang_id ."', "
 						."description = '". htmlspecialchars($this->description) ."', "
@@ -938,16 +972,16 @@ class Property {
 						."name = '". $this->name ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
-						."updateuser = '". rex::getUser()->getLogin() ."' ";
-				$result = rex_sql::factory();
+						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
 			}
 		}
 
 		// Update URLs
-		if(rex_addon::get("url")->isAvailable()) {
-			UrlGenerator::generatePathFile([]);
+		if(\rex_addon::get("url")->isAvailable()) {
+			\UrlGenerator::generatePathFile([]);
 		}
 		
 		return $error;
@@ -958,9 +992,9 @@ class Property {
 	 */
 	private function setPriority() {
 		// Pull prios from database
-		$query = "SELECT property_id, priority FROM ". rex::getTablePrefix() ."d2u_immo_properties "
+		$query = "SELECT property_id, priority FROM ". \rex::getTablePrefix() ."d2u_immo_properties "
 			."WHERE property_id <> ". $this->property_id ." ORDER BY priority";
-		$result = rex_sql::factory();
+		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		// When priority is too small, set at beginning
@@ -982,10 +1016,10 @@ class Property {
 
 		// Save all prios
 		foreach($properties as $prio => $property_id) {
-			$query = "UPDATE ". rex::getTablePrefix() ."d2u_immo_properties "
+			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties "
 					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE property_id = ". $property_id;
-			$result = rex_sql::factory();
+			$result = \rex_sql::factory();
 			$result->setQuery($query);
 		}
 	}

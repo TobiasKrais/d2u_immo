@@ -15,7 +15,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	// Media fields and links need special treatment
 	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
 
-	$contact = new Contact($form['contact_id']);
+	$contact = new D2U_Immo\Contact($form['contact_id']);
 	$contact->city = $form['city'];
 	$contact->company = $form['company'];
 	$contact->country_code = $form['country_code'];
@@ -52,14 +52,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 		$form = (array) rex_post('form', 'array', []);
 		$contact_id = $form['contact_id'];
 	}
-	$contact = new Contact($contact_id);
+	$contact = new D2U_Immo\Contact($contact_id);
 	
 	// Check if object is used
 	$uses_properties = $contact->getProperties();
 	
 	// If not used, delete
 	if(count($uses_properties) == 0) {
-		$contact = new Contact($contact_id);
+		$contact = new D2U_Immo\Contact($contact_id);
 		$contact->delete();
 	}
 	else {
@@ -87,9 +87,9 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_contact'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							$contact = new Contact($entry_id);
+							$contact = new D2U_Immo\Contact($entry_id);
 							$readonly = TRUE;
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
 								$readonly = FALSE;
 							}
 							
@@ -117,7 +117,7 @@ if ($func == 'edit' || $func == 'add') {
 						<button class="btn btn-apply" type="submit" name="btn_apply" value="1"><?php echo rex_i18n::msg('form_apply'); ?></button>
 						<button class="btn btn-abort" type="submit" name="btn_abort" formnovalidate="formnovalidate" value="1"><?php echo rex_i18n::msg('form_abort'); ?></button>
 						<?php
-							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
+							if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
 								print '<button class="btn btn-delete" type="submit" name="btn_delete" formnovalidate="formnovalidate" data-confirm="'. rex_i18n::msg('form_delete') .'?" value="1">'. rex_i18n::msg('form_delete') .'</button>';
 							}
 						?>
@@ -142,7 +142,7 @@ if ($func == 'edit' || $func == 'add') {
 
 if ($func == '') {
 	$query = 'SELECT contact_id, firstname, lastname, company '
-		. 'FROM '. rex::getTablePrefix() .'d2u_immo_contacts '
+		. 'FROM '. \rex::getTablePrefix() .'d2u_immo_contacts '
 		. 'ORDER BY lastname, firstname ASC';
     $list = rex_list::factory($query);
 
@@ -150,7 +150,7 @@ if ($func == '') {
 
     $tdIcon = '<i class="rex-icon rex-icon-user"></i>';
  	$thIcon = "";
-	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
+	if(\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
 		$thIcon = '<a href="' . $list->getUrl(['func' => 'add']) . '" title="' . rex_i18n::msg('add') . '"><i class="rex-icon rex-icon-add-module"></i></a>';
 	}
     $list->addColumn($thIcon, $tdIcon, 0, ['<th class="rex-table-icon">###VALUE###</th>', '<td class="rex-table-icon">###VALUE###</td>']);

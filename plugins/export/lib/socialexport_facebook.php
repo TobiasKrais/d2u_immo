@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * Facebook export.
  */
@@ -146,7 +148,7 @@ class SocialExportFacebook extends AExport {
 						// 'caption' => 'E.g.: Small heading',
 						'description' => $property->getSocialNetworkDescription()]; // post description
 				if(count($property->pictures) > 0) {
-					$news['picture'] = rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0];
+					$news['picture'] = \rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0];
 				}
 
 				try {
@@ -162,10 +164,10 @@ class SocialExportFacebook extends AExport {
 					$exported_property->provider_import_id = $feedback["id"];
 				} catch (FacebookApiException $e) {
 					if($this->provider->facebook_pageid == "") {
-						return rex_i18n::msg("d2u_immo_export_facebook_upload_failed") ." ". $e;
+						return \rex_i18n::msg("d2u_immo_export_facebook_upload_failed") ." ". $e;
 					}
 					else {
-						return rex_i18n::msg("d2u_immo_export_facebook_upload_page_failed") ." ". $e;
+						return \rex_i18n::msg("d2u_immo_export_facebook_upload_page_failed") ." ". $e;
 					}
 				}
 				

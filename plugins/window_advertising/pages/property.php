@@ -7,7 +7,7 @@ $property_id = rex_request('property_id', 'int');
  */
 if ($func == 'online' || $func == 'offline') {
 	// Change status
-	$property = new Property($property_id, rex_config::get("d2u_helper", "default_lang"));
+	$property = new D2U_Immo\Property($property_id, rex_config::get("d2u_helper", "default_lang"));
 	$property->property_id = $property_id; // Ensure correct ID in case language has no object
 	$property->changeWindowAdvertisingStatus();
 
@@ -16,7 +16,7 @@ if ($func == 'online' || $func == 'offline') {
 }
 
 print '<table class="table table-striped table-hover">';
-$properties = Property::getAll(rex_config::get("d2u_helper", "default_lang"), '', TRUE);
+$properties = D2U_Immo\Property::getAll(rex_config::get("d2u_helper", "default_lang"), '', TRUE);
 
 print "<thead>";
 print "<tr>";

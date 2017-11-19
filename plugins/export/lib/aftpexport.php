@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * Defines methods each export provider has to implement
  */
@@ -40,7 +42,7 @@ abstract class AFTPExport extends AExport {
 		$this->export_properties = ExportedProperty::getAll($this->provider);		
 		
 		// Check if cache path exists - if not create it
-		$this->cache_path = rex_path::pluginCache("d2u_immo", "export");
+		$this->cache_path = \rex_path::pluginCache("d2u_immo", "export");
 		if(!is_dir($this->cache_path)) {
 			mkdir($this->cache_path, 0777, true);
 		}
@@ -138,14 +140,14 @@ abstract class AFTPExport extends AExport {
 
 		// Is connection not healthy: send error message
 		if ((!$connection_id) || (!$login_result)) {
-		   return rex_i18n::msg('d2u_immo_export_ftp_error_connection');
+		   return \rex_i18n::msg('d2u_immo_export_ftp_error_connection');
 		}
 		// Passive mode
 		ftp_pasv($connection_id, true);
 		
 		// Upload
 		if (! ftp_put($connection_id, $this->zip_filename, $this->cache_path . $this->getZipFileName(), FTP_BINARY)) {
-		   return rex_i18n::msg('d2u_immo_export_ftp_error_upload');
+		   return \rex_i18n::msg('d2u_immo_export_ftp_error_upload');
 		}
 
 		// Close connection
@@ -161,16 +163,16 @@ abstract class AFTPExport extends AExport {
 	 */
 	protected function zip($filename) {
 	   	// Create ZIP
-		$zip = new ZipArchive();
-		if ($zip->open($this->cache_path . $this->getZipFileName(), ZipArchive::CREATE) !== TRUE) {
-			return rex_i18n::msg('d2u_immo_export_zip_cannot_create');
+		$zip = new \ZipArchive();
+		if ($zip->open($this->cache_path . $this->getZipFileName(), \ZipArchive::CREATE) !== TRUE) {
+			return \rex_i18n::msg('d2u_immo_export_zip_cannot_create');
 		}
 		$zip->addFile($this->cache_path . $filename, $filename);
 		foreach($this->files_for_zip as $original_filename => $cachefilename) {
 			$zip->addFile($cachefilename, $original_filename);
 		}
 		foreach($this->documents_for_zip as $filename) {
-			$zip->addFile(rex_url::media($filename), $filename);
+			$zip->addFile(\rex_url::media($filename), $filename);
 		}
 		$zip->close();
 		return "";

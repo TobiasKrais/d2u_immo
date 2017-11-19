@@ -1,12 +1,12 @@
 <?php
-if(rex::isBackend() && is_object(rex::getUser())) {
+if(\rex::isBackend() && is_object(\rex::getUser())) {
 	rex_perm::register('d2u_immo[]', rex_i18n::msg('d2u_immo_rights_all'));
 	rex_perm::register('d2u_immo[edit_lang]', rex_i18n::msg('d2u_immo_rights_edit_lang'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_immo[edit_data]', rex_i18n::msg('d2u_immo_rights_edit_data'), rex_perm::OPTIONS);
 	rex_perm::register('d2u_immo[settings]', rex_i18n::msg('d2u_immo_rights_settings'), rex_perm::OPTIONS);	
 }
 
-if(rex::isBackend()) {
+if(\rex::isBackend()) {
 	rex_extension::register('CLANG_DELETED', 'rex_d2u_immo_clang_deleted');
 	rex_extension::register('MEDIA_IS_IN_USE', 'rex_d2u_immo_media_is_in_use');
 	rex_extension::register('ART_PRE_DELETED', 'rex_d2u_immo_article_is_in_use');
@@ -53,11 +53,11 @@ function rex_d2u_immo_clang_deleted(rex_extension_point $ep) {
 	$clang_id = $params['id'];
 
 	// Delete
-	$categories = Category::getAll($clang_id);
+	$categories = D2U_Immo\Category::getAll($clang_id);
 	foreach ($categories as $category) {
 		$category->delete(FALSE);
 	}
-	$properties = Property::getAll($clang_id, '', FALSE);
+	$properties = D2U_Immo\Property::getAll($clang_id, '', FALSE);
 	foreach ($properties as $property) {
 		$property->delete(FALSE);
 	}
@@ -84,19 +84,19 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep) {
 
 	// Contacts
 	$sql_contacts = rex_sql::factory();
-	$sql_contacts->setQuery('SELECT contact_id, firstname, lastname FROM `' . rex::getTablePrefix() . 'd2u_immo_contacts` '
+	$sql_contacts->setQuery('SELECT contact_id, firstname, lastname FROM `' . \rex::getTablePrefix() . 'd2u_immo_contacts` '
 		.'WHERE picture = "'. $filename .'" ');
 	
 	// Categories
 	$sql_categories = rex_sql::factory();
-	$sql_categories->setQuery('SELECT lang.category_id, name FROM `' . rex::getTablePrefix() . 'd2u_immo_categories_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_immo_categories` AS categories ON lang.category_id = categories.category_id '
+	$sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_immo_categories_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_immo_categories` AS categories ON lang.category_id = categories.category_id '
 		.'WHERE picture = "'. $filename .'" ');  
 
 	// Properties
 	$sql_properties = rex_sql::factory();
-	$sql_properties->setQuery('SELECT lang.property_id, name FROM `' . rex::getTablePrefix() . 'd2u_immo_properties_lang` AS lang '
-		.'LEFT JOIN `' . rex::getTablePrefix() . 'd2u_immo_properties` AS properties ON lang.property_id = properties.property_id '
+	$sql_properties->setQuery('SELECT lang.property_id, name FROM `' . \rex::getTablePrefix() . 'd2u_immo_properties_lang` AS lang '
+		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_immo_properties` AS properties ON lang.property_id = properties.property_id '
 		.'WHERE pictures LIKE "%'. $filename .'%" OR ground_plans LIKE "%'. $filename .'%" OR location_plans LIKE "%'. $filename .'%" OR documents LIKE "%'. $filename .'%"');  
 
 	// Prepare warnings

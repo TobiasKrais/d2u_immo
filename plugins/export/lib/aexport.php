@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * Defines methods each export provider has to implement
  */
@@ -21,7 +23,6 @@ abstract class AExport {
 		$this->provider = $provider;
 		$this->export_properties = ExportedProperty::getAll($this->provider);
 	}
-
 	
 	/**
 	 * Converts HTML formatted string to string with new lines. Following HTML
@@ -54,21 +55,21 @@ abstract class AExport {
 	 * @return string Cached picture filename
 	 */
 	protected function preparePicture($pic) {
-		$media = rex_media::get($pic);
-		if($media instanceof rex_media && $media->getSize() < 3145728) {
-			$media_manager = rex_media_manager::create($this->provider->media_manager_type, $pic);
+		$media = \rex_media::get($pic);
+		if($media instanceof \rex_media && $media->getSize() < 3145728) {
+			$media_manager = \rex_media_manager::create($this->provider->media_manager_type, $pic);
 			if(file_exists($media_manager->getCacheFilename())) {
 				// Cached file if successfull
 				return $media_manager->getCacheFilename();
 			}
 			else {
 				// Normal media file if not successfull
-				return rex_url::media($pic);
+				return \rex_url::media($pic);
 			}
 		}
 		else {
-			print rex_view::warning($pic .": ". rex_i18n::msg('d2u_immo_export_image_too_large'));
-			return rex_url::media($pic);
+			print \rex_view::warning($pic .": ". \rex_i18n::msg('d2u_immo_export_image_too_large'));
+			return \rex_url::media($pic);
 		}
 	}
 	

@@ -1,4 +1,6 @@
 <?php
+namespace D2U_Immo;
+
 /**
  * OpenImmo export class
  */
@@ -60,7 +62,7 @@ class OpenImmo extends AFTPExport {
 	 */
 	function createXML() {
 		// <?xml version="1.0" encoding="UTF-8">
-		$xml = new DOMDocument("1.0", "UTF-8");
+		$xml = new \DOMDocument("1.0", "UTF-8");
 		$xml->formatOutput = true;
 		$openimmo = $xml->createElement("openimmo");
 		$xml->appendChild($openimmo);
@@ -977,9 +979,9 @@ class OpenImmo extends AFTPExport {
 
 			foreach($objekt_anhaenge as $objekt_anhang) {
 				foreach($objekt_anhang as $media_type => $filename) {
-					$anhang_media = rex_media::get($filename);
+					$anhang_media = \rex_media::get($filename);
 					// Pruefen, ob Datei in Datenbank existiert
-					if($anhang_media instanceof rex_media) {
+					if($anhang_media instanceof \rex_media) {
 						//<anhang location="EXTERN" gruppe="BILD">
 						$anhang = $xml->createElement("anhang");
 						$anhang_location = $xml->createAttribute("location");
@@ -1139,14 +1141,14 @@ class OpenImmo extends AFTPExport {
 		// write XML file
 		try {
 			if($xml->save($this->cache_path . $this->xml_filename) === FALSE) {
-				return rex_i18n::msg('d2u_immo_export_xml_cannot_create');
+				return \rex_i18n::msg('d2u_immo_export_xml_cannot_create');
 			}
 			else {
 				return "";
 			}
 		}
 		catch(Exception $e) {
-			return rex_i18n::msg('d2u_machinery_export_xml_cannot_create') . " - ". $e->getMessage();
+			return \rex_i18n::msg('d2u_machinery_export_xml_cannot_create') . " - ". $e->getMessage();
 		}
 	}
 }

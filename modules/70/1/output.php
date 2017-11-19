@@ -151,7 +151,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$property_id = UrlGenerator::getId();
 	}
-	$property = new Property($property_id, rex_clang::getCurrentId());
+	$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
 
 	if($print == "") {
 		print '<div class="col-12 expose-navi d-print-none">';
@@ -1037,10 +1037,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 }
 else {
 	// Output property list
-	$properties_leasehold = Property::getAll(Rex_clang::getCurrentId(), "ERBPACHT", TRUE);
-	$properties_leasing = Property::getAll(Rex_clang::getCurrentId(), "LEASING", TRUE);
-	$properties_rent = Property::getAll(Rex_clang::getCurrentId(), "MIETE_PACHT", TRUE);
-	$properties_sale = Property::getAll(Rex_clang::getCurrentId(), "KAUF", TRUE);
+	$properties_leasehold = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "ERBPACHT", TRUE);
+	$properties_leasing = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "LEASING", TRUE);
+	$properties_rent = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "MIETE_PACHT", TRUE);
+	$properties_sale = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "KAUF", TRUE);
 
 	// Tabs
 	print '<div class="col-12">';

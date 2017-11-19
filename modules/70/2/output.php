@@ -1,7 +1,7 @@
 <?php
 $contact_id = "REX_VALUE[2]";
 $contact_form_url = "REX_LINK[id=1 output=url]";
-$contact = new Contact($contact_id);
+$contact = new D2U_Immo\Contact($contact_id);
 $property = FALSE;
 
 // Get placeholder wildcard tags and other presets
@@ -22,7 +22,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$property_id = UrlGenerator::getId();
 	}
-	$property = new Property($property_id, rex_clang::getCurrentId());
+	$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
 	if("REX_VALUE[1]" == "Ja") {
 		$contact = $property->contact;
 	}
