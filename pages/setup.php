@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.3:</p>
 <ul>
-	<li>Übersetzungshile aus D2U Helper 1.3.0 integriert.</li>
+	<li>Übersetzungshile aus D2U Helper 1.3.0 integriert. ACHTUNG: Namespace hinzugefügt! Eigene Module müssen angepasst werden!</li>
 	<li>Update auf URL Addon 1.0.1.</li>
 	<li>Bugfix Finanzierungsrechner bei Summen über 1.000.000,-.</li>
 	<li>Bugfix wenn Standardsprache die zweite Sprache ist.</li>
