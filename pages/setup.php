@@ -31,6 +31,10 @@ $d2u_module_manager->showManagerList();
 <p>Sammelthread fürs Addon im <a href="https://redaxo.org/forum/viewtopic.php?f=43&t=21965" target="_blank">Redaxo Forum</a>.</p>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.0.4 (NEXT):</p>
+<ul>
+	<li>Downloads, die durch ycom/auth_media geschützt sind werden nicht mehr angezeigt.</li>
+</ul>
 <p>1.0.3:</p>
 <ul>
 	<li>Übersetzungshile aus D2U Helper 1.3.0 integriert. ACHTUNG: Namespace hinzugefügt! Eigene Module müssen angepasst werden!</li>

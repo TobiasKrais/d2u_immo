@@ -348,7 +348,14 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		foreach($property->documents as $document) {
 			$media = rex_media::get($document);
 			if($media instanceof rex_media) {
-				print '<li><span class="icon pdf"></span> <a href="'. rex_url::media($document) .'">'. $media->getTitle() .'</a></li>';
+				// Check permissions
+				$has_permission = TRUE;
+				if(rex_plugin::get('ycom', 'auth_media')->isAvailable()) {
+					$has_permission = rex_ycom_auth_media::checkPerm($media);
+				}
+				if($has_permission) {
+					print '<li><span class="icon pdf"></span> <a href="'. rex_url::media($document) .'">'. $media->getTitle() .'</a></li>';
+				}
 			}
 		}
 		if($property->market_type == "MIETE_PACHT" && $d2u_immo->hasConfig('even_informative_pdf') && $d2u_immo->getConfig('even_informative_pdf') != '') {
