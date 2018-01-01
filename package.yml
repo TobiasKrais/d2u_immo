@@ -1,5 +1,5 @@
 package: d2u_immo
-version: '1.0.3'
+version: '1.0.4'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_immo
 
@@ -28,6 +28,6 @@ requires:
         media_manager: '>=2.2'
         tinymce4: '>=0.10'
         sprog: '>=1.0.0'
-        url: '>=1.0.0'
+        url: '>=1.0.1'
         yform: '>=2.0'
         yrewrite: '>=2.0.1'

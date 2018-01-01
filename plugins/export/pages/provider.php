@@ -20,6 +20,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$provider->company_email = $form['company_email'];
 	$provider->customer_number = $form['customer_number'];
 	$provider->media_manager_type = $form['media_manager_type'];
+	$provider->online_status = array_key_exists('online_status', $form) ? "online" : "offline";
 	$provider->ftp_server = $form['ftp_server'];
 	$provider->ftp_username = $form['ftp_username'];
 	$provider->ftp_password = $form['ftp_password'];
@@ -61,7 +62,14 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	}
 	$func = '';
 }
-
+// Change online status of machine
+else if($func == 'changestatus') {
+	$provider = new \D2U_Immo\Provider($entry_id);
+	$provider->changeStatus();
+	
+	header("Location: ". rex_url::currentBackendPage());
+	exit;
+}
 // Eingabeformular
 if ($func == 'edit' || $func == 'add') {
 ?>
@@ -100,6 +108,7 @@ if ($func == 'edit' || $func == 'add') {
 								$media_sql->next();
 							}
 							d2u_addon_backend_helper::form_select('d2u_immo_export_media_manager_type', 'form[media_manager_type]', $options_media, array($provider->media_manager_type));
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $provider->online_status == "online", $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -165,7 +174,7 @@ if ($func == 'edit' || $func == 'add') {
 }
 
 if ($func == '') {
-	$query = 'SELECT provider_id, name, type '
+	$query = 'SELECT provider_id, name, type, online_status '
 		.'FROM '. rex::getTablePrefix() .'d2u_immo_export_provider '
 		.'ORDER BY name';
     $list = rex_list::factory($query);
@@ -185,7 +194,11 @@ if ($func == '') {
 
     $list->setColumnLabel('type', rex_i18n::msg('d2u_immo_export_type'));
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('system_update'));
+	$list->removeColumn('online_status');
+	$list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###provider_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+	$list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+	
+	$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
     $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###provider_id###']);
 

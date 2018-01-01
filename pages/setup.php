@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.4 (NEXT):</p>
 <ul>
+	<li>Export Plugin: Portale können offline geschaltet werden.</li>
 	<li>Downloads, die durch ycom/auth_media geschützt sind werden nicht mehr angezeigt.</li>
 </ul>
 <p>1.0.3:</p>
