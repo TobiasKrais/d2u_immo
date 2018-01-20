@@ -34,6 +34,7 @@ $d2u_module_manager->showManagerList();
 <p>1.0.4-DEV:</p>
 <ul>
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
+	<li>Export Plugin: Bei Installation des Autoexportes künftig Ausführung im Frontend und Backend.</li>
 	<li>Downloads, die durch ycom/auth_media geschützt sind werden nicht mehr angezeigt.</li>
 	<li>Anpassungen Druckausgabe an Bootstrap 4.0.0.</li>
 </ul>
