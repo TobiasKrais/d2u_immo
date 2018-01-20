@@ -31,10 +31,11 @@ $d2u_module_manager->showManagerList();
 <p>Sammelthread fürs Addon im <a href="https://redaxo.org/forum/viewtopic.php?f=43&t=21965" target="_blank">Redaxo Forum</a>.</p>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.0.4 (NEXT):</p>
+<p>1.0.4-DEV:</p>
 <ul>
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
 	<li>Downloads, die durch ycom/auth_media geschützt sind werden nicht mehr angezeigt.</li>
+	<li>Anpassungen Druckausgabe an Bootstrap 4.0.0.</li>
 </ul>
 <p>1.0.3:</p>
 <ul>

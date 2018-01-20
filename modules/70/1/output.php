@@ -166,7 +166,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</ul>';
 		print '</div>';
 
-		print '<div class="col-12 d-print-inline">';
+		print '<div class="col-12 d-none d-print-inline">';
 		print '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
 		print $tag_open .'d2u_immo_form_phone'. $tag_close .': '. $property->contact->phone .'<br>';
 		print $tag_open .'d2u_immo_form_email'. $tag_close .': '. $property->contact->email .'<p>';
@@ -203,7 +203,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	print '<div class="col-12 print-border-h">';
 	print '<h1>'. $property->name .'</h1>';
 	print '</div>';
-	print '<div class="col-12 print-border d-print-inline">';
+	print '<div class="col-12 print-border d-none d-print-inline">';
 	print '<p>'. $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city .'</p>';
 	print '</div>';
 	print '<div class="col-12 print-border">'; // START overview picture and short info
@@ -559,7 +559,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	else {
 		print '<div class="col-12 print-border">'. $property->courtage .' '. $tag_open .'d2u_immo_courtage_incl_vat'. $tag_close .'</div>';
 	}
-	print '<div class="col-12 d-print-inline">&nbsp;</div>';
+	print '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
 
 	print '</div>'; // END row overview
 	if($print == "") {
@@ -572,10 +572,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div id="tab_pictures" class="tab-pane immo-tab fade">'; // START tab picures
 		}
 		print '<div class="row">'; // START pictures
-		print '<div class="col-12 d-print-inline print-border-h">';
+		print '<div class="col-12 d-none d-print-inline print-border-h">';
 		print "<h2>". $tag_open .'d2u_immo_tab_pictures'. $tag_close ."</h2>";
 		print '</div>';
-		print '<div class="col-12 d-print-none">';
+		print '<div class="col-12 d-none d-print-none">';
 		print "<h2>". $property->name ."</h2>";
 		print '</div>';
 		echo printImages($property->pictures);
@@ -587,7 +587,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print "<h2>". $tag_open .'d2u_immo_ground_plans'. $tag_close ."</h2>";
 			print '</div>';
 			echo printImages($property->ground_plans);
-			print '<div class="col-12 d-print-inline">&nbsp;</div>';
+			print '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
 			print '</div>';			
 		}
 
@@ -597,7 +597,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print "<h2>". $tag_open .'d2u_immo_location_plans'. $tag_close ."</h2>";
 			print '</div>';
 			echo printImages($property->location_plans);	
-			print '<div class="col-12 d-print-inline">&nbsp;</div>';
+			print '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
 			print '</div>';
 		}
 		if($print != "full") {
@@ -616,7 +616,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div id="tab_map" class="tab-pane immo-tab fade page-break-avoid">'; // START tab map
 		}
 		print '<div class="row page-break-avoid">';
-		print '<div class="col-12 d-print-inline print-border-h">';
+		print '<div class="col-12 d-none d-print-inline print-border-h">';
 		print "<h2>". $tag_open .'d2u_immo_tab_map'. $tag_close ."</h2>";
 		print '</div>';
 		print '<div class="col-12 print-border">';
@@ -685,7 +685,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '</div>';  // END tab map
 		}
 		else {
-			print '<div class="col-12 d-print-inline">&nbsp;</div>';
+			print '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
 		}
 	}
 	// End Map
@@ -1035,7 +1035,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '</div>'; // END div containing tab content
 	}
 
-	print '<div class="col-12 d-print-inline">';
+	print '<div class="col-12 d-none d-print-inline">';
 	print '<p>'. $tag_open .'d2u_immo_print_foot'. $tag_close .'</p>';
 	print '<p>'. $tag_open .'d2u_immo_print_foot_greetings'. $tag_close .'</p>';
 	print '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'</p>';
