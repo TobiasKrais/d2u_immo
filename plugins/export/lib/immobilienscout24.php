@@ -367,7 +367,7 @@ class ImmobilienScout24 extends AFTPExport {
 			// <Objektbeschreibung>ruhige, schön geschnittene, helle Wohung in attraktivem Haus, Aufzug, Parkdeck und Grünfläche</Objektbeschreibung>
 			$objektbeschreibung = $xml->createElement("Objektbeschreibung");
 			if(strlen($property->description) > 0) {
-				$objektbeschreibung->appendChild($xml->createTextNode($property->description));
+				$objektbeschreibung->appendChild($xml->createTextNode(\d2u_addon_frontend_helper::prepareEditorField($property->description)));
 			}
 			else {
 				$objektbeschreibung->appendChild($xml->createTextNode("Keine Objektbeschreibung eingegeben."));
@@ -377,21 +377,21 @@ class ImmobilienScout24 extends AFTPExport {
 			// <Lage>zentral Nähe Hauptbahnhof</Lage>
 			if($property->description_location != "") {
 				$lage = $xml->createElement("Lage");
-				$lage->appendChild($xml->createTextNode($property->description_location));
+				$lage->appendChild($xml->createTextNode(\d2u_addon_frontend_helper::prepareEditorField($property->description_location)));
 				$objekttyp->appendChild($lage);
 			}
 
 			// <Ausstattung>vollständig gefließt, kompl. einger. offene EBK (Cerankochfeld,Spülmaschine), Wannenbad/WC, S/W-Balkon, KabelTV, Waschmaschine auf Wunsch vorhanden</Ausstattung>
 			if($property->description_equipment != "") {
 				$ausstatt = $xml->createElement("Ausstattung");
-				$ausstatt->appendChild($xml->createTextNode($property->description_equipment));
+				$ausstatt->appendChild($xml->createTextNode(\d2u_addon_frontend_helper::prepareEditorField($property->description_equipment)));
 				$objekttyp->appendChild($ausstatt);
 			}
 
 			//<SonstigeAngaben>Fahrradkeller und Trockenboden vorhanden</SonstigeAngaben>
 			if($property->description_others != "") {
 				$sonstige_angaben = $xml->createElement("SonstigeAngaben");
-				$sonstige_angaben->appendChild($xml->createTextNode($property->description_others));
+				$sonstige_angaben->appendChild($xml->createTextNode(\d2u_addon_frontend_helper::prepareEditorField($property->description_others)));
 				$objekttyp->appendChild($sonstige_angaben);
 			}
 

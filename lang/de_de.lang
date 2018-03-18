@@ -97,7 +97,6 @@ d2u_immo_property_currency_code_EUR = Euro
 d2u_immo_property_currency_code_USD = US Dollar
 d2u_immo_property_data = Eckdaten
 d2u_immo_property_deposit = Kaution
-d2u_immo_property_description = Beschreibung
 d2u_immo_property_description_location = Lagebeschreibung
 d2u_immo_property_description_equipment = Ausstattung
 d2u_immo_property_description_others = Weitere Beschreibung

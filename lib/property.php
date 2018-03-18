@@ -440,39 +440,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->courtage_incl_vat = $result->getValue("courtage_incl_vat") == "1" ? TRUE : FALSE;
 			$this->currency_code = $result->getValue("currency_code");
 			$this->deposit = $result->getValue("deposit");
-			// Convert redaxo://123 to URL
-			$this->description = preg_replace_callback(
-					'@redaxo://(\d+)(?:-(\d+))?/?@i',
-					create_function(
-							'$matches',
-							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
-					),
-					htmlspecialchars_decode($result->getValue("description"))
-			);
-			$this->description_equipment = preg_replace_callback(
-					'@redaxo://(\d+)(?:-(\d+))?/?@i',
-					create_function(
-							'$matches',
-							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
-					),
-					htmlspecialchars_decode($result->getValue("description_equipment"))
-			);
-			$this->description_location = preg_replace_callback(
-					'@redaxo://(\d+)(?:-(\d+))?/?@i',
-					create_function(
-							'$matches',
-							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
-					),
-					htmlspecialchars_decode($result->getValue("description_location"))
-			);
-			$this->description_others = preg_replace_callback(
-					'@redaxo://(\d+)(?:-(\d+))?/?@i',
-					create_function(
-							'$matches',
-							'return \rex_getUrl($matches[1], isset($matches[2]) ? $matches[2] : "");'
-					),
-					htmlspecialchars_decode($result->getValue("description_others"))
-			);
+			$this->description = htmlspecialchars_decode($result->getValue("description"));
+			$this->description_equipment = htmlspecialchars_decode($result->getValue("description_equipment"));
+			$this->description_location = htmlspecialchars_decode($result->getValue("description_location"));
+			$this->description_others = htmlspecialchars_decode($result->getValue("description_others"));
 			$this->documents = preg_grep('/^\s*$/s', explode(",", $result->getValue("documents")), PREG_GREP_INVERT);
 			$this->elevator = preg_grep('/^\s*$/s', explode("|", $result->getValue("elevator")), PREG_GREP_INVERT);
 			$this->energy_consumption = $result->getValue("energy_consumption");

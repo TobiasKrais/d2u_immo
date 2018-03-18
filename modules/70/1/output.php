@@ -506,7 +506,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div class="row page-break-avoid">';
 		}
 		print '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description'. $tag_close .'</h2></div>';
-		print '<div class="col-12 print-border">'. $property->description .'</div>';
+		print '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description) .'</div>';
 		print '<div class="col-12">&nbsp;</div>';
 		if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
 			print '</div>';
@@ -518,7 +518,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div class="row page-break-avoid">';
 		}
 		print '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_location'. $tag_close .'</h2></div>';
-		print '<div class="col-12 print-border">'. $property->description_location .'</div>';
+		print '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_location) .'</div>';
 		print '<div class="col-12">&nbsp;</div>';
 		if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
 			print '</div>';
@@ -530,7 +530,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div class="row page-break-avoid">';
 		}
 		print '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_equipment'. $tag_close .'</h2></div>';
-		print '<div class="col-12 print-border">'. $property->description_equipment .'</div>';
+		print '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_equipment) .'</div>';
 		print '<div class="col-12">&nbsp;</div>';
 		if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
 			print '</div>';
@@ -542,7 +542,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div class="row page-break-avoid">';
 		}
 		print '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_others'. $tag_close .'</h2></div>';
-		print '<div class="col-12 print-border">'. $property->description_others .'</div>';
+		print '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_others) .'</div>';
 		print '<div class="col-12">&nbsp;</div>';
 		if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
 			print '</div>';

@@ -12,8 +12,5 @@ page:
         advertisement: { title: 'translate:d2u_immo_window_advertising_ads', icon: rex-icon fa-desktop }
 
 requires:
-    redaxo: '>=5.3.0'
-    php:
-        version: '>=5.6'
     packages:
         sprog: '>=1.0.0'
