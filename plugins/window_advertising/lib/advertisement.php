@@ -84,8 +84,8 @@ class Advertisement implements \D2U_Helper\ITranslationHelper {
 		if ($num_rows > 0) {
 			$this->ad_id = $result->getValue("ad_id");
 			$this->priority = $result->getValue("priority");
-			$this->title = $result->getValue("title");
-			$this->description = $result->getValue("description");
+			$this->title = stripslashes(htmlspecialchars_decode($result->getValue("title")));
+			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
 			$this->picture = $result->getValue("picture");
 			$this->online_status = $result->getValue("online_status");
 			if($result->getValue("translation_needs_update") != "") {
@@ -275,8 +275,8 @@ class Advertisement implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_window_advertising_lang SET "
 						."ad_id = '". $this->ad_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."title = '". htmlspecialchars($this->title) ."', "
-						."description = '". htmlspecialchars($this->description) ."', "
+						."title = '". addslashes(htmlspecialchars($this->title)) ."', "
+						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";

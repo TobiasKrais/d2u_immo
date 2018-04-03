@@ -440,10 +440,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->courtage_incl_vat = $result->getValue("courtage_incl_vat") == "1" ? TRUE : FALSE;
 			$this->currency_code = $result->getValue("currency_code");
 			$this->deposit = $result->getValue("deposit");
-			$this->description = htmlspecialchars_decode($result->getValue("description"));
-			$this->description_equipment = htmlspecialchars_decode($result->getValue("description_equipment"));
-			$this->description_location = htmlspecialchars_decode($result->getValue("description_location"));
-			$this->description_others = htmlspecialchars_decode($result->getValue("description_others"));
+			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
+			$this->description_equipment = stripslashes(htmlspecialchars_decode($result->getValue("description_equipment")));
+			$this->description_location = stripslashes(htmlspecialchars_decode($result->getValue("description_location")));
+			$this->description_others = stripslashes(htmlspecialchars_decode($result->getValue("description_others")));
 			$this->documents = preg_grep('/^\s*$/s', explode(",", $result->getValue("documents")), PREG_GREP_INVERT);
 			$this->elevator = preg_grep('/^\s*$/s', explode("|", $result->getValue("elevator")), PREG_GREP_INVERT);
 			$this->energy_consumption = $result->getValue("energy_consumption");
@@ -939,10 +939,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_properties_lang SET "
 						."property_id = '". $this->property_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."description = '". htmlspecialchars($this->description) ."', "
-						."description_equipment = '". htmlspecialchars($this->description_equipment) ."', "
-						."description_location = '". htmlspecialchars($this->description_location) ."', "
-						."description_others = '". htmlspecialchars($this->description_others) ."', "
+						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
+						."description_equipment = '". addslashes(htmlspecialchars($this->description_equipment)) ."', "
+						."description_location = '". addslashes(htmlspecialchars($this->description_location)) ."', "
+						."description_others = '". addslashes(htmlspecialchars($this->description_others)) ."', "
 						."documents = '". implode(",", $this->documents) ."', "
 						."teaser = '". $this->teaser ."', "
 						."name = '". $this->name ."', "

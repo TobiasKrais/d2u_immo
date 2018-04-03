@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.4-DEV:</p>
 <ul>
+	<li>Fehler beim Speichern von einfachen Anführungszeichen behoben.</li>
 	<li>YRewrite Multidomain Anpassungen.</li>
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
 	<li>Export Plugin: Bei Installation des Autoexportes künftig Ausführung im Frontend und Backend.</li>
