@@ -465,7 +465,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->living_area = $result->getValue("living_area");
 			$this->location_plans = preg_grep('/^\s*$/s', explode(",", $result->getValue("location_plans")), PREG_GREP_INVERT);
 			$this->longitude = $result->getValue("longitude") == "" ? 0 : $result->getValue("longitude");
-			$this->market_type = $result->getValue("market_type");
+			$this->market_type = stripslashes($result->getValue("market_type"));
 			$this->name = $result->getValue("name");
 			$this->object_reserved = $result->getValue("object_reserved") == "1" ? TRUE : FALSE;
 			$this->object_sold = $result->getValue("object_sold") == "1" ? TRUE : FALSE;
@@ -945,7 +945,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 						."description_others = '". addslashes(htmlspecialchars($this->description_others)) ."', "
 						."documents = '". implode(",", $this->documents) ."', "
 						."teaser = '". $this->teaser ."', "
-						."name = '". $this->name ."', "
+						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";

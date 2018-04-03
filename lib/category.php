@@ -87,8 +87,8 @@ class Category implements \D2U_Helper\ITranslationHelper {
 			if($result->getValue("parent_category_id") > 0) {
 				$this->parent_category = new Category($result->getValue("parent_category_id"), $clang_id);
 			}
-			$this->name = $result->getValue("name");
-			$this->teaser = $result->getValue("teaser");
+			$this->name = stripslashes($result->getValue("name"));
+			$this->teaser = stripslashes($result->getValue("teaser"));
 			$this->picture = $result->getValue("picture");
 			$this->priority = $result->getValue("priority");
 			if($result->getValue("translation_needs_update") != "") {
@@ -363,8 +363,8 @@ class Category implements \D2U_Helper\ITranslationHelper {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_categories_lang SET "
 						."category_id = '". $this->category_id ."', "
 						."clang_id = '". $this->clang_id ."', "
-						."name = '". $this->name ."', "
-						."teaser = '". $this->teaser ."', "
+						."name = '". addslashes($this->name) ."', "
+						."teaser = '". addslashes($this->teaser) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
