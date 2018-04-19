@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.4-DEV:</p>
 <ul>
+	<li>Feld Datenschutzerklärung akzeptiert im Frontend Formular hinzugefügt.</li>
 	<li>Fehler beim Speichern von einfachen Anführungszeichen behoben.</li>
 	<li>YRewrite Multidomain Anpassungen.</li>
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
