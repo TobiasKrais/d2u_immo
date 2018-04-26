@@ -934,8 +934,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				</table>
 			</fieldset>
 			<br />
-			<input name="berechnen" id="berechnen" value="<?php print $tag_open .'d2u_immo_finance_calc_calculate'. $tag_close; ?>" type="submit" onClick="javascript:recalc(); return false;" class="d-print-none">
-			<input name="drucken" id="drucken" value="<?php print $tag_open .'d2u_immo_print'. $tag_close; ?>" onClick="javascript:window.print(); return false;" type="submit" class="d-print-none">
+			<input name="berechnen" id="berechnen" value="<?php print $tag_open .'d2u_immo_finance_calc_calculate'. $tag_close; ?>" type="submit" onClick="javascript:recalc(); return false;" class="btn btn-primary d-print-none">
+			<input name="drucken" id="drucken" value="<?php print $tag_open .'d2u_immo_print'. $tag_close; ?>" onClick="javascript:window.print(); return false;" type="submit" class="btn btn-primary d-print-none">
 		</form>
 
 <?php
@@ -958,7 +958,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				text|phone|'. $tag_open .'d2u_immo_form_phone'. $tag_close .' *
 				text|email|'. $tag_open .'d2u_immo_form_email'. $tag_close .' *
 				textarea|message|'. $tag_open .'d2u_immo_form_message'. $tag_close .'
-				'. ($privacy_policy_article_name != '' ? 'checkbox|privacy_policy_accepted|<a href="'. $privacy_policy_article->getUrl() .'" target="_blank">'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .'</a> *|no,yes|no' : '') .'
+				'. ($privacy_policy_article_name != '' ? 'checkbox|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .'</a> *|no,yes|no' : '') .'
 
 				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
 				captcha|'. $tag_open .'d2u_immo_form_captcha'. $tag_close .'|'. $tag_open .'d2u_immo_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['property_id' => $property->property_id]) .'
@@ -969,7 +969,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				validate|empty|phone|'. $tag_open .'d2u_immo_form_validate_phone'. $tag_close .'
 				validate|empty|email|'. $tag_open .'d2u_immo_form_validate_email'. $tag_close .'
 				validate|email|email|'. $tag_open .'d2u_immo_form_validate_email_false'. $tag_close .'
-			'. ($privacy_policy_article_name != '' ? 'validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_guestbook_form_validate_privacy_policy'. $tag_close .'' : '') .'
+			'. ($privacy_policy_article_name != '' ? 'validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'' : '') .'
 
 				action|tpl2email|d2u_immo_request|emaillabel|'. $property->contact->email;
 

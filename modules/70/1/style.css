@@ -1,7 +1,10 @@
-.tab-content {
+.tab-pane {
 	border: 1px solid navi_color_bg;
 	margin-bottom: 1em;
-	padding: 1em
+	padding: 1em 1em 0 1em;
+}
+.immo-tab {
+	padding-bottom: 1em;
 }
 .tab-content ul {
 	margin-bottom: 0;
