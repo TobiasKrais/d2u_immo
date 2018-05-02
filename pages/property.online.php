@@ -56,7 +56,7 @@ if ($func == '') {
 		$list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
 	}
 
-    $list->setNoRowsMessage(rex_i18n::msg('d2u_immo_category_no_categories_found'));
+    $list->setNoRowsMessage(rex_i18n::msg('d2u_helper_no_categories_found'));
 
     $fragment = new rex_fragment();
     $fragment->setVar('title', rex_i18n::msg('d2u_immo_properties'), false);

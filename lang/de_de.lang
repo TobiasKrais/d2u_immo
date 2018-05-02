@@ -13,7 +13,6 @@ d2u_immo_status = Online Status
 d2u_immo_status_archived = Archiviert
 d2u_immo_teaser = Kurzbeschreibung
 
-d2u_immo_category_no_categories_found = Es wurden noch keine Kategorien angelegt.
 d2u_immo_category_parent = Elternkategorie
 d2u_immo_category_parent_none = Hat keine Elternkategorie
 
