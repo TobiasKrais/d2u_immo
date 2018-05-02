@@ -13,7 +13,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$form = (array) rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$success = TRUE;
 	$category = FALSE;
@@ -86,10 +86,10 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	else {
 		$message = '<ul>';
 		foreach($uses_categories as $uses_category) {
-			$message .= '<li><a href="index.php?page=d2u_immo/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name.'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_immo/category&func=edit&entry_id='. $uses_category->category_id .'">'. $uses_category->name .'</a></li>';
 		}
 		foreach($uses_properties as $uses_property) {
-			$message .= '<li><a href="index.php?page=d2u_immo/property&func=edit&entry_id='. $uses_property->property_id .'">'. $uses_property->name.'</a></li>';
+			$message .= '<li><a href="index.php?page=d2u_immo/property&func=edit&entry_id='. $uses_property->property_id .'">'. $uses_property->name .'</a></li>';
 		}
 		$message .= '</ul>';
 
@@ -104,7 +104,7 @@ if ($func == 'edit' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
-			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_immo_category'); ?></div></header>
+			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_helper_category'); ?></div></header>
 			<div class="panel-body">
 				<input type="hidden" name="form[category_id]" value="<?php echo $entry_id; ?>">
 				<?php
@@ -132,7 +132,7 @@ if ($func == 'edit' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 								
-								d2u_addon_backend_helper::form_input('d2u_immo_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $category->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_input('d2u_immo_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $category->teaser, FALSE, $readonly_lang, "text");
 							?>
 						</div>
@@ -216,7 +216,7 @@ if ($func == '') {
     $list->setColumnLabel('category_id', rex_i18n::msg('id'));
     $list->setColumnLayout('category_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_immo_name'));
+    $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('categoryname', ['func' => 'edit', 'entry_id' => '###category_id###']);
 
     $list->setColumnLabel('parentname', rex_i18n::msg('d2u_immo_category_parent'));
@@ -237,7 +237,7 @@ if ($func == '') {
     $list->setNoRowsMessage(rex_i18n::msg('d2u_immo_category_no_categories_found'));
 
     $fragment = new rex_fragment();
-    $fragment->setVar('title', rex_i18n::msg('d2u_immo_categories'), false);
+    $fragment->setVar('title', rex_i18n::msg('d2u_helper_categories'), false);
     $fragment->setVar('content', $list->get(), false);
     echo $fragment->parse('core/page/section.php');
 }

@@ -33,6 +33,8 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.5-DEV:</p>
 <ul>
+	<li>Formular um Einwilligung zur telefonischen Kontaktaufnahme ergänzt.</li>
+	<li>Bugfix: Fatal Error beim löschen eines Kontaktes behoben.</li>
 	<li>Bugfix: Übersetzung Datenschutzerklärung Formular aus Gästebuch Addon übernommen.</li>
 	<li>Bugfix: Style Kompatibilität zu D2U Gästebuch Tabs hergestellt.</li>
 </ul>
@@ -62,7 +64,7 @@ $d2u_module_manager->showManagerList();
 </ul>
 <p>1.0.1:</p>
 <ul>
-	<li>Bugfix Version, besonders den Export betreffend.</li>
+	<li>Bugfix Release, besonders den Export betreffend.</li>
 </ul>
 <p>1.0.0:</p>
 <ul>

@@ -187,7 +187,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
 
-								d2u_addon_backend_helper::form_input('d2u_immo_name', "form[lang][". $rex_clang->getId() ."][name]", $property->name, $required, $readonly_lang, "text");
+								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $property->name, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_input('d2u_immo_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $property->teaser, $required, $readonly_lang, "text");
 								d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $property->description, 10, FALSE, $readonly_lang, TRUE);
 								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_location', "form[lang][". $rex_clang->getId() ."][description_location]", $property->description_location, 5, FALSE, $readonly_lang, TRUE);
@@ -209,7 +209,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 
 				?>
 				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_immo_categories'); ?></legend>
+					<legend><?php echo rex_i18n::msg('d2u_helper_categories'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							$options_categories = [];
@@ -218,7 +218,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 									$options_categories[$category->category_id] = $category->name;
 								}
 							}
-							d2u_addon_backend_helper::form_select('d2u_immo_category', 'form[category_id]', $options_categories, ($property->category === FALSE ? [] : [$property->category->category_id]), 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options_categories, ($property->category === FALSE ? [] : [$property->category->category_id]), 1, FALSE, $readonly);
 							$options_type_of_use = ['WOHNEN' => rex_i18n::msg('d2u_immo_property_type_of_use_WOHNEN'),
 								'GEWERBE' => rex_i18n::msg('d2u_immo_property_type_of_use_GEWERBE'),
 								'ANLAGE' => rex_i18n::msg('d2u_immo_property_type_of_use_ANLAGE'),

@@ -1,5 +1,4 @@
 d2u_immo = D2U Immobilien
-d2u_immo_categories = Kategorien
 d2u_immo_contacts = Kontakte
 d2u_immo_properties = Immobilien
 d2u_immo_properties_archive = Archiviert
@@ -9,13 +8,11 @@ d2u_immo_city = Stadt
 d2u_immo_confirm_delete = Wirklich löschen?
 d2u_immo_country_code = Dreistelliger Ländercode
 d2u_immo_house_number = Hausnummer
-d2u_immo_name = Name
 d2u_immo_no_selection = Keine Auswahl
 d2u_immo_status = Online Status
 d2u_immo_status_archived = Archiviert
 d2u_immo_teaser = Kurzbeschreibung
 
-d2u_immo_category = Kategorie
 d2u_immo_category_no_categories_found = Es wurden noch keine Kategorien angelegt.
 d2u_immo_category_parent = Elternkategorie
 d2u_immo_category_parent_none = Hat keine Elternkategorie

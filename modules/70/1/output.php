@@ -947,8 +947,6 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div id="tab_request" class="tab-pane immo-tab fade">'; // START tab request
 		print '<div class="col-12">';
 		print '<fieldset><legend>'. $tag_open .'d2u_immo_form_title'. $tag_close .'</legend>';
-		$privacy_policy_article = rex_article::get(rex_config::get('d2u_helper', 'article_id_privacy_policy', 0));
-		$privacy_policy_article_name = $privacy_policy_article instanceof rex_article ? $privacy_policy_article->getName() : '';
 		$form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
 
 				text|name|'. $tag_open .'d2u_immo_form_name'. $tag_close .' *
@@ -958,7 +956,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				text|phone|'. $tag_open .'d2u_immo_form_phone'. $tag_close .' *
 				text|email|'. $tag_open .'d2u_immo_form_email'. $tag_close .' *
 				textarea|message|'. $tag_open .'d2u_immo_form_message'. $tag_close .'
-				'. ($privacy_policy_article_name != '' ? 'checkbox|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .'</a> *|no,yes|no' : '') .'
+				checkbox|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .' *|'. $tag_open .'d2u_immo_no'. $tag_close .','. $tag_open .'d2u_immo_yes'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .'
+				checkbox|phone_calls|'. $tag_open .'d2u_immo_form_phone_calls'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .','. $tag_open .'d2u_immo_yes'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .'
 
 				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
 				captcha|'. $tag_open .'d2u_immo_form_captcha'. $tag_close .'|'. $tag_open .'d2u_immo_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['property_id' => $property->property_id]) .'
@@ -969,7 +968,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				validate|empty|phone|'. $tag_open .'d2u_immo_form_validate_phone'. $tag_close .'
 				validate|empty|email|'. $tag_open .'d2u_immo_form_validate_email'. $tag_close .'
 				validate|email|email|'. $tag_open .'d2u_immo_form_validate_email_false'. $tag_close .'
-			'. ($privacy_policy_article_name != '' ? 'validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'' : '') .'
+				validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'
 
 				action|tpl2email|d2u_immo_request|emaillabel|'. $property->contact->email;
 
@@ -1001,7 +1000,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				text|sender_mail|'. $tag_open .'d2u_immo_recommendation_sender_mail'. $tag_close .' *
 				text|receipient_name|'. $tag_open .'d2u_immo_recommendation_receipient_name'. $tag_close .' *
 				text|receipient_mail|'. $tag_open .'d2u_immo_recommendation_receipient_mail'. $tag_close .' *
-				textarea|message|'. $tag_open .'d2u_immo_recommendation_message'. $tag_close .' *
+				textarea|message|'. $tag_open .'d2u_immo_recommendation_message'. $tag_close .'
 
 				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
 				captcha|'. $tag_open .'d2u_immo_form_captcha'. $tag_close .'|'. $tag_open .'d2u_immo_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['property_id' => $property->property_id]) .'

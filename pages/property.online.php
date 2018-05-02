@@ -30,10 +30,10 @@ if ($func == '') {
     $list->setColumnLabel('property_id', rex_i18n::msg('id'));
     $list->setColumnLayout('property_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('propertyname', rex_i18n::msg('d2u_immo_name'));
+    $list->setColumnLabel('propertyname', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('propertyname', ['func' => 'edit', 'entry_id' => '###property_id###']);
 
-    $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_immo_category'));
+    $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_category'));
 
 	$list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
 

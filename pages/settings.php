@@ -84,10 +84,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				</div>
 			</fieldset>
 			<fieldset>
-				<legend><small><i class="rex-icon rex-icon-open-category"></i></small> <?php echo rex_i18n::msg('d2u_immo_categories'); ?></legend>
+				<legend><small><i class="rex-icon rex-icon-open-category"></i></small> <?php echo rex_i18n::msg('d2u_helper_categories'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						$options_category_sort = ['name' => rex_i18n::msg('d2u_immo_name'), 'priority' => rex_i18n::msg('header_priority')];
+						$options_category_sort = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
 						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_category_sort]', $options_category_sort, [$this->getConfig('default_category_sort')]);
 					?>
 				</div>
@@ -96,7 +96,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<legend><small><i class="rex-icon rex-icon-module"></i></small> <?php echo rex_i18n::msg('d2u_immo_properties'); ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-						$options = ['name' => rex_i18n::msg('d2u_immo_name'), 'priority' => rex_i18n::msg('header_priority')];
+						$options = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
 						d2u_addon_backend_helper::form_select('d2u_helper_translations_sort', 'settings[default_property_sort]', $options, [$this->getConfig('default_property_sort')]);
 						d2u_addon_backend_helper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', $this->hasConfig('even_informative_pdf') ? $this->getConfig('even_informative_pdf') : "")
 					?>

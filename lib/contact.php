@@ -157,7 +157,7 @@ class Contact {
 		
 		$properties = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$properties[] = new Property($result->getValue("property_id"), $this->clang_id);
+			$properties[] = new Property($result->getValue("property_id"), \rex_clang::getCurrentId());
 			$result->next();
 		}
 		return $properties;
