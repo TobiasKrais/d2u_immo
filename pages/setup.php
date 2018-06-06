@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.5-DEV:</p>
 <ul>
-	<li>Formulare um zeitverzögerten Spamschutz ergänzt.</li>
+	<li>Formulare um zeitverzögerten Spamschutz (10 Sekunden) ergänzt.</li>
 	<li>Formular um Einwilligung zur telefonischen Kontaktaufnahme ergänzt.</li>
 	<li>Bugfix: Fatal Error beim löschen eines Kontaktes behoben.</li>
 	<li>Bugfix: Übersetzung Datenschutzerklärung Formular aus Gästebuch Addon übernommen.</li>

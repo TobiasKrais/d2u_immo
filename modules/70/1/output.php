@@ -1,21 +1,4 @@
 <?php
-if(!function_exists('yform_validate_timer')) {
-	/**
-	 * Timer Spamprotection function
-	 * @param string $label
-	 * @param int $microtime
-	 * @param int $seconds
-	 * @return boolean
-	 */
-	function yform_validate_timer($label, $microtime, $seconds) {
-        if (($microtime + $seconds) > microtime(true)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-
 if(!function_exists('sendRecommendation')) {
 	/**
 	 * Sends recommendation mail.
@@ -987,7 +970,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				validate|empty|email|'. $tag_open .'d2u_immo_form_validate_email'. $tag_close .'
 				validate|email|email|'. $tag_open .'d2u_immo_form_validate_email_false'. $tag_close .'
 				validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'
-				validate|customfunction|validate_timer|yform_validate_timer|5|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
+				validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|10|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
 				action|tpl2email|d2u_immo_request|emaillabel|'. $property->contact->email;
 
@@ -1036,7 +1019,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				validate|empty|receipient_mail|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
 				validate|email|receipient_mail|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
 				validate|empty|message|'. $tag_open .'d2u_immo_recommendation_validate_message'. $tag_close .'
-				validate|customfunction|immo_contact_validate_timer|yform_validate_timer|5|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
+				validate|customfunction|immo_contact_validate_timer|d2u_addon_frontend_helper::yform_validate_timer|10|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
 				action|callback|sendRecommendation';
 
