@@ -1,5 +1,22 @@
 <?php
-if(!function_exists('printPropertylist')) {
+if(!function_exists('yform_validate_timer')) {
+	/**
+	 * Timer Spamprotection function
+	 * @param string $label
+	 * @param int $microtime
+	 * @param int $seconds
+	 * @return boolean
+	 */
+	function yform_validate_timer($label, $microtime, $seconds) {
+        if (($microtime + $seconds) > microtime(true)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+if(!function_exists('sendRecommendation')) {
 	/**
 	 * Sends recommendation mail.
 	 * @param yform $yform YForm object with fields and values
@@ -958,6 +975,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				textarea|message|'. $tag_open .'d2u_immo_form_message'. $tag_close .'
 				checkbox|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .' *|'. $tag_open .'d2u_immo_no'. $tag_close .','. $tag_open .'d2u_immo_yes'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .'
 				checkbox|phone_calls|'. $tag_open .'d2u_immo_form_phone_calls'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .','. $tag_open .'d2u_immo_yes'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .'
+				php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
 				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
 				captcha|'. $tag_open .'d2u_immo_form_captcha'. $tag_close .'|'. $tag_open .'d2u_immo_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['property_id' => $property->property_id]) .'
@@ -969,6 +987,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				validate|empty|email|'. $tag_open .'d2u_immo_form_validate_email'. $tag_close .'
 				validate|email|email|'. $tag_open .'d2u_immo_form_validate_email_false'. $tag_close .'
 				validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'
+				validate|customfunction|validate_timer|yform_validate_timer|5|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
 				action|tpl2email|d2u_immo_request|emaillabel|'. $property->contact->email;
 
@@ -977,6 +996,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		$yform->setObjectparams("form_action", $property->getUrl());
 		$yform->setObjectparams("form_anchor", "tab_request");
 		$yform->setObjectparams("Error-occured", $tag_open .'d2u_immo_form_validate_title'. $tag_close);
+		$yform->setObjectparams("real_field_names", TRUE);
 
 		// action - showtext
 		$yform->setActionField("showtext", array($tag_open .'d2u_immo_form_thanks'. $tag_close));
@@ -1001,6 +1021,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				text|receipient_name|'. $tag_open .'d2u_immo_recommendation_receipient_name'. $tag_close .' *
 				text|receipient_mail|'. $tag_open .'d2u_immo_recommendation_receipient_mail'. $tag_close .' *
 				textarea|message|'. $tag_open .'d2u_immo_recommendation_message'. $tag_close .'
+				php|immo_contact_validate_timer|Spamprotection|<input name="immo_contact_validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
 				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
 				captcha|'. $tag_open .'d2u_immo_form_captcha'. $tag_close .'|'. $tag_open .'d2u_immo_form_validate_captcha'. $tag_close .'|'. rex_getUrl('', '', ['property_id' => $property->property_id]) .'
@@ -1015,6 +1036,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				validate|empty|receipient_mail|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
 				validate|email|receipient_mail|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
 				validate|empty|message|'. $tag_open .'d2u_immo_recommendation_validate_message'. $tag_close .'
+				validate|customfunction|immo_contact_validate_timer|yform_validate_timer|5|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
 				action|callback|sendRecommendation';
 
@@ -1023,6 +1045,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		$yform_recommend->setObjectparams("form_action", $property->getUrl());
 		$yform_recommend->setObjectparams("form_anchor", "tab_recommendation");
 		$yform_recommend->setObjectparams("Error-occured", $tag_open .'d2u_immo_form_validate_title'. $tag_close);
+		$yform_recommend->setObjectparams("real_field_names", TRUE);
 
 		// action - showtext
 		$yform_recommend->setActionField("showtext", array($tag_open .'d2u_immo_recommendation_thanks'. $tag_close));
