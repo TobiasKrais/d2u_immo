@@ -982,7 +982,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		$yform->setObjectparams("real_field_names", TRUE);
 
 		// action - showtext
-		$yform->setActionField("showtext", array($tag_open .'d2u_immo_form_thanks'. $tag_close));
+		$yform->setActionField("showtext", [$tag_open .'d2u_immo_form_thanks'. $tag_close]);
 
 		echo $yform->getForm();
 		print '</fieldset>';
