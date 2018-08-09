@@ -10,7 +10,7 @@ $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 
 $urlParamKey = "";
-if(rex_addon::get("url")->isAvailable()) {
+if(\rex_addon::get("url")->isAvailable()) {
 	$url_data = UrlGenerator::getData();
 	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 }
@@ -19,7 +19,7 @@ if(rex_addon::get("url")->isAvailable()) {
 if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && $urlParamKey === "property_id")) {
 	// Output property
 	$property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
-	if(rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
+	if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
 		$property_id = UrlGenerator::getId();
 	}
 	$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());

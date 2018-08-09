@@ -425,8 +425,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->bath = preg_grep('/^\s*$/s', explode("|", $result->getValue("bath")), PREG_GREP_INVERT);
 			$this->broadband_internet = preg_grep('/^\s*$/s', explode("|", $result->getValue("broadband_internet")), PREG_GREP_INVERT);
 			$this->cable_sat_tv = $result->getValue("cable_sat_tv") == "1" ? TRUE : FALSE;
-			if($result->getValue("property_id") > 0) {
-				$this->category = new Category($result->getValue("property_id"), $clang_id);
+			if($result->getValue("category_id") > 0) {
+				$this->category = new Category($result->getValue("category_id"), $clang_id);
 			}
 			$this->city = $result->getValue("city");
 			$this->cold_rent = $result->getValue("cold_rent");
@@ -758,7 +758,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		}
 		$social_description .=  ", ". Sprog\Wildcard::get('d2u_immo_construction_year', $this->clang_id) ." ". $this->construction_year .", ";
 		foreach($this->firing_type as $firing_type) {
-			$social_description .=  Sprog\Wildcard::get('d2u_immo_firing_type_'. $this->firing_type, $this->clang_id) .", ";
+			$social_description .=  Sprog\Wildcard::get('d2u_immo_firing_type_'. $firing_type, $this->clang_id) .", ";
 		}
 		$social_description .= "; ". Sprog\Wildcard::get('d2u_immo_form_city', $this->clang_id) .": ". $this->zip_code ." ". $this->city;
 		
@@ -770,7 +770,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	 * @return Complete title tag.
 	 */
 	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. $this->category->name .' / '. \rex::getServerName() .'</title>';
+		return '<title>'. $this->name .' / '. ($this->category !== FALSE ? $this->category->name .' / ' : ''). \rex::getServerName() .'</title>';
 	}
 	
 	/**
