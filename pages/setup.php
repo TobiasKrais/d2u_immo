@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.6:</p>
 <ul>
+	<li>Bugfix: Updatefehler behoben.</li>
 	<li>Bugfix: Kategorie des Objekts wurde nicht korrekt ausgelesen.</li>
 	<li>Methode zum Erstellen von Meta Tags d2u_immo_frontend_helper::getAlternateURLs() hinzugefügt.</li>
 	<li>Methode zum Erstellen von Meta Tags d2u_immo_frontend_helper::getMetaTags() hinzugefügt.</li>
