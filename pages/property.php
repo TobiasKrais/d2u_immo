@@ -517,7 +517,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		print d2u_addon_backend_helper::getCSS();
 		print d2u_addon_backend_helper::getJS();
 	?>
-	<script type="text/javascript">
+	<script>
 		function object_type_changer(value) {
 			if (value === "wohnung") {
 				$("select[name='form[apartment_type]']").prop('disabled', false);

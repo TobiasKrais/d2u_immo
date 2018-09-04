@@ -31,6 +31,10 @@ $d2u_module_manager->showManagerList();
 <p>Sammelthread fürs Addon im <a href="https://redaxo.org/forum/viewtopic.php?f=43&t=21965" target="_blank">Redaxo Forum</a>.</p>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
+<p>1.0.7-DEV:</p>
+<ul>
+	<li>Modul 70-1 zeigt die Mieterselbstauskunft jetzt nicht mehr bei Nutzungsart Gewerbe an.</li>
+</ul>
 <p>1.0.6:</p>
 <ul>
 	<li>Bugfix: Updatefehler behoben.</li>

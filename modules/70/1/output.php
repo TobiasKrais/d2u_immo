@@ -160,7 +160,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		//	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
 		print '<li><small><a href="javascript:onclick=window.open(\''. $property->getURL(TRUE).'?print=small\', \'_blank\',\'width=500, height=500\');" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
 		print '<li><small><a href="javascript:onclick=window.open(\''. $property->getURL(TRUE).'?print=full\', \'_blank\',\'width=500, height=500\');" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
-		if($property->market_type == "MIETE_PACHT" && $d2u_immo->hasConfig('even_informative_pdf') && $d2u_immo->getConfig('even_informative_pdf') != '') {
+		if($property->market_type == "MIETE_PACHT" && $property->type_of_use != "GEWERBE" && $d2u_immo->getConfig('even_informative_pdf', '') != '') {
 			print '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
 		}
 		print '</ul>';
@@ -343,7 +343,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-6">'. round($property->land_area) .'&nbsp;m²</div>';
 	}
 
-	if(count($property->documents) > 0 || ($property->market_type == "MIETE_PACHT" && $d2u_immo->hasConfig('even_informative_pdf') && $d2u_immo->getConfig('even_informative_pdf') != '')) {
+	if(count($property->documents) > 0 || ($property->market_type == "MIETE_PACHT" && $property->type_of_use != "GEWERBE" && $d2u_immo->getConfig('even_informative_pdf', '') != '')) {
 		print '<div class="col-12"><ul>';
 		foreach($property->documents as $document) {
 			$media = rex_media::get($document);
@@ -358,7 +358,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				}
 			}
 		}
-		if($property->market_type == "MIETE_PACHT" && $d2u_immo->hasConfig('even_informative_pdf') && $d2u_immo->getConfig('even_informative_pdf') != '') {
+		if($property->market_type == "MIETE_PACHT" && $property->type_of_use != "GEWERBE" && $d2u_immo->getConfig('even_informative_pdf', '') != '') {
 			print '<li><span class="icon pdf"></span> <a href="'. rex_url::media('mieterselbstauskunft.pdf') .'">'. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></li>';
 		}
 		print '</ul></div>';
@@ -623,9 +623,9 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<h2 class="d-print-none">'. $property->name .'</h2>';
 		print '<p class="d-print-none">'. $property->street ." ". $property->house_number ."<br /> ". $property->zip_code ." ". $property->city ."</p>";
 ?>
-		<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?php echo $api_key; ?>"></script> 
+		<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $api_key; ?>"></script> 
 		<div id="map_canvas" style="display: block; <?php print ($print != '' ? 'width: 900px' : 'width: 100%'); ?>; height: 500px"></div> 
-		<script type="text/javascript">
+		<script>
 			var map;
 			var myLatlng;
 			<?php
@@ -702,7 +702,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		
 		print '<h2>'. $property->name .'</h2>';
 ?>
-		<script type="text/javascript">
+		<script>
 			// Removes thousand separator, substutiutes decimal separator
 			function substractNumber(number_string) {
 				number_string = number_string.trim();
