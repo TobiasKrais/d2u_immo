@@ -242,6 +242,7 @@ d2u_immo_property_prices = Preise
 d2u_immo_property_publish_address = Adresse anzeigen?
 d2u_immo_property_purchase_price = Kaufpreis
 d2u_immo_property_purchase_price_m2 = Kaufpreis pro m²
+d2u_immo_property_rent_plus_vat = Miete und Nebenkosten zzgl. MwSt.
 d2u_immo_property_rented = Vermietet?
 d2u_immo_property_rooms = Anzahl Zimmer
 d2u_immo_property_total_area = Gesamtfläche

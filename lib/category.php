@@ -80,9 +80,8 @@ class Category implements \D2U_Helper\ITranslationHelper {
 				."WHERE categories.category_id = ". $category_id;
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
-		$num_rows = $result->getRows();
 
-		if ($num_rows > 0) {
+		if ($result->getRows() > 0) {
 			$this->category_id = $result->getValue("category_id");
 			if($result->getValue("parent_category_id") > 0) {
 				$this->parent_category = new Category($result->getValue("parent_category_id"), $clang_id);

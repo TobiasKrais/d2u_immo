@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.7-DEV:</p>
 <ul>
+	<li>Feld "Miete zzgl. MwSt." für gewerbliche Mietobjekte hinzugefügt.</li>
 	<li>Modul 70-1 zeigt die Mieterselbstauskunft jetzt nicht mehr bei Nutzungsart Gewerbe an.</li>
 </ul>
 <p>1.0.6:</p>

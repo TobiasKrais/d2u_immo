@@ -189,7 +189,7 @@ if ($func == '') {
     $list->setColumnLabel('provider_id', rex_i18n::msg('id'));
     $list->setColumnLayout('provider_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
 
-    $list->setColumnLabel('name', rex_i18n::msg('d2u_immo_name'));
+    $list->setColumnLabel('name', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('name', ['func' => 'edit', 'entry_id' => '###provider_id###']);
 
     $list->setColumnLabel('type', rex_i18n::msg('d2u_immo_export_type'));

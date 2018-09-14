@@ -139,6 +139,11 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $cold_rent = 0;
 	
 	/**
+	 * @var boolean TRUE if rent has additional VAT
+	 */
+	var $rent_plus_vat = FALSE;
+
+	/**
 	 * @var int Additional monthly costs for rent
 	 */
 	var $additional_costs = 0;
@@ -430,6 +435,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			}
 			$this->city = $result->getValue("city");
 			$this->cold_rent = $result->getValue("cold_rent");
+			$this->rent_plus_vat = $result->getValue("rent_plus_vat") == "1" ? TRUE : FALSE;
 			$this->condition_type = $result->getValue("condition_type");
 			$this->construction_year = $result->getValue("construction_year");
 			if($result->getValue("contact_id") > 0) {
@@ -722,6 +728,9 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			if ($this->additional_costs > 0) {
 				$social_description .= Sprog\Wildcard::get('d2u_immo_additional_costs', $this->clang_id) . ":&nbsp;". number_format($this->additional_costs, 2, ",", ".") .'&nbsp;'.$this->currency_code ."; ";
 			}
+			if($this->rent_plus_vat) {
+				$objektbeschreibung .= "<p>". \Sprog\Wildcard::get('d2u_immo_rent_plus_vat', $this->clang_id) ."</p>";
+			}
 		}
 
 		if(strtoupper($this->object_type) == "HAUS" || strtoupper($this->object_type) == "WOHNUNG" || strtoupper($this->object_type) == "BUERO_PRAXEN") {
@@ -859,6 +868,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."category_id = ". ($this->category !== FALSE ? $this->category->category_id : 0) .", "
 					."city = '". $this->city ."', "
 					."cold_rent = ". $this->cold_rent .", "
+					."rent_plus_vat = ". ($this->rent_plus_vat ? 1 : 0) .", "
 					."condition_type = '". $this->condition_type ."', "
 					."construction_year = ". $this->construction_year .", "
 					."contact_id = ". ($this->contact !== FALSE ? $this->contact->contact_id : 0) .", "
