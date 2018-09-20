@@ -31,6 +31,10 @@ $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_propertie
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `rent_plus_vat` TINYINT(1) NOT NULL DEFAULT 0 AFTER `cold_rent`;");
 }
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'hall_warehouse_type';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `hall_warehouse_type` TINYINT(1) NOT NULL DEFAULT 0 AFTER `office_type`;");
+}
 
 // Update language replacements
 d2u_immo_lang_helper::factory()->install();

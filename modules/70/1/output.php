@@ -378,7 +378,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 
 	print '<div class="col-12">&nbsp;</div>';
 
-	if(strlen($property->energy_pass) > 5) {
+	if($property->object_type != "grundstueck" && strlen($property->energy_pass) > 5) {
 		if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
 			print '<div class="row page-break-avoid">';
 		}

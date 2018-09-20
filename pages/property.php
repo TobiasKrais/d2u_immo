@@ -53,6 +53,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->floor = $form['floor'];
 			$property->floor_type = isset($form['floor_type']) ? $form['floor_type'] : [];
 			$property->ground_plans = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
+			$property->hall_warehouse_type = isset($form['hall_warehouse_type']) ? $form['hall_warehouse_type'] : '';
 			$property->heating_type = isset($form['heating_type']) ? $form['heating_type'] : [];
 			$property->house_number = $form['house_number'];
 			$property->house_type = isset($form['house_type']) ? $form['house_type'] : '';
@@ -237,7 +238,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'grundstueck' => rex_i18n::msg('d2u_immo_property_object_type_grundstueck'),
 //								'einzelhandel' => rex_i18n::msg('d2u_immo_property_object_type_einzelhandel'),
 //								'gastgewerbe' => rex_i18n::msg('d2u_immo_property_object_type_gastgewerbe'),
-//								'hallen_lager_prod' => rex_i18n::msg('d2u_immo_property_object_type_hallen_lager_prod'),
+								'hallen_lager_prod' => rex_i18n::msg('d2u_immo_property_object_type_hallen_lager_prod'),
 //								'land_und_forstwirtschaft' => rex_i18n::msg('d2u_immo_property_object_type_land_und_forstwirtschaft'),
 //								'freizeitimmobilie_gewerblich' => rex_i18n::msg('d2u_immo_property_object_type_freizeitimmobilie_gewerblich'),
 //								'zinshaus_renditeobjekt' => rex_i18n::msg('d2u_immo_property_object_type_zinshaus_renditeobjekt'),
@@ -252,7 +253,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'WETAGE' => rex_i18n::msg('d2u_immo_property_apartment_type_WETAGE'),
 								'ERDGESCHOSS' => rex_i18n::msg('d2u_immo_property_apartment_type_ERDGESCHOSS'),
 								'SOUTERRAIN' => rex_i18n::msg('d2u_immo_property_apartment_type_SOUTERRAIN')];
-							d2u_addon_backend_helper::form_select('d2u_immo_property_apartment_type', 'form[apartment_type]', $options_apartment_type, [$property->apartment_type], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[apartment_type]', $options_apartment_type, [$property->apartment_type], 1, FALSE, $readonly);
 							$options_house_type = ['KEINE_ANGABE' => rex_i18n::msg('d2u_immo_property_type_KEINE_ANGABE'),
 								'APARTMENTHAUS' => rex_i18n::msg('d2u_immo_property_house_type_APARTMENTHAUS'),
 								'BAUERNHAUS' => rex_i18n::msg('d2u_immo_property_house_type_BAUERNHAUS'),
@@ -281,7 +282,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'STRANDHAUS' => rex_i18n::msg('d2u_immo_property_house_type_STRANDHAUS'),
 								'VILLA' => rex_i18n::msg('d2u_immo_property_house_type_VILLA'),
 								'ZWEIFAMILIENHAUS' => rex_i18n::msg('d2u_immo_property_house_type_ZWEIFAMILIENHAUS')];
-							d2u_addon_backend_helper::form_select('d2u_immo_property_house_type', 'form[house_type]', $options_house_type, [$property->house_type], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[house_type]', $options_house_type, [$property->house_type], 1, FALSE, $readonly);
 							$options_land_type = ['WOHNEN' => rex_i18n::msg('d2u_immo_property_land_type_WOHNEN'),
 								'GEWERBE' => rex_i18n::msg('d2u_immo_property_land_type_GEWERBE'),
 								'INDUSTRIE' => rex_i18n::msg('d2u_immo_property_land_type_INDUSTRIE'),
@@ -291,7 +292,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'GEWERBEPARK' => rex_i18n::msg('d2u_immo_property_land_type_GEWERBEPARK'),
 								'SEELIEGENSCHAFT' => rex_i18n::msg('d2u_immo_property_land_type_SEELIEGENSCHAFT'),
 								'SONDERNUTZUNG' => rex_i18n::msg('d2u_immo_property_land_type_SONDERNUTZUNG')];
-							d2u_addon_backend_helper::form_select('d2u_immo_property_land_type', 'form[land_type]', $options_land_type, [$property->land_type], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[land_type]', $options_land_type, [$property->land_type], 1, FALSE, $readonly);
 							$options_office_type = ['BUEROFLAECHE' => rex_i18n::msg('d2u_immo_property_office_type_BUEROFLAECHE'),
 								'BUEROHAUS' => rex_i18n::msg('d2u_immo_property_office_type_BUEROHAUS'),
 								'BUEROZENTRUM' => rex_i18n::msg('d2u_immo_property_office_type_BUEROZENTRUM'),
@@ -302,12 +303,25 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'PRAXISHAUS' => rex_i18n::msg('d2u_immo_property_office_type_PRAXISHAUS'),
 								'SHARED_OFFICE' => rex_i18n::msg('d2u_immo_property_office_type_SHARED_OFFICE'),
 								'AUSSTELLUNGSFLAECHE' => rex_i18n::msg('d2u_immo_property_office_type_AUSSTELLUNGSFLAECHE')];
-							d2u_addon_backend_helper::form_select('d2u_immo_property_office_type', 'form[office_type]', $options_office_type, [$property->office_type], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[office_type]', $options_office_type, [$property->office_type], 1, FALSE, $readonly);
+							$options_hall_warehouse_type = ['HALLE' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_HALLE'),
+								'INDUSTRIEHALLE' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_INDUSTRIEHALLE'),
+								'LAGER' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_LAGER'),
+								'LAGERFLAECHEN' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_LAGERFLAECHEN'),
+								'LAGER_MIT_FREIFLAECHE' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_LAGER_MIT_FREIFLAECHE'),
+								'HOCHREGALLAGER' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_HOCHREGALLAGER'),
+								'SPEDITIONSLAGER' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_SPEDITIONSLAGER'),
+								'PRODUKTION' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_PRODUKTION'),
+								'WERKSTATT' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_WERKSTATT'),
+								'SERVICE' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_SERVICE'),
+								'FREIFLAECHEN' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_FREIFLAECHEN'),
+								'KUEHLHAUS' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_KUEHLHAUS')];
+							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[hall_warehouse_type]', $options_hall_warehouse_type, [$property->hall_warehouse_type], 1, FALSE, $readonly);
 							$options_other_type = ['PARKHAUS' => rex_i18n::msg('d2u_immo_property_other_type_PARKHAUS'),
 								'TANKSTELLE' => rex_i18n::msg('d2u_immo_property_other_type_TANKSTELLE'),
 								'KRANKENHAUS' => rex_i18n::msg('d2u_immo_property_other_type_KRANKENHAUS'),
 								'SONSTIGE' => rex_i18n::msg('d2u_immo_property_other_type_SONSTIGE')];
-							d2u_addon_backend_helper::form_select('d2u_immo_property_other_type', 'form[other_type]', $options_other_type, [$property->other_type], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[other_type]', $options_other_type, [$property->other_type], 1, FALSE, $readonly);
 							$options_condition_type = ['ABRISSOBJEKT' => rex_i18n::msg('d2u_immo_property_condition_type_ABRISSOBJEKT'),
 								'BAUFAELLIG' => rex_i18n::msg('d2u_immo_property_condition_type_BAUFAELLIG'),
 								'ENTKERNT' => rex_i18n::msg('d2u_immo_property_condition_type_ENTKERNT'),
@@ -522,83 +536,93 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 	<script>
 		function object_type_changer(value) {
 			if (value === "wohnung") {
-				$("select[name='form[apartment_type]']").prop('disabled', false);
-				$("select[name='form[house_type]']").prop('disabled', true);
-				$("select[name='form[land_type]']").prop('disabled', true);
-				$("select[name='form[office_type]']").prop('disabled', true);
-				$("select[name='form[other_type]']").prop('disabled', true);
+				$("dl[id='form[apartment_type]']").fadeIn();
+				$("dl[id='form[hall_warehouse_type]']").hide();
+				$("dl[id='form[house_type]']").hide();
+				$("dl[id='form[land_type]']").hide();
+				$("dl[id='form[office_type]']").hide();
+				$("dl[id='form[other_type]']").hide();
 			}
 			else if (value === "haus") {
-				$("select[name='form[apartment_type]']").prop('disabled', true);
-				$("select[name='form[house_type]']").prop('disabled', false);
-				$("select[name='form[land_type]']").prop('disabled', true);
-				$("select[name='form[office_type]']").prop('disabled', true);
-				$("select[name='form[other_type]").prop('disabled', true);
+				$("dl[id='form[apartment_type]']").hide();
+				$("dl[id='form[hall_warehouse_type]']").hide();
+				$("dl[id='form[house_type]']").fadeIn();
+				$("dl[id='form[land_type]']").hide();
+				$("dl[id='form[office_type]']").hide();
+				$("dl[id='form[other_type]']").hide();
 			}
 			else if (value === "grundstueck") {
-				$("select[name='form[apartment_type]']").prop('disabled', true);
-				$("select[name='form[house_type]']").prop('disabled', true);
-				$("select[name='form[land_type]']").prop('disabled', false);
-				$("select[name='form[office_type]']").prop('disabled', true);
-				$("select[name='form[other_type]").prop('disabled', true);
+				$("dl[id='form[apartment_type]']").hide();
+				$("dl[id='form[hall_warehouse_type]']").hide();
+				$("dl[id='form[house_type]']").hide();
+				$("dl[id='form[land_type]']").fadeIn();
+				$("dl[id='form[office_type]']").hide();
+				$("dl[id='form[other_type]']").hide();
 			}
 			else if (value === "buero_praxen") {
-				$("select[name='form[apartment_type]']").prop('disabled', true);
-				$("select[name='form[house_type]']").prop('disabled', true);
-				$("select[name='form[land_type]']").prop('disabled', true);
-				$("select[name='form[office_type]']").prop('disabled', false);
-				$("select[name='form[other_type]").prop('disabled', true);
+				$("dl[id='form[apartment_type]']").hide();
+				$("dl[id='form[hall_warehouse_type]']").hide();
+				$("dl[id='form[house_type]']").hide();
+				$("dl[id='form[land_type]']").hide();
+				$("dl[id='form[office_type]']").fadeIn();
+				$("dl[id='form[other_type]']").hide();
+			}
+			else if (value === "hallen_lager_prod") {
+				$("dl[id='form[apartment_type]']").hide();
+				$("dl[id='form[hall_warehouse_type]']").fadeIn();
+				$("dl[id='form[house_type]']").hide();
+				$("dl[id='form[land_type]']").hide();
+				$("dl[id='form[office_type]']").hide();
+				$("dl[id='form[other_type]']").hide();
 			}
 			else if (value === "sonstige") {
-				$("select[name='form[apartment_type]']").prop('disabled', true);
-				$("select[name='form[house_type]']").prop('disabled', true);
-				$("select[name='form[land_type]']").prop('disabled', true);
-				$("select[name='form[office_type]']").prop('disabled', true);
-				$("select[name='form[other_type]").prop('disabled', false);
+				$("dl[id='form[apartment_type]']").hide();
+				$("dl[id='form[hall_warehouse_type]']").hide();
+				$("dl[id='form[house_type]']").hide();
+				$("dl[id='form[land_type]']").hide();
+				$("dl[id='form[office_type]']").hide();
+				$("dl[id='form[other_type]']").fadeIn();
 			};
+			
 			if (value === "grundstueck") {
 				$("select[name='form[energy_pass]']").removeAttr('required');
-				$("select[name='form[energy_pass]']").prop('disabled', true);
 				$("input[name='form[energy_consumption]']").removeAttr('required');
-				$("input[name='form[energy_consumption]']").prop('disabled', true);
 				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
-				$("input[name='form[energy_pass_valid_until]']").prop('disabled', true);
-				$("select[name='form[condition_type]']").prop('disabled', true);
+				$("dl[id='form[energy_pass]']").parent().parent().hide();
 			}
 			else {
 				$("select[name='form[energy_pass]']").prop('required', true);
-				$("select[name='form[energy_pass]']").prop('disabled', false);
 				$("input[name='form[energy_consumption]']").prop('required', true);
-				$("input[name='form[energy_consumption]']").prop('disabled', false);
 				$("input[name='form[energy_pass_valid_until]']").prop('required', true);
-				$("input[name='form[energy_pass_valid_until]']").prop('disabled', false);
-				$("select[name='form[condition_type]']").prop('disabled', false);
+				$("dl[id='form[energy_pass]']").parent().parent().fadeIn();
 			}
 		}
 		
 		function market_type_changer(value) {
 			if (value === "KAUF") {
-				$("input[name='form[purchase_price]']").prop('disabled', false);
+				$("dl[id='form[purchase_price]']").fadeIn();
 				$("input[name='form[purchase_price]']").prop('required', true);
-				$("input[name='form[purchase_price_m2]").prop('disabled', false);
+				$("dl[id='form[purchase_price_m2]']").fadeIn();
 				$("input[name='form[purchase_price_m2]").prop('required', true);
-				$("input[name='form[cold_rent]']").prop('disabled', true);
+				$("dl[id='form[cold_rent]']").hide();
 				$("input[name='form[cold_rent]']").removeAttr('required');
-				$("input[name='form[additional_costs]']").prop('disabled', true);
+				$("dl[id='form[additional_costs]']").hide();
 				$("input[name='form[additional_costs]']").removeAttr('required');
-				$("input[name='form[deposit]']").prop('disabled', true);
+				$("dl[id='form[rent_plus_vat]']").hide();
+				$("dl[id='form[deposit]']").hide();
 				$("input[name='form[deposit]']").removeAttr('required');
 			}
 			else {
-				$("input[name='form[purchase_price]']").prop('disabled', true);
+				$("dl[id='form[purchase_price]']").hide();
 				$("input[name='form[purchase_price]']").removeAttr('required');
-				$("input[name='form[purchase_price_m2]").prop('disabled', true);
+				$("dl[id='form[purchase_price_m2]']").hide();
 				$("input[name='form[purchase_price_m2]").removeAttr('required');
-				$("input[name='form[cold_rent]']").prop('disabled', false);
+				$("dl[id='form[cold_rent]']").fadeIn();
 				$("input[name='form[cold_rent]']").prop('required', true);
-				$("input[name='form[additional_costs]']").prop('disabled', false);
+				$("dl[id='form[additional_costs]']").fadeIn();
 				$("input[name='form[additional_costs]']").prop('required', true);
-				$("input[name='form[deposit]']").prop('disabled', false);
+				$("dl[id='form[rent_plus_vat]']").fadeIn();
+				$("dl[id='form[deposit]']").fadeIn();
 				$("input[name='form[deposit]']").prop('required', true);
 			};			
 		}

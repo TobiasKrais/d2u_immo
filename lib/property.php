@@ -71,6 +71,12 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	 * of value "buero_typ".
 	 */
 	var $office_type = "";
+
+	/**
+	 * @var string Type of hall / warehouse. Values are defined in OpenImmo definition
+	 * of value "hallen_lager_prod".
+	 */
+	var $hall_warehouse_type = "";
 	
 	/**
 	 * @var string Type of office. Values are defined in OpenImmo definition
@@ -477,6 +483,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->object_sold = $result->getValue("object_sold") == "1" ? TRUE : FALSE;
 			$this->object_type = $result->getValue("object_type");
 			$this->office_type = $result->getValue("office_type");
+			$this->hall_warehouse_type = $result->getValue("hall_warehouse_type");
 			$this->online_status = $result->getValue("online_status");
 			$this->openimmo_object_id = $result->getValue("openimmo_object_id") == "" ? $this->createOpenImmoObjectID() : $result->getValue("openimmo_object_id");
 			$this->other_type = $result->getValue("other_type");
@@ -885,6 +892,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."floor = ". $this->floor .", "
 					."floor_type = '|". implode("|", $this->floor_type) ."|', "
 					."ground_plans = '". implode(",", $this->ground_plans) ."', "
+					."hall_warehouse_type = '". $this->hall_warehouse_type ."', "
 					."heating_type = '|". implode("|", $this->heating_type) ."|', "
 					."house_number = '". $this->house_number ."', "
 					."house_type = '". $this->house_type ."', "

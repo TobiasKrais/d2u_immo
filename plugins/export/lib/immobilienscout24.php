@@ -119,7 +119,7 @@ class ImmobilienScout24 extends AFTPExport {
 						(strtoupper($property->market_type) == "MIETE_PACHT" || strtoupper($property->market_type) == "ERBPACHT" || strtoupper($property->market_type) == "LEASING")) {
 				$objekttyp_wert = "HausMiete";
 			}
-			else if(strtoupper($immo->type_of_use) == "ZIMMER") {
+			else if(strtoupper($property->type_of_use) == "ZIMMER") {
 				$objekttyp_wert = "WGZimmer";
 			}
 			else if(strtoupper($property->object_type) == "GRUNDSTUECK") {
@@ -137,13 +137,21 @@ class ImmobilienScout24 extends AFTPExport {
 			else if(strtoupper($property->object_type) == "BUERO_PRAXEN") {
 				$objekttyp_wert = "BueroPraxis";
 			}
+			else if(strtoupper($property->object_type) == "HALLEN_LAGER_PROD") {
+				$objekttyp_wert = "HalleProduktion";
+			}
 			// Garagen
 			else if(strtoupper($property->object_type) == "SONSTIGE" && strtoupper($property->other_type) == "SONSTIGE") {
-				if(strtoupper($property->market_type) == "KAUF") {
-					$objekttyp_wert = "GarageKauf";
+				if(strtoupper($property->type_of_use) == "GEWERBE") {
+					$objekttyp_wert = "SonstigeGewerbe";
 				}
-				else if(strtoupper($property->market_type) == "MIETE_PACHT" || strtoupper($property->market_type) == "ERBPACHT" || strtoupper($property->market_type) == "LEASING") {
-					$objekttyp_wert = "GarageMiete";
+				else {
+					if(strtoupper($property->market_type) == "KAUF") {
+						$objekttyp_wert = "GarageKauf";
+					}
+					else if(strtoupper($property->market_type) == "MIETE_PACHT" || strtoupper($property->market_type) == "ERBPACHT" || strtoupper($property->market_type) == "LEASING") {
+						$objekttyp_wert = "GarageMiete";
+					}
 				}
 			}
 
@@ -501,8 +509,8 @@ class ImmobilienScout24 extends AFTPExport {
 
 				// In: WohnungMiete, WohnungKauf, HausMiete, HausKauf
 				$objekttyp_zimmer = $xml->createAttribute("Zimmer");
-				if($immo->zimmer > 0.5) {
-					$objekttyp_zimmer->appendChild($xml->createTextNode($immo->rooms));
+				if($property->rooms > 0.5) {
+					$objekttyp_zimmer->appendChild($xml->createTextNode($property->rooms));
 				}
 				else {
 					$objekttyp_zimmer->appendChild($xml->createTextNode("0.5"));

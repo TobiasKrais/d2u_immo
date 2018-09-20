@@ -50,6 +50,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_immo_
 	house_type varchar(255) collate utf8_general_ci default NULL,
 	land_type varchar(255) collate utf8_general_ci default NULL,
 	office_type varchar(255) collate utf8_general_ci default NULL,
+	hall_warehouse_type varchar(255) collate utf8_general_ci default NULL,
 	other_type varchar(255) collate utf8_general_ci default NULL,
 	street varchar(100) collate utf8_general_ci default NULL,
 	house_number varchar(5) collate utf8_general_ci default NULL,
