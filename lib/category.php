@@ -133,7 +133,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_categories AS categories "
 				."ON lang.category_id = categories.category_id "
 			."WHERE clang_id = ". $clang_id ." ";
-		if(\rex_addon::get('d2u_immo')->hasConfig('default_category_sort') && \rex_addon::get('d2u_immo')->getConfig('default_category_sort') == 'priority') {
+		if(\rex_addon::get('d2u_immo')->getConfig('default_category_sort', 'name') == 'priority') {
 			$query .= 'ORDER BY priority';
 		}
 		else {

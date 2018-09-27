@@ -899,10 +899,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."including_warm_water = ". ($this->including_warm_water ? 1 : 0) .", "
 					."internal_object_number = '". $this->internal_object_number ."', "
 					."kitchen = '|". implode("|", $this->kitchen) ."|', "
-					."land_area = ". $this->land_area .", "
+					."land_area = ". str_replace(',', '.', $this->land_area) .", "
 					."land_type = '". $this->land_type ."', "
 					."latitude = '". $this->latitude ."', "
-					."living_area = ". $this->living_area .", "
+					."living_area = ". str_replace(',', '.', $this->living_area) .", "
 					."location_plans = '". implode(",", $this->location_plans) ."', "
 					."longitude = '". $this->longitude ."', "
 					."market_type = '". $this->market_type ."', "
@@ -926,7 +926,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."flat_sharing_possible = ". ($this->flat_sharing_possible ? 1 : 0) .", "
 					."rooms = ". $this->rooms .", "
 					."street = '". $this->street ."', "
-					."total_area = ". $this->total_area .", "
+					."total_area = ". str_replace(',', '.', $this->total_area) .", "
 					."type_of_use = '". $this->type_of_use ."', "
 					."wheelchair_accessable = ". ($this->wheelchair_accessable ? 1 : 0) .", "
 					."zip_code = '". $this->zip_code ."' ";
@@ -947,7 +947,6 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_property->online_status == "online" && $this->online_status != online) {
 				ExportedProperty::removePropertyFromAllExports($this->property_id);
 			}
-
 		}
 		
 		if($error == 0) {
