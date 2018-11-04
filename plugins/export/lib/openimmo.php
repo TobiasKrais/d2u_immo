@@ -951,28 +951,21 @@ class OpenImmo extends AFTPExport {
 			// Titelbild auslesen
 			$is_title_pic = TRUE;
 			$zaehler = 0;
+			// Bilder auslesen
 			foreach($property->pictures as $bild) {
-				if(strlen($bild) > 3) {
+				if(strlen($bild) > 3 && $is_title_pic) {
 					$objekt_anhaenge[$zaehler] = ["TITELBILD" => $bild];
-					$zaehler++;
-					break;
+					$is_title_pic = FALSE;
 				}
+				else if(strlen($bild) > 3 && $zaehler < $this->max_pics) {
+					$objekt_anhaenge[$zaehler] = ["BILD" => $bild];
+				}
+				$zaehler++;
 			}
 			// Grundrisse auslesen
 			foreach($property->ground_plans as $grundriss) {
 				if(strlen($grundriss) > 3 && $zaehler < $this->max_pics) {
 					$objekt_anhaenge[$zaehler] = ["GRUNDRISS" => $grundriss];
-					$zaehler++;
-				}
-			}
-			// Bilder auslesen
-			foreach($property->pictures as $bild) {
-				if($is_title_pic) {
-					$is_title_pic = FALSE;
-					continue;
-				}
-				else if(strlen($bild) > 3 && $zaehler < $this->max_pics) {
-					$objekt_anhaenge[$zaehler] = ["BILD" => $bild];
 					$zaehler++;
 				}
 			}

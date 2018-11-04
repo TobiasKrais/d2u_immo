@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.7-DEV:</p>
 <ul>
+	<li>Bugfix: CronJob wird - wenn installiert - nicht immer richtig aktiviert.</li>
 	<li>Flächenangaben können jetzt auch mit einem Komma gemacht werden.</li>
 	<li>Nicht zutreffende Felder in Eingabemaske der Immobilien werden jetzt ausgeblendet statt ausgegraut.</li>
 	<li>Unterstützung von Openimmo Objektart Lager, Halle, Produktion.</li>
