@@ -21,4 +21,8 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_prope
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_properties_lang');
 
 // Delete language replacements
+if(!class_exists('d2u_immo_lang_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/d2u_immo_lang_helper.php';
+}
 d2u_immo_lang_helper::factory()->uninstall();

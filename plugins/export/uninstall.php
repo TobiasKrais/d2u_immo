@@ -6,7 +6,10 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_expor
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_export_properties');
 
 // Delete Autoexport if activated
-require_once 'lib/export_backend_helper.php';
+if(!class_exists('export_backend_helper')) {
+	// Load class in case addon is deactivated
+	require_once 'lib/export_backend_helper.php';
+}
 if(export_backend_helper::autoexportIsInstalled()) {
 	export_backend_helper::autoexportDelete();
 }
