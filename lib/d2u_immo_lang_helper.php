@@ -368,6 +368,7 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper {
 		foreach($this->replacements_english as $key => $value) {
 			foreach (rex_clang::getAllIds() as $clang_id) {
 				$lang_replacement = rex_config::get('d2u_immo', 'lang_replacement_'. $clang_id, '');
+
 				// Load values for input
 				if($lang_replacement === 'german' && isset($this->replacements_german) && isset($this->replacements_german[$key])) {
 					$value = $this->replacements_german[$key];
