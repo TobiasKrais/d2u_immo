@@ -22,7 +22,7 @@ $d2u_module_manager->showManagerList();
 <h2>Template</h2>
 <p>Beispielseiten</p>
 <ul>
-	<li>Immobilien Addon: <a href="http://www.immobiliengaiser.de" target="_blank">
+	<li>Immobilien Addon: <a href="https://www.immobiliengaiser.de/" target="_blank">
 		ImmobilienGaiser</a>.</li>
 </ul>
 <p>Im D2U Helper Addon kann das "Header Pic Template - 2 Columns" installiert werden. In
@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.7-DEV:</p>
 <ul>
+	<li>In den Einstellungen gibt es jetzt eine Option, eigene Übersetzungen in SProg dauerhaft zu erhalten.</li>
 	<li>Bugfix: CronJob wird - wenn installiert - nicht immer richtig aktiviert.</li>
 	<li>Flächenangaben können jetzt auch mit einem Komma gemacht werden.</li>
 	<li>Nicht zutreffende Felder in Eingabemaske der Immobilien werden jetzt ausgeblendet statt ausgegraut.</li>
