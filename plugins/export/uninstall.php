@@ -10,6 +10,7 @@ if(!class_exists('export_backend_helper')) {
 	// Load class in case addon is deactivated
 	require_once 'lib/export_backend_helper.php';
 }
-if(export_backend_helper::autoexportIsInstalled()) {
-	export_backend_helper::autoexportDelete();
+$export_cronjob = d2u_immo_export_cronjob::factory();
+if($export_cronjob->isInstalled()) {
+	$export_cronjob->delete();
 }
