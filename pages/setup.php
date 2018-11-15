@@ -31,7 +31,7 @@ $d2u_module_manager->showManagerList();
 <p>Sammelthread fürs Addon im <a href="https://redaxo.org/forum/viewtopic.php?f=43&t=21965" target="_blank">Redaxo Forum</a>.</p>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
-<p>1.0.7-DEV:</p>
+<p>1.0.7:</p>
 <ul>
 	<li>Bugfix: Deaktiviertes Addon zu deinstallieren führte zu fatal error.</li>
 	<li>In den Einstellungen gibt es jetzt eine Option, eigene Übersetzungen in SProg dauerhaft zu erhalten.</li>
