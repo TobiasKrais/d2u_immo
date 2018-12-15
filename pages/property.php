@@ -393,16 +393,15 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							}
 						</script>
 						<?php
-							}
-
-							print '<dl class="rex-form-group form-group" id="geocode">';
-							print '<dt><label></label></dt>';
-							print '<dd><input type="submit" value="'. rex_i18n::msg('d2u_helper_geocode') .'" onclick="geocode(); return false;" class="btn btn-save">'
-								. ' <div class="btn btn-abort"><a href="https://maps.google.com/?q='. $address->latitude .','. $address->longitude .'&z=17" id="check_geocode" target="_blank">'. rex_i18n::msg('d2u_helper_geocode_check') .'</a></div>'
-								. '</dd>';
-							print '</dl>';
-							if($address->latitude == 0 && $address->longitude == 0) {
-								print '<script>jQuery(document).ready(function($) { $("#check_geocode").parent().hide(); });</script>';
+								print '<dl class="rex-form-group form-group" id="geocode">';
+								print '<dt><label></label></dt>';
+								print '<dd><input type="submit" value="'. rex_i18n::msg('d2u_helper_geocode') .'" onclick="geocode(); return false;" class="btn btn-save">'
+									. ' <div class="btn btn-abort"><a href="https://maps.google.com/?q='. $address->latitude .','. $address->longitude .'&z=17" id="check_geocode" target="_blank">'. rex_i18n::msg('d2u_helper_geocode_check') .'</a></div>'
+									. '</dd>';
+								print '</dl>';
+								if($address->latitude == 0 && $address->longitude == 0) {
+									print '<script>jQuery(document).ready(function($) { $("#check_geocode").parent().hide(); });</script>';
+								}
 							}
 							d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');							
 							d2u_addon_backend_helper::form_input('d2u_immo_property_longitude', 'form[longitude]', $property->longitude, FALSE, $readonly, 'text');
