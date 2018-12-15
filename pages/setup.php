@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.8:</p>
 <ul>
-	<li>...</li>
+	<li>Geocodierung von Adressen im Backend per 1-Click möglich.</li>
 </ul>
 <p>1.0.7:</p>
 <ul>
