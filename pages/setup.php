@@ -28,7 +28,6 @@ $d2u_module_manager->showManagerList();
 <p>Im D2U Helper Addon kann das "Header Pic Template - 2 Columns" installiert werden. In
 	diesem Template sind alle nötigen Anpassungen integriert.</p>
 <h2>Support</h2>
-<p>Sammelthread fürs Addon im <a href="https://redaxo.org/forum/viewtopic.php?f=43&t=21965" target="_blank">Redaxo Forum</a>.</p>
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 <p>1.0.8:</p>
