@@ -35,6 +35,11 @@ $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_propertie
 if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `hall_warehouse_type` TINYINT(1) NOT NULL DEFAULT 0 AFTER `office_type`;");
 }
+// 1.0.8
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'parking_type';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `parking_type` TINYINT(1) NOT NULL DEFAULT 0 AFTER `hall_warehouse_type`;");
+}
 
 // Update language replacements
 if(!class_exists('d2u_immo_lang_helper')) {
@@ -48,7 +53,7 @@ if(class_exists('D2UModuleManager')) {
 	$modules = [];
 	$modules[] = new D2UModule("70-1",
 		"D2U Immo Addon - Hauptausgabe",
-		10);
+		11);
 	$modules[] = new D2UModule("70-2",
 		"D2U Immo Addon - Infobox Ansprechpartner",
 		2);

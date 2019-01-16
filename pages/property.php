@@ -77,6 +77,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->parking_space_garage = $form['parking_space_garage'];
 			$property->parking_space_simple = $form['parking_space_simple'];
 			$property->parking_space_undergroundcarpark = $form['parking_space_undergroundcarpark'];
+			$property->parking_type = $form['parking_type'];
 			$property->pictures = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
 			$property->priority = $form['priority'];
 			$property->publish_address = array_key_exists('publish_address', $form);
@@ -239,6 +240,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 //								'einzelhandel' => rex_i18n::msg('d2u_immo_property_object_type_einzelhandel'),
 //								'gastgewerbe' => rex_i18n::msg('d2u_immo_property_object_type_gastgewerbe'),
 								'hallen_lager_prod' => rex_i18n::msg('d2u_immo_property_object_type_hallen_lager_prod'),
+								'parken' => rex_i18n::msg('d2u_immo_property_object_type_parken'),
 //								'land_und_forstwirtschaft' => rex_i18n::msg('d2u_immo_property_object_type_land_und_forstwirtschaft'),
 //								'freizeitimmobilie_gewerblich' => rex_i18n::msg('d2u_immo_property_object_type_freizeitimmobilie_gewerblich'),
 //								'zinshaus_renditeobjekt' => rex_i18n::msg('d2u_immo_property_object_type_zinshaus_renditeobjekt'),
@@ -317,6 +319,17 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								'FREIFLAECHEN' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_FREIFLAECHEN'),
 								'KUEHLHAUS' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_KUEHLHAUS')];
 							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[hall_warehouse_type]', $options_hall_warehouse_type, [$property->hall_warehouse_type], 1, FALSE, $readonly);
+							$options_parking_type = ['BOOTSLIEGEPLATZ' => rex_i18n::msg('d2u_immo_property_parking_type_BOOTSLIEGEPLATZ'),
+								'CARPORT' => rex_i18n::msg('d2u_immo_property_parking_type_CARPORT'),
+								'DOPPELGARAGE' => rex_i18n::msg('d2u_immo_property_parking_type_DOPPELGARAGE'),
+								'DUPLEX' => rex_i18n::msg('d2u_immo_property_parking_type_DUPLEX'),
+								'EINZELGARAGE' => rex_i18n::msg('d2u_immo_property_parking_type_EINZELGARAGE'),
+								'PARKHAUS' => rex_i18n::msg('d2u_immo_property_parking_type_PARKHAUS'),
+								'PARKPLATZ_STROM' => rex_i18n::msg('d2u_immo_property_parking_type_PARKPLATZ_STROM'),
+								'STELLPLATZ' => rex_i18n::msg('d2u_immo_property_parking_type_STELLPLATZ'),
+								'TIEFGARAGENSTELLPLATZ' => rex_i18n::msg('d2u_immo_property_parking_type_TIEFGARAGENSTELLPLATZ'),
+								'TIEFGARAGE' => rex_i18n::msg('d2u_immo_property_parking_type_TIEFGARAGE')];
+							d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[parking_type]', $options_parking_type, [$property->parking_type], 1, FALSE, $readonly);
 							$options_other_type = ['PARKHAUS' => rex_i18n::msg('d2u_immo_property_other_type_PARKHAUS'),
 								'TANKSTELLE' => rex_i18n::msg('d2u_immo_property_other_type_TANKSTELLE'),
 								'KRANKENHAUS' => rex_i18n::msg('d2u_immo_property_other_type_KRANKENHAUS'),
@@ -587,6 +600,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[land_type]']").hide();
 				$("dl[id='form[office_type]']").hide();
 				$("dl[id='form[other_type]']").hide();
+				$("dl[id='form[parking_type]']").hide();
 			}
 			else if (value === "haus") {
 				$("dl[id='form[apartment_type]']").hide();
@@ -595,6 +609,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[land_type]']").hide();
 				$("dl[id='form[office_type]']").hide();
 				$("dl[id='form[other_type]']").hide();
+				$("dl[id='form[parking_type]']").hide();
 			}
 			else if (value === "grundstueck") {
 				$("dl[id='form[apartment_type]']").hide();
@@ -603,6 +618,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[land_type]']").fadeIn();
 				$("dl[id='form[office_type]']").hide();
 				$("dl[id='form[other_type]']").hide();
+				$("dl[id='form[parking_type]']").hide();
 			}
 			else if (value === "buero_praxen") {
 				$("dl[id='form[apartment_type]']").hide();
@@ -611,6 +627,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[land_type]']").hide();
 				$("dl[id='form[office_type]']").fadeIn();
 				$("dl[id='form[other_type]']").hide();
+				$("dl[id='form[parking_type]']").hide();
 			}
 			else if (value === "hallen_lager_prod") {
 				$("dl[id='form[apartment_type]']").hide();
@@ -619,6 +636,16 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[land_type]']").hide();
 				$("dl[id='form[office_type]']").hide();
 				$("dl[id='form[other_type]']").hide();
+				$("dl[id='form[parking_type]']").hide();
+			}
+			else if (value === "parken") {
+				$("dl[id='form[apartment_type]']").hide();
+				$("dl[id='form[hall_warehouse_type]']").hide();
+				$("dl[id='form[house_type]']").hide();
+				$("dl[id='form[land_type]']").hide();
+				$("dl[id='form[office_type]']").hide();
+				$("dl[id='form[other_type]']").hide();
+				$("dl[id='form[parking_type]']").fadeIn();
 			}
 			else if (value === "sonstige") {
 				$("dl[id='form[apartment_type]']").hide();
@@ -627,9 +654,11 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[land_type]']").hide();
 				$("dl[id='form[office_type]']").hide();
 				$("dl[id='form[other_type]']").fadeIn();
+				$("dl[id='form[parking_type]']").hide();
 			};
 			
-			if (value === "grundstueck") {
+			// If engery pass is not necessary
+			if (value === "grundstueck" || value === "parken") {
 				$("select[name='form[energy_pass]']").removeAttr('required');
 				$("input[name='form[energy_consumption]']").removeAttr('required');
 				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');

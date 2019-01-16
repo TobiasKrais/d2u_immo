@@ -176,6 +176,10 @@ class OpenImmo extends AFTPExport {
 				$objektart_sub_typ = $xml->createAttribute("hallen_typ");
 				$objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->hall_warehouse_type)));
 			}
+			else if(strtolower($property->object_type) == "parken") {
+				$objektart_sub_typ = $xml->createAttribute("parken_typ");
+				$objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->parking_type)));
+			}
 			else if(strtolower($property->object_type) == "sonstige") {
 				$objektart_sub_typ = $xml->createAttribute("sonstige_typ");
 				$objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->other_type)));

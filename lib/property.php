@@ -79,6 +79,12 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $hall_warehouse_type = "";
 	
 	/**
+	 * @var string Type of car parking places. Values are defined in OpenImmo definition
+	 * of value "parken".
+	 */
+	var $parking_type = "";
+	
+	/**
 	 * @var string Type of office. Values are defined in OpenImmo definition
 	 * of value "sonstige_typ".
 	 */
@@ -491,6 +497,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->parking_space_garage = $result->getValue("parking_space_garage");
 			$this->parking_space_simple = $result->getValue("parking_space_simple");
 			$this->parking_space_undergroundcarpark = $result->getValue("parking_space_undergroundcarpark");
+			$this->parking_type = $result->getValue("parking_type");
 			$this->pictures = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures")), PREG_GREP_INVERT);
 			$this->priority = $result->getValue("priority");
 			$this->publish_address = $result->getValue("publish_address") == "1" ? TRUE : FALSE;
@@ -918,6 +925,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."parking_space_garage = ". $this->parking_space_garage .", "
 					."parking_space_simple = ". $this->parking_space_simple .", "
 					."parking_space_undergroundcarpark = ". $this->parking_space_undergroundcarpark .", "
+					."parking_type = '". $this->parking_type ."', "
 					."pictures = '". implode(",", $this->pictures) ."', "
 					."publish_address = ". ($this->publish_address ? 1 : 0) .", "
 					."purchase_price = ". $this->purchase_price .", "

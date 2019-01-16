@@ -140,18 +140,18 @@ class ImmobilienScout24 extends AFTPExport {
 			else if(strtoupper($property->object_type) == "HALLEN_LAGER_PROD") {
 				$objekttyp_wert = "HalleProduktion";
 			}
-			// Garagen
+			// Garage
+			else if(strtoupper($property->object_type) == "PARKEN" && strtoupper($property->other_type) == "PARKEN") {
+				if(strtoupper($property->market_type) == "KAUF") {
+					$objekttyp_wert = "GarageKauf";
+				}
+				else if(strtoupper($property->market_type) == "MIETE_PACHT" || strtoupper($property->market_type) == "ERBPACHT" || strtoupper($property->market_type) == "LEASING") {
+					$objekttyp_wert = "GarageMiete";
+				}
+			}
 			else if(strtoupper($property->object_type) == "SONSTIGE" && strtoupper($property->other_type) == "SONSTIGE") {
 				if(strtoupper($property->type_of_use) == "GEWERBE") {
 					$objekttyp_wert = "SonstigeGewerbe";
-				}
-				else {
-					if(strtoupper($property->market_type) == "KAUF") {
-						$objekttyp_wert = "GarageKauf";
-					}
-					else if(strtoupper($property->market_type) == "MIETE_PACHT" || strtoupper($property->market_type) == "ERBPACHT" || strtoupper($property->market_type) == "LEASING") {
-						$objekttyp_wert = "GarageMiete";
-					}
 				}
 			}
 
