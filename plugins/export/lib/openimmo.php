@@ -405,7 +405,7 @@ class OpenImmo extends AFTPExport {
 			// <nettokaltmiete>500.00</nettokaltmiete>
 			if($property->cold_rent > 0) {
 				$nettokaltmiete = $xml->createElement("nettokaltmiete");
-				$nettokaltmiete->appendChild($xml->createTextNode($property->nettokaltmiete));
+				$nettokaltmiete->appendChild($xml->createTextNode($property->cold_rent));
 				$preise->appendChild($nettokaltmiete);
 			}
 			// TODO: <xsd:element ref="kaltmiete" minOccurs="0"/>
