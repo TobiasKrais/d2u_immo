@@ -163,7 +163,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var string Deposit
 	 */
-	var $deposit = "";
+	var $deposit = 0;
 	
 	/**
 	 * @var string Courtage
@@ -890,7 +890,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."courtage = '". $this->courtage ."', "
 					."courtage_incl_vat = ". ($this->courtage_incl_vat ? 1 : 0) .", "
 					."currency_code = '". $this->currency_code ."', "
-					."deposit = '". $this->deposit ."', "
+					."deposit = ". $this->deposit .", "
 					."elevator = '|". implode("|", $this->elevator) ."|', "
 					."energy_consumption = '". $this->energy_consumption ."', "
 					."energy_pass = '". $this->energy_pass ."', "

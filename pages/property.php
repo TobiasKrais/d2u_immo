@@ -515,7 +515,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_immo_property_cold_rent', 'form[cold_rent]', $property->cold_rent, FALSE, $readonly, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_additional_costs', 'form[additional_costs]', $property->additional_costs, FALSE, $readonly, 'number');
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_rent_plus_vat', 'form[rent_plus_vat]', 'true', $property->rent_plus_vat, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_property_deposit', 'form[deposit]', $property->deposit, FALSE, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_immo_property_deposit', 'form[deposit]', $property->deposit, FALSE, $readonly, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_courtage', 'form[courtage]', $property->courtage, FALSE, $readonly, 'text');
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_courtage_incl_vat', 'form[courtage_incl_vat]', 'true', $property->courtage_incl_vat, $readonly);
 						?>

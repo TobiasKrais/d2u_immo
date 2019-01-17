@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 <p>1.0.9-DEV:</p>
 <ul>
 	<li>Bugfix OpenImmo Export: Kaltmiete wurde nicht übermittelt.</li>
+	<li>Kaution wurde in einen Zahlenwert geändert um mit dem OpenImmo Export kompatibel zu sein. ACHTUNG: Texteingaben in dem Feld gehen verloren! Eventuell vor dem Update die Werte manuell anpassen.</li>
 </ul>
 <p>1.0.8:</p>
 <ul>

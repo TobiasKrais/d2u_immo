@@ -262,7 +262,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		}
 		if($property->deposit != "") {
 			print '<div class="col-6">'. $tag_open .'d2u_immo_deposit'. $tag_close .':</div>';
-			print '<div class="col-6">'. $property->deposit .'</div>';
+			print '<div class="col-6">'. number_format($property->deposit, 2, ",", ".") .'&nbsp;'. $property->currency_code .'</div>';
 		}
 	}
 	

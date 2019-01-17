@@ -67,7 +67,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_immo_
 	cold_rent int(15) default 0,
 	rent_plus_vat int(1) default 0,
 	additional_costs int(15) default 0,
-	deposit varchar(50) collate utf8_general_ci default NULL,
+	deposit int(10) collate utf8_general_ci default NULL,
 	courtage varchar(255) collate utf8_general_ci,
 	courtage_incl_vat int(1) default 0,
 	currency_code varchar(3) collate utf8_general_ci DEFAULT 'EUR',
