@@ -189,15 +189,29 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 								else {
 									print '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
 								}
-
-								d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $property->name, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_input('d2u_immo_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $property->teaser, $required, $readonly_lang, "text");
-								d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $property->description, 10, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_location', "form[lang][". $rex_clang->getId() ."][description_location]", $property->description_location, 5, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_equipment', "form[lang][". $rex_clang->getId() ."][description_equipment]", $property->description_equipment, 5, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_others', "form[lang][". $rex_clang->getId() ."][description_others]", $property->description_others, 5, FALSE, $readonly_lang, TRUE);
-								d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_documents', '1'. $rex_clang->getId(), $property->documents, $readonly_lang);
 							?>
+							<script>
+								// Hide on document load
+								$(document).ready(function() {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+
+								// Hide on selection change
+								$("select[name='form[lang][1][translation_needs_update]']").on('change', function(e) {
+									toggleClangDetailsView(<?php print $rex_clang->getId(); ?>);
+								});
+							</script>
+							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
+								<?php
+									d2u_addon_backend_helper::form_input('d2u_helper_name', "form[lang][". $rex_clang->getId() ."][name]", $property->name, $required, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_input('d2u_immo_teaser', "form[lang][". $rex_clang->getId() ."][teaser]", $property->teaser, $required, $readonly_lang, "text");
+									d2u_addon_backend_helper::form_textarea('d2u_helper_description', "form[lang][". $rex_clang->getId() ."][description]", $property->description, 10, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_location', "form[lang][". $rex_clang->getId() ."][description_location]", $property->description_location, 5, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_equipment', "form[lang][". $rex_clang->getId() ."][description_equipment]", $property->description_equipment, 5, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_others', "form[lang][". $rex_clang->getId() ."][description_others]", $property->description_others, 5, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_documents', '1'. $rex_clang->getId(), $property->documents, $readonly_lang);
+								?>
+							</div>
 						</div>
 					</fieldset>
 				<?php
