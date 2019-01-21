@@ -619,6 +619,9 @@ class Property implements \D2U_Helper\ITranslationHelper {
 				."WHERE property_id = ". $this->property_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
+
+			// reset priorities
+			$this->setPriority(TRUE);			
 		}
 	}
 	
@@ -989,9 +992,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	}
 	
 	/**
-	 * Reassigns priority to all properties in database.
+	 * Reassigns priorities in database.
+	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority() {
+	private function setPriority($delete = FALSE) {
 		// Pull prios from database
 		$query = "SELECT property_id, priority FROM ". \rex::getTablePrefix() ."d2u_immo_properties "
 			."WHERE property_id <> ". $this->property_id ." ORDER BY priority";
@@ -1003,8 +1007,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->priority = 1;
 		}
 		
-		// When prio is too high, simply add at end 
-		if($this->priority > $result->getRows()) {
+		// When prio is too high or was deleted, simply add at end 
+		if($this->priority > $result->getRows() || $delete) {
 			$this->priority = $result->getRows() + 1;
 		}
 
