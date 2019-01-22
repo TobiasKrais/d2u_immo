@@ -671,18 +671,50 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[parking_type]']").hide();
 			};
 			
-			// If engery pass is not necessary
+			// If engery pass an other stuff is is not necessary for "grundstueck" and
 			if (value === "grundstueck" || value === "parken") {
 				$("select[name='form[energy_pass]']").removeAttr('required');
 				$("input[name='form[energy_consumption]']").removeAttr('required');
 				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
 				$("dl[id='form[energy_pass]']").parent().parent().hide();
+				$("dl[id='form[flat_sharing_possible]']").parent().parent().hide();
+				$("dl[id='form[floor]']").slideUp();
+				$("dl[id='form[living_area]']").slideUp();
+				$("dl[id='form[total_area]']").slideUp();
+				$("dl[id='form[rooms]']").slideUp();
+				$("dl[id='form[parking_space_duplex]']").slideUp();
+				$("dl[id='form[parking_space_simple]']").slideUp();
+				$("dl[id='form[parking_space_garage]']").slideUp();
+				$("dl[id='form[parking_space_undergroundcarpark]']").slideUp();
+				$("dl[id='form[animals]']").slideUp();
+				if (value === "grundstueck") {
+					$("dl[id='form[construction_year]']").slideUp();
+				}
+				if (value === "parken") {
+					$("dl[id='form[land_area]']").slideUp();
+				}
 			}
 			else {
 				$("select[name='form[energy_pass]']").prop('required', true);
 				$("input[name='form[energy_consumption]']").prop('required', true);
 				$("input[name='form[energy_pass_valid_until]']").prop('required', true);
 				$("dl[id='form[energy_pass]']").parent().parent().fadeIn();
+				$("dl[id='form[flat_sharing_possible]']").parent().parent().fadeIn();
+				$("dl[id='form[floor]']").slideDown();
+				$("dl[id='form[living_area]']").slideDown();
+				$("dl[id='form[total_area]']").slideDown();
+				$("dl[id='form[rooms]']").slideDown();
+				$("dl[id='form[parking_space_duplex]']").slideDown();
+				$("dl[id='form[parking_space_simple]']").slideDown();
+				$("dl[id='form[parking_space_garage]']").slideDown();
+				$("dl[id='form[parking_space_undergroundcarpark]']").slideDown();
+				$("dl[id='form[animals]']").slideDown();
+				if (value === "grundstueck") {
+					$("dl[id='form[construction_year]']").slideDown();
+				}
+				if (value === "parken") {
+					$("dl[id='form[land_area]']").slideDown();
+				}
 			}
 		}
 		
@@ -712,7 +744,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[rent_plus_vat]']").fadeIn();
 				$("dl[id='form[deposit]']").fadeIn();
 				$("input[name='form[deposit]']").prop('required', true);
-			};			
+			}		
 		}
 
 		// Hide on document load

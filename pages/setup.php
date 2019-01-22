@@ -32,6 +32,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.0.9-DEV:</p>
 <ul>
+	<li>Für Objektart Grundstück und Parken werden nicht benötigte Felder im Backend ausgeblendet.</li>
 	<li>Sprachdetails werden ausgeblendet, wenn Speicherung der Sprache nicht vorgesehen ist.</li>
 	<li>Bugfix: Prioritäten wurden beim Löschen nicht reorganisiert.</li>
 	<li>Bugfix OpenImmo Export: Kaltmiete wurde nicht übermittelt.</li>
