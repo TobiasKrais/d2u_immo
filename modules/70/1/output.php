@@ -960,8 +960,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				text|phone|'. $tag_open .'d2u_immo_form_phone'. $tag_close .' *
 				text|email|'. $tag_open .'d2u_immo_form_email'. $tag_close .' *
 				textarea|message|'. $tag_open .'d2u_immo_form_message'. $tag_close .'
-				checkbox|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .' *|'. $tag_open .'d2u_immo_no'. $tag_close .','. $tag_open .'d2u_immo_yes'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .'
-				checkbox|phone_calls|'. $tag_open .'d2u_immo_form_phone_calls'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .','. $tag_open .'d2u_immo_yes'. $tag_close .'|'. $tag_open .'d2u_immo_no'. $tag_close .'
+				checkbox|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .' *|0,1|0
+				checkbox|phone_calls|'. $tag_open .'d2u_immo_form_phone_calls'. $tag_close .'|0,1|0
 				php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
 				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>

@@ -42,7 +42,14 @@ if($sql->getRows() == 0) {
 }
 // 1.0.9
 $sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` CHANGE `deposit` `deposit` INT(10) NOT NULL DEFAULT 0;");
- 
+
+// 1.1.0 YForm e-mail template
+$sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."yform_email_template WHERE name = 'd2u_immo_request'");
+if($sql->getRows() == 0) {
+	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `subject`, `body`, `body_html`, `attachments`) VALUES
+		('d2u_immo_request', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"name\"]', 'Immobilienanfrage', 'Immobilienanfrage von Internetseite:\r\nImmobilie: REX_YFORM_DATA[field=\"immo_name\"]\r\n\r\nEs fragt an:\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nTelefon Anrufe gestattet: <?php print REX_YFORM_DATA[field=\"phone_calls\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\nDatenschutzerklärung zugestimmt: <?php print REX_YFORM_DATA[field=\"privacy_policy_accepted\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n', '', '')");
+}
+
 // Update language replacements
 if(!class_exists('d2u_immo_lang_helper')) {
 	// Load class in case addon is deactivated
@@ -55,7 +62,7 @@ if(class_exists('D2UModuleManager')) {
 	$modules = [];
 	$modules[] = new D2UModule("70-1",
 		"D2U Immo Addon - Hauptausgabe",
-		12);
+		13);
 	$modules[] = new D2UModule("70-2",
 		"D2U Immo Addon - Infobox Ansprechpartner",
 		2);

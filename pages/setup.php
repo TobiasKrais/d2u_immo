@@ -32,7 +32,7 @@ $d2u_module_manager->showManagerList();
 <h2>Changelog</h2>
 <p>1.1.0:</p>
 <ul>
-	<li>...</li>
+	<li>Anpassungen an YForm 3.</li>
 </ul>
 <p>1.0.9:</p>
 <ul>
