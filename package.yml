@@ -25,5 +25,5 @@ requires:
         media_manager: '>=2.2'
         sprog: '>=1.0.0'
         url: '>=1.0.1'
-        yform: '>=2.0'
+        yform: '>=3.0'
         yrewrite: '>=2.0.1'
