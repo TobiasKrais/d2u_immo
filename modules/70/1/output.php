@@ -1010,7 +1010,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				php|immo_contact_validate_timer|Spamprotection|<input name="immo_contact_validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
 				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
-				html||<br>* '. $tag_open .'d2u_immo_recommendation_privacy_policy'. $tag_close .'<br><br>
+				html||<br>'. $tag_open .'d2u_immo_recommendation_privacy_policy'. $tag_close .'<br><br>
 
 				submit|submit|'. $tag_open .'d2u_immo_form_send'. $tag_close .'|no_db
 
