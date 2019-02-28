@@ -808,19 +808,7 @@ class OpenImmo extends AFTPExport {
 				$zustand->appendChild($zustand_art);
 				$zustand_angaben->appendChild($zustand);
 			}
-			// <alter alter_attr="NEUBAU" />
-			if($property->construction_year > 0) {
-				$alter = $xml->createElement("alter");
-				$alter_attr = $xml->createAttribute("alter_attr");
-				if($property->construction_year > 1945) {
-					$alter_attr->appendChild($xml->createTextNode("NEUBAU"));
-				}
-				else {
-					$alter_attr->appendChild($xml->createTextNode("ALTBAU"));
-				}
-				$alter->appendChild($alter_attr);
-				$zustand_angaben->appendChild($alter);
-			}
+			// TODO: <alter alter_attr="NEUBAU" />
 			// TODO: <xsd:element ref="bebaubar_nach" minOccurs="0"/>
 			// TODO: <xsd:element ref="erschliessung" minOccurs="0"/>
 			// TODO: <xsd:element ref="altlasten" minOccurs="0"/>
