@@ -825,7 +825,10 @@ class OpenImmo extends AFTPExport {
 			// TODO: <xsd:element ref="erschliessung" minOccurs="0"/>
 			// TODO: <xsd:element ref="altlasten" minOccurs="0"/>
 			// <energiepass>
-			if(strlen($property->energy_pass) > 1) {
+			if(strtolower($property->object_type) != "grundstueck"
+					&& strtolower($property->object_type) != "parken"
+					&& strtolower($property->condition_type) != "projektiert"
+					&& strlen($property->energy_pass) > 5) {
 				$energiepass = $xml->createElement("energiepass");
 				// <epart>BEDARF</epart>
 				$energiepass_art = $xml->createElement("epart");

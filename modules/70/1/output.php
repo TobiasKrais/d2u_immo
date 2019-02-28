@@ -378,7 +378,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 
 	print '<div class="col-12">&nbsp;</div>';
 
-	if((strtolower($property->object_type) != "grundstueck" && strtolower($property->object_type) != "parken") && strlen($property->energy_pass) > 5) {
+	if(strtolower($property->object_type) != "grundstueck"
+			&& strtolower($property->object_type) != "parken"
+			&& strtolower($property->condition_type) != "projektiert"
+			&& strlen($property->energy_pass) > 5) {
 		if($print != "") { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
 			print '<div class="row page-break-avoid">';
 		}
@@ -390,8 +393,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_type'. $tag_close .':</li></ul></div>';
 		print '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_energy_pass_'. $property->energy_pass . $tag_close .'</div>';
 
-		print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_valid_until'. $tag_close .':</li></ul></div>';
-		print '<div class="col-6 col-md-8 col-lg-9">'. date_format(date_create_from_format('Y-m-d', $property->energy_pass_valid_until), "d.m.Y") .'</div>';
+		if($property->energy_pass_valid_until != '') {
+			print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_valid_until'. $tag_close .':</li></ul></div>';
+			print '<div class="col-6 col-md-8 col-lg-9">'. date_format(date_create_from_format('Y-m-d', $property->energy_pass_valid_until), "d.m.Y") .'</div>';
+		}
 
 		print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_value'. $tag_close .':</li></ul></div>';
 		print '<div class="col-6 col-md-8 col-lg-9">'. $property->energy_consumption .'&nbsp;kWh/(m²*a)</div>';

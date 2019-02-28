@@ -606,6 +606,24 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 	?>
 	<script>
+		function energy_pass_changer() {
+			// Engery pass is not necessary for object tpye "grundstueck" and "parken", also for condition type "projektiert"
+			if ($("select[name='form[object_type]']").val() === "grundstueck"
+					|| $("select[name='form[object_type]']").val() === "parken"
+					|| $("select[name='form[condition_type]").val() === "PROJEKTIERT") {
+				$("select[name='form[energy_pass]']").removeAttr('required');
+				$("input[name='form[energy_consumption]']").removeAttr('required');
+				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
+				$("dl[id='form[energy_pass]']").parent().parent().hide();
+			}
+			else {
+				$("select[name='form[energy_pass]']").prop('required', true);
+				$("input[name='form[energy_consumption]']").prop('required', true);
+				$("input[name='form[energy_pass_valid_until]']").prop('required', true);
+				$("dl[id='form[energy_pass]']").parent().parent().fadeIn();
+			}
+		}
+		
 		function object_type_changer(value) {
 			if (value === "wohnung") {
 				$("dl[id='form[apartment_type]']").fadeIn();
@@ -671,12 +689,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("dl[id='form[parking_type]']").hide();
 			};
 			
-			// If engery pass an other stuff is is not necessary for "grundstueck" and
+			// If other stuff is is not necessary for "grundstueck" and parking
 			if (value === "grundstueck" || value === "parken") {
-				$("select[name='form[energy_pass]']").removeAttr('required');
-				$("input[name='form[energy_consumption]']").removeAttr('required');
-				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
-				$("dl[id='form[energy_pass]']").parent().parent().hide();
 				$("dl[id='form[flat_sharing_possible]']").parent().parent().hide();
 				$("dl[id='form[floor]']").slideUp();
 				$("dl[id='form[living_area]']").slideUp();
@@ -695,10 +709,6 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				}
 			}
 			else {
-				$("select[name='form[energy_pass]']").prop('required', true);
-				$("input[name='form[energy_consumption]']").prop('required', true);
-				$("input[name='form[energy_pass_valid_until]']").prop('required', true);
-				$("dl[id='form[energy_pass]']").parent().parent().fadeIn();
 				$("dl[id='form[flat_sharing_possible]']").parent().parent().fadeIn();
 				$("dl[id='form[floor]']").slideDown();
 				$("dl[id='form[living_area]']").slideDown();
@@ -751,6 +761,8 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		$(document).ready(function() {
 			market_type_changer($("select[name='form[market_type]']").val());
 			object_type_changer($("select[name='form[object_type]']").val());
+			// Check if energy pass is necessary
+			energy_pass_changer();
 		});
 
 		// Hide on selection change
@@ -759,6 +771,10 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 		});
 		$("select[name='form[object_type]']").on('change', function(e) {
 			object_type_changer($(this).val());
+			energy_pass_changer();
+		});
+		$("select[name='form[condition_type]").on('change', function(e) {
+			energy_pass_changer();
 		});
 	</script>
 	<?php

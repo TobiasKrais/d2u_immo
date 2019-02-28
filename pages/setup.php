@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.1-DEV:</p>
 <ul>
+	<li>Energieausweis wird bei "Zustand des Objektes" "Projektiert" nicht mehr erzwungen.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
 </ul>
 <p>1.1.0:</p>

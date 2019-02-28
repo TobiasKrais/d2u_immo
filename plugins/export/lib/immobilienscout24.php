@@ -839,7 +839,9 @@ class ImmobilienScout24 extends AFTPExport {
 				$objekttyp->appendChild($befeuerungsart);
 
 				// <Energieausweis Energieausweistyp="Energieverbrauchskennwert" Energieverbrauchskennwert="73.4" WarmwasserEnthalten="true"/>
-				if((strtoupper($property->energy_pass) == "VERBRAUCH" || strtoupper($property->energy_pass_valid_until) == "BEDARF") && strlen($property->energy_consumption) > 0) {
+				if(strtolower($property->condition_type) != "projektiert"
+						&& (strtoupper($property->energy_pass) == "VERBRAUCH" || strtoupper($property->energy_pass_valid_until) == "BEDARF")
+						&& strlen($property->energy_consumption) > 0) {
 					$energieausweis = $xml->createElement("Energieausweis");
 					$energieausweis_typ = $xml->createAttribute("Energieausweistyp");
 					if(strtoupper($property->energy_pass) == "VERBRAUCH") {
