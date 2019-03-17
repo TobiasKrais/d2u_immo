@@ -148,7 +148,8 @@ class SocialExportFacebook extends AExport {
 						// 'caption' => 'E.g.: Small heading',
 						'description' => $property->getSocialNetworkDescription()]; // post description
 				if(count($property->pictures) > 0) {
-					$news['picture'] = \rex::getServer() .'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0];
+					$news['picture'] = (\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
+						.'?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0];
 				}
 
 				try {

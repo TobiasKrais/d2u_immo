@@ -30,7 +30,8 @@ class SocialExportLinkedIn extends AExport {
 	 * @return string callback URL
 	 */
 	public function getCallbackURL() {
-		return \rex::getServer() ."redaxo/". \rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id], FALSE);
+		return (\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
+			."redaxo/". \rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id], FALSE);
 	}
 
 	/**
@@ -214,7 +215,8 @@ class SocialExportLinkedIn extends AExport {
 					// <submitted-image-url>http://www.meier-krantechnik.de/index.php?rex_img_type=d2u_baumaschinen_list&amp;rex_img_file=sjjdc_826.jpg</submitted-image-url>
 					if(count($property->pictures) > 0) {
 						$submitted_image_url = $xml->createElement("submitted-image-url");
-						$submitted_image_url->appendChild($xml->createTextNode(\rex::getServer() .'index.php?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0]));
+						$submitted_image_url->appendChild($xml->createTextNode((\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
+							.'index.php?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0]));
 						$content->appendChild($submitted_image_url);
 					}
 
