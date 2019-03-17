@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.1-DEV:</p>
 <ul>
+	<li>YRewrite Multidomain support.</li>
 	<li>Aus OpenImmo Export 'alter alter_attr="NEUBAU/ALTBAU"' entfernt, da bei Nutzern die Aussage (ALTBAU = vor 1945, NEUBAU = nach 1945) zu Irritationen führte.</li>
 	<li>Energieausweis wird bei "Zustand des Objektes" "Projektiert" nicht mehr erzwungen.</li>
 	<li>Konvertierung der Datenbanktabellen zu utf8mb4.</li>
