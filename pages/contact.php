@@ -144,7 +144,7 @@ if ($func == '') {
 	$query = 'SELECT contact_id, firstname, lastname, company '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_immo_contacts '
 		. 'ORDER BY lastname, firstname ASC';
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 

@@ -215,7 +215,7 @@ if ($func == '') {
 	else {
 		$query .= 'ORDER BY categoryname ASC';
 	}
-    $list = rex_list::factory($query);
+    $list = rex_list::factory($query, 1000);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
