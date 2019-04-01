@@ -619,7 +619,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	}
 	// End Pictures
 	// Map
-	if(count($property->publish_address) > 0 && $print != "small") {
+	if($property->publish_address > 0 && $print != "small") {
 		$d2u_helper = rex_addon::get("d2u_helper");
 		$api_key = "";
 		if($d2u_helper->hasConfig("maps_key")) {
