@@ -424,7 +424,7 @@ class OpenImmo extends AFTPExport {
 			// TODO: <xsd:element ref="heizkosten_enthalten" minOccurs="0"/>
 			// TODO: <xsd:element ref="heizkosten" minOccurs="0"/>
 			// <zzg_mehrwertsteuer>true</zzg_mehrwertsteuer>
-			if($property->rent_plus_vat) {
+			if($property->price_plus_vat) {
 				$zzg_mehrwertsteuer = $xml->createElement("zzg_mehrwertsteuer");
 				$zzg_mehrwertsteuer->appendChild($xml->createTextNode("true"));
 				$preise->appendChild($zzg_mehrwertsteuer);
@@ -923,9 +923,9 @@ class OpenImmo extends AFTPExport {
 			// <objektbeschreibung>Objektbeschreibung</objektbeschreibung>
 			$objektbeschreibung = $xml->createElement("objektbeschreibung");
 			$description = \d2u_addon_frontend_helper::prepareEditorField($property->description);
-			if($property->rent_plus_vat) {
+			if($property->price_plus_vat) {
 				// Immmowelt does not import <zzg_mehrwertsteuer>true</zzg_mehrwertsteuer>, so it is added to description
-				$description .= " ". \Sprog\Wildcard::get('d2u_immo_rent_plus_vat', $property->clang_id) ."";
+				$description .= " ". \Sprog\Wildcard::get('d2u_immo_prices_plus_vat', $property->clang_id) ."";
 			}
 			$objektbeschreibung->appendChild($xml->createTextNode(strip_tags($description)));
 			$freitexte->appendChild($objektbeschreibung);

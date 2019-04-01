@@ -380,8 +380,8 @@ class ImmobilienScout24 extends AFTPExport {
 			else {
 				$objektbeschreibung->appendChild($xml->createTextNode("Keine Objektbeschreibung eingegeben."));
 			}
-			if($property->rent_plus_vat) {
-				$objektbeschreibung .= "<p>". \Sprog\Wildcard::get('d2u_immo_rent_plus_vat', $property->clang_id) ."</p>";
+			if($property->price_plus_vat) {
+				$objektbeschreibung .= "<p>". \Sprog\Wildcard::get('d2u_immo_prices_plus_vat', $property->clang_id) ."</p>";
 			}
 			$objekttyp->appendChild($objektbeschreibung);
 

@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.1-DEV:</p>
 <ul>
+	<li>Kaufpreis kann jetzt auch zzgl. MwSt. angegeben werden (ACHTUNG: Feld "rent_plus_vat" wird in "price_plus_vat" umbenannt!").</li>
 	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>YRewrite Multidomain support.</li>
 	<li>Aus OpenImmo Export 'alter alter_attr="NEUBAU/ALTBAU"' entfernt, da bei Nutzern die Aussage (ALTBAU = vor 1945, NEUBAU = nach 1945) zu Irritationen führte.</li>

@@ -242,6 +242,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div class="col-6">'. $tag_open .'d2u_immo_purchase_price_m2'. $tag_close .':</div>';
 			print '<div class="col-6">'. number_format($property->purchase_price_m2, 2, ",", ".") .'&nbsp;'. $property->currency_code .'</div>';
 		}
+		if($property->price_plus_vat) {
+			print '<div class="col-12">'. $tag_open .'d2u_immo_prices_plus_vat'. $tag_close .'</div>';
+			print '<div class="col-12">&nbsp;</div>';
+		}
 	}
 	else {
 		if($property->cold_rent > 0 && $property->additional_costs > 0) {
@@ -256,8 +260,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			print '<div class="col-6">'. $tag_open .'d2u_immo_additional_costs'. $tag_close .':</div>';
 			print '<div class="col-6">'. number_format($property->additional_costs, 2, ",", ".") .'&nbsp;'. $property->currency_code .'</div>';
 		}
-		if($property->rent_plus_vat) {
-			print '<div class="col-12">'. $tag_open .'d2u_immo_rent_plus_vat'. $tag_close .'</div>';
+		if($property->price_plus_vat) {
+			print '<div class="col-12">'. $tag_open .'d2u_immo_prices_plus_vat'. $tag_close .'</div>';
 			print '<div class="col-12">&nbsp;</div>';
 		}
 		if($property->deposit != "") {

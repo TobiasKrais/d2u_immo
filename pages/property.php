@@ -34,7 +34,7 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			}
 			$property->city = $form['city'];
 			$property->cold_rent = isset($form['cold_rent']) ? $form['cold_rent'] : 0;
-			$property->rent_plus_vat = array_key_exists('rent_plus_vat', $form);
+			$property->price_plus_vat = array_key_exists('price_plus_vat', $form);
 			$property->condition_type = $form['condition_type'];
 			$property->construction_year = $form['construction_year'];
 			if(isset($form['contact_id']) && $form['contact_id'] > 0) {
@@ -528,7 +528,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_immo_property_purchase_price_m2', 'form[purchase_price_m2]', $property->purchase_price_m2, FALSE, $readonly, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_cold_rent', 'form[cold_rent]', $property->cold_rent, FALSE, $readonly, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_additional_costs', 'form[additional_costs]', $property->additional_costs, FALSE, $readonly, 'number');
-							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_rent_plus_vat', 'form[rent_plus_vat]', 'true', $property->rent_plus_vat, $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_price_plus_vat', 'form[price_plus_vat]', 'true', $property->price_plus_vat, $readonly);
 							d2u_addon_backend_helper::form_input('d2u_immo_property_deposit', 'form[deposit]', $property->deposit, FALSE, $readonly, 'number');
 							d2u_addon_backend_helper::form_input('d2u_immo_property_courtage', 'form[courtage]', $property->courtage, FALSE, $readonly, 'text');
 							d2u_addon_backend_helper::form_checkbox('d2u_immo_property_courtage_incl_vat', 'form[courtage_incl_vat]', 'true', $property->courtage_incl_vat, $readonly);
@@ -738,7 +738,6 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("input[name='form[cold_rent]']").removeAttr('required');
 				$("dl[id='form[additional_costs]']").hide();
 				$("input[name='form[additional_costs]']").removeAttr('required');
-				$("dl[id='form[rent_plus_vat]']").hide();
 				$("dl[id='form[deposit]']").hide();
 				$("input[name='form[deposit]']").removeAttr('required');
 			}
@@ -751,7 +750,6 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 				$("input[name='form[cold_rent]']").prop('required', true);
 				$("dl[id='form[additional_costs]']").fadeIn();
 				$("input[name='form[additional_costs]']").prop('required', true);
-				$("dl[id='form[rent_plus_vat]']").fadeIn();
 				$("dl[id='form[deposit]']").fadeIn();
 				$("input[name='form[deposit]']").prop('required', true);
 			}		

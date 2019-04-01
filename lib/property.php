@@ -153,7 +153,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var boolean TRUE if rent has additional VAT
 	 */
-	var $rent_plus_vat = FALSE;
+	var $price_plus_vat = FALSE;
 
 	/**
 	 * @var int Additional monthly costs for rent
@@ -447,7 +447,6 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			}
 			$this->city = $result->getValue("city");
 			$this->cold_rent = $result->getValue("cold_rent");
-			$this->rent_plus_vat = $result->getValue("rent_plus_vat") == "1" ? TRUE : FALSE;
 			$this->condition_type = $result->getValue("condition_type");
 			$this->construction_year = $result->getValue("construction_year");
 			if($result->getValue("contact_id") > 0) {
@@ -499,6 +498,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->parking_space_undergroundcarpark = $result->getValue("parking_space_undergroundcarpark");
 			$this->parking_type = $result->getValue("parking_type");
 			$this->pictures = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures")), PREG_GREP_INVERT);
+			$this->price_plus_vat = $result->getValue("price_plus_vat") == "1" ? TRUE : FALSE;
 			$this->priority = $result->getValue("priority");
 			$this->publish_address = $result->getValue("publish_address") == "1" ? TRUE : FALSE;
 			$this->purchase_price = $result->getValue("purchase_price");
@@ -745,8 +745,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			if ($this->additional_costs > 0) {
 				$social_description .= Sprog\Wildcard::get('d2u_immo_additional_costs', $this->clang_id) . ":&nbsp;". number_format($this->additional_costs, 2, ",", ".") .'&nbsp;'.$this->currency_code ."; ";
 			}
-			if($this->rent_plus_vat) {
-				$objektbeschreibung .= "<p>". \Sprog\Wildcard::get('d2u_immo_rent_plus_vat', $this->clang_id) ."</p>";
+			if($this->price_plus_vat) {
+				$social_description .= "<p>". \Sprog\Wildcard::get('d2u_immo_prices_plus_vat', $this->clang_id) ."</p>";
 			}
 		}
 
@@ -885,7 +885,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."category_id = ". ($this->category !== FALSE ? $this->category->category_id : 0) .", "
 					."city = '". $this->city ."', "
 					."cold_rent = ". $this->cold_rent .", "
-					."rent_plus_vat = ". ($this->rent_plus_vat ? 1 : 0) .", "
+					."price_plus_vat = ". ($this->price_plus_vat ? 1 : 0) .", "
 					."condition_type = '". $this->condition_type ."', "
 					."construction_year = ". $this->construction_year .", "
 					."contact_id = ". ($this->contact !== FALSE ? $this->contact->contact_id : 0) .", "

@@ -27,9 +27,9 @@ if(\rex_addon::get("url")->isAvailable()) {
 }
 
 // 1.0.7 update
-$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'rent_plus_vat';");
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'price_plus_vat';");
 if($sql->getRows() == 0) {
-	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `rent_plus_vat` TINYINT(1) NOT NULL DEFAULT 0 AFTER `cold_rent`;");
+	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `price_plus_vat` TINYINT(1) NOT NULL DEFAULT 0 AFTER `cold_rent`;");
 }
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'hall_warehouse_type';");
 if($sql->getRows() == 0) {
@@ -56,6 +56,10 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_categories` CON
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_categories_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_properties` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_properties_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+$sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'price_plus_vat';");
+if($sql->getRows() == 0) {
+	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` CHANGE `rent_plus_vat` `price_plus_vat` TINYINT(1) NOT NULL DEFAULT 0;");
+}
 
 // Update language replacements
 if(!class_exists('d2u_immo_lang_helper')) {
@@ -69,7 +73,7 @@ if(class_exists('D2UModuleManager')) {
 	$modules = [];
 	$modules[] = new D2UModule("70-1",
 		"D2U Immo Addon - Hauptausgabe",
-		14);
+		15);
 	$modules[] = new D2UModule("70-2",
 		"D2U Immo Addon - Infobox Ansprechpartner",
 		2);
