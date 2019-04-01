@@ -31,9 +31,9 @@ $d2u_module_manager->showManagerList();
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 
-<p>1.1.1-DEV:</p>
+<p>1.1.1:</p>
 <ul>
-	<li>Kaufpreis kann jetzt auch zzgl. MwSt. angegeben werden (ACHTUNG: Feld "rent_plus_vat" wird in "price_plus_vat" umbenannt!").</li>
+	<li>Kaufpreis kann jetzt auch zzgl. MwSt. angegeben werden (ACHTUNG: Feld "Property::rent_plus_vat" wird in "Property::price_plus_vat" umbenannt. "Property::rent_plus_vat" ist nun deprecated.).</li>
 	<li>Listen im Backend werden jetzt nicht mehr in Seiten unterteilt.</li>
 	<li>YRewrite Multidomain support.</li>
 	<li>Aus OpenImmo Export 'alter alter_attr="NEUBAU/ALTBAU"' entfernt, da bei Nutzern die Aussage (ALTBAU = vor 1945, NEUBAU = nach 1945) zu Irritationen führte.</li>

@@ -156,6 +156,12 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $price_plus_vat = FALSE;
 
 	/**
+	 * @var boolean TRUE if rent has additional VAT
+	 * @deprecated since version 1.1.1
+	 */
+	var $rent_plus_vat = FALSE;
+	
+	/**
 	 * @var int Additional monthly costs for rent
 	 */
 	var $additional_costs = 0;
@@ -499,6 +505,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->parking_type = $result->getValue("parking_type");
 			$this->pictures = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures")), PREG_GREP_INVERT);
 			$this->price_plus_vat = $result->getValue("price_plus_vat") == "1" ? TRUE : FALSE;
+			// deprecated
+			$this->rent_plus_vat = $this->price_plus_vat;
 			$this->priority = $result->getValue("priority");
 			$this->publish_address = $result->getValue("publish_address") == "1" ? TRUE : FALSE;
 			$this->purchase_price = $result->getValue("purchase_price");
