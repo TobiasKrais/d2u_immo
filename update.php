@@ -24,7 +24,7 @@ if(\rex_addon::get('url')->isAvailable()) {
 	$article_id = rex_config::get('d2u_immo', 'article_id', 0) > 0 ? rex_config::get('d2u_immo', 'article_id') : rex_article::getSiteStartArticleId(); 
 	if(rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 		// Insert url schemes Version 2.x
-		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."rex_url_generator_profile WHERE `namespace` = 'property_id'");
+		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."rex_url_generator_profile WHERE `namespace` = 'property_id';");
 		$sql->setQuery("INSERT INTO `rex_url_generator_profile` (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
 			('property_id', "
 			. $article_id .", "
@@ -34,7 +34,7 @@ if(\rex_addon::get('url')->isAvailable()) {
 			. "'relation_1_xxx_1_xxx_rex_d2u_immo_categories_lang', "
 			. "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\"}', "
 			. "'', '[]', '', '[]', CURRENT_TIMESTAMP, '". rex::getUser()->getValue('login') ."', CURRENT_TIMESTAMP, '". rex::getUser()->getValue('login') ."');");
-		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."rex_url_generator_profile WHERE `namespace` = 'category_id'");
+		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."rex_url_generator_profile WHERE `namespace` = 'category_id';");
 		$sql->setQuery("INSERT INTO `rex_url_generator_profile` (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
 			('category_id', "
 			. $article_id .", "
@@ -47,7 +47,7 @@ if(\rex_addon::get('url')->isAvailable()) {
 	}
 	else {
 		// Insert url schemes Version 1.x
-		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_immo_url_properties'");
+		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_immo_url_properties';");
 		$sql->setQuery("INSERT INTO `". \rex::getTablePrefix() ."url_generate` (`article_id`, `clang_id`, `url`, `table`, `table_parameters`, `relation_table`, `relation_table_parameters`, `relation_insert`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
 			(". $article_id .", "
 			. $clang_id .", "
@@ -57,7 +57,7 @@ if(\rex_addon::get('url')->isAvailable()) {
 			. "'1_xxx_relation_". \rex::getTablePrefix() ."d2u_immo_url_categories', "
 			. "'{\"1_xxx_relation_". \rex::getTablePrefix() ."d2u_immo_url_categories_field_1\":\"name\",\"1_xxx_relation_". \rex::getTablePrefix() ."d2u_immo_url_categories_field_2\":\"\",\"1_xxx_relation_". \rex::getTablePrefix() ."d2u_immo_url_categories_field_3\":\"\",\"1_xxx_relation_". \rex::getTablePrefix() ."d2u_immo_url_categories_id\":\"category_id\",\"1_xxx_relation_". \rex::getTablePrefix() ."d2u_immo_url_categories_clang_id\":\"clang_id\"}', "
 			. "'before', UNIX_TIMESTAMP(), '". rex::getUser()->getValue('login') ."', UNIX_TIMESTAMP(), '". rex::getUser()->getValue('login') ."');");
-		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_immo_url_categories'");
+		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generate WHERE `table` = '1_xxx_". \rex::getTablePrefix() ."d2u_immo_url_categories';");
 		$sql->setQuery("INSERT INTO `". \rex::getTablePrefix() ."url_generate` (`article_id`, `clang_id`, `url`, `table`, `table_parameters`, `relation_table`, `relation_table_parameters`, `relation_insert`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
 			(". $article_id .", "
 			. $clang_id .", "
