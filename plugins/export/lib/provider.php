@@ -430,7 +430,6 @@ class Provider {
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_export_properties AS export ON properties.property_id = export.property_id "
 			."WHERE provider_id = ". $this->provider_id ." AND clang_id = ". $this->clang_id ." "
 			."ORDER BY properties.updatedate DESC LIMIT 0, 1";
-		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0 && $result->getValue("updatedate") > $result->getValue("export_timestamp")) {
@@ -459,7 +458,7 @@ class Provider {
 
 	/**
 	 * Get last export timestamp.
-	 * @return int Timestamp of last successful export.
+	 * @return string Timestamp of last successful export.
 	 */
 	public function getLastExportTimestamp() {
 		$query = "SELECT export_timestamp FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
@@ -468,7 +467,7 @@ class Provider {
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
 		
-		$time = 0;
+		$time = "";
 		if($result->getRows() > 0) {
 			$time = $result->getValue("export_timestamp");
 		}

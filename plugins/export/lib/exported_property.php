@@ -34,9 +34,9 @@ class ExportedProperty {
 	var $provider_import_id = "";
 	
 	/**
-	 * @var int Export timestamp.
+	 * @var string Export timestamp.
 	 */
-	var $export_timestamp = 0;
+	var $export_timestamp = "";
 
 	/**
 	 * Constructor. Fetches the object from database
@@ -56,7 +56,7 @@ class ExportedProperty {
 		if ($num_rows > 0) {
 			$this->export_action = $result->getValue("export_action");
 			$this->provider_import_id = $result->getValue("provider_import_id");
-			if($result->getValue("export_timestamp") > 0) {
+			if($result->getValue("export_timestamp") != "") {
 				$this->export_timestamp = $result->getValue("export_timestamp");
 			}
 		}
@@ -85,10 +85,10 @@ class ExportedProperty {
 		$properties = Property::getAll($provider->clang_id, '', TRUE);
 		foreach($properties as $property) {
 			$exported_property = new ExportedProperty($property->property_id, $provider_id);
-			if($exported_property->export_action == "" && $exported_property->export_timestamp == 0) {
+			if($exported_property->export_action == "" && $exported_property->export_timestamp == "") {
 				$exported_property->export_action = "add";
 			}
-			else if(($exported_property->export_action == "" && $exported_property->export_timestamp > 0) || $exported_property->export_action == "delete") {
+			else if(($exported_property->export_action == "" && $exported_property->export_timestamp != "") || $exported_property->export_action == "delete") {
 				$exported_property->export_action = "update";
 			}
 			$exported_property->save();
@@ -132,7 +132,7 @@ class ExportedProperty {
 	 * @return boolean TRUE if set, FALSE if not
 	 */
 	public function isSetForExport() {
-		if($this->export_action == "add" || $this->export_action == "update" || ($this->export_action == "" && $this->export_timestamp > 0)) {
+		if($this->export_action == "add" || $this->export_action == "update" || ($this->export_action == "" && $this->export_timestamp != "")) {
 			return TRUE;
 		}
 		else {

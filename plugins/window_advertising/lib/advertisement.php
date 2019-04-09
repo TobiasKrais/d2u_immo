@@ -52,9 +52,9 @@ class Advertisement implements \D2U_Helper\ITranslationHelper {
 	var $translation_needs_update = "delete";
 
 	/**
-	 * @var int Unix timestamp containing the last update date
+	 * @var string Timestamp containing the last update date
 	 */
-	var $updatedate = 0;
+	var $updatedate = "";
 	
 	/**
 	 * @var string Redaxo update user name
@@ -281,7 +281,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper {
 						."title = '". addslashes(htmlspecialchars($this->title)) ."', "
 						."description = '". addslashes(htmlspecialchars($this->description)) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
+						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

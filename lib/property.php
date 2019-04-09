@@ -364,9 +364,9 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $window_advertising_status = "";
 
 	/**
-	 * @var int Unix timestamp for update date.
+	 * @var string Unix timestamp for update date.
 	 */
-	var $updatedate = 0;
+	var $updatedate = "";
 	
 	/**
 	 * @var string Redaxo user who last updated property
@@ -983,7 +983,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 						."teaser = '". $this->teaser ."', "
 						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
-						."updatedate = ". time() .", "
+						."updatedate = CURRENT_TIMESTAMP, "
 						."updateuser = '". \rex::getUser()->getLogin() ."' ";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);

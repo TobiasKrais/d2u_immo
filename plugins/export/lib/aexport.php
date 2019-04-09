@@ -79,7 +79,7 @@ abstract class AExport {
 	protected function saveExportedProperties() {
 		foreach($this->export_properties as $exported_property) {
 			if($exported_property->export_action == "add" || $exported_property->export_action == "update") {
-				$exported_property->export_timestamp = time();
+				$exported_property->export_timestamp = date("Y-m-d H:i:s");
 				$exported_property->export_action = "";
 				$exported_property->save();
 			}

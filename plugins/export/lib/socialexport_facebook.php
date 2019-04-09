@@ -174,7 +174,7 @@ class SocialExportFacebook extends AExport {
 				
 				// Save results
 				$exported_property->export_action = "";
-				$exported_property->export_timestamp = time();
+				$exported_property->export_timestamp = date("Y-m-d H:i:s");
 				$exported_property->save();
 			}
 		}

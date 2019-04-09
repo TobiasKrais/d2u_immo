@@ -15,7 +15,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_w
 	title varchar(255) collate utf8mb4_unicode_ci default NULL,
 	description text collate utf8mb4_unicode_ci default NULL,
 	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	updatedate int(11) default NULL,
+	updatedate DATETIME default NULL,
 	updateuser varchar(255) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (ad_id, clang_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");

@@ -33,7 +33,8 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.2-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bild in sitemap.xml aufgenommen.</li>
+	<li>Anpassungen an URL Addon 2.x.</li>
 </ul>
 <p>1.1.1:</p>
 <ul>

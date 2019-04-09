@@ -68,10 +68,10 @@ $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_immo = rex_addon::get("d2u_immo");
-$urlParamKey = "";
+$url_namespace = "";
 if(\rex_addon::get("url")->isAvailable()) {
 	$url_data = UrlGenerator::getData();
-	$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
+	$url_namespace = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
 }
 
 // Output property list

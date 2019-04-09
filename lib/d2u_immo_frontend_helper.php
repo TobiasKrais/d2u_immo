@@ -11,16 +11,13 @@ class d2u_immo_frontend_helper {
 		$alternate_URLs = [];
 
 		// Prepare objects first for sorting in correct order
-		$urlParamKey = "";
-		if(\rex_addon::get("url")->isAvailable()) {
-			$url_data = UrlGenerator::getData();
-			$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
-		}		
+		$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
+		$url_id = d2u_addon_frontend_helper::getUrlId();
 		
-		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "property_id")) {
+		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "property_id") {
 			$property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-				$property_id = UrlGenerator::getId();
+			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+				$property_id = $url_id;
 			}
 			foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
 				$lang_property = new D2U_Immo\Property($property_id, $this_lang_key);
@@ -29,10 +26,10 @@ class d2u_immo_frontend_helper {
 				}
 			}
 		}
-		else if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "category_id")) {
+		else if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "category_id") {
 			$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-				$category_id = UrlGenerator::getId();
+			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+				$category_id = $url_id;
 			}
 			foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
 				$lang_category = new D2U_Immo\Category($category_id, $this_lang_key);
@@ -53,23 +50,22 @@ class d2u_immo_frontend_helper {
 		$breadcrumbs = [];
 
 		// Prepare objects first for sorting in correct order
+		$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
+		$url_id = d2u_addon_frontend_helper::getUrlId();
+
 		$category = FALSE;
 		$property = FALSE;
-		$url_data = [];
-		if(\rex_addon::get("url")->isAvailable()) {
-			$url_data = UrlGenerator::getData();
-		}
-		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "property_id")) {
+		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "property_id") {
 			$property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-				$property_id = UrlGenerator::getId();
+			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+				$property_id = $url_id;
 			}
 			$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
 		}
-		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "category_id")) {
+		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "category_id") {
 			$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-				$category_id = UrlGenerator::getId();
+			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+				$category_id = $url_id;
 			}
 			$category = new D2U_Immo\Category($category_id, rex_clang::getCurrentId());
 		}
@@ -96,17 +92,14 @@ class d2u_immo_frontend_helper {
 		$meta_tags = "";
 
 		// Prepare objects first for sorting in correct order
-		$urlParamKey = "";
-		if(\rex_addon::get("url")->isAvailable()) {
-			$url_data = UrlGenerator::getData();
-			$urlParamKey = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
-		}
+		$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
+		$url_id = d2u_addon_frontend_helper::getUrlId();
 
 		// Property
-		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "property_id")) {
+		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "property_id") {
 			$property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-				$property_id = UrlGenerator::getId();
+			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+				$property_id = $url_id;
 			}
 			$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
 			$meta_tags .= $property->getMetaAlternateHreflangTags();
@@ -115,10 +108,10 @@ class d2u_immo_frontend_helper {
 			$meta_tags .= $property->getTitleTag() . PHP_EOL;
 		}
 		// Category
-		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || (rex_addon::get("url")->isAvailable() && isset($url_data->urlParamKey) && $url_data->urlParamKey === "category_id")) {
+		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "category_id") {
 			$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && UrlGenerator::getId() > 0) {
-				$category_id = UrlGenerator::getId();
+			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
+				$category_id = $url_id;
 			}
 			$category = new D2U_Immo\Category($category_id, rex_clang::getCurrentId());
 			$meta_tags .= $category->getMetaAlternateHreflangTags();

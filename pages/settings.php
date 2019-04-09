@@ -23,7 +23,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		if(\rex_addon::get('url')->isAvailable()) {
 			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_immo_url_categories", $settings['article_id']);
 			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_immo_url_properties", $settings['article_id']);
-			UrlGenerator::generatePathFile([]);
+			\UrlGenerator::generatePathFile([]);
 		}
 		
 		// Install / update language replacements
