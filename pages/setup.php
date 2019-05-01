@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.2-DEV:</p>
 <ul>
+	<li>Modul 70-1 prüft bei aktiviertem YCom ob Downloadrechte für Dateien bestehen.</li>
 	<li>Bild in sitemap.xml aufgenommen.</li>
 	<li>Anpassungen an URL Addon 2.x.</li>
 </ul>
@@ -97,7 +98,7 @@ $d2u_module_manager->showManagerList();
 	<li>Export Plugin: Portale können offline geschaltet werden.</li>
 	<li>Export Plugin: Bei Installation des Autoexportes künftig Ausführung im Frontend und Backend.</li>
 	<li>Export Plugin: Code hatte seit Einführung des namespace nicht mehr funktioniert.</li>
-	<li>Downloads, die durch ycom/auth_media geschützt sind werden nicht mehr angezeigt.</li>
+	<li>Downloads, die durch ycom/media_auth geschützt sind werden nicht mehr angezeigt.</li>
 	<li>Anpassungen Druckausgabe an Bootstrap 4.0.0.</li>
 </ul>
 <p>1.0.3:</p>

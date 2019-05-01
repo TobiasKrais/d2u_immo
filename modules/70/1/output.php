@@ -356,8 +356,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			if($media instanceof rex_media) {
 				// Check permissions
 				$has_permission = TRUE;
-				if(rex_plugin::get('ycom', 'auth_media')->isAvailable()) {
-					$has_permission = rex_ycom_auth_media::checkPerm($media);
+				if(rex_plugin::get('ycom', 'media_auth')->isAvailable()) {
+					$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $document));
 				}
 				if($has_permission) {
 					print '<li><span class="icon pdf"></span> <a href="'. rex_url::media($document) .'">'. $media->getTitle() .'</a></li>';
