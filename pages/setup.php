@@ -31,7 +31,7 @@ $d2u_module_manager->showManagerList();
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 
-<p>1.1.2-DEV:</p>
+<p>1.1.2:</p>
 <ul>
 	<li>Modul 70-1 prüft bei aktiviertem YCom ob Downloadrechte für Dateien bestehen.</li>
 	<li>Bild in sitemap.xml aufgenommen.</li>
