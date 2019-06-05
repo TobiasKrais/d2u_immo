@@ -31,9 +31,10 @@ $d2u_module_manager->showManagerList();
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 
-<p>1.1.3-DEV:</p>
+<p>1.1.3:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix: Fatal error beim Speichern verursacht durch die URL Addon Version 2 Anpassungen behoben.</li>
+	<li>Bugfix: bei Installation des Export Plugins wurde ein Datenbankfeld vergessen anzulegen.</li>
 </ul>
 <p>1.1.2:</p>
 <ul>
