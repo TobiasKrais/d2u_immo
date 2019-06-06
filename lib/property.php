@@ -929,7 +929,6 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."object_type = '". $this->object_type ."', "
 					."office_type = '". $this->office_type ."', "
 					."online_status = '". $this->online_status ."', "
-					."window_advertising_status = '". ($this->window_advertising_status ? 'online' : 'offline') ."', "
 					."openimmo_object_id = '". $this->openimmo_object_id ."', "
 					."other_type = '". $this->other_type ."', "
 					."parking_space_duplex = ". $this->parking_space_duplex .", "
@@ -949,6 +948,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."type_of_use = '". $this->type_of_use ."', "
 					."wheelchair_accessable = ". ($this->wheelchair_accessable ? 1 : 0) .", "
 					."zip_code = '". $this->zip_code ."' ";
+			if(\rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
+				$query .= ", window_advertising_status = '". ($this->window_advertising_status ? 'online' : 'offline') ."' ";
+			}
+
 			if($this->property_id == 0) {
 				$query = "INSERT INTO ". $query;
 			}

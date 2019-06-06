@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.4-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix: wenn Schaufenster Plugin nicht installiert war, kam es beim Speichern einer Immobilie zu einem fatal error.</li>
 </ul>
 <p>1.1.3:</p>
 <ul>
