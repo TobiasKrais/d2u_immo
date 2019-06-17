@@ -966,7 +966,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Remove from export
-			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_property->online_status == "online" && $this->online_status != online) {
+			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_property->online_status == "online" && $this->online_status != "online") {
 				ExportedProperty::removePropertyFromAllExports($this->property_id);
 			}
 		}
