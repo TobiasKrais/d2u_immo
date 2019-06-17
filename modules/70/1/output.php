@@ -707,7 +707,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-12">';
 		$real_estate_tax = $d2u_immo->getConfig('finance_calculator_real_estate_tax');
 		$notary_costs = $d2u_immo->getConfig('finance_calculator_notary_costs');
-		$courtage = strtr(strtr($property->courtage, ",", ".") * 1, ",", ".") / 100;
+		$courtage = is_numeric($property->courtage) ? (strtr(strtr($property->courtage, ",", ".") * 1, ",", ".") / 100) : 0;
 		$interest_rate = $d2u_immo->getConfig('finance_calculator_interest_rate');
 		$repayment = $d2u_immo->getConfig('finance_calculator_repayment');
 		
