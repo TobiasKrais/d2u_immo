@@ -71,7 +71,7 @@ abstract class AFTPExport extends AExport {
 		foreach($this->export_properties as $exported_property) {
 			if($exported_property->export_action == "add" || $exported_property->export_action == "update") {
 				$property = new Property($exported_property->property_id, $this->provider->clang_id);
-				$number_free_docs = $max_attachments - count($property->pictures) - count($property->ground_plans) -count($property->location_plans);
+				$number_free_docs = $max_attachments - count($property->pictures) - count($property->ground_plans) - count($property->location_plans);
 				if($max_attachments > $number_free_docs) {
 					foreach($property->documents as $document) {
 						if(strlen($document) > 3 && $number_free_docs > 0 && !in_array($document, $this->documents_for_zip)) {
