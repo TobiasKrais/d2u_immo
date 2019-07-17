@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.4-DEV:</p>
 <ul>
+	<li>Modul 70-1: Exposé beinhaltet jetzt Telefonnummer und E-Mail des Kontakts. Falls ein PDF Dokument im Medienpool keine Bezeichnung hat, wird nun der Name der Datei ausgegeben.</li>
 	<li>Kontaktformular funktioniert nun auch wenn über Office 365 versendet wird.</li>
 	<li>Bugfix: wenn Schaufenster Plugin nicht installiert war, kam es beim Speichern einer Immobilie zu einem fatal error.</li>
 </ul>

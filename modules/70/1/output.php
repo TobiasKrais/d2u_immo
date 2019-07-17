@@ -360,7 +360,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 					$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $document));
 				}
 				if($has_permission) {
-					print '<li><span class="icon pdf"></span> <a href="'. rex_url::media($document) .'">'. $media->getTitle() .'</a></li>';
+					print '<li><span class="icon pdf"></span> <a href="'. rex_url::media($document) .'">'. ($media->getTitle() != "" ? $media->getTitle() : $document) .'</a></li>';
 				}
 			}
 		}
@@ -1056,7 +1056,14 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	print '<div class="col-12 d-none d-print-inline">';
 	print '<p>'. $tag_open .'d2u_immo_print_foot'. $tag_close .'</p>';
 	print '<p>'. $tag_open .'d2u_immo_print_foot_greetings'. $tag_close .'</p>';
-	print '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'</p>';
+	print '<p>'. $property->contact->firstname .' '. $property->contact->lastname;
+	if($property->contact->phone != "") {
+		print '<br>'. $property->contact->phone;
+	}
+	if($property->contact->email != "") {
+		print '<br>'. $property->contact->email;
+	}
+	print '</p>';
 	print '</div>';
 
 }
