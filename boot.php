@@ -97,7 +97,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep) {
 	$sql_properties = rex_sql::factory();
 	$sql_properties->setQuery('SELECT lang.property_id, name FROM `' . \rex::getTablePrefix() . 'd2u_immo_properties_lang` AS lang '
 		.'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_immo_properties` AS properties ON lang.property_id = properties.property_id '
-		.'WHERE pictures LIKE "%'. $filename .'%" OR ground_plans LIKE "%'. $filename .'%" OR location_plans LIKE "%'. $filename .'%" OR documents LIKE "%'. $filename .'%"');  
+		.'WHERE FIND_IN_SET("'. $filename .'", pictures) OR FIND_IN_SET("'. $filename .'", ground_plans) OR FIND_IN_SET("'. $filename .'", location_plans) OR FIND_IN_SET("'. $filename .'", documents)');
 
 	// Prepare warnings
 	// Categories
