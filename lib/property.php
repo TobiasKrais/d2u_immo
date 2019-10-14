@@ -993,7 +993,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 				
-				if($pre_save_property->name != $this->name) {
+				if(!$error && $pre_save_property->name != $this->name) {
 					$regenerate_urls = true;
 				}
 			}
