@@ -874,14 +874,14 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		$error = 0;
 
 		// Save the not language specific part
-		$pre_save_property = new Property($this->property_id, $this->clang_id);
+		$pre_save_object = new Property($this->property_id, $this->clang_id);
 
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_property->priority || $this->property_id == 0) {
+		if($this->priority != $pre_save_object->priority || $this->property_id == 0) {
 			$this->setPriority();
 		}
 
-		if($this->property_id == 0 || $pre_save_property != $this) {
+		if($this->property_id == 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_immo_properties SET "
 					."additional_costs = ". $this->additional_costs .", "
 					."animals = ". ($this->animals ? 1 : 0) .", "
@@ -966,7 +966,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			}
 			
 			// Remove from export
-			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_property->online_status == "online" && $this->online_status != "online") {
+			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_object->online_status == "online" && $this->online_status != "online") {
 				ExportedProperty::removePropertyFromAllExports($this->property_id);
 			}
 		}
@@ -974,8 +974,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		$regenerate_urls = false;
 		if($error == 0) {
 			// Save the language specific part
-			$pre_save_property = new Property($this->property_id, $this->clang_id);
-			if($pre_save_property != $this) {
+			$pre_save_object = new Property($this->property_id, $this->clang_id);
+			if($pre_save_object != $this) {
 				$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_properties_lang SET "
 						."property_id = '". $this->property_id ."', "
 						."clang_id = '". $this->clang_id ."', "
@@ -993,7 +993,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 				$result->setQuery($query);
 				$error = $result->hasError();
 				
-				if(!$error && $pre_save_property->name != $this->name) {
+				if(!$error && $pre_save_object->name != $this->name) {
 					$regenerate_urls = true;
 				}
 			}
