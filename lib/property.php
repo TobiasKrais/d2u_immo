@@ -971,6 +971,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			}
 		}
 		
+		$regenerate_urls = false;
 		if($error == 0) {
 			// Save the language specific part
 			$pre_save_property = new Property($this->property_id, $this->clang_id);
@@ -991,11 +992,17 @@ class Property implements \D2U_Helper\ITranslationHelper {
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
+				
+				if($pre_save_property->name != $this->name) {
+					$regenerate_urls = true;
+				}
 			}
 		}
 
 		// Update URLs
-		\d2u_addon_backend_helper::generateUrlCache('property_id');
+		if($regenerate_urls) {
+			\d2u_addon_backend_helper::generateUrlCache('property_id');
+		}
 		
 		return $error;
 	}
