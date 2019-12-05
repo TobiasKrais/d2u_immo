@@ -31,11 +31,11 @@ $d2u_module_manager->showManagerList();
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 
-<p>1.1.4-DEV:</p>
+<p>1.1.4:</p>
 <ul>
 	<li>Backend: Einstellungen und Setup Tabs rechts eingeordnet um sie vom Inhalt besser zu unterscheiden.</li>
 	<li>Anpassungen an neueste Version des URL Addons Version 2.</li>
-	<li>Bugfix: das Löschen eines Bildes im Medienpool wurde unter Umständen mit der Begründung verhindet, dass das Bild in Benutzung sei, obwohl das nicht der Fall war.</li>
+	<li>Bugfix: das Löschen eines Bildes im Medienpool wurde unter Umständen mit der Begründung verhindert, dass das Bild in Benutzung sei, obwohl das nicht der Fall war.</li>
 	<li>Modul 70-1: Exposé beinhaltet jetzt Telefonnummer und E-Mail des Kontakts. Falls ein PDF Dokument im Medienpool keine Bezeichnung hat, wird nun der Name der Datei ausgegeben.</li>
 	<li>Kontaktformular funktioniert nun auch wenn über Office 365 versendet wird.</li>
 	<li>Bugfix: wenn Schaufenster Plugin nicht installiert war, kam es beim Speichern einer Immobilie zu einem fatal error.</li>
