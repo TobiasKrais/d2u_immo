@@ -98,16 +98,6 @@ class Provider {
 	var $social_oauth_token_valid_until = "";
 
 	/**
-	 * @var string Facebook login email address
-	 */
-	var $facebook_email = "";
-
-	/**
-	 * @var string Facebook page id.
-	 */
-	var $facebook_pageid = "";
-
-	/**
 	 * @var string Linkedin id.
 	 */
 	var $linkedin_email = "";
@@ -158,8 +148,6 @@ class Provider {
 			$this->social_oauth_token = $result->getValue("social_oauth_token");
 			$this->social_oauth_token_secret = $result->getValue("social_oauth_token_secret");
 			$this->social_oauth_token_valid_until = $result->getValue("social_oauth_token_valid_until");
-			$this->facebook_email = $result->getValue("facebook_email");
-			$this->facebook_pageid = $result->getValue("facebook_pageid");
 			$this->linkedin_email = $result->getValue("linkedin_email");
 			$this->linkedin_groupid = $result->getValue("linkedin_groupid");
 			$this->twitter_id = $result->getValue("twitter_id");
@@ -298,35 +286,6 @@ class Provider {
 		else if(strtolower($this->type) == "immobilienscout24") {
 			$immobilienscout24 = new ImmobilienScout24($this);
 			return $immobilienscout24->export();
-		}
-		else if(strtolower($this->type) == "facebook") {
-			// Check requirements
-			if (!function_exists('curl_init')) {
-				return \rex_i18n::msg('d2u_immo_export_failure_curl');
-			}
-			else if (!function_exists('json_decode')) {
-				return \rex_i18n::msg('d2u_immo_export_failure_json');				
-			}
-			
-			// Export
-			return "Facebook Export needs upgrade to newer Graph API (currently 2.3). Export aborted.";
-/*
-			$facebook = new SocialExportFacebook($this);
-			if($facebook->isUserLoggedIn()) {
-				return $facebook->export();
-			}
-			else {
-				if($facebook->isAnybodyLoggedIn()) {
-					// Wrong user logged in: logout first
-					header("Location: ". $facebook->getLogoutURL());
-				}
-				else {
-					// If not logged in, go to log in page
-					header("Location: ". $facebook->getLoginURL());
-				}
-				exit;
-			}
- */
 		}
 		else if(strtolower($this->type) == "twitter") {
 			return "Schnittstelle ist nicht programmiert.";
@@ -512,8 +471,6 @@ class Provider {
 				."social_oauth_token = '". $this->social_oauth_token ."', "
 				."social_oauth_token_secret = '". $this->social_oauth_token_secret ."', "
 				."social_oauth_token_valid_until = '". $this->social_oauth_token_valid_until ."', "
-				."facebook_email = '". $this->facebook_email ."', "
-				."facebook_pageid = '". $this->facebook_pageid ."', "
 				."linkedin_email = '". $this->linkedin_email ."', "
 				."linkedin_groupid = '". $this->linkedin_groupid ."', "
 				."twitter_id = '". $this->twitter_id ."' ";

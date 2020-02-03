@@ -17,3 +17,11 @@ if (rex_string::versionCompare($this->getVersion(), '1.1.2', '<')) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_immo_export_properties DROP export_timestamp;");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_immo_export_properties CHANGE `export_timestamp_new` `export_timestamp` DATETIME NOT NULL;");
 }
+
+// 1.1.5 remove Facebook support
+\rex_sql_table::get(
+    \rex::getTable('d2u_immo_export_provider'))
+    ->removeColumn('facebook_email')
+    ->removeColumn('facebook_pageid')
+    ->ensure();
+$sql->setQuery("DELETE FROM `". rex::getTablePrefix() ."d2u_immo_export_provider` WHERE type = 'facebook';");

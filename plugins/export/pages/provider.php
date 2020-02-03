@@ -27,8 +27,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 	$provider->ftp_filename = $form['ftp_filename'];
 	$provider->social_app_id = $form['social_app_id'];
 	$provider->social_app_secret = $form['social_app_secret'];
-	$provider->facebook_email = $form['facebook_email'];
-	$provider->facebook_pageid = $form['facebook_pageid'];
 	$provider->linkedin_email = $form['linkedin_email'];
 	$provider->linkedin_groupid = $form['linkedin_groupid'];
 //	$provider->twitter_id = $form['twitter_id'];
@@ -88,7 +86,6 @@ if ($func == 'edit' || $func == 'add') {
 							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, TRUE, $readonly, 'text');
 							$options = ['openimmo' => rex_i18n::msg('d2u_immo_export_openimmo'),
 								'immobilienscout24' => rex_i18n::msg('d2u_immo_export_immobilienscout24'),
-								'facebook' => rex_i18n::msg('d2u_immo_export_facebook'),
 								'linkedin' => rex_i18n::msg('d2u_immo_export_linkedin')];
 							d2u_addon_backend_helper::form_select('d2u_immo_export_type', 'form[type]', $options, array($provider->type), 1, FALSE, $readonly);
 							
@@ -129,15 +126,6 @@ if ($func == 'edit' || $func == 'add') {
 						<?php
 							d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_id', "form[social_app_id]", $provider->social_app_id, FALSE, $readonly, "text");
 							d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_secret', "form[social_app_secret]", $provider->social_app_secret, FALSE, $readonly, "text");
-						?>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend><?php echo rex_i18n::msg('d2u_immo_export_social_settings_facebook'); ?></legend>
-					<div class="panel-body-wrapper slide">
-						<?php
-							d2u_addon_backend_helper::form_input('d2u_immo_export_login_email', "form[facebook_email]", $provider->facebook_email, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_immo_export_facebook_pageid', "form[facebook_pageid]", $provider->facebook_pageid, FALSE, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
