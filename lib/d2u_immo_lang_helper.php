@@ -297,7 +297,7 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper {
 		'd2u_immo_form_zip' => 'PLZ',
 		'd2u_immo_ground_plans' => 'Grundrisse',
 		'd2u_immo_kitchen' => 'Küche',
-		'd2u_immo_kitchen_EBK' => 'Einbaukücke',
+		'd2u_immo_kitchen_EBK' => 'Einbauküche',
 		'd2u_immo_kitchen_OFFEN' => 'Offene Küche',
 		'd2u_immo_kitchen_PANTRY' => 'Kochnische',
 		'd2u_immo_land_area' => 'Grundstücksfläche',
