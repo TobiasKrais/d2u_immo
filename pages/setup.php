@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.5-DEV:</p>
 <ul>
+	<li>Notice beim Speichern der Einstellungen entfernt.</li>
 	<li>Schreibfehler Einbauküche behoben.</li>
 	<li>Export Plugin: Facebook Export endgültig entfernt.</li>
 	<li>Backend: Beim online stellen eines Objekts in der Objektliste gab es beim Aufruf im Frontend einen Fatal Error, da der URL cache nicht neu generiert wurde.</li>
