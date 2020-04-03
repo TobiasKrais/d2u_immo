@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.5-DEV:</p>
 <ul>
+	<li>Fehler entfernt wenn in den Einstellungen kein Artikel gesetzt ist.</li>
 	<li>Notice beim Speichern der Einstellungen entfernt.</li>
 	<li>Schreibfehler Einbauküche behoben.</li>
 	<li>Export Plugin: Facebook Export endgültig entfernt.</li>
