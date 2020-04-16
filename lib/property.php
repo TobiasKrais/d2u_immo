@@ -562,11 +562,9 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->online_status = "online";
 		}
 		
-		// Don't forget to regenerate URL cache to make online machine available
-		if(rex_addon::get("url")->isAvailable()) {
-			d2u_addon_backend_helper::generateUrlCache("property_id");
-			d2u_addon_backend_helper::generateUrlCache("category_id");
-		}
+		// Don't forget to regenerate URL cache / update search_it index
+		\d2u_addon_backend_helper::generateUrlCache("property_id");
+		\d2u_addon_backend_helper::generateUrlCache("category_id");
 	}
 	
 	/**
@@ -637,6 +635,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			// reset priorities
 			$this->setPriority(TRUE);			
 		}
+		
+		// Don't forget to regenerate URL cache / update search_it index
+		\d2u_addon_backend_helper::generateUrlCache("property_id");
+		\d2u_addon_backend_helper::generateUrlCache("category_id");
 	}
 	
 	/**
@@ -1007,7 +1009,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 
 		// Update URLs
 		if($regenerate_urls) {
-			\d2u_addon_backend_helper::generateUrlCache('property_id');
+			\d2u_addon_backend_helper::generateUrlCache("property_id");
+			\d2u_addon_backend_helper::generateUrlCache("category_id");
 		}
 		
 		return $error;

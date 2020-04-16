@@ -42,6 +42,9 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$category->delete(FALSE);
 		}
 		else if($category->save() > 0){
+			// And regenerate search_it index
+			\d2u_addon_backend_helper::update_searchit_url_index();
+
 			$success = FALSE;
 		}
 		else {
@@ -81,6 +84,9 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	// If not used, delete
 	if(count($uses_properties) == 0 && count($uses_categories) == 0) {
+		// And regenerate search_it index
+		\d2u_addon_backend_helper::update_searchit_url_index();
+		
 		$category->delete(TRUE);
 	}
 	else {

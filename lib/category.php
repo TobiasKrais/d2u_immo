@@ -124,6 +124,9 @@ class Category implements \D2U_Helper\ITranslationHelper {
 			// reset priorities
 			$this->setPriority(TRUE);			
 		}
+
+		\d2u_addon_backend_helper::generateUrlCache('category_id');
+		\d2u_addon_backend_helper::generateUrlCache('property_id');
 	}
 	
 	/**

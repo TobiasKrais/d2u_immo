@@ -26,6 +26,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_immo_url_categories", $settings['article_id']);
 			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_immo_url_properties", $settings['article_id']);
 			\d2u_addon_backend_helper::generateUrlCache();
+			\d2u_addon_backend_helper::update_searchit_url_index();
 		}
 		
 		// Install / update language replacements
