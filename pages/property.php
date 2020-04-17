@@ -111,9 +111,6 @@ if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_a
 			$property->delete(FALSE);
 		}
 		else if($property->save() > 0){
-			// And regenerate search_it index
-			\d2u_addon_backend_helper::update_searchit_url_index();
-
 			$success = FALSE;
 		}
 		else {
@@ -148,9 +145,6 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$property->property_id = $property_id; // Ensure correct ID in case language has no object
 	$property->delete();
 
-	// And regenerate search_it index
-	\d2u_addon_backend_helper::update_searchit_url_index();		
-
 	$func = '';
 }
 // Change online status of machine
@@ -159,9 +153,6 @@ else if($func == 'changestatus') {
 	$property->property_id = $property_id; // Ensure correct ID in case language has no object
 	$property->changeStatus();
 	
-	// And regenerate search_it index
-	\d2u_addon_backend_helper::update_searchit_url_index();
-
 	header("Location: ". rex_url::currentBackendPage());
 	exit;
 }
