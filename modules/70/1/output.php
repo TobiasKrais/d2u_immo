@@ -150,6 +150,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		$property_id = $url_id;
 	}
 	$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
+	// Redirect if object is not online
+	if($property->online_status != "online") {
+		\rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
+	}
 
 	if($print == "") {
 		print '<div class="col-12 expose-navi d-print-none">';

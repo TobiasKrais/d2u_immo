@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.5-DEV:</p>
 <ul>
+	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" leitet Offlineobjekte auf die Fehlerseite weiter.</li>
 	<li>Aktualisiert beim Speichern automatisch den search_it index.</li>
 	<li>Fehler entfernt wenn in den Einstellungen kein Artikel gesetzt ist.</li>
 	<li>Notice beim Speichern der Einstellungen entfernt.</li>
