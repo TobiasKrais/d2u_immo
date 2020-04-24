@@ -125,7 +125,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". \rex::getTablePrefix() ."d2u_immo_
 
 // Create views for url addon
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_properties AS
-	SELECT lang.property_id, lang.clang_id, lang.name, CONCAT(lang.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(properties.pictures, ",", 1) as picture,  properties.category_id, lang.updatedate
+	SELECT lang.property_id, lang.clang_id, lang.name, CONCAT(lang.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(properties.pictures, ",", 1) as picture, properties.category_id, lang.updatedate
 	FROM '. \rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
 	LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_properties AS properties ON lang.property_id = properties.property_id
 	LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS categories ON properties.category_id = categories.category_id AND lang.clang_id = categories.clang_id
