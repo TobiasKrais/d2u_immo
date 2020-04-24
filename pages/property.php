@@ -150,7 +150,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 // Change online status of machine
 else if($func == 'changestatus') {
 	$property = new D2U_Immo\Property($entry_id, rex_config::get("d2u_helper", "default_lang"));
-	$property->property_id = $property_id; // Ensure correct ID in case language has no object
+	$property->property_id = $entry_id; // Ensure correct ID in case language has no object
 	$property->changeStatus();
 	
 	header("Location: ". rex_url::currentBackendPage());
