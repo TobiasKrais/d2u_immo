@@ -24,6 +24,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		$contact = $property->contact;
 	}
 }
+
+if($contact && $contact->contact_id > 0) {
 ?>
 <div class="col-12 col-sm-6 col-md-4 col-lg-12">
 	<div class="infobox">
@@ -37,7 +39,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				print $contact->firstname ." ". $contact->lastname;
 				print "<span class='right'>";
 				if($property !== FALSE) {
-					print '<a href="'. $property->getURL(TRUE) .'#request">';
+					print '<a href="javascript:show_request_form()">';
 				}
 				else if($contact_form_url != "") {
 					print '<a href="'. $contact_form_url .'">';
@@ -47,6 +49,13 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				
 				print "Telefon: <span class='right'>". $contact->phone ."</span>";
 			?>
+		<script>
+			function show_request_form() {
+				$('#tab_request_pill').tab('show');
+			}
+		</script>
 		</div>
 	</div>
 </div>
+<?php
+}

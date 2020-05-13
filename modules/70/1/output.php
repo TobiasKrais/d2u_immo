@@ -187,7 +187,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if($property->market_type == "KAUF") {
 			print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></a></li>';
 		}
-		print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_request"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></a></li>';
+		print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_request" id="tab_request_pill"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></a></li>';
 		print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_recommendation"><span class="icon forward d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_recommendation'. $tag_close .'<span></a></li>';
 		print '</ul>';
 		print '</div>';
