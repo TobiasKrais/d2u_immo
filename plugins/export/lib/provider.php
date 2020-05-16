@@ -155,9 +155,8 @@ class Provider {
 	}
 
 	/**
-	 * Exports property for provider types OpenImmo and ImmoScout24 XML (ftp
-	 * based exports). Export starts only, if changes were made or last export
-	 * is older than a week.
+	 * Exports property for provider type OpenImmo XML (ftp based exports).
+	 * Export starts only, if changes were made or last export is older than a week.
 	 * @return string HTML formatted string with success or failure message.
 	 */
 	public static function autoexport() {
@@ -174,18 +173,6 @@ class Provider {
 					if($openimmo_error != "") {
 						$message[] = $provider->name .": ". $openimmo_error;
 						print $provider->name .": ". $openimmo_error ."; ";
-						$error = TRUE;
-					}
-					else {
-						$message[] = $provider->name .": ". \rex_i18n::msg('d2u_immo_export_success');
-					}
-				}
-				else if(strtolower($provider->type) == "immobilienscout24") {
-					$immobilienscout24 = new ImmobilienScout24($provider);
-					$immobilienscout24_error = $immobilienscout24->export();
-					if($immobilienscout24_error != "") {
-						$message[] = $provider->name .": ". $immobilienscout24_error;
-						print $provider->name .": ". $immobilienscout24_error ."; ";
 						$error = TRUE;
 					}
 					else {
@@ -282,10 +269,6 @@ class Provider {
 			$openimmo = new OpenImmo($this);
 
 			return $openimmo->export();
-		}
-		else if(strtolower($this->type) == "immobilienscout24") {
-			$immobilienscout24 = new ImmobilienScout24($this);
-			return $immobilienscout24->export();
 		}
 		else if(strtolower($this->type) == "twitter") {
 			return "Schnittstelle ist nicht programmiert.";

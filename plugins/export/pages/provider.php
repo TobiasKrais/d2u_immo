@@ -85,7 +85,6 @@ if ($func == 'edit' || $func == 'add') {
 							
 							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, TRUE, $readonly, 'text');
 							$options = ['openimmo' => rex_i18n::msg('d2u_immo_export_openimmo'),
-								'immobilienscout24' => rex_i18n::msg('d2u_immo_export_immobilienscout24'),
 								'linkedin' => rex_i18n::msg('d2u_immo_export_linkedin')];
 							d2u_addon_backend_helper::form_select('d2u_immo_export_type', 'form[type]', $options, array($provider->type), 1, FALSE, $readonly);
 							

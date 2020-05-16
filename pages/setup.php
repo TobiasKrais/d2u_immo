@@ -41,7 +41,7 @@ $d2u_module_manager->showManagerList();
 	<li>Fehler entfernt wenn in den Einstellungen kein Artikel gesetzt ist.</li>
 	<li>Notice beim Speichern der Einstellungen entfernt.</li>
 	<li>Schreibfehler Einbauküche behoben.</li>
-	<li>Export Plugin: Facebook Export endgültig entfernt.</li>
+	<li>Export Plugin: Facebook Export (Schnittstelle war veraltet) und ImmoScout24 XML (Schnittstelle eingestellt) endgültig entfernt.</li>
 	<li>Backend: Beim online stellen eines Objekts in der Objektliste gab es beim Aufruf im Frontend einen Fatal Error, da der URL cache nicht neu generiert wurde.</li>
 </ul>
 <p>1.1.4:</p>
