@@ -11,7 +11,7 @@ if($sql->getRows() == 0) {
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_export_provider` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_export_properties` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 
-if (rex_string::versionCompare($this->getVersion(), '1.1.2', '<')) {
+if (rex_version::compare($this->getVersion(), '1.1.2', '<')) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_immo_export_properties ADD COLUMN `export_timestamp_new` DATETIME NOT NULL AFTER `export_timestamp`;");
 	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_immo_export_properties SET `export_timestamp_new` = FROM_UNIXTIME(`export_timestamp`);");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_immo_export_properties DROP export_timestamp;");

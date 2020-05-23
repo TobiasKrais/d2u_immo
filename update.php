@@ -22,7 +22,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_
 if(\rex_addon::get('url')->isAvailable()) {
 	$clang_id = count(rex_clang::getAllIds()) == 1 ? rex_clang::getStartId() : 0;
 	$article_id = rex_config::get('d2u_immo', 'article_id', 0) > 0 ? rex_config::get('d2u_immo', 'article_id') : rex_article::getSiteStartArticleId(); 
-	if(rex_string::versionCompare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
+	if(rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
 		// Insert url schemes Version 2.x
 		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'property_id';");
 		$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."url_generator_profile (`namespace`, `article_id`, `clang_id`, `table_name`, `table_parameters`, `relation_1_table_name`, `relation_1_table_parameters`, `relation_2_table_name`, `relation_2_table_parameters`, `relation_3_table_name`, `relation_3_table_parameters`, `createdate`, `createuser`, `updatedate`, `updateuser`) VALUES
@@ -92,7 +92,7 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `mail_reply_to`, `mail_reply_to_name`, `subject`, `body`, `body_html`, `attachments`) VALUES
 		('d2u_immo_request', '', '', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"name\"]', 'Immobilienanfrage', 'Immobilienanfrage von Internetseite:\r\nImmobilie: REX_YFORM_DATA[field=\"immo_name\"]\r\n\r\nEs fragt an:\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nTelefon Anrufe gestattet: <?php print REX_YFORM_DATA[field=\"phone_calls\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\nDatenschutzerklärung zugestimmt: <?php print REX_YFORM_DATA[field=\"privacy_policy_accepted\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n', '', '')");
 }
-else if (rex_string::versionCompare($this->getVersion(), '1.1.4', '<')) {
+else if (rex_version::compare($this->getVersion(), '1.1.4', '<')) {
 	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."yform_email_template SET `mail_from` = '', `mail_from_name` = '', `mail_reply_to` = 'REX_YFORM_DATA[field=\"email\"]', `mail_reply_to_name` = 'REX_YFORM_DATA[field=\"vorname\"] REX_YFORM_DATA[field=\"name\"]' WHERE name = 'd2u_immo_request';");
 }
 
@@ -107,7 +107,7 @@ if($sql->getRows() == 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` CHANGE `rent_plus_vat` `price_plus_vat` TINYINT(1) NOT NULL DEFAULT 0;");
 }
 
-if (rex_string::versionCompare($this->getVersion(), '1.1.2', '<')) {
+if (rex_version::compare($this->getVersion(), '1.1.2', '<')) {
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_immo_properties_lang ADD COLUMN `updatedate_new` DATETIME NOT NULL AFTER `updatedate`;");
 	$sql->setQuery("UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties_lang SET `updatedate_new` = FROM_UNIXTIME(`updatedate`);");
 	$sql->setQuery("ALTER TABLE ". \rex::getTablePrefix() ."d2u_immo_properties_lang DROP updatedate;");
