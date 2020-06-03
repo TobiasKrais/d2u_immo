@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.5-DEV:</p>
 <ul>
+	<li>Kontakte können geklont werden.</li>
 	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet wird.</li>
 	<li>Fehler behoben, wenn bei einer Immobilie in der Übersichtsliste auf offline geklickt wurde.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" leitet Offlineobjekte auf die Fehlerseite weiter.</li>

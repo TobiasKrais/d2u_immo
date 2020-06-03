@@ -76,13 +76,13 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_immo_contact'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[contact_id]" value="<?php echo $entry_id; ?>">
+				<input type="hidden" name="form[contact_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
 				<fieldset>
 					<legend><?php echo rex_i18n::msg('d2u_immo_contact'); ?></legend>
 					<div class="panel-body-wrapper slide">
@@ -167,11 +167,15 @@ if ($func == '') {
 
     $list->setColumnLabel('company', rex_i18n::msg('d2u_immo_contact_company'));
 
-    $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
-    $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
-    $list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###contact_id###']);
-
 	if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
+		$list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
+		$list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="3">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
+		$list->setColumnParams(rex_i18n::msg('module_functions'), ['func' => 'edit', 'entry_id' => '###contact_id###']);
+
+		$list->addColumn(rex_i18n::msg('d2u_helper_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_helper_clone'));
+		$list->setColumnLayout(rex_i18n::msg('d2u_helper_clone'), ['', '<td class="rex-table-action">###VALUE###</td>']);
+		$list->setColumnParams(rex_i18n::msg('d2u_helper_clone'), ['func' => 'clone', 'entry_id' => '###contact_id###']);
+
 		$list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
 		$list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 		$list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###contact_id###']);
