@@ -25,7 +25,6 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		if(\rex_addon::get('url')->isAvailable() && $settings['article_id'] > 0) {
 			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_immo_url_categories", $settings['article_id']);
 			d2u_addon_backend_helper::update_url_scheme(rex::getTablePrefix() ."d2u_immo_url_properties", $settings['article_id']);
-			\d2u_addon_backend_helper::generateUrlCache();
 		}
 		
 		// Install / update language replacements
