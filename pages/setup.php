@@ -36,7 +36,7 @@ $d2u_module_manager->showManagerList();
 	<li>Kontakte können geklont werden.</li>
 	<li>Benötigt Redaxo >= 5.10, da die neue Klasse rex_version verwendet wird.</li>
 	<li>Fehler behoben, wenn bei einer Immobilie in der Übersichtsliste auf offline geklickt wurde.</li>
-	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" leitet Offlineobjekte auf die Fehlerseite weiter.</li>
+	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" leitet Offlineobjekte auf die Fehlerseite weiter und wurde an YForm 3.4 angepasst.</li>
 	<li>Modul 70-2 "D2U Immo Addon - Infobox Ansprechpartner" hat bei Klick auf E-Mail nicht mehr das Angebotstab angezeigt.</li>
 	<li>Modul 70-2 "D2U Immo Addon - Infobox Ansprechpartner" hat kann jetzt auf Fallbackkontakt verzichten.</li>
 	<li>Aktualisiert beim Speichern automatisch den search_it index.</li>

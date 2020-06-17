@@ -986,7 +986,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'
 				validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
-				action|tpl2email|d2u_immo_request|emaillabel|'. $property->contact->email;
+				action|tpl2email|d2u_immo_request|'. $property->contact->email;
 
 		$yform = new rex_yform;
 		$yform->setFormData(trim($form_data));
