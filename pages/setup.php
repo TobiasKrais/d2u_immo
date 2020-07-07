@@ -39,7 +39,6 @@ $d2u_module_manager->showManagerList();
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" leitet Offlineobjekte auf die Fehlerseite weiter und wurde an YForm 3.4 angepasst.</li>
 	<li>Modul 70-2 "D2U Immo Addon - Infobox Ansprechpartner" hat bei Klick auf E-Mail nicht mehr das Angebotstab angezeigt.</li>
 	<li>Modul 70-2 "D2U Immo Addon - Infobox Ansprechpartner" hat kann jetzt auf Fallbackkontakt verzichten.</li>
-	<li>Aktualisiert beim Speichern automatisch den search_it index.</li>
 	<li>Fehler entfernt wenn in den Einstellungen kein Artikel gesetzt ist.</li>
 	<li>Notice beim Speichern der Einstellungen entfernt.</li>
 	<li>Schreibfehler Einbauküche behoben.</li>
