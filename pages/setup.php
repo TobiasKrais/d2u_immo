@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.6-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>HTML Entities (codiertes ä, ö, ü, ...) werden entfernt, da nicht alle Immobilienportale diese decodieren können.</li>
 </ul>
 <p>1.1.5:</p>
 <ul>

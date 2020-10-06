@@ -463,10 +463,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->courtage_incl_vat = $result->getValue("courtage_incl_vat") == "1" ? TRUE : FALSE;
 			$this->currency_code = $result->getValue("currency_code");
 			$this->deposit = $result->getValue("deposit");
-			$this->description = stripslashes(htmlspecialchars_decode($result->getValue("description")));
-			$this->description_equipment = stripslashes(htmlspecialchars_decode($result->getValue("description_equipment")));
-			$this->description_location = stripslashes(htmlspecialchars_decode($result->getValue("description_location")));
-			$this->description_others = stripslashes(htmlspecialchars_decode($result->getValue("description_others")));
+			$this->description = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue("description"))));
+			$this->description_equipment = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue("description_equipment"))));
+			$this->description_location = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue("description_location"))));
+			$this->description_others = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue("description_others"))));
 			$this->documents = preg_grep('/^\s*$/s', explode(",", $result->getValue("documents")), PREG_GREP_INVERT);
 			$this->elevator = preg_grep('/^\s*$/s', explode("|", $result->getValue("elevator")), PREG_GREP_INVERT);
 			$this->energy_consumption = $result->getValue("energy_consumption");
