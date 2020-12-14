@@ -34,6 +34,7 @@ $d2u_module_manager->showManagerList();
 <p>1.1.6-DEV:</p>
 <ul>
 	<li>HTML Entities (codiertes ä, ö, ü, ...) werden entfernt, da nicht alle Immobilienportale diese decodieren können.</li>
+	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" gibt die Adresse beim Drucken nicht mehr aus wenn die Adresse nicht veröffentlicht werden soll.</li>
 </ul>
 <p>1.1.5:</p>
 <ul>

@@ -126,7 +126,7 @@ if(class_exists('D2UModuleManager')) {
 	$modules = [];
 	$modules[] = new D2UModule("70-1",
 		"D2U Immo Addon - Hauptausgabe",
-		19);
+		20);
 	$modules[] = new D2UModule("70-2",
 		"D2U Immo Addon - Infobox Ansprechpartner",
 		4);

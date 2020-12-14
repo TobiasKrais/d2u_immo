@@ -205,9 +205,11 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	print '<div class="col-12 print-border-h">';
 	print '<h1>'. $property->name .'</h1>';
 	print '</div>';
-	print '<div class="col-12 print-border d-none d-print-inline">';
-	print '<p>'. $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city .'</p>';
-	print '</div>';
+	if($property->publish_address > 0) {
+		print '<div class="col-12 print-border d-none d-print-inline">';
+		print '<p>'. $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city .'</p>';
+		print '</div>';
+	}
 	print '<div class="col-12 print-border">'; // START overview picture and short info
 	print '<div class="row">';
 	
