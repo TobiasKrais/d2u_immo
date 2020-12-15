@@ -183,7 +183,9 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if(count($property->pictures) > 0) {
 			print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</span></a></li>';
 		}
-		print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></a></li>';
+		if($property->publish_address) {
+			print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></a></li>';
+		}
 		if($property->market_type == "KAUF") {
 			print '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></a></li>';
 		}
@@ -205,7 +207,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	print '<div class="col-12 print-border-h">';
 	print '<h1>'. $property->name .'</h1>';
 	print '</div>';
-	if($property->publish_address > 0) {
+	if($property->publish_address) {
 		print '<div class="col-12 print-border d-none d-print-inline">';
 		print '<p>'. $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city .'</p>';
 		print '</div>';
@@ -623,7 +625,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 	}
 	// End Pictures
 	// Map
-	if($property->publish_address > 0 && $print != "small") {
+	if($property->publish_address && $print != "small") {
 		$d2u_helper = rex_addon::get("d2u_helper");
 		$api_key = "";
 		if($d2u_helper->hasConfig("maps_key")) {
