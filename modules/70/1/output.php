@@ -139,6 +139,7 @@ $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_immo = rex_addon::get("d2u_immo");
+$map_type = "REX_VALUE[1]" == '' ? 'google' : "REX_VALUE[1]"; // Backward compatibility
 
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 $url_id = d2u_addon_frontend_helper::getUrlId();
@@ -641,6 +642,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-12 print-border">';
 		print '<h2 class="d-print-none">'. $property->name .'</h2>';
 		print '<p class="d-print-none">'. $property->street ." ". $property->house_number ."<br /> ". $property->zip_code ." ". $property->city ."</p>";
+
+		if($map_type == "google") {
 ?>
 		<script src="https://maps.googleapis.com/maps/api/js?key=<?php echo $api_key; ?>"></script> 
 		<div id="map_canvas" style="display: block; <?php print ($print != '' ? 'width: 900px' : 'width: 100%'); ?>; height: 500px"></div> 
@@ -697,7 +700,40 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 				}
 			?>
 		</script>
-<?php
+		<?php
+		}
+		else {
+			$map_id = rand();
+
+			$leaflet_js_file = 'modules/04-2/leaflet.js';
+			print '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
+		?>
+		<div id="map-<?php echo $map_id; ?>" style="width:100%; height: 500px"></div>
+		<script type="text/javascript" async="async">
+			<?php
+				print "var map = L.map('map-". $map_id ."').setView([". $property->latitude .", ". $property->longitude ."], 15);";
+			?>
+			L.tileLayer('/?osmtype=german&z={z}&x={x}&y={y}', {
+				attribution: 'Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+			}).addTo(map);
+			map.scrollWheelZoom.disable();
+			var myIcon = L.icon({
+				iconUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png'); ?>',
+				shadowUrl: '<?php echo rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png'); ?>',
+
+				iconSize:     [25, 41], // size of the icon
+				shadowSize:   [41, 41], // size of the shadow
+				iconAnchor:   [12, 40], // point of the icon which will correspond to marker's location
+				shadowAnchor: [13, 40], // the same for the shadow
+				popupAnchor:  [0, -41]  // point from which the popup should open relative to the iconAnchor
+			});
+			var marker = L.marker([<?= $property->latitude; ?>, <?= $property->longitude; ?>], {
+				draggable: false,
+				icon: myIcon
+			}).addTo(map);
+		</script>
+		<?php
+		}
 		print '</div>';
 		print '</div>';
 		if($print != "full") {
@@ -1143,16 +1179,24 @@ else {
 		hash && $('ul.nav a[href="' + hash + '"]').tab('show');
 	});
 	
-	// Activate Google map on hidden tab
+	// Activate map on hidden tab
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 		var target_url = e.target.toString();
 		var target_anchor = target_url.substr(target_url.indexOf("#")).toString();
 		if(target_anchor === "#tab_map") {
+			<?php
+				if($map_type == "google") {
+			?>
 			google.maps.event.trigger(map, 'resize');
 			map.setCenter(myLatlng);
+			<?php
+				}
+				else {
+					print "L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);";
+				}
+			?>
 		}
 	});
-
 	<?php
 		if($print != "") {
 			print "window.print();";

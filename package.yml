@@ -22,7 +22,7 @@ page:
 requires:
     redaxo: '>=5.10.0'
     packages:
-        d2u_helper: '>=1.6.2'
+        d2u_helper: '>=1.8.4'
         media_manager: '>=2.2'
         sprog: '>=1.0.0'
         url: '>=1.0.1'
