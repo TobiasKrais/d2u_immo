@@ -707,43 +707,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		}
 		return $properties;
 	}
-	
-	/**
-	 * Get the <link rel="canonical"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getCanonicalTag() {
-		return '<link rel="canonical" href="'. $this->getURL() .'">';
-	}
 
-	/**
-	 * Get the <meta rel="alternate" hreflang=""> tags for page header.
-	 * @return Complete tags.
-	 */
-	public function getMetaAlternateHreflangTags() {
-		$hreflang_tags = "";
-		foreach(\rex_clang::getAll() as $rex_clang) {
-			if($rex_clang->getId() == $this->clang_id && $this->translation_needs_update != "delete") {
-				$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $this->getURL() .'" title="'. str_replace('"', '', $this->category->name .': '. $this->name) .'">';
-			}
-			else {
-				$property = new Property($this->property_id, $rex_clang->getId());
-				if($property->translation_needs_update != "delete") {
-					$hreflang_tags .= '<link rel="alternate" type="text/html" hreflang="'. $rex_clang->getCode() .'" href="'. $property->getURL() .'" title="'. str_replace('"', '', $property->category->name .': '. $property->name) .'">';
-				}
-			}
-		}
-		return $hreflang_tags;
-	}
-	
-	/**
-	 * Get the <meta name="description"> tag for page header.
-	 * @return Complete tag.
-	 */
-	public function getMetaDescriptionTag() {
-		return '<meta name="description" content="'. $this->teaser .'">';
-	}
-	
 	/**
 	 * Creates a short description suiteable for social networks.
 	 * @return Short description.
@@ -805,14 +769,6 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		$social_description .= "; ". Sprog\Wildcard::get('d2u_immo_form_city', $this->clang_id) .": ". $this->zip_code ." ". $this->city;
 		
 		return $social_description;
-	}
-
-	/**
-	 * Get the <title> tag for page header.
-	 * @return Complete title tag.
-	 */
-	public function getTitleTag() {
-		return '<title>'. $this->name .' / '. ($this->category !== FALSE ? $this->category->name .' / ' : ''). \rex::getServerName() .'</title>';
 	}
 	
 	/**

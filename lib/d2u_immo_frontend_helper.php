@@ -83,43 +83,4 @@ class d2u_immo_frontend_helper {
 		
 		return $breadcrumbs;
 	}
-	
-	/**
-	 * Returns breadcrumbs. Not from article path, but only part from this addon.
-	 * @return string[] Breadcrumb elements
-	 */
-	public static function getMetaTags() {
-		$meta_tags = "";
-
-		// Prepare objects first for sorting in correct order
-		$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-		$url_id = d2u_addon_frontend_helper::getUrlId();
-
-		// Property
-		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "property_id") {
-			$property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
-				$property_id = $url_id;
-			}
-			$property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
-			$meta_tags .= $property->getMetaAlternateHreflangTags();
-			$meta_tags .= $property->getCanonicalTag() . PHP_EOL;
-			$meta_tags .= $property->getMetaDescriptionTag() . PHP_EOL;
-			$meta_tags .= $property->getTitleTag() . PHP_EOL;
-		}
-		// Category
-		if(filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "category_id") {
-			$category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
-			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
-				$category_id = $url_id;
-			}
-			$category = new D2U_Immo\Category($category_id, rex_clang::getCurrentId());
-			$meta_tags .= $category->getMetaAlternateHreflangTags();
-			$meta_tags .= $category->getCanonicalTag() . PHP_EOL;
-			$meta_tags .= $category->getMetaDescriptionTag() . PHP_EOL;
-			$meta_tags .= $category->getTitleTag() . PHP_EOL;
-		}
-
-		return $meta_tags;
-	}
 }

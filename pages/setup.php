@@ -33,6 +33,8 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.6-DEV:</p>
 <ul>
+	<li>Methode d2u_immo_frontend_helper::getMetaTags() entfernt, da das URL Addon eine bessere Funktion anbietet.
+		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der aller Klassen, die diese Methoden abgeboten hatten.</li>
 	<li>HTML Entities (codiertes ä, ö, ü, ...) werden entfernt, da nicht alle Immobilienportale diese decodieren können.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" gibt die Adresse beim Drucken nicht mehr aus wenn die Adresse nicht veröffentlicht werden soll.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" kann auch OpenStreetMap Karte statt Google Maps verwenden.</li>
