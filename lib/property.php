@@ -884,7 +884,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."land_area = ". str_replace(',', '.', $this->land_area) .", "
 					."land_type = '". $this->land_type ."', "
 					."latitude = '". $this->latitude ."', "
-					."living_area = ". str_replace(',', '.', $this->living_area) .", "
+					."living_area = ". floatval(str_replace(',', '.', $this->living_area)) .", "
 					."location_plans = '". implode(",", $this->location_plans) ."', "
 					."longitude = '". $this->longitude ."', "
 					."market_type = '". $this->market_type ."', "
