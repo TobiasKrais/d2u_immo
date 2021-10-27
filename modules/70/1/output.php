@@ -161,8 +161,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<ul>';
 		print '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
 		//	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
-		print '<li><small><a href="javascript:onclick=window.open(\''. $property->getURL(TRUE).'?print=small\', \'_blank\',\'width=500, height=500\');" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
-		print '<li><small><a href="javascript:onclick=window.open(\''. $property->getURL(TRUE).'?print=full\', \'_blank\',\'width=500, height=500\');" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
+		print '<li><small><a href="'. $property->getURL(TRUE).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
+		print '<li><small><a href="'. $property->getURL(TRUE).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
 		if($property->market_type == "MIETE_PACHT" && $property->type_of_use != "GEWERBE" && $d2u_immo->getConfig('even_informative_pdf', '') != '') {
 			print '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
 		}
@@ -374,7 +374,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			}
 		}
 		if($property->market_type == "MIETE_PACHT" && $property->type_of_use != "GEWERBE" && $d2u_immo->getConfig('even_informative_pdf', '') != '') {
-			print '<li><span class="icon pdf"></span> <a href="'. rex_url::media('mieterselbstauskunft.pdf') .'">'. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></li>';
+			print '<li class="d-print-none"><span class="icon pdf"></span> <a href="'. rex_url::media('mieterselbstauskunft.pdf') .'">'. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></li>';
 		}
 		print '</ul></div>';
 	}
