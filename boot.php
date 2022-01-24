@@ -107,6 +107,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep) {
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
+		$sql_categories->next();
     }
 	
 	// Contacts
@@ -116,6 +117,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep) {
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
+		$sql_contacts->next();
     }
 
 	// Properties
@@ -125,6 +127,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep) {
 		if(!in_array($message, $warning)) {
 			$warning[] = $message;
 		}
+		$sql_properties->next();
     }
 	
 	$addon = rex_addon::get("d2u_immo");
