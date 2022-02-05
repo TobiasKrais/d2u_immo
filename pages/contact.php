@@ -59,7 +59,6 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	
 	// If not used, delete
 	if(count($uses_properties) == 0) {
-		$contact = new D2U_Immo\Contact($contact_id);
 		$contact->delete();
 	}
 	else {
