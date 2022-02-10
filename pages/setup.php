@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.6-DEV:</p>
 <ul>
+	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Methode d2u_immo_frontend_helper::getMetaTags() entfernt, da das URL Addon eine bessere Funktion anbietet.
 		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der aller Klassen, die diese Methoden abgeboten hatten.</li>
 	<li>Konvertiert die Wohnfläche vor dem Speichern in eine Zahl.</li>
