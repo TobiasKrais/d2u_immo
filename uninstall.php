@@ -7,13 +7,8 @@ $sql->setQuery('DROP VIEW IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_url_ca
 
 // Delete url schemes
 if(\rex_addon::get('url')->isAvailable()) {
-	if(rex_version::compare(\rex_addon::get('url')->getVersion(), '1.5', '>=')) {
-		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'property_id';");
-		$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'category_id';");		
-	}
-	else {
-		$sql->setQuery("DELETE FROM `". rex::getTablePrefix() ."url_generate` WHERE `table` LIKE '%d2u_immo_url_%'");
-	}
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'property_id';");
+	$sql->setQuery("DELETE FROM ". \rex::getTablePrefix() ."url_generator_profile WHERE `namespace` = 'category_id';");		
 }
 
 // Delete Media Manager media types

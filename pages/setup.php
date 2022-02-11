@@ -38,6 +38,7 @@ $d2u_module_manager->showManagerList();
 		Ebenso die Methoden getMetaAlternateHreflangTags(), getMetaDescriptionTag(), getCanonicalTag und getTitleTag() der aller Klassen, die diese Methoden abgeboten hatten.</li>
 	<li>Konvertiert die Wohnfläche vor dem Speichern in eine Zahl.</li>
 	<li>HTML Entities (codiertes ä, ö, ü, ...) werden entfernt, da nicht alle Immobilienportale diese decodieren können.</li>
+	<li>Unterstützt nur noch URL Addon >= 2.0.</li>
 	<li>Bugfix: Beim Löschen von Artikeln und Medien die vom Addon verlinkt werden wurde der Name der verlinkenden Quelle in der Warnmeldung nicht immer korrekt angegeben.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" gibt die Adresse beim Drucken nicht mehr aus wenn die Adresse nicht veröffentlicht werden soll.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" kann auch OpenStreetMap Karte statt Google Maps verwenden.</li>
