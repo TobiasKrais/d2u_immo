@@ -31,7 +31,7 @@ $d2u_module_manager->showManagerList();
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 
-<p>1.1.6-DEV:</p>
+<p>1.1.6:</p>
 <ul>
 	<li>Anpassungen an Publish Github Release to Redaxo.</li>
 	<li>Methode d2u_immo_frontend_helper::getMetaTags() entfernt, da das URL Addon eine bessere Funktion anbietet.
