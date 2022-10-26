@@ -702,7 +702,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		</script>
 		<?php
 		}
-		else {
+		elseif($map_type == "osm" && rex_addon::get('osmproxy')->isAvailable()) {
 			$map_id = rand();
 
 			$leaflet_js_file = 'modules/04-2/leaflet.js';
@@ -734,6 +734,72 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		</script>
 		<?php
 		}
+		elseif(rex_addon::get('geolocation')->isAvailable()) {
+			try {
+				if(rex::isFrontend()) {
+					\Geolocation\tools::echoAssetTags();
+				}
+?>
+<script>
+	Geolocation.default.positionColor = '<?= rex_config::get('d2u_helper', 'article_color_h'); ?>';
+
+	// adjust zoom level
+	Geolocation.Tools.Center = class extends Geolocation.Tools.Template{
+		constructor ( ...args){
+			super(args);
+			this.zoom = this.zoomDefault = Geolocation.default.zoom;
+			this.center = this.centerDefault = L.latLngBounds( Geolocation.default.bounds ).getCenter();
+			return this;
+		}
+		setValue( data ){
+			super.setValue( data );
+			this.center = L.latLng( data[0] ) || this.centerDefault;
+			this.zoom = data[1] || this.zoomDefault;
+			this.radius = data[2];
+			this.circle = null;
+			if( data[2] ) {
+				let options = Geolocation.default.styleCenter;
+				options.color = data[3] || options.color;
+				options.radius = this.radius;
+				this.circle = L.circle( this.center, options );
+			}
+			if( this.map ) this.show( this.map );
+			return this;
+		}
+		show( map ){
+			super.show( map );
+			map.setView( this.center, this.zoom );
+			if( this.circle instanceof L.Circle ) this.circle.addTo( map );
+			return this;
+		}
+		remove(){
+			if( this.circle instanceof L.Circle ) this.circle.remove();
+			super.remove();
+			return this;
+		}
+		getCurrentBounds(){
+			if( this.circle instanceof L.Circle ) {
+				return this.radius ? this.circle.getBounds() : this.circle.getLatLng();
+			}
+			return this.center;
+		}
+	};
+	Geolocation.tools.center = function(...args) { return new Geolocation.Tools.Center(args); };
+</script>
+<?php
+			}
+			catch (Exception $e) {}
+
+			$mapsetId = (int) 'REX_VALUE[9]';
+
+			$rex_map = \Geolocation\mapset::take($mapsetId)
+				->attributes('id', $mapsetId)
+				->attributes('style', 'height:500px;width:100%;')
+				->dataset('position', [$property->latitude, $property->longitude])
+				->dataset('center', [[$property->latitude, $property->longitude], 15])
+				->parse();				
+		}	
+		
 		print '</div>';
 		print '</div>';
 		if($print != "full") {
@@ -1186,13 +1252,14 @@ else {
 		if(target_anchor === "#tab_map") {
 			<?php
 				if($map_type == "google") {
-			?>
-			google.maps.event.trigger(map, 'resize');
-			map.setCenter(myLatlng);
-			<?php
+					print "google.maps.event.trigger(map, 'resize');";
+					print "map.setCenter(myLatlng);";
 				}
-				else {
+				else if($map_type == "osm" && rex_addon::get('osmproxy')->isAvailable()) {
 					print "L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);";
+				}
+				elseif(rex_addon::get('geolocation')->isAvailable()) {
+//					print "Geolocation.tools.center.initFromHiddenTab()";
 				}
 			?>
 		}
