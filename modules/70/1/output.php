@@ -1253,10 +1253,11 @@ else {
 					print "google.maps.event.trigger(map, 'resize');";
 					print "map.setCenter(myLatlng);";
 				}
-				else if($map_type == "osm" && rex_addon::get('osmproxy')->isAvailable()) {
+				elseif($map_type == "osm" && rex_addon::get('osmproxy')->isAvailable()) {
 					print "L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);";
 				}
 				elseif(rex_addon::get('geolocation')->isAvailable()) {
+//					print "Geolocation.initMap(". $map_type .");"; // FIXME invalidate map size
 				}
 			?>
 		}
