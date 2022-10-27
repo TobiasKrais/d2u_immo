@@ -140,6 +140,7 @@ $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_immo = rex_addon::get("d2u_immo");
 $map_type = "REX_VALUE[1]" == '' ? 'google' : "REX_VALUE[1]"; // Backward compatibility
+$map_id = 'd2u' . md5(strval(time()));
 		
 
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
@@ -791,7 +792,6 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			}
 			catch (Exception $e) {}
 
-            $map_id = 'd2u' . md5(strval(time());
 			echo \Geolocation\mapset::take($map_type)
 				->attributes('id', $map_id)
 				->dataset('position', [$property->latitude, $property->longitude])
@@ -1258,13 +1258,8 @@ else {
 					print "L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);";
 				}
 				elseif(rex_addon::get('geolocation')->isAvailable()) {
-                    print '
-                    let container = document.getElementById(\''.$map_id.'\');
-                    if( container ) container.__rmMap.map.invalidateSize();
-                    // oder falls da simple invalidateSize nicht reicht:
-                    // if( container ) L.Util.requestAnimFrame(container.__rmMap.map.invalidateSize,container.__rmMap.map,!1,container);  
-                    ';
-//					print "Geolocation.initMap(". $map_type .");"; // FIXME invalidate map size
+                    print 'let container = document.getElementById(\''.$map_id.'\');'. PHP_EOL;
+                    print 'if( container ) container.__rmMap.map.invalidateSize();'. PHP_EOL;
 				}
 			?>
 		}
