@@ -140,6 +140,7 @@ $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_immo = rex_addon::get("d2u_immo");
 $map_type = "REX_VALUE[1]" == '' ? 'google' : "REX_VALUE[1]"; // Backward compatibility
+		
 
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 $url_id = d2u_addon_frontend_helper::getUrlId();
@@ -790,11 +791,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			}
 			catch (Exception $e) {}
 
-			$mapsetId = (int) 'REX_VALUE[9]';
-
-			echo \Geolocation\mapset::take($mapsetId)
-				->attributes('id', $mapsetId)
-				->attributes('style', 'height:500px;width:100%;')
+			echo \Geolocation\mapset::take($map_type)
+				->attributes('id', $map_type)
 				->dataset('position', [$property->latitude, $property->longitude])
 				->dataset('center', [[$property->latitude, $property->longitude], 15])
 				->parse();
@@ -1259,7 +1257,6 @@ else {
 					print "L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);";
 				}
 				elseif(rex_addon::get('geolocation')->isAvailable()) {
-//					print "Geolocation.initMap( rex_map );";
 				}
 			?>
 		}
