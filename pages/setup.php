@@ -34,6 +34,7 @@ $d2u_module_manager->showManagerList();
 <p>1.1.7-DEV:</p>
 <ul>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
+	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" kann jetzt auch Geolocation Karten verwenden.</li>
 </ul>
 <p>1.1.6:</p>
 <ul>
