@@ -12,7 +12,7 @@
 					$map_types[$id] = 'Geolocation Addon: '. $name;
 				}
 			}
-			else if(rex_addon::get('osmproxy')->isAvailable()) {
+			if(rex_addon::get('osmproxy')->isAvailable()) {
 				$map_types['osm'] = 'OSM Proxy Addon: OpenStreetMap Karte';
 			}
 			$map_types['google'] = 'Google Maps'. (rex_config::get('d2u_helper', 'maps_key', '') != '' ? "" : " (in den Einstellung des D2U Helper Addons muss hierfür noch ein Google Maps API Key eingegeben werden)");

@@ -792,12 +792,12 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 
 			$mapsetId = (int) 'REX_VALUE[9]';
 
-			$rex_map = \Geolocation\mapset::take($mapsetId)
+			echo \Geolocation\mapset::take($mapsetId)
 				->attributes('id', $mapsetId)
 				->attributes('style', 'height:500px;width:100%;')
 				->dataset('position', [$property->latitude, $property->longitude])
 				->dataset('center', [[$property->latitude, $property->longitude], 15])
-				->parse();				
+				->parse();
 		}	
 		
 		print '</div>';
@@ -1259,7 +1259,7 @@ else {
 					print "L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);";
 				}
 				elseif(rex_addon::get('geolocation')->isAvailable()) {
-//					print "Geolocation.tools.center.initFromHiddenTab()";
+//					print "Geolocation.initMap( rex_map );";
 				}
 			?>
 		}
