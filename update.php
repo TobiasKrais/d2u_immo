@@ -109,7 +109,7 @@ if(class_exists('D2UModuleManager')) {
 		4);
 	$modules[] = new D2UModule("70-3",
 		"D2U Immo Addon - Ausgabe Kategorie",
-		3);
+		4);
 
 	$d2u_module_manager = new D2UModuleManager($modules, "", "d2u_immo");
 	$d2u_module_manager->autoupdate();

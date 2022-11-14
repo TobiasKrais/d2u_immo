@@ -61,18 +61,10 @@ if(!function_exists('printPropertylist')) {
 	}
 }
 
-
-// Get placeholder wildcard tags and other presets
-$print = filter_input(INPUT_GET, 'print', FILTER_SANITIZE_SPECIAL_CHARS);
+// Get placeholder wildcard tags
 $sprog = rex_addon::get("sprog");
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
-$d2u_immo = rex_addon::get("d2u_immo");
-$url_namespace = "";
-if(\rex_addon::get("url")->isAvailable()) {
-	$url_data = UrlGenerator::getData();
-	$url_namespace = isset($url_data->urlParamKey) ? $url_data->urlParamKey : "";
-}
 
 // Output property list
 $category_id = "REX_VALUE[1]";

@@ -19,7 +19,7 @@ class D2UImmoModules {
 			4);
 		$modules[] = new D2UModule("70-3",
 			"D2U Immo Addon - Ausgabe Kategorie",
-			3);
+			4);
 		return $modules;
 	}
 }
