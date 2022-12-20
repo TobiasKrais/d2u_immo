@@ -9,7 +9,7 @@ if($message != "") {
 }
 
 // save settings
-if (filter_input(INPUT_POST, "btn_save") == 1 || filter_input(INPUT_POST, "btn_apply") == 1) {
+if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
 	$form = (array) rex_post('form', 'array', []);
 
 	$provider = new D2U_Immo\Provider($form['provider_id']);
