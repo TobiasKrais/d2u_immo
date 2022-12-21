@@ -5,9 +5,9 @@ if ($func == '') {
 	$query = 'SELECT properties.property_id, lang.name AS propertyname, categories.name AS categoryname, online_status, priority '
 		.'FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
 		.'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
-			.'ON properties.property_id = lang.property_id AND lang.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
+			.'ON properties.property_id = lang.property_id AND lang.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' '
 		.'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories '
-			.'ON properties.category_id = categories.category_id AND categories.clang_id = '. rex_config::get("d2u_helper", "default_lang") .' '
+			.'ON properties.category_id = categories.category_id AND categories.clang_id = '. intval(rex_config::get("d2u_helper", "default_lang")) .' '
 		.'WHERE online_status = "online" OR online_status = "offline"';
 	if($this->getConfig('default_property_sort') == 'priority') {
 		$query .= 'ORDER BY online_status DESC, priority ASC';

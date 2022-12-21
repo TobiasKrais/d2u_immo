@@ -41,7 +41,7 @@ $providers = D2U_Immo\Provider::getAll();
 
 print '<table class="table table-striped table-hover">';
 if(count($providers) > 0) {
-	$properties = D2U_Immo\Property::getAll(rex_config::get("d2u_helper", "default_lang"), '', TRUE);
+	$properties = D2U_Immo\Property::getAll(intval(rex_config::get("d2u_helper", "default_lang")), '', TRUE);
 
 	print "<thead>";
 	print "<tr>";
