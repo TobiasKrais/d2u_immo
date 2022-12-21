@@ -626,7 +626,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			."WHERE property_id = ". $this->property_id;
 		$result_main = \rex_sql::factory();
 		$result_main->setQuery($query_main);
-		if($result_main->getRows() == 0) {
+		if(intval($result_main->getRows()) === 0) {
 			$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_properties "
 				."WHERE property_id = ". $this->property_id;
 			$result = \rex_sql::factory();
