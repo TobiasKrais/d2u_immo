@@ -48,16 +48,16 @@ if(\rex_addon::get('url')->isAvailable()) {
 
 // 1.0.7 update
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'price_plus_vat';");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `price_plus_vat` TINYINT(1) NOT NULL DEFAULT 0 AFTER `cold_rent`;");
 }
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'hall_warehouse_type';");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `hall_warehouse_type` TINYINT(1) NOT NULL DEFAULT 0 AFTER `office_type`;");
 }
 // 1.0.8
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'parking_type';");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` ADD `parking_type` TINYINT(1) NOT NULL DEFAULT 0 AFTER `hall_warehouse_type`;");
 }
 // 1.0.9
@@ -65,7 +65,7 @@ $sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` CH
 
 // 1.1.0 YForm e-mail template
 $sql->setQuery("SELECT * FROM ". \rex::getTablePrefix() ."yform_email_template WHERE name = 'd2u_immo_request'");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("INSERT INTO ". \rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `mail_reply_to`, `mail_reply_to_name`, `subject`, `body`, `body_html`, `attachments`) VALUES
 		('d2u_immo_request', '', '', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"name\"]', 'Immobilienanfrage', 'Immobilienanfrage von Internetseite:\r\nImmobilie: REX_YFORM_DATA[field=\"immo_name\"]\r\n\r\nEs fragt an:\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nTelefon Anrufe gestattet: <?php print REX_YFORM_DATA[field=\"phone_calls\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\nDatenschutzerklärung zugestimmt: <?php print REX_YFORM_DATA[field=\"privacy_policy_accepted\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n', '', '')");
 }
@@ -80,7 +80,7 @@ $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_categories_lang
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_properties` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("ALTER TABLE `". rex::getTablePrefix() ."d2u_immo_properties_lang` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
 $sql->setQuery("SHOW COLUMNS FROM ". \rex::getTablePrefix() ."d2u_immo_properties LIKE 'price_plus_vat';");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("ALTER TABLE `". \rex::getTablePrefix() ."d2u_immo_properties` CHANGE `rent_plus_vat` `price_plus_vat` TINYINT(1) NOT NULL DEFAULT 0;");
 }
 

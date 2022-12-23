@@ -944,13 +944,13 @@ class OpenImmo extends AFTPExport {
 			$anhaenge = $xml->createElement("anhaenge");
 			$objekt_anhaenge = [];
 			// Titelbild auslesen
-			$is_title_pic = TRUE;
+			$is_title_pic = true;
 			$zaehler = 0;
 			// Bilder auslesen
 			foreach($property->pictures as $bild) {
 				if(strlen($bild) > 3 && $is_title_pic) {
 					$objekt_anhaenge[$zaehler] = ["TITELBILD" => $bild];
-					$is_title_pic = FALSE;
+					$is_title_pic = false;
 				}
 				else if(strlen($bild) > 3 && $zaehler < $this->max_pics) {
 					$objekt_anhaenge[$zaehler] = ["BILD" => $bild];
@@ -990,7 +990,7 @@ class OpenImmo extends AFTPExport {
 						$anhang_location->appendChild($xml->createTextNode("EXTERN"));
 						$anhang->appendChild($anhang_location);
 						$anhang_gruppe = $xml->createAttribute("gruppe");
-						if(strpos($anhang_media->getType(), "image") !== FALSE && $media_type == "DOKUMENTE") {
+						if(strpos($anhang_media->getType(), "image") !== false && $media_type == "DOKUMENTE") {
 							// Falls Bilder im Dokumentenbereich eingefuegt wurden
 							$anhang_gruppe->appendChild($xml->createTextNode("BILD"));
 						}
@@ -1142,7 +1142,7 @@ class OpenImmo extends AFTPExport {
 
 		// write XML file
 		try {
-			if($xml->save($this->cache_path . $this->xml_filename) === FALSE) {
+			if($xml->save($this->cache_path . $this->xml_filename) === false) {
 				return \rex_i18n::msg('d2u_immo_export_xml_cannot_create');
 			}
 			else {

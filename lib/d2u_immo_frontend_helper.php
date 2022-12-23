@@ -19,7 +19,7 @@ class d2u_immo_frontend_helper {
 			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 				$property_id = $url_id;
 			}
-			foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
+			foreach(rex_clang::getAllIds(true) as $this_lang_key) {
 				$lang_property = new D2U_Immo\Property($property_id, $this_lang_key);
 				if($lang_property->translation_needs_update != "delete") {
 					$alternate_URLs[$this_lang_key] = $lang_property->getURL();
@@ -31,7 +31,7 @@ class d2u_immo_frontend_helper {
 			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
 				$category_id = $url_id;
 			}
-			foreach(rex_clang::getAllIds(TRUE) as $this_lang_key) {
+			foreach(rex_clang::getAllIds(true) as $this_lang_key) {
 				$lang_category = new D2U_Immo\Category($category_id, $this_lang_key);
 				if($lang_category->translation_needs_update != "delete") {
 					$alternate_URLs[$this_lang_key] = $lang_category->getURL();
@@ -53,8 +53,8 @@ class d2u_immo_frontend_helper {
 		$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 		$url_id = d2u_addon_frontend_helper::getUrlId();
 
-		$category = FALSE;
-		$property = FALSE;
+		$category = false;
+		$property = false;
 		if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default'=> 0]]) > 0 || $url_namespace === "property_id") {
 			$property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
 			if(\rex_addon::get("url")->isAvailable() && $url_id > 0) {
@@ -71,13 +71,13 @@ class d2u_immo_frontend_helper {
 		}
 
 		// Breadcrumbs
-		if($category !== FALSE) {
-			if($category->parent_category !== FALSE) {
+		if($category !== false) {
+			if($category->parent_category !== false) {
 				$breadcrumbs[] = '<a href="' . $category->parent_category->getUrl() . '">' . $category->parent_category->name . '</a>';
 			}
 			$breadcrumbs[] = '<a href="' . $category->getUrl() . '">' . $category->name . '</a>';
 		}
-		if($property !== FALSE) {
+		if($property !== false) {
 			$breadcrumbs[] = '<a href="' . $property->getUrl() . '">' . $property->name . '</a>';
 		}
 		

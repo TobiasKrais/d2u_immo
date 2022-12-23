@@ -14,7 +14,7 @@ if(!function_exists('sendRecommendation')) {
 			}
 			
 			$mail = new rex_mailer();
-			$mail->IsHTML(FALSE);
+			$mail->IsHTML(false);
 			$mail->CharSet = "utf-8";
 			$mail->From = $fields['immo_contact_mail'];
 			$mail->FromName = $fields['immo_contact_name'];
@@ -163,8 +163,8 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<ul>';
 		print '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
 		//	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
-		print '<li><small><a href="'. $property->getURL(TRUE).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
-		print '<li><small><a href="'. $property->getURL(TRUE).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
+		print '<li><small><a href="'. $property->getURL(true).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
+		print '<li><small><a href="'. $property->getURL(true).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
 		if($property->market_type == "MIETE_PACHT" && $property->type_of_use != "GEWERBE" && $d2u_immo->getConfig('even_informative_pdf', '') != '') {
 			print '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
 		}
@@ -366,7 +366,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 			$media = rex_media::get($document);
 			if($media instanceof rex_media) {
 				// Check permissions
-				$has_permission = TRUE;
+				$has_permission = true;
 				if(rex_plugin::get('ycom', 'media_auth')->isAvailable()) {
 					$has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create("", $document));
 				}
@@ -427,10 +427,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if($property->firing_type > 0) {
 			print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_firing_type'. $tag_close .':</li></ul></div>';
 			print '<div class="col-6 col-md-8 col-lg-9">';
-			$first_element = TRUE;
+			$first_element = true;
 			foreach($property->firing_type as $firing_type) {
 				print ($first_element ? "" : ", ") . $tag_open .'d2u_immo_firing_type_'. $firing_type . $tag_close;
-				$first_element = FALSE;
+				$first_element = false;
 			}
 			print '</div>';
 		}
@@ -465,10 +465,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if(count($property->bath) > 0) {
 			print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_bath'. $tag_close .':</li></ul></div>';
 			print '<div class="col-6 col-md-8 col-lg-9">';
-			$first_element = TRUE;
+			$first_element = true;
 			foreach($property->bath as $bath) {
 				print ($first_element ? "" : ", ") . $tag_open .'d2u_immo_bath_'. $bath . $tag_close;
-				$first_element = FALSE;
+				$first_element = false;
 			}
 			print '</div>';
 		}
@@ -476,10 +476,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if(count($property->kitchen) > 0) {
 			print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_kitchen'. $tag_close .':</li></ul></div>';
 			print '<div class="col-6 col-md-8 col-lg-9">';
-			$first_element = TRUE;
+			$first_element = true;
 			foreach($property->kitchen as $kitchen) {
 				print ($first_element ? "" : ", ") . $tag_open .'d2u_immo_kitchen_'. $kitchen . $tag_close;
-				$first_element = FALSE;
+				$first_element = false;
 			}
 			print '</div>';
 		}
@@ -487,10 +487,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if(count($property->floor_type) > 0) {
 			print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_floor_type'. $tag_close .':</li></ul></div>';
 			print '<div class="col-6 col-md-8 col-lg-9">';
-			$first_element = TRUE;
+			$first_element = true;
 			foreach($property->floor_type as $floor_type) {
 				print ($first_element ? "" : ", ") . $tag_open .'d2u_immo_floor_type_'. $floor_type . $tag_close;
-				$first_element = FALSE;
+				$first_element = false;
 			}
 			print '</div>';
 		}
@@ -498,10 +498,10 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		if(count($property->elevator) > 0) {
 			print '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_elevator'. $tag_close .':</li></ul></div>';
 			print '<div class="col-6 col-md-8 col-lg-9">';
-			$first_element = TRUE;
+			$first_element = true;
 			foreach($property->elevator as $elevator) {
 				print ($first_element ? "" : ", ") . $tag_open .'d2u_immo_elevator_'. $elevator . $tag_close;
-				$first_element = FALSE;
+				$first_element = false;
 			}
 			print '</div>';
 		}
@@ -1098,7 +1098,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		$yform->setObjectparams("form_action", $property->getUrl());
 		$yform->setObjectparams("form_anchor", "tab_request");
 		$yform->setObjectparams("Error-occured", $tag_open .'d2u_immo_form_validate_title'. $tag_close);
-		$yform->setObjectparams("real_field_names", TRUE);
+		$yform->setObjectparams("real_field_names", true);
 
 		// action - showtext
 		$yform->setActionField("showtext", [$tag_open .'d2u_immo_form_thanks'. $tag_close]);
@@ -1114,7 +1114,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		print '<div class="col-12">';
 		print '<fieldset><legend>'. $tag_open .'d2u_immo_recommendation_title'. $tag_close .'</legend>';
 		$form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
-				hidden|immo_url|'. $property->getURL(TRUE) .'|REQUEST
+				hidden|immo_url|'. $property->getURL(true) .'|REQUEST
 				hidden|immo_contact_mail|'. $property->contact->email .'|REQUEST
 				hidden|immo_contact_name|'. $property->contact->firstname .' '. $property->contact->lastname .'|REQUEST
 
@@ -1146,7 +1146,7 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 		$yform_recommend->setObjectparams("form_action", $property->getUrl());
 		$yform_recommend->setObjectparams("form_anchor", "tab_recommendation");
 		$yform_recommend->setObjectparams("Error-occured", $tag_open .'d2u_immo_form_validate_title'. $tag_close);
-		$yform_recommend->setObjectparams("real_field_names", TRUE);
+		$yform_recommend->setObjectparams("real_field_names", true);
 
 		// action - showtext
 		$yform_recommend->setActionField("showtext", array($tag_open .'d2u_immo_recommendation_thanks'. $tag_close));
@@ -1178,60 +1178,60 @@ if(filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['d
 }
 else {
 	// Output property list
-	$properties_leasehold = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "ERBPACHT", TRUE);
-	$properties_leasing = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "LEASING", TRUE);
-	$properties_rent = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "MIETE_PACHT", TRUE);
-	$properties_sale = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "KAUF", TRUE);
+	$properties_leasehold = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "ERBPACHT", true);
+	$properties_leasing = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "LEASING", true);
+	$properties_rent = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "MIETE_PACHT", true);
+	$properties_sale = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "KAUF", true);
 
 	// Tabs
 	print '<div class="col-12">';
 	print '<ul class="nav nav-pills d-print-none">';
-	$tab_active = TRUE;
+	$tab_active = true;
 	if(count($properties_sale) > 0) {
 		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	if(count($properties_rent) > 0) {
 		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_rent">'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	if(count($properties_leasing) > 0) {
 		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasing">'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	if(count($properties_leasehold) > 0) {
 		print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasehold">'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	print '</ul>';
 	print '</div>';
 	
 	print '<div class="col-12">';
 	print '<div class="tab-content">';
-	$tab_active = TRUE;
+	$tab_active = true;
 	if(count($properties_sale) > 0) {
 		print '<div id="tab_sale" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_sale);
 		print '</div>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	if(count($properties_rent) > 0) {
 		print '<div id="tab_rent" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_rent);
 		print '</div>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	if(count($properties_leasing) > 0) {
 		print '<div id="tab_leasing" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_leasing);
 		print '</div>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	if(count($properties_leasehold) > 0) {
 		print '<div id="tab_leasehold" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 		printPropertylist($properties_leasehold);
 		print '</div>';
-		$tab_active = FALSE;
+		$tab_active = false;
 	}
 	print '</div>';
 	print '</div>';

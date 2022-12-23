@@ -19,9 +19,9 @@ function rex_d2u_immo_window_advertising_clang_deleted(rex_extension_point $ep) 
 	$clang_id = $params['id'];
 
 	// Delete
-	$ads = Advertisement::getAll($clang_id, FALSE);
+	$ads = Advertisement::getAll($clang_id, false);
 	foreach ($ads as $ad) {
-		$ad->delete(FALSE);
+		$ad->delete(false);
 	}
 
 	return $warning;

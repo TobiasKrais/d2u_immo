@@ -16,7 +16,7 @@ if ($func == 'online' || $func == 'offline') {
 }
 
 print '<table class="table table-striped table-hover">';
-$properties = D2U_Immo\Property::getAll(intval(rex_config::get("d2u_helper", "default_lang")), '', TRUE);
+$properties = D2U_Immo\Property::getAll(intval(rex_config::get("d2u_helper", "default_lang")), '', true);
 
 print "<thead>";
 print "<tr>";

@@ -56,11 +56,11 @@ function rex_d2u_immo_clang_deleted(rex_extension_point $ep) {
 	// Delete
 	$categories = D2U_Immo\Category::getAll($clang_id);
 	foreach ($categories as $category) {
-		$category->delete(FALSE);
+		$category->delete(false);
 	}
-	$properties = D2U_Immo\Property::getAll($clang_id, '', FALSE);
+	$properties = D2U_Immo\Property::getAll($clang_id, '', false);
 	foreach ($properties as $property) {
-		$property->delete(FALSE);
+		$property->delete(false);
 	}
 	
 	// Delete language settings

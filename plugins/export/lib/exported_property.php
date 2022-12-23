@@ -82,7 +82,7 @@ class ExportedProperty {
 	 */
 	public static function addAllToExport($provider_id) {
 		$provider = new Provider($provider_id);
-		$properties = Property::getAll($provider->clang_id, '', TRUE);
+		$properties = Property::getAll($provider->clang_id, '', true);
 		foreach($properties as $property) {
 			$exported_property = new ExportedProperty($property->property_id, $provider_id);
 			if($exported_property->export_action == "" && $exported_property->export_timestamp == "") {
@@ -111,9 +111,9 @@ class ExportedProperty {
 	 * @param Provider $provider Optional provider object
 	 * @return ExportedProperty[] Array with exported properties objects.
 	 */
-	public static function getAll($provider = FALSE) {
+	public static function getAll($provider = false) {
 		$query = "SELECT property_id, provider_id FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties AS export";
-		if ($provider !== FALSE && $provider->provider_id > 0) {
+		if ($provider !== false && $provider->provider_id > 0) {
 			$query .= " WHERE provider_id = ". $provider->provider_id;
 		}
 		$result = \rex_sql::factory();
@@ -129,14 +129,14 @@ class ExportedProperty {
 	
 	/**
 	 * Proves, if Property is set for export for this provider.
-	 * @return boolean TRUE if set, FALSE if not
+	 * @return boolean true if set, false if not
 	 */
 	public function isSetForExport() {
 		if($this->export_action == "add" || $this->export_action == "update" || ($this->export_action == "" && $this->export_timestamp != "")) {
-			return TRUE;
+			return true;
 		}
 		else {
-			return FALSE;
+			return false;
 		}
 	}
 	
@@ -197,7 +197,7 @@ class ExportedProperty {
 
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$query = "REPLACE INTO ". \rex::getTablePrefix() ."d2u_immo_export_properties SET "

@@ -164,7 +164,7 @@ abstract class AFTPExport extends AExport {
 	protected function zip($filename) {
 	   	// Create ZIP
 		$zip = new \ZipArchive();
-		if ($zip->open($this->cache_path . $this->getZipFileName(), \ZipArchive::CREATE) !== TRUE) {
+		if ($zip->open($this->cache_path . $this->getZipFileName(), \ZipArchive::CREATE) !== true) {
 			return \rex_i18n::msg('d2u_immo_export_zip_cannot_create');
 		}
 		$zip->addFile($this->cache_path . $filename, $filename);

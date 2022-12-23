@@ -163,7 +163,7 @@ class Provider {
 		$providers = Provider::getAll();
 		$message = [];
 		
-		$error = FALSE;
+		$error = false;
 		
 		foreach($providers as $provider) {
 			if($provider->isExportPossible() && ($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime("-1 week"))) {
@@ -173,7 +173,7 @@ class Provider {
 					if($openimmo_error != "") {
 						$message[] = $provider->name .": ". $openimmo_error;
 						print $provider->name .": ". $openimmo_error ."; ";
-						$error = TRUE;
+						$error = true;
 					}
 					else {
 						$message[] = $provider->name .": ". \rex_i18n::msg('d2u_immo_export_success');
@@ -186,7 +186,7 @@ class Provider {
 						if($mascus_error != "") {
 							$message[] = $provider->name .": ". $linkedin_error;
 							print $provider->name .": ". $linkedin_error ."; ";
-							$error = TRUE;
+							$error = true;
 						}
 						else {
 							$message[] = $provider->name .": ". \rex_i18n::msg('d2u_immo_export_success');
@@ -220,8 +220,8 @@ class Provider {
 	/**
 	 * Changes the status
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->provider_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_export_provider "
 					."SET online_status = 'offline' "
@@ -313,12 +313,12 @@ class Provider {
 			if($linkedin->hasAccessToken()) {
 				// set the access token so we can make authenticated requests
 				$is_logged_in = $linkedin->isUserLoggedIn();
-				if($is_logged_in === FALSE) {
+				if($is_logged_in === false) {
 					// Wrong user? Logout and inform user
 					$linkedin->logout();
 					return \rex_i18n('d2u_immo_export_linkedin_login_again');
 				}
-				else if($is_logged_in === TRUE) {
+				else if($is_logged_in === true) {
 					// Correct user? Perform export
 					return $linkedin->export();
 				}
@@ -335,7 +335,7 @@ class Provider {
 	 * @param boolean $online_only Return only online (active) providers
 	 * @return Provider[] Array with Provider objects.
 	 */
-	public static function getAll($online_only = TRUE) {
+	public static function getAll($online_only = true) {
 		$query = "SELECT provider_id FROM ". \rex::getTablePrefix() ."d2u_immo_export_provider ";
 		if($online_only) {
 			$query .= "WHERE online_status = 'online' ";
@@ -365,7 +365,7 @@ class Provider {
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
-			return TRUE;
+			return true;
 		}
 		
 		$query = "SELECT properties.updatedate, export.export_timestamp FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS properties "
@@ -375,10 +375,10 @@ class Provider {
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0 && $result->getValue("updatedate") > $result->getValue("export_timestamp")) {
-			return TRUE;
+			return true;
 		}
 		
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -393,9 +393,9 @@ class Provider {
 		$result->setQuery($query);
 		
 		if($result->getRows() > 0) {
-			return TRUE;
+			return true;
 		}
-		return FALSE;
+		return false;
 	}
 
 	/**
@@ -431,7 +431,7 @@ class Provider {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$this->clang_id = $this->clang_id === 0 ? \intval(rex_config::get("d2u_helper", "default_lang")) : $this->clang_id;
@@ -458,7 +458,7 @@ class Provider {
 				."linkedin_groupid = '". $this->linkedin_groupid ."', "
 				."twitter_id = '". $this->twitter_id ."' ";
 
-		if($this->provider_id == 0) {
+		if($this->provider_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}
 		else {
@@ -467,14 +467,14 @@ class Provider {
 
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
-		if($this->provider_id == 0) {
-			$this->provider_id = $result->getLastId();
+		if($this->provider_id === 0) {
+			$this->provider_id = intval($result->getLastId());
 		}
 
 		if($result->hasError()) {
-			return FALSE;
+			return false;
 		}
 		
-		return TRUE;
+		return true;
 	}
 }

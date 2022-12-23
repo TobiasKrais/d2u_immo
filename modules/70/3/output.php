@@ -73,68 +73,68 @@ $properties_leasing = [];
 $properties_rent = [];
 $properties_sale = [];
 if($category_id > 0) {
-	$category = new D2U_Immo\Category($category_id, TRUE);
-	$properties_leasehold = $category->getProperties("ERBPACHT", TRUE);
-	$properties_leasing = $category->getProperties("LEASING", TRUE);
-	$properties_rent = $category->getProperties("MIETE_PACHT", TRUE);
-	$properties_sale = $category->getProperties("KAUF", TRUE);
+	$category = new D2U_Immo\Category($category_id, true);
+	$properties_leasehold = $category->getProperties("ERBPACHT", true);
+	$properties_leasing = $category->getProperties("LEASING", true);
+	$properties_rent = $category->getProperties("MIETE_PACHT", true);
+	$properties_sale = $category->getProperties("KAUF", true);
 }
 else {
-	$properties_leasehold = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "ERBPACHT", TRUE);
-	$properties_leasing = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "LEASING", TRUE);
-	$properties_rent = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "MIETE_PACHT", TRUE);
-	$properties_sale = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "KAUF", TRUE);
+	$properties_leasehold = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "ERBPACHT", true);
+	$properties_leasing = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "LEASING", true);
+	$properties_rent = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "MIETE_PACHT", true);
+	$properties_sale = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), "KAUF", true);
 }
 
 // Tabs
 print '<div class="col-12">';
 print '<ul class="nav nav-pills d-print-none">';
-$tab_active = TRUE;
+$tab_active = true;
 if(count($properties_sale) > 0) {
 	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 if(count($properties_rent) > 0) {
 	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_rent">'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 if(count($properties_leasing) > 0) {
 	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasing">'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 if(count($properties_leasehold) > 0) {
 	print '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasehold">'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 print '</ul>';
 print '</div>';
 
 print '<div class="col-12">';
 print '<div class="tab-content">';
-$tab_active = TRUE;
+$tab_active = true;
 if(count($properties_sale) > 0) {
 	print '<div id="tab_sale" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_sale);
 	print '</div>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 if(count($properties_rent) > 0) {
 	print '<div id="tab_rent" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_rent);
 	print '</div>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 if(count($properties_leasing) > 0) {
 	print '<div id="tab_leasing" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_leasing);
 	print '</div>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 if(count($properties_leasehold) > 0) {
 	print '<div id="tab_leasehold" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
 	printPropertylist($properties_leasehold);
 	print '</div>';
-	$tab_active = FALSE;
+	$tab_active = false;
 }
 print '</div>';
 print '</div>';

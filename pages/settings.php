@@ -10,7 +10,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 		$settings['window_advertising_settings_article'] = $link_ids["REX_INPUT_LINK"][2];
 	}
 
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 	$settings['even_informative_pdf'] = $input_media['even_informative_pdf'];
 
 	// Checkbox also need special treatment if empty
@@ -111,10 +111,10 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 				<div class="panel-body-wrapper slide">
 					<?php
 						print '<p>'. rex_i18n::msg('d2u_immo_settings_finance_calculator_hint') .'</p>';
-						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_real_estate_tax', 'settings[finance_calculator_real_estate_tax]', $this->getConfig('finance_calculator_real_estate_tax'), TRUE, FALSE, 'text');
-						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_notary_costs', 'settings[finance_calculator_notary_costs]', $this->getConfig('finance_calculator_notary_costs'), TRUE, FALSE, 'text');
-						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_interest_rate', 'settings[finance_calculator_interest_rate]', $this->getConfig('finance_calculator_interest_rate'), TRUE, FALSE, 'text');
-						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_repayment', 'settings[finance_calculator_repayment]', $this->getConfig('finance_calculator_repayment'), TRUE, FALSE, 'text');
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_real_estate_tax', 'settings[finance_calculator_real_estate_tax]', $this->getConfig('finance_calculator_real_estate_tax'), true, false, 'text');
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_notary_costs', 'settings[finance_calculator_notary_costs]', $this->getConfig('finance_calculator_notary_costs'), true, false, 'text');
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_interest_rate', 'settings[finance_calculator_interest_rate]', $this->getConfig('finance_calculator_interest_rate'), true, false, 'text');
+						d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_repayment', 'settings[finance_calculator_repayment]', $this->getConfig('finance_calculator_repayment'), true, false, 'text');
 					?>
 				</div>
 			</fieldset>
@@ -126,7 +126,7 @@ if (filter_input(INPUT_POST, "btn_save") == 'save') {
 					<div class="panel-body-wrapper slide">
 						<?php
 						d2u_addon_backend_helper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', $this->getConfig('export_autoexport') == 'active');
-						d2u_addon_backend_helper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', $this->getConfig('export_failure_email'), TRUE, FALSE, 'email');
+						d2u_addon_backend_helper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', $this->getConfig('export_failure_email'), true, false, 'email');
 						?>
 					</div>
 				</fieldset>

@@ -23,12 +23,12 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var Contact Contact object.
 	 */
-	var $contact = FALSE;
+	var $contact = false;
 	
 	/**
 	 * @var Category Category object. 
 	 */
-	var $category = FALSE;
+	var $category = false;
 	
 	/**
 	 * @var string Type of use. Values are defined in OpenImmo definition of
@@ -131,9 +131,9 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $floor = 0;
 	
 	/**
-	 * @var boolean TRUE if property addess may be published
+	 * @var boolean true if property addess may be published
 	 */
-	var $publish_address = TRUE;
+	var $publish_address = true;
 
 	/**
 	 * @var int Price if object can be bought.
@@ -151,15 +151,15 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $cold_rent = 0;
 	
 	/**
-	 * @var boolean TRUE if rent has additional VAT
+	 * @var boolean true if rent has additional VAT
 	 */
-	var $price_plus_vat = FALSE;
+	var $price_plus_vat = false;
 
 	/**
-	 * @var boolean TRUE if rent has additional VAT
+	 * @var boolean true if rent has additional VAT
 	 * @deprecated since version 1.1.1
 	 */
-	var $rent_plus_vat = FALSE;
+	var $rent_plus_vat = false;
 	
 	/**
 	 * @var int Additional monthly costs for rent
@@ -177,9 +177,9 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $courtage = "";
 	
 	/**
-	 * @var boolean TRUE if VAT is included in courtage
+	 * @var boolean true if VAT is included in courtage
 	 */
-	var $courtage_incl_vat = TRUE;
+	var $courtage_incl_vat = true;
 	
 	/**
 	 * @var string Three digit ISO currency code.
@@ -232,7 +232,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $construction_year = 0;
 	
 	/**
-	 * @var boolean TRUE if property can be used
+	 * @var boolean true if property can be used
 	 */
 	var $flat_sharing_possible = 0;
 	
@@ -269,14 +269,14 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $elevator = [];
 	
 	/**
-	 * @var boolean TRUE if home is wheelchair accessable.
+	 * @var boolean true if home is wheelchair accessable.
 	 */
-	var $wheelchair_accessable = FALSE;
+	var $wheelchair_accessable = false;
 	
 	/**
-	 * @var boolean TRUE if cable or sat tv is available
+	 * @var boolean true if cable or sat tv is available
 	 */
-	var $cable_sat_tv = TRUE;
+	var $cable_sat_tv = true;
 	
 	/**
 	 * @var string[] Broadband type as described in OpenImmo value of definition "breitband_zugang".
@@ -306,7 +306,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var boolean Energy pass including warm water
 	 */
-	var $including_warm_water = TRUE;
+	var $including_warm_water = true;
 	
 	/**
 	 * @var string[] Picture filenames
@@ -329,24 +329,24 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $available_from = "";
 	
 	/**
-	 * @var boolean TRUE if property rented.
+	 * @var boolean true if property rented.
 	 */
-	var $rented = FALSE;
+	var $rented = false;
 	
 	/**
-	 * @var boolean Are animals permittet? If TRUE, yes.
+	 * @var boolean Are animals permittet? If true, yes.
 	 */
-	var $animals = TRUE;
+	var $animals = true;
 	
 	/**
-	 * @var boolean TRUE if property is reserved.
+	 * @var boolean true if property is reserved.
 	 */
-	var $object_reserved = FALSE;
+	var $object_reserved = false;
 	
 	/**
-	 * @var	boolean TRUE if property is already sold.
+	 * @var	boolean true if property is already sold.
 	 */
-	var $object_sold = FALSE;
+	var $object_sold = false;
 	
 	/**
 	 * @var string Unique OpenImmo property identifier
@@ -442,12 +442,12 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		if($num_rows > 0) {
 			$this->property_id = $result->getValue("property_id");
 			$this->additional_costs = $result->getValue("additional_costs");
-			$this->animals = $result->getValue("animals") == "1" ? TRUE : FALSE;
+			$this->animals = $result->getValue("animals") == "1" ? true : false;
 			$this->apartment_type = $result->getValue("apartment_type");
 			$this->available_from = $result->getValue("available_from");
 			$this->bath = preg_grep('/^\s*$/s', explode("|", $result->getValue("bath")), PREG_GREP_INVERT);
 			$this->broadband_internet = preg_grep('/^\s*$/s', explode("|", $result->getValue("broadband_internet")), PREG_GREP_INVERT);
-			$this->cable_sat_tv = $result->getValue("cable_sat_tv") == "1" ? TRUE : FALSE;
+			$this->cable_sat_tv = $result->getValue("cable_sat_tv") == "1" ? true : false;
 			if($result->getValue("category_id") > 0) {
 				$this->category = new Category($result->getValue("category_id"), $clang_id);
 			}
@@ -460,7 +460,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			}
 			$this->country_code = $result->getValue("country_code");
 			$this->courtage = $result->getValue("courtage");
-			$this->courtage_incl_vat = $result->getValue("courtage_incl_vat") == "1" ? TRUE : FALSE;
+			$this->courtage_incl_vat = $result->getValue("courtage_incl_vat") == "1" ? true : false;
 			$this->currency_code = $result->getValue("currency_code");
 			$this->deposit = $result->getValue("deposit");
 			$this->description = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue("description"))));
@@ -479,7 +479,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->heating_type = preg_grep('/^\s*$/s', explode("|", $result->getValue("heating_type")), PREG_GREP_INVERT);
 			$this->house_number = $result->getValue("house_number");
 			$this->house_type = $result->getValue("house_type");
-			$this->including_warm_water = $result->getValue("including_warm_water") == "1" ? TRUE : FALSE;
+			$this->including_warm_water = $result->getValue("including_warm_water") == "1" ? true : false;
 			$this->internal_object_number = $result->getValue("internal_object_number");
 			$this->kitchen = preg_grep('/^\s*$/s', explode("|", $result->getValue("kitchen")), PREG_GREP_INVERT);
 			$this->land_area = $result->getValue("land_area");
@@ -490,8 +490,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->longitude = $result->getValue("longitude") == "" ? 0 : $result->getValue("longitude");
 			$this->market_type = stripslashes($result->getValue("market_type"));
 			$this->name = $result->getValue("name");
-			$this->object_reserved = $result->getValue("object_reserved") == "1" ? TRUE : FALSE;
-			$this->object_sold = $result->getValue("object_sold") == "1" ? TRUE : FALSE;
+			$this->object_reserved = $result->getValue("object_reserved") == "1" ? true : false;
+			$this->object_sold = $result->getValue("object_sold") == "1" ? true : false;
 			$this->object_type = $result->getValue("object_type");
 			$this->office_type = $result->getValue("office_type");
 			$this->hall_warehouse_type = $result->getValue("hall_warehouse_type");
@@ -504,15 +504,15 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->parking_space_undergroundcarpark = $result->getValue("parking_space_undergroundcarpark");
 			$this->parking_type = $result->getValue("parking_type");
 			$this->pictures = preg_grep('/^\s*$/s', explode(",", $result->getValue("pictures")), PREG_GREP_INVERT);
-			$this->price_plus_vat = $result->getValue("price_plus_vat") == "1" ? TRUE : FALSE;
+			$this->price_plus_vat = $result->getValue("price_plus_vat") == "1" ? true : false;
 			// deprecated
 			$this->rent_plus_vat = $this->price_plus_vat;
 			$this->priority = $result->getValue("priority");
-			$this->publish_address = $result->getValue("publish_address") == "1" ? TRUE : FALSE;
+			$this->publish_address = $result->getValue("publish_address") == "1" ? true : false;
 			$this->purchase_price = $result->getValue("purchase_price");
 			$this->purchase_price_m2 = $result->getValue("purchase_price_m2");
-			$this->rented = $result->getValue("rented") == "1" ? TRUE : FALSE;
-			$this->flat_sharing_possible = $result->getValue("flat_sharing_possible") == "1" ? TRUE : FALSE;
+			$this->rented = $result->getValue("rented") == "1" ? true : false;
+			$this->flat_sharing_possible = $result->getValue("flat_sharing_possible") == "1" ? true : false;
 			$this->rooms = ($result->getValue("rooms") == round($result->getValue("rooms")) ? round($result->getValue("rooms")) : $result->getValue("rooms"));
 			$this->street = $result->getValue("street");
 			$this->teaser = $result->getValue("teaser");
@@ -523,11 +523,11 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$this->type_of_use = $result->getValue("type_of_use");
 			$this->updatedate = $result->getValue("updatedate");
 			$this->updateuser = $result->getValue("updateuser");
-			$this->wheelchair_accessable = $result->getValue("wheelchair_accessable") == "1" ? TRUE : FALSE;
+			$this->wheelchair_accessable = $result->getValue("wheelchair_accessable") == "1" ? true : false;
 			$this->zip_code = $result->getValue("zip_code");
 			// Window advertising plugin fields
 			if(\rex_plugin::get("d2u_immo", "window_advertising")->isAvailable()) {
-				$this->window_advertising_status = $result->getValue("window_advertising_status") == "online" ? TRUE : FALSE;
+				$this->window_advertising_status = $result->getValue("window_advertising_status") == "online" ? true : false;
 			}
 		}
 	}
@@ -535,8 +535,8 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * Changes the status of a property
 	 */
-	public function changeStatus() {
-		if($this->online_status == "online") {
+	public function changeStatus():void {
+		if($this->online_status === "online") {
 			if($this->property_id > 0) {
 				$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties "
 					."SET online_status = 'offline' "
@@ -611,10 +611,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang "
 			."WHERE property_id = ". $this->property_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -633,7 +633,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 		
 		// Don't forget to regenerate URL cache / update search_it index
@@ -648,7 +648,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	 * @param boolean $only_online Show only online properties
 	 * @return Properties[] Array with Property objects.
 	 */
-	public static function getAll($clang_id, $market_type = '', $only_online = FALSE) {
+	public static function getAll($clang_id, $market_type = '', $only_online = false) {
 		$query = "SELECT lang.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_properties AS properties "
 				."ON lang.property_id = properties.property_id AND lang.clang_id = ". $clang_id ." ";
@@ -781,7 +781,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT property_id FROM '. \rex::getTablePrefix() .'d2u_immo_properties_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.property_id FROM '. \rex::getTablePrefix() .'d2u_immo_properties AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_properties_lang AS target_lang '
 						.'ON main.property_id = target_lang.property_id AND target_lang.clang_id = '. $clang_id .' '
@@ -805,10 +805,10 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param string $including_domain true if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE) {
+	public function getURL($including_domain = false) {
 		if($this->url == "") {
 			$d2u_immo = \rex_addon::get("d2u_immo");
 				
@@ -832,7 +832,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$error = 0;
@@ -841,11 +841,11 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new Property($this->property_id, $this->clang_id);
 
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->property_id == 0) {
+		if($this->priority != $pre_save_object->priority || $this->property_id === 0) {
 			$this->setPriority();
 		}
 
-		if($this->property_id == 0 || $pre_save_object != $this) {
+		if($this->property_id === 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_immo_properties SET "
 					."additional_costs = ". $this->additional_costs .", "
 					."animals = ". ($this->animals ? 1 : 0) .", "
@@ -854,13 +854,13 @@ class Property implements \D2U_Helper\ITranslationHelper {
 					."bath = '|". implode("|", $this->bath) ."|', "
 					."broadband_internet = '|". implode("|", $this->broadband_internet) ."|', "
 					."cable_sat_tv = ". ($this->cable_sat_tv ? 1 : 0) .", "
-					."category_id = ". ($this->category !== FALSE ? $this->category->category_id : 0) .", "
+					."category_id = ". ($this->category !== false ? $this->category->category_id : 0) .", "
 					."city = '". $this->city ."', "
 					."cold_rent = ". $this->cold_rent .", "
 					."price_plus_vat = ". ($this->price_plus_vat ? 1 : 0) .", "
 					."condition_type = '". $this->condition_type ."', "
 					."construction_year = ". $this->construction_year .", "
-					."contact_id = ". ($this->contact !== FALSE ? $this->contact->contact_id : 0) .", "
+					."contact_id = ". ($this->contact !== false ? $this->contact->contact_id : 0) .", "
 					."country_code = '". $this->country_code ."', "
 					."courtage = '". $this->courtage ."', "
 					."courtage_incl_vat = ". ($this->courtage_incl_vat ? 1 : 0) .", "
@@ -916,7 +916,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 				$query .= ", window_advertising_status = '". ($this->window_advertising_status ? 'online' : 'offline') ."' ";
 			}
 
-			if($this->property_id == 0) {
+			if($this->property_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -924,13 +924,13 @@ class Property implements \D2U_Helper\ITranslationHelper {
 			}
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->property_id == 0) {
-				$this->property_id = $result->getLastId();
+			if($this->property_id === 0) {
+				$this->property_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 			
 			// Remove from export
-			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_object->online_status == "online" && $this->online_status != "online") {
+			if(\rex_plugin::get("d2u_immo", "export")->isAvailable() && $pre_save_object->online_status === "online" && $this->online_status != "online") {
 				ExportedProperty::removePropertyFromAllExports($this->property_id);
 			}
 		}
@@ -952,7 +952,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 						."name = '". addslashes($this->name) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = CURRENT_TIMESTAMP, "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
 				$error = $result->hasError();
@@ -976,7 +976,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = false):void {
 		// Pull prios from database
 		$query = "SELECT property_id, priority FROM ". \rex::getTablePrefix() ."d2u_immo_properties "
 			."WHERE property_id <> ". $this->property_id ." ORDER BY priority";
@@ -990,7 +990,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$properties = [];
@@ -1003,7 +1003,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		// Save all prios
 		foreach($properties as $prio => $property_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_properties "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". (intval($prio) + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE property_id = ". $property_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

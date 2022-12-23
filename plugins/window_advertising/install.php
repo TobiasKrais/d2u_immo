@@ -21,7 +21,7 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_w
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
 
 $sql->setQuery("SHOW COLUMNS FROM ". rex::getTablePrefix() ."d2u_immo_properties LIKE 'window_advertising_status';");
-if($sql->getRows() == 0) {
+if(intval($sql->getRows()) === 0) {
 	$sql->setQuery("ALTER TABLE ". rex::getTablePrefix() ."d2u_immo_properties "
 		. "ADD window_advertising_status VARCHAR(10) collate utf8mb4_unicode_ci default 'offline' AFTER online_status;");
 }

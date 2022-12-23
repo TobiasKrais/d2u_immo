@@ -2,7 +2,7 @@
 $contact_id = "REX_VALUE[2]";
 $contact_form_url = "REX_LINK[id=1 output=url]";
 $contact = new D2U_Immo\Contact($contact_id);
-$property = FALSE;
+$property = false;
 
 // Get placeholder wildcard tags and other presets
 $sprog = rex_addon::get("sprog");
@@ -38,7 +38,7 @@ if($contact && $contact->contact_id > 0) {
 				print "<br>";
 				print $contact->firstname ." ". $contact->lastname;
 				print "<span class='right'>";
-				if($property !== FALSE) {
+				if($property !== false) {
 					print '<a href="javascript:show_request_form()">';
 				}
 				else if($contact_form_url != "") {

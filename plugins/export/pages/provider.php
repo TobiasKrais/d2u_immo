@@ -10,7 +10,7 @@ if($message != "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	$provider = new D2U_Immo\Provider($form['provider_id']);
 	$provider->name = $form['name'];
@@ -31,7 +31,7 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	$provider->linkedin_groupid = $form['linkedin_groupid'];
 //	$provider->twitter_id = $form['twitter_id'];
 
-	if($provider->save() == FALSE){
+	if($provider->save() == false){
 		$message = 'form_save_error';
 	}
 	else {
@@ -39,19 +39,19 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $message != 'form_save_error') {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$message != 'form_save_error') {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$provider->provider_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$provider_id = $entry_id;
-	if($provider_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($provider_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$provider_id = $form['entry_id'];
 	}
 	if($provider_id > 0) {
@@ -61,7 +61,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$provider = new \D2U_Immo\Provider($entry_id);
 	$provider->changeStatus();
 	
@@ -69,7 +69,7 @@ else if($func == 'changestatus') {
 	exit;
 }
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -81,21 +81,21 @@ if ($func == 'edit' || $func == 'add') {
 					<div class="panel-body-wrapper slide">
 						<?php
 							$provider = new D2U_Immo\Provider($entry_id);
-							$readonly = FALSE;
+							$readonly = false;
 							
-							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, TRUE, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, true, $readonly, 'text');
 							$options = ['openimmo' => rex_i18n::msg('d2u_immo_export_openimmo'),
 								'linkedin' => rex_i18n::msg('d2u_immo_export_linkedin')];
-							d2u_addon_backend_helper::form_select('d2u_immo_export_type', 'form[type]', $options, array($provider->type), 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_immo_export_type', 'form[type]', $options, array($provider->type), 1, false, $readonly);
 							
 							$options_lang = [];
 							foreach(rex_clang::getAll() as $rex_clang) {
 								$options_lang[$rex_clang->getId()] = $rex_clang->getName();
 							}
 							d2u_addon_backend_helper::form_select('d2u_immo_export_clang', 'form[clang_id]', $options_lang, array($provider->clang_id));
-							d2u_addon_backend_helper::form_input('d2u_immo_export_company_name', 'form[company_name]', $provider->company_name, TRUE, $readonly, 'text');
-							d2u_addon_backend_helper::form_input('d2u_immo_export_company_email', 'form[company_email]', $provider->company_email, TRUE, $readonly, 'email');
-							d2u_addon_backend_helper::form_input('d2u_immo_export_customer_number', 'form[customer_number]', $provider->customer_number, FALSE, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_immo_export_company_name', 'form[company_name]', $provider->company_name, true, $readonly, 'text');
+							d2u_addon_backend_helper::form_input('d2u_immo_export_company_email', 'form[company_email]', $provider->company_email, true, $readonly, 'email');
+							d2u_addon_backend_helper::form_input('d2u_immo_export_customer_number', 'form[customer_number]', $provider->customer_number, false, $readonly, 'text');
 							$options_media = [];
 							$media_sql = rex_sql::factory();
 							$media_sql->setQuery("SELECT name FROM ". rex::getTablePrefix() ."media_manager_type");
@@ -104,7 +104,7 @@ if ($func == 'edit' || $func == 'add') {
 								$media_sql->next();
 							}
 							d2u_addon_backend_helper::form_select('d2u_immo_export_media_manager_type', 'form[media_manager_type]', $options_media, array($provider->media_manager_type));
-							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $provider->online_status == "online", $readonly);
+							d2u_addon_backend_helper::form_checkbox('d2u_helper_online_status', 'form[online_status]', 'online', $provider->online_status === "online", $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -112,10 +112,10 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_export_ftp_settings'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_server', "form[ftp_server]", $provider->ftp_server, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_username', "form[ftp_username]", $provider->ftp_username, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_password', "form[ftp_password]", $provider->ftp_password, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_filename', "form[ftp_filename]", $provider->ftp_filename, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_server', "form[ftp_server]", $provider->ftp_server, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_username', "form[ftp_username]", $provider->ftp_username, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_password', "form[ftp_password]", $provider->ftp_password, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_filename', "form[ftp_filename]", $provider->ftp_filename, false, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
@@ -123,8 +123,8 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_export_social_settings'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_id', "form[social_app_id]", $provider->social_app_id, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_secret', "form[social_app_secret]", $provider->social_app_secret, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_id', "form[social_app_id]", $provider->social_app_id, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_secret', "form[social_app_secret]", $provider->social_app_secret, false, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
@@ -132,8 +132,8 @@ if ($func == 'edit' || $func == 'add') {
 					<legend><?php echo rex_i18n::msg('d2u_immo_export_social_settings_linkedin'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-							d2u_addon_backend_helper::form_input('d2u_immo_export_login_email', "form[linkedin_email]", $provider->linkedin_email, FALSE, $readonly, "text");
-							d2u_addon_backend_helper::form_input('d2u_immo_export_linkedin_groupid', "form[linkedin_groupid]", $provider->linkedin_groupid, FALSE, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_login_email', "form[linkedin_email]", $provider->linkedin_email, false, $readonly, "text");
+							d2u_addon_backend_helper::form_input('d2u_immo_export_linkedin_groupid', "form[linkedin_groupid]", $provider->linkedin_groupid, false, $readonly, "text");
 						?>
 					</div>
 				</fieldset>
@@ -160,7 +160,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT provider_id, name, type, online_status '
 		.'FROM '. rex::getTablePrefix() .'d2u_immo_export_provider '
 		.'ORDER BY name';

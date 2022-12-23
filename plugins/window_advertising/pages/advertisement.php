@@ -10,17 +10,17 @@ if($message != "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', array());
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
-	$success = TRUE;
-	$advertisement = FALSE;
+	$success = true;
+	$advertisement = false;
 	$ad_id = $form['ad_id'];
 
 	foreach(rex_clang::getAll() as $rex_clang) {
-		if($advertisement === FALSE) {
+		if($advertisement === false) {
 			$advertisement = new D2U_Immo\Advertisement($ad_id, $rex_clang->getId());
 			$advertisement->ad_id = $ad_id; // Ensure correct ID in case first language has no object
 			$advertisement->priority = $form['priority'];
@@ -34,11 +34,11 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$advertisement->description = $form['lang'][$rex_clang->getId()]['description'];
 		$advertisement->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
 		
-		if($advertisement->translation_needs_update == "delete") {
-			$advertisement->delete(FALSE);
+		if($advertisement->translation_needs_update === "delete") {
+			$advertisement->delete(false);
 		}
 		else if($advertisement->save() > 0){
-			$success = FALSE;
+			$success = false;
 		}
 		else {
 			// remember id, for each database lang object needs same id
@@ -53,19 +53,19 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $advertisement !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$advertisement->ad_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$advertisement !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$advertisement->ad_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$ad_id = $entry_id;
-	if($ad_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($ad_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$ad_id = $form['ad_id'];
 	}
 	$advertisement = new D2U_Immo\Advertisement($ad_id, intval(rex_config::get("d2u_helper", "default_lang")));
@@ -75,7 +75,7 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 	$func = '';
 }
 // Change online status of machine
-else if($func == 'changestatus') {
+else if($func === 'changestatus') {
 	$advertisement = new D2U_Immo\Advertisement($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
 	$advertisement->ad_id = $ad_id; // Ensure correct ID in case language has no object
 	$advertisement->changeStatus();
@@ -85,7 +85,7 @@ else if($func == 'changestatus') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'add') {
+if ($func === 'edit' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
@@ -95,11 +95,11 @@ if ($func == 'edit' || $func == 'add') {
 				<?php
 					foreach(rex_clang::getAll() as $rex_clang) {
 						$advertisement = new D2U_Immo\Advertisement($entry_id, $rex_clang->getId());
-						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? TRUE : FALSE;
+						$required = $rex_clang->getId() === intval(rex_config::get("d2u_helper", "default_lang")) ? true : false;
 						
-						$readonly_lang = TRUE;
+						$readonly_lang = true;
 						if(rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_immo[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
-							$readonly_lang = FALSE;
+							$readonly_lang = false;
 						}
 				?>
 					<fieldset>
@@ -111,7 +111,7 @@ if ($func == 'edit' || $func == 'add') {
 									$options_translations["yes"] = rex_i18n::msg('d2u_helper_translation_needs_update');
 									$options_translations["no"] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
 									$options_translations["delete"] = rex_i18n::msg('d2u_helper_translation_delete');
-									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$advertisement->translation_needs_update], 1, FALSE, $readonly_lang);
+									d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$advertisement->translation_needs_update], 1, false, $readonly_lang);
 								}
 								else {
 									print '<input type="hidden" title="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
@@ -131,7 +131,7 @@ if ($func == 'edit' || $func == 'add') {
 							<div id="details_clang_<?php print $rex_clang->getId(); ?>">
 								<?php
 									d2u_addon_backend_helper::form_input('d2u_immo_window_advertising_title', "form[lang][". $rex_clang->getId() ."][title]", $advertisement->title, $required, $readonly_lang, "text");
-									d2u_addon_backend_helper::form_textarea('d2u_immo_window_advertising_description', "form[lang][". $rex_clang->getId() ."][description]", $advertisement->description, 10, FALSE, $readonly_lang, TRUE);
+									d2u_addon_backend_helper::form_textarea('d2u_immo_window_advertising_description', "form[lang][". $rex_clang->getId() ."][description]", $advertisement->description, 10, false, $readonly_lang, true);
 								?>
 							</div>
 						</div>
@@ -145,16 +145,16 @@ if ($func == 'edit' || $func == 'add') {
 						<?php
 							// Do not use last object from translations, because you don't know if it exists in DB
 							$advertisement = new D2U_Immo\Advertisement($entry_id, intval(rex_config::get("d2u_helper", "default_lang")));
-							$readonly = TRUE;
+							$readonly = true;
 							if(rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]')) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 							
-							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $advertisement->priority, TRUE, $readonly, 'number');
+							d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $advertisement->priority, true, $readonly, 'number');
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $advertisement->picture, $readonly);
 							$options_status = ['online' => rex_i18n::msg('clang_online'),
 								'offline' => rex_i18n::msg('clang_offline')];
-							d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$advertisement->online_status], 1, FALSE, $readonly);
+							d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$advertisement->online_status], 1, false, $readonly);
 						?>
 					</div>
 				</fieldset>
@@ -181,7 +181,7 @@ if ($func == 'edit' || $func == 'add') {
 		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT advertisements.ad_id, title, priority, online_status '
 		. 'FROM '. rex::getTablePrefix() .'d2u_immo_window_advertising AS advertisements '
 		. 'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_window_advertising_lang AS lang '

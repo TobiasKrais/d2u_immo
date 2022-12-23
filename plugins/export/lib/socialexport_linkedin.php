@@ -31,7 +31,7 @@ class SocialExportLinkedIn extends AExport {
 	 */
 	public function getCallbackURL() {
 		return (\rex_addon::get('yrewrite') && \rex_addon::get('yrewrite')->isAvailable() ? \rex_yrewrite::getCurrentDomain()->getUrl() : \rex::getServer())
-			."redaxo/". \rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id], FALSE);
+			."redaxo/". \rex_url::currentBackendPage(['func'=>'export', 'provider_id'=>$this->provider->provider_id], false);
 	}
 
 	/**
@@ -92,12 +92,12 @@ class SocialExportLinkedIn extends AExport {
 	
 	/**
 	 * Check if access token is set.
-	 * @return boolean TRUE if yes, otherwise FALSE
+	 * @return boolean true if yes, otherwise false
 	 */
 	public function hasAccessToken() {
 		if($this->provider->social_oauth_token != "" && $this->provider->social_oauth_token_secret != "") {
 			if($this->provider->social_oauth_token_valid_until > time()) {
-				return TRUE;
+				return true;
 			}
 			else {
 				$this->provider->social_oauth_token = "";
@@ -106,12 +106,12 @@ class SocialExportLinkedIn extends AExport {
 				$this->provider->save();
 			}
 		}
-		return FALSE;
+		return false;
 	}
 
 	/**
 	 * Is user mentioned in provider logged in?
-	 * @return boolean TRUE id yes, FALSE if no or a string with error message
+	 * @return boolean true id yes, false if no or a string with error message
 	 */
 	public function isUserLoggedIn() {
 		try {
@@ -136,7 +136,7 @@ class SocialExportLinkedIn extends AExport {
 				return \rex_i18n::msg('d2u_immo_export_linkedin_login_again');
 			}
 			else {
-				return TRUE;
+				return true;
 			}
 		}
 		catch(OAuthException $e) {
@@ -209,7 +209,7 @@ class SocialExportLinkedIn extends AExport {
 
 					// <submitted-url>http://www.meier-krantechnik.de/de/produkte/gebrauchte-krane?action=detail&item=13</submitted-url>
 					$submitted_url = $xml->createElement("submitted-url");
-					$submitted_url->appendChild($xml->createTextNode($property->getURL(TRUE)));
+					$submitted_url->appendChild($xml->createTextNode($property->getURL(true)));
 					$content->appendChild($submitted_url);
 
 					// <submitted-image-url>http://www.meier-krantechnik.de/index.php?rex_img_type=d2u_baumaschinen_list&amp;rex_img_file=sjjdc_826.jpg</submitted-image-url>
@@ -240,7 +240,7 @@ class SocialExportLinkedIn extends AExport {
 				// Post on group stream: prepare XML
 				else {
 					$title_text = $this->provider->company_name ." ". Sprog\Wildcard::get('d2u_immo_export_linkedin_offers', $this->provider->clang_id) .": ". $property->name;
-					$summary_text = Sprog\Wildcard::get('d2u_immo_export_linkedin_details', $this->provider->clang_id) ." ". $property->getURL(TRUE) ;
+					$summary_text = Sprog\Wildcard::get('d2u_immo_export_linkedin_details', $this->provider->clang_id) ." ". $property->getURL(true) ;
 
 					// <post>
 					$post = $xml->createElement("post");
@@ -291,7 +291,7 @@ class SocialExportLinkedIn extends AExport {
 	/**
 	 * Parses HTTP headers into an associative array.
 	 * @param String $header string containing HTTP headers
-	 * @return Returns an array on success or FALSE on failure.
+	 * @return Returns an array on success or false on failure.
 	 */
 	private static function http_parse_headers($r) {
 		$o = [];

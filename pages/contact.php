@@ -10,10 +10,10 @@ if($message != "") {
 
 // save settings
 if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(INPUT_POST, "btn_apply")) === 1) {
-	$form = (array) rex_post('form', 'array', []);
+	$form = rex_post('form', 'array', []);
 
 	// Media fields and links need special treatment
-	$input_media = (array) rex_post('REX_INPUT_MEDIA', 'array', []);
+	$input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
 	$contact = new D2U_Immo\Contact($form['contact_id']);
 	$contact->city = $form['city'];
@@ -37,19 +37,19 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 	}
 	
 	// Redirect to make reload and thus double save impossible
-	if(filter_input(INPUT_POST, "btn_apply") == 1 && $contact !== FALSE) {
-		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$contact->contact_id, "func"=>'edit', "message"=>$message), FALSE));
+	if(intval(filter_input(INPUT_POST, "btn_apply", FILTER_VALIDATE_INT)) === 1 &&$contact !== false) {
+		header("Location: ". rex_url::currentBackendPage(array("entry_id"=>$contact->contact_id, "func"=>'edit', "message"=>$message), false));
 	}
 	else {
-		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), FALSE));
+		header("Location: ". rex_url::currentBackendPage(array("message"=>$message), false));
 	}
 	exit;
 }
 // Delete
-else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
+else if(intval(filter_input(INPUT_POST, "btn_delete", FILTER_VALIDATE_INT)) === 1 || $func === 'delete') {
 	$contact_id = $entry_id;
-	if($contact_id == 0) {
-		$form = (array) rex_post('form', 'array', []);
+	if($contact_id === 0) {
+		$form = rex_post('form', 'array', []);
 		$contact_id = $form['contact_id'];
 	}
 	$contact = new D2U_Immo\Contact($contact_id);
@@ -75,35 +75,35 @@ else if(filter_input(INPUT_POST, "btn_delete") == 1 || $func == 'delete') {
 }
 
 // Eingabeformular
-if ($func == 'edit' || $func == 'clone' || $func == 'add') {
+if ($func === 'edit' || $func === 'clone' || $func === 'add') {
 ?>
 	<form action="<?php print rex_url::currentBackendPage(); ?>" method="post">
 		<div class="panel panel-edit">
 			<header class="panel-heading"><div class="panel-title"><?php print rex_i18n::msg('d2u_immo_contact'); ?></div></header>
 			<div class="panel-body">
-				<input type="hidden" name="form[contact_id]" value="<?php echo ($func == 'edit' ? $entry_id : 0); ?>">
+				<input type="hidden" name="form[contact_id]" value="<?php echo ($func === 'edit' ? $entry_id : 0); ?>">
 				<fieldset>
 					<legend><?php echo rex_i18n::msg('d2u_immo_contact'); ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
 							$contact = new D2U_Immo\Contact($entry_id);
-							$readonly = TRUE;
+							$readonly = true;
 							if(\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_immo[edit_data]'))) {
-								$readonly = FALSE;
+								$readonly = false;
 							}
 							
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_firstname', 'form[firstname]', $contact->firstname, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_lastname', 'form[lastname]', $contact->lastname, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_company', 'form[company]', $contact->company, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_street', 'form[street]', $contact->street, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_house_number', 'form[house_number]', $contact->house_number, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_zip_code', 'form[zip_code]', $contact->zip_code, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_city', 'form[city]', $contact->city, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_country_code', 'form[country_code]', $contact->country_code, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_email', 'form[email]', $contact->email, TRUE, $readonly, 'email');
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_phone', 'form[phone]', $contact->phone, TRUE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_mobile', 'form[mobile]', $contact->mobile, FALSE, $readonly);
-							d2u_addon_backend_helper::form_input('d2u_immo_contact_fax', 'form[fax]', $contact->fax, FALSE, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_firstname', 'form[firstname]', $contact->firstname, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_lastname', 'form[lastname]', $contact->lastname, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_company', 'form[company]', $contact->company, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_street', 'form[street]', $contact->street, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_house_number', 'form[house_number]', $contact->house_number, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_zip_code', 'form[zip_code]', $contact->zip_code, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_city', 'form[city]', $contact->city, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_country_code', 'form[country_code]', $contact->country_code, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_email', 'form[email]', $contact->email, true, $readonly, 'email');
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_phone', 'form[phone]', $contact->phone, true, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_mobile', 'form[mobile]', $contact->mobile, false, $readonly);
+							d2u_addon_backend_helper::form_input('d2u_immo_contact_fax', 'form[fax]', $contact->fax, false, $readonly);
 							d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $contact->picture, $readonly);
 						?>
 					</div>
@@ -139,7 +139,7 @@ if ($func == 'edit' || $func == 'clone' || $func == 'add') {
 //		print d2u_addon_backend_helper::getJS();
 }
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT contact_id, firstname, lastname, company '
 		. 'FROM '. \rex::getTablePrefix() .'d2u_immo_contacts '
 		. 'ORDER BY lastname, firstname ASC';

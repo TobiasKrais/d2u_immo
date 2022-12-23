@@ -185,7 +185,7 @@ class Contact {
 				."street = '". $this->street ."', "
 				."zip_code = '". $this->zip_code ."' ";
 
-		if($this->contact_id == 0) {
+		if($this->contact_id === 0) {
 			$query = "INSERT INTO ". $query;
 		}
 		else {
@@ -194,8 +194,8 @@ class Contact {
 
 		$result = \rex_sql::factory();
 		$result->setQuery($query);
-		if($this->contact_id == 0) {
-			$this->contact_id = $result->getLastId();
+		if($this->contact_id === 0) {
+			$this->contact_id = intval($result->getLastId());
 			$error = $result->hasError();
 		}
 		

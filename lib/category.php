@@ -24,7 +24,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 	/**
 	 * @var Category Father category object
 	 */
-	var $parent_category = FALSE;
+	var $parent_category = false;
 	
 	/**
 	 * @var string Name
@@ -100,10 +100,10 @@ class Category implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Deletes the object in all languages.
-	 * @param int $delete_all If TRUE, all translations and main object are deleted. If 
-	 * FALSE, only this translation will be deleted.
+	 * @param bool $delete_all If true, all translations and main object are deleted. If 
+	 * false, only this translation will be deleted.
 	 */
-	public function delete($delete_all = TRUE) {
+	public function delete($delete_all = true):void {
 		$query_lang = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_categories_lang "
 			."WHERE category_id = ". $this->category_id
 			. ($delete_all ? '' : ' AND clang_id = '. $this->clang_id) ;
@@ -122,7 +122,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 			$result->setQuery($query);
 
 			// reset priorities
-			$this->setPriority(TRUE);			
+			$this->setPriority(true);			
 		}
 
 		\d2u_addon_backend_helper::generateUrlCache('category_id');
@@ -176,14 +176,14 @@ class Category implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Detects whether category is child or not.
-	 * @return boolean TRUE if category has father.
+	 * @return boolean true if category has father.
 	 */
 	public function isChild() {
-		if($this->parent_category === FALSE) {
-			return FALSE;
+		if($this->parent_category === false) {
+			return false;
 		}
 		else {
-			return TRUE;
+			return true;
 		}
 	}
 	
@@ -193,7 +193,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 	 * @param boolean $only_online Show only online properties
 	 * @return Property[] Properties in this category
 	 */
-	public function getProperties($market_type = '', $only_online = FALSE) {
+	public function getProperties($market_type = '', $only_online = false) {
 		$query = "SELECT lang.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
 			."LEFT JOIN ". \rex::getTablePrefix() ."d2u_immo_properties AS properties "
 					."ON lang.property_id = properties.property_id "
@@ -233,7 +233,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 		$query = 'SELECT category_id FROM '. \rex::getTablePrefix() .'d2u_immo_categories_lang '
 				."WHERE clang_id = ". $clang_id ." AND translation_needs_update = 'yes' "
 				.'ORDER BY name';
-		if($type == 'missing') {
+		if($type === 'missing') {
 			$query = 'SELECT main.category_id FROM '. \rex::getTablePrefix() .'d2u_immo_categories AS main '
 					.'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS target_lang '
 						.'ON main.category_id = target_lang.category_id AND target_lang.clang_id = '. $clang_id .' '
@@ -257,10 +257,10 @@ class Category implements \D2U_Helper\ITranslationHelper {
 	
 	/*
 	 * Returns the URL of this object.
-	 * @param string $including_domain TRUE if Domain name should be included
+	 * @param string $including_domain true if Domain name should be included
 	 * @return string URL
 	 */
-	public function getURL($including_domain = FALSE) {
+	public function getURL($including_domain = false) {
 		if($this->url == "") {
 			$parameterArray = [];
 			$parameterArray['category_id'] = $this->category_id;
@@ -283,7 +283,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 	
 	/**
 	 * Updates or inserts the object into database.
-	 * @return boolean TRUE if successful
+	 * @return boolean true if successful
 	 */
 	public function save() {
 		$error = 0;
@@ -292,17 +292,17 @@ class Category implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new Category($this->category_id, $this->clang_id);
 	
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->category_id == 0) {
+		if($this->priority != $pre_save_object->priority || $this->category_id === 0) {
 			$this->setPriority();
 		}
 
-		if($this->category_id == 0 || $pre_save_object != $this) {
+		if($this->category_id === 0 || $pre_save_object != $this) {
 			$query = \rex::getTablePrefix() ."d2u_immo_categories SET "
-					."parent_category_id = ". ($this->parent_category === FALSE ? 0 : $this->parent_category->category_id) .", "
+					."parent_category_id = ". ($this->parent_category === false ? 0 : $this->parent_category->category_id) .", "
 					."priority = ". $this->priority .", "
 					."picture = '". $this->picture ."' ";
 
-			if($this->category_id == 0) {
+			if($this->category_id === 0) {
 				$query = "INSERT INTO ". $query;
 			}
 			else {
@@ -311,8 +311,8 @@ class Category implements \D2U_Helper\ITranslationHelper {
 
 			$result = \rex_sql::factory();
 			$result->setQuery($query);
-			if($this->category_id == 0) {
-				$this->category_id = $result->getLastId();
+			if($this->category_id === 0) {
+				$this->category_id = intval($result->getLastId());
 				$error = $result->hasError();
 			}
 		}
@@ -329,7 +329,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 						."teaser = '". addslashes($this->teaser) ."', "
 						."translation_needs_update = '". $this->translation_needs_update ."', "
 						."updatedate = ". time() .", "
-						."updateuser = '". \rex::getUser()->getLogin() ."' ";
+						."updateuser = '". (\rex::getUser() instanceof rex_user ? \rex::getUser()->getLogin() : '') ."' ";
 
 				$result = \rex_sql::factory();
 				$result->setQuery($query);
@@ -354,7 +354,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 	 * Reassigns priorities in database.
 	 * @param boolean $delete Reorder priority after deletion
 	 */
-	private function setPriority($delete = FALSE) {
+	private function setPriority($delete = false):void {
 		// Pull prios from database
 		$query = "SELECT category_id, priority FROM ". \rex::getTablePrefix() ."d2u_immo_categories "
 			."WHERE category_id <> ". $this->category_id ." ORDER BY priority";
@@ -368,7 +368,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 		
 		// When prio is too high or was deleted, simply add at end 
 		if($this->priority > $result->getRows() || $delete) {
-			$this->priority = $result->getRows() + 1;
+			$this->priority = intval($result->getRows()) + 1;
 		}
 
 		$categories = [];
@@ -381,7 +381,7 @@ class Category implements \D2U_Helper\ITranslationHelper {
 		// Save all prios
 		foreach($categories as $prio => $category_id) {
 			$query = "UPDATE ". \rex::getTablePrefix() ."d2u_immo_categories "
-					."SET priority = ". ($prio + 1) ." " // +1 because array_splice recounts at zero
+					."SET priority = ". (intval($prio) + 1) ." " // +1 because array_splice recounts at zero
 					."WHERE category_id = ". $category_id;
 			$result = \rex_sql::factory();
 			$result->setQuery($query);

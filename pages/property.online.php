@@ -1,7 +1,7 @@
 <?php
 require_once 'property.php';
 
-if ($func == '') {
+if ($func === '') {
 	$query = 'SELECT properties.property_id, lang.name AS propertyname, categories.name AS categoryname, online_status, priority '
 		.'FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
 		.'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
