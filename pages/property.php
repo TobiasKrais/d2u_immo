@@ -52,7 +52,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$property->firing_type = isset($form['firing_type']) ? $form['firing_type'] : [];
 			$property->floor = $form['floor'];
 			$property->floor_type = isset($form['floor_type']) ? $form['floor_type'] : [];
-			$property->ground_plans = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
+			$ground_plans = preg_grep('/^\s*$/s', explode(",", $input_media_list[2]), PREG_GREP_INVERT);
+			$property->ground_plans = is_array($ground_plans) ? $ground_plans : [];
 			$property->hall_warehouse_type = isset($form['hall_warehouse_type']) ? $form['hall_warehouse_type'] : '';
 			$property->heating_type = isset($form['heating_type']) ? $form['heating_type'] : [];
 			$property->house_number = $form['house_number'];
@@ -64,7 +65,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$property->land_type = isset($form['land_type']) ? $form['land_type'] : '';
 			$property->latitude = $form['latitude'];
 			$property->living_area = $form['living_area'];
-			$property->location_plans = preg_grep('/^\s*$/s', explode(",", $input_media_list[3]), PREG_GREP_INVERT);
+			$location_plans = preg_grep('/^\s*$/s', explode(",", $input_media_list[3]), PREG_GREP_INVERT);
+			$property->location_plans = is_array($location_plans) ? $location_plans : [];
 			$property->longitude = $form['longitude'];
 			$property->market_type = $form['market_type'];
 			$property->object_reserved = array_key_exists('object_reserved', $form);
@@ -78,7 +80,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 			$property->parking_space_simple = $form['parking_space_simple'];
 			$property->parking_space_undergroundcarpark = $form['parking_space_undergroundcarpark'];
 			$property->parking_type = $form['parking_type'];
-			$property->pictures = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
+			$pictures = preg_grep('/^\s*$/s', explode(",", $input_media_list[1]), PREG_GREP_INVERT);
+			$property->pictures = is_array($pictures) ? $pictures : [];
 			$property->priority = $form['priority'];
 			$property->publish_address = array_key_exists('publish_address', $form);
 			$property->purchase_price = isset($form['purchase_price']) ? $form['purchase_price'] : 0;
@@ -102,7 +105,8 @@ if (intval(filter_input(INPUT_POST, "btn_save")) === 1 || intval(filter_input(IN
 		$property->description_equipment = $form['lang'][$rex_clang->getId()]['description_equipment'];
 		$property->description_location = $form['lang'][$rex_clang->getId()]['description_location'];
 		$property->description_others = $form['lang'][$rex_clang->getId()]['description_others'];
-		$property->documents = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
+		$documents = preg_grep('/^\s*$/s', explode(",", $input_media_list['1'. $rex_clang->getId()]), PREG_GREP_INVERT);
+		$property->documents = is_array($documents) ? $documents : [];
 		$property->name = $form['lang'][$rex_clang->getId()]['name'];
 		$property->teaser = $form['lang'][$rex_clang->getId()]['teaser'];
 		$property->translation_needs_update = $form['lang'][$rex_clang->getId()]['translation_needs_update'];
