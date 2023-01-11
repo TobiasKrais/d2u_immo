@@ -4,20 +4,20 @@
  */
 class export_lang_helper extends d2u_immo_lang_helper {
 	/**
-	 * @var string[] Array with englisch replacements. Key is the wildcard,
+	 * @var array<string, string> Array with englisch replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_immo_export_linkedin_comment_text' => 'Check out our latest offer. For further information click on the picture.',
 		'd2u_immo_export_linkedin_details' => 'More information can be found on our website.',
 		'd2u_immo_export_linkedin_offers' => 'offers'
 	];
 
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_immo_export_linkedin_comment_text' => 'Unsere aktuellen Angebote: Klicken Sie auf das Bild.',
 		'd2u_immo_export_linkedin_details' => 'Mehr Infos finden Sie auf unserer Webseite.',
 		'd2u_immo_export_linkedin_offers' => 'bietet an'

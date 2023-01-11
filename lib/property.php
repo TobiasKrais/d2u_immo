@@ -852,7 +852,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		$pre_save_object = new Property($this->property_id, $this->clang_id);
 
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_object->priority || $this->property_id === 0) {
+		if($this->priority !== $pre_save_object->priority || $this->property_id === 0) {
 			$this->setPriority();
 		}
 

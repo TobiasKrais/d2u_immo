@@ -246,7 +246,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper {
 		$pre_save_advertisement = new Advertisement($this->ad_id, $this->clang_id);
 	
 		// save priority, but only if new or changed
-		if($this->priority != $pre_save_advertisement->priority || $this->ad_id === 0) {
+		if($this->priority !== $pre_save_advertisement->priority || $this->ad_id === 0) {
 			$this->setPriority();
 		}
 

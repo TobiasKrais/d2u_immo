@@ -4,10 +4,10 @@
  */
 class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper {
 	/**
-	 * @var string[] Array with english replacements. Key is the wildcard,
+	 * @var array<string, string> Array with english replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_english = [
+	protected array $replacements_english = [
 		'd2u_immo_additional_costs' => 'Additional costs',
 		'd2u_immo_animals' => 'Animals allowed?',
 		'd2u_immo_available_from' => 'Available from',
@@ -177,10 +177,10 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper {
 		'd2u_immo_yes' => 'Yes',
 	];
 	/**
-	 * @var string[] Array with german replacements. Key is the wildcard,
+	 * @var array<string, string> Array with german replacements. Key is the wildcard,
 	 * value the replacement. 
 	 */
-	protected $replacements_german = [
+	protected array $replacements_german = [
 		'd2u_immo_additional_costs' => 'Nebenkosten',
 		'd2u_immo_animals' => 'Haustiere erlaubt?',
 		'd2u_immo_available_from' => 'Verfügbar ab',
