@@ -246,7 +246,7 @@ class Provider {
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		// First delete exported objects
 		$exported_properties = ExportedProperty::getAll($this);
 		foreach($exported_properties as $exported_property) {

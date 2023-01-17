@@ -237,34 +237,34 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $flat_sharing_possible = 0;
 	
 	/**
-	 * @var string[] Bath room features as described in OpenImmo value of
+	 * @var array<string> Bath room features as described in OpenImmo value of
 	 * definition "bad".
 	 */
 	var $bath = [];
 	
 	/**
-	 * @var string[] Kitchen features as described in OpenImmo value of definition
+	 * @var array<string> Kitchen features as described in OpenImmo value of definition
 	 * "kueche"
 	 */
 	var $kitchen = [];
 	
 	/**
-	 * @var string[] Floor type as described in OpenImmo value of definition "boden".
+	 * @var array<string> Floor type as described in OpenImmo value of definition "boden".
 	 */
 	var $floor_type = [];
 	
 	/**
-	 * @var string[] Heating type as described in OpenImmo value of definition "heizungsart".
+	 * @var array<string> Heating type as described in OpenImmo value of definition "heizungsart".
 	 */
 	var $heating_type = [];
 	
 	/**
-	 * @var string[] Firing type as described in OpenImmo value of definition "befeuerung".
+	 * @var array<string> Firing type as described in OpenImmo value of definition "befeuerung".
 	 */
 	var $firing_type = [];
 	
 	/**
-	 * @var string[] Elevator type as described in OpenImmo value of definition "fahrstuhl".
+	 * @var array<string> Elevator type as described in OpenImmo value of definition "fahrstuhl".
 	 */
 	var $elevator = [];
 	
@@ -279,7 +279,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $cable_sat_tv = true;
 	
 	/**
-	 * @var string[] Broadband type as described in OpenImmo value of definition "breitband_zugang".
+	 * @var array<string> Broadband type as described in OpenImmo value of definition "breitband_zugang".
 	 */
 	var $broadband_internet = [];
 	
@@ -309,17 +309,17 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $including_warm_water = true;
 	
 	/**
-	 * @var string[] Picture filenames
+	 * @var array<string> Picture filenames
 	 */
 	var $pictures = [];
 	
 	/**
-	 * @var string[] Filenames of available ground plans.
+	 * @var array<string> Filenames of available ground plans.
 	 */
 	var $ground_plans = [];
 	
 	/**
-	 * @var string[] Filenames of location plans.
+	 * @var array<string> Filenames of location plans.
 	 */
 	var $location_plans = [];
 	
@@ -409,7 +409,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	var $description_others = "";
 	
 	/**
-	 * @var string[] Language specific documents of the property
+	 * @var array<string> Language specific documents of the property
 	 */
 	var $documents = [];
 		
@@ -657,7 +657,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 	 * @param int $clang_id Redaxo clang id.
 	 * @param string $market_type KAUF, MIETE_PACHT, ERBPACHT, LEASING or empty (all)
 	 * @param boolean $only_online Show only online properties
-	 * @return Properties[] Array with Property objects.
+	 * @return array<Property> Array with Property objects.
 	 */
 	public static function getAll($clang_id, $market_type = '', $only_online = false) {
 		$query = "SELECT lang.property_id FROM ". \rex::getTablePrefix() ."d2u_immo_properties_lang AS lang "
@@ -684,7 +684,7 @@ class Property implements \D2U_Helper\ITranslationHelper {
 		
 		$properties = [];
 		for($i = 0; $i < $result->getRows(); $i++) {
-			$properties[] = new Property($result->getValue("property_id"), $clang_id);
+			$properties[] = new Property((int) $result->getValue("property_id"), $clang_id);
 			$result->next();
 		}
 		return $properties;

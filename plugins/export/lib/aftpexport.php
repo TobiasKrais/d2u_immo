@@ -11,12 +11,12 @@ abstract class AFTPExport extends AExport {
 	protected $cache_path = "";
 	
 	/**
-	 * @var string[] list of documents that need to be added to ZIP export file. 
+	 * @var array<string> list of documents that need to be added to ZIP export file. 
 	 */
 	protected $documents_for_zip = [];
 	
 	/**
-	 * @var string[] list of files that need to be added to ZIP export file. 
+	 * @var array<string> list of files that need to be added to ZIP export file. 
 	 */
 	protected $files_for_zip = [];
 	

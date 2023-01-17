@@ -98,7 +98,7 @@ class ExportedProperty {
 	/**
 	 * Deletes the object.
 	 */
-	public function delete() {
+	public function delete():void {
 		$query = "DELETE FROM ". \rex::getTablePrefix() ."d2u_immo_export_properties "
 			."WHERE property_id = ". $this->property_id ." AND provider_id = ". $this->provider_id;
 		$result_lang = \rex_sql::factory();
