@@ -2,34 +2,34 @@
 	<div class="col-xs-4">Art der Karte:</div>
 	<div class="col-xs-8">
 		<?php
-			$map_types = [];
-			if(rex_addon::get('geolocation')->isAvailable()) {
-				$map_types['geolocation'] = 'Geolocation Addon: Standardkarte';
-				$mapsets = \Geolocation\mapset::query()
-					->orderBy('title')
-					->findValues('title', 'id');
-				foreach($mapsets as $id => $name ){
-					$map_types[$id] = 'Geolocation Addon: '. $name;
-				}
-			}
-			if(rex_addon::get('osmproxy')->isAvailable()) {
-				$map_types['osm'] = 'OSM Proxy Addon: OpenStreetMap Karte';
-			}
-			$map_types['google'] = 'Google Maps'. (rex_config::get('d2u_helper', 'maps_key', '') != '' ? "" : " (in den Einstellung des D2U Helper Addons muss hierfür noch ein Google Maps API Key eingegeben werden)");
+            $map_types = [];
+            if (rex_addon::get('geolocation')->isAvailable()) {
+                $map_types['geolocation'] = 'Geolocation Addon: Standardkarte';
+                $mapsets = \Geolocation\mapset::query()
+                    ->orderBy('title')
+                    ->findValues('title', 'id');
+                foreach ($mapsets as $id => $name) {
+                    $map_types[$id] = 'Geolocation Addon: '. $name;
+                }
+            }
+            if (rex_addon::get('osmproxy')->isAvailable()) {
+                $map_types['osm'] = 'OSM Proxy Addon: OpenStreetMap Karte';
+            }
+            $map_types['google'] = 'Google Maps'. ('' != rex_config::get('d2u_helper', 'maps_key', '') ? '' : ' (in den Einstellung des D2U Helper Addons muss hierfür noch ein Google Maps API Key eingegeben werden)');
 
-			if(count($map_types) > 0) {
-				print '<select name="REX_INPUT_VALUE[1]" class="form-control">';
-				foreach ($map_types as $map_type_id => $map_type_name) {
-					echo '<option value="'. $map_type_id .'"';
+            if (count($map_types) > 0) {
+                echo '<select name="REX_INPUT_VALUE[1]" class="form-control">';
+                foreach ($map_types as $map_type_id => $map_type_name) {
+                    echo '<option value="'. $map_type_id .'"';
 
-					if ("REX_VALUE[1]" == $map_type_id) {
-						echo ' selected="selected" ';
-					}
-					echo '>'. $map_type_name .'</option>';
-				}
-				print '</select>';
-			}
-		?>
+                    if ('REX_VALUE[1]' == $map_type_id) {
+                        echo ' selected="selected" ';
+                    }
+                    echo '>'. $map_type_name .'</option>';
+                }
+                echo '</select>';
+            }
+        ?>
 	</div>
 </div>
 <div class="row">

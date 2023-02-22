@@ -1,4 +1,5 @@
 <?php
+
 $func = rex_request('func', 'string');
 $provider_id = rex_request('provider_id', 'int');
 $property_id = rex_request('property_id', 'int');
@@ -6,119 +7,113 @@ $property_id = rex_request('property_id', 'int');
 /*
  * Do actions
  */
-if ($func == 'online') {
-	// Add to next export
-	$export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
-	$export_property->addToExport();
-}
-else if ($func == 'offline') {
-	// Remove to next export
-	$export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
-	$export_property->removeFromExport();
-}
-else if ($func == 'all_online') {
-	// Add all to next export
-	D2U_Immo\ExportedProperty::addAllToExport($provider_id);
-}
-else if ($func == 'all_offline') {
-	// Remove all from next export
-	D2U_Immo\ExportedProperty::removeAllFromExport($provider_id);
-}
-else if ($func == 'export') {
-	// Export
-	$provider = new D2U_Immo\Provider($provider_id);
-	$error = $provider->export();
-	if($error != "") {
-		print rex_view::error($provider->name .": ". $error);
-	}
-	else {
-		print rex_view::success($provider->name .": ". rex_i18n::msg('d2u_immo_export_success'));
-	}
+if ('online' == $func) {
+    // Add to next export
+    $export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
+    $export_property->addToExport();
+} elseif ('offline' == $func) {
+    // Remove to next export
+    $export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
+    $export_property->removeFromExport();
+} elseif ('all_online' == $func) {
+    // Add all to next export
+    D2U_Immo\ExportedProperty::addAllToExport($provider_id);
+} elseif ('all_offline' == $func) {
+    // Remove all from next export
+    D2U_Immo\ExportedProperty::removeAllFromExport($provider_id);
+} elseif ('export' == $func) {
+    // Export
+    $provider = new D2U_Immo\Provider($provider_id);
+    $error = $provider->export();
+    if ('' != $error) {
+        echo rex_view::error($provider->name .': '. $error);
+    } else {
+        echo rex_view::success($provider->name .': '. rex_i18n::msg('d2u_immo_export_success'));
+    }
 }
 
 // Fetch providers
 $providers = D2U_Immo\Provider::getAll();
 
-print '<table class="table table-striped table-hover">';
-if(count($providers) > 0) {
-	$properties = D2U_Immo\Property::getAll(intval(rex_config::get("d2u_helper", "default_lang")), '', true);
+echo '<table class="table table-striped table-hover">';
+if (count($providers) > 0) {
+    $properties = D2U_Immo\Property::getAll((int) rex_config::get('d2u_helper', 'default_lang'), '', true);
 
-	print "<thead>";
-	print "<tr>";
-	print "<th><b>". rex_i18n::msg('d2u_immo_property') ."</b></th>";
-	foreach ($providers as $provider) {
-		print "<th><b>". $provider->name ."</b></th>";
-	}
-	print "</tr>";
-	print "<tr>";
-	print "<td>&nbsp;</td>";
-	foreach ($providers as $provider) {
-		print "<td>";
-		if($provider->isExportPossible()) {
-			print "<a href='". rex_url::currentBackendPage(array('func'=>'export', 'provider_id'=>$provider->provider_id)) ."'>"
-				. "<button class='btn btn-apply'>". rex_i18n::msg('d2u_immo_export_start') ."</button></a>";
-		}
-		print "</td>";
-	}
-	print "</tr>";
-	print "<tr>";
-	print "<td><b>". rex_i18n::msg('d2u_immo_export_last_export_date') ."</b></td>";
-	foreach ($providers as $provider) {
-		print "<td>";
-		if($provider->getLastExportTimestamp() != "") {
-			print date("d.m.Y H:i", strtotime($provider->getLastExportTimestamp())) ." ". rex_i18n::msg('d2u_immo_export_uhr');
-		}
-		print "</td>";
-	}
-	print "</tr>";print "</thead>";
-	print "<tbody>";
+    echo '<thead>';
+    echo '<tr>';
+    echo '<th><b>'. rex_i18n::msg('d2u_immo_property') .'</b></th>';
+    foreach ($providers as $provider) {
+        echo '<th><b>'. $provider->name .'</b></th>';
+    }
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td>&nbsp;</td>';
+    foreach ($providers as $provider) {
+        echo '<td>';
+        if ($provider->isExportPossible()) {
+            echo "<a href='". rex_url::currentBackendPage(['func' => 'export', 'provider_id' => $provider->provider_id]) ."'>"
+                . "<button class='btn btn-apply'>". rex_i18n::msg('d2u_immo_export_start') .'</button></a>';
+        }
+        echo '</td>';
+    }
+    echo '</tr>';
+    echo '<tr>';
+    echo '<td><b>'. rex_i18n::msg('d2u_immo_export_last_export_date') .'</b></td>';
+    foreach ($providers as $provider) {
+        echo '<td>';
+        if ('' != $provider->getLastExportTimestamp()) {
+            echo date('d.m.Y H:i', strtotime($provider->getLastExportTimestamp())) .' '. rex_i18n::msg('d2u_immo_export_uhr');
+        }
+        echo '</td>';
+    }
+    echo '</tr>';
+    echo '</thead>';
+    echo '<tbody>';
 
-	// Only if properties are available
-	if(count($properties) > 0) {
-		// Possibility to add all properties to export
-		print "<tr>";
-		print '<td><i>'. rex_i18n::msg('d2u_immo_export_all_online') ."</i></td>";
-		foreach ($providers as $provider) {
-			print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'all_online', 'provider_id'=>$provider->provider_id))
-					.'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
-		}
-		print "</tr>";
-		// Posibility to remove all properties from export
-		print "<tr>";
-		print "<td><i>". rex_i18n::msg('d2u_immo_export_all_offline') ."</i></td>";
-		foreach ($providers as $provider) {
-			print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'all_offline', 'provider_id'=>$provider->provider_id))
-					.'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
-		}
-		print "</tr>";
-		// How many properties are set for export?
-		print "<tr>";
-		print "<td><i>". rex_i18n::msg('d2u_immo_export_number_online') ."</i></td>";
-		foreach ($providers as $provider) {
-			print '<td><i>'. $provider->getNumberOnlineProperties() ."</i></td>";
-		}
-		print "</tr>";
+    // Only if properties are available
+    if (count($properties) > 0) {
+        // Possibility to add all properties to export
+        echo '<tr>';
+        echo '<td><i>'. rex_i18n::msg('d2u_immo_export_all_online') .'</i></td>';
+        foreach ($providers as $provider) {
+            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'all_online', 'provider_id' => $provider->provider_id])
+                    .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
+        }
+        echo '</tr>';
+        // Posibility to remove all properties from export
+        echo '<tr>';
+        echo '<td><i>'. rex_i18n::msg('d2u_immo_export_all_offline') .'</i></td>';
+        foreach ($providers as $provider) {
+            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'all_offline', 'provider_id' => $provider->provider_id])
+                    .'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
+        }
+        echo '</tr>';
+        // How many properties are set for export?
+        echo '<tr>';
+        echo '<td><i>'. rex_i18n::msg('d2u_immo_export_number_online') .'</i></td>';
+        foreach ($providers as $provider) {
+            echo '<td><i>'. $provider->getNumberOnlineProperties() .'</i></td>';
+        }
+        echo '</tr>';
 
-		foreach($properties as $property) {
-			print "<tr>";
-			print "<td>". $property->name ."</td>";
-			foreach ($providers as $provider) {
-				$exported_property = new D2U_Immo\ExportedProperty($property->property_id, $provider->provider_id);
-				if($exported_property->isSetForExport()) {
-					print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'offline', 'provider_id'=>$provider->provider_id, 'property_id'=>$property->property_id))
-						.'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
-				}
-				else {
-					print '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array('func'=>'online', 'provider_id'=>$provider->provider_id, 'property_id'=>$property->property_id))
-						.'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
-				}
-			}
-			print "</tr>";
-		}
-	}
-	print "</tbody>";
+        foreach ($properties as $property) {
+            echo '<tr>';
+            echo '<td>'. $property->name .'</td>';
+            foreach ($providers as $provider) {
+                $exported_property = new D2U_Immo\ExportedProperty($property->property_id, $provider->provider_id);
+                if ($exported_property->isSetForExport()) {
+                    echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'offline', 'provider_id' => $provider->provider_id, 'property_id' => $property->property_id])
+                        .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
+                } else {
+                    echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'online', 'provider_id' => $provider->provider_id, 'property_id' => $property->property_id])
+                        .'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
+                }
+            }
+            echo '</tr>';
+        }
+    }
+    echo '</tbody>';
+} else {
+    echo '<tr><th><b>'. rex_i18n::msg('d2u_immo_export_no_providers_found') .'</b></th></tr>';
 }
-else {
-	print '<tr><th><b>'. rex_i18n::msg('d2u_immo_export_no_providers_found') .'</b></th></tr>';
-}
-print "</table>";
+echo '</table>';

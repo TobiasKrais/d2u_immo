@@ -1,8 +1,9 @@
 <?php
+
 $sql = rex_sql::factory();
 
 // Create database
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_export_provider (
+$sql->setQuery('CREATE TABLE IF NOT EXISTS '. rex::getTablePrefix() ."d2u_immo_export_provider (
 	provider_id int(10) unsigned NOT NULL auto_increment,
 	name varchar(50) collate utf8mb4_unicode_ci default NULL,
 	type varchar(50) collate utf8mb4_unicode_ci default NULL,
@@ -26,8 +27,8 @@ $sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_e
 	twitter_id varchar(255) collate utf8mb4_unicode_ci default NULL,
 	PRIMARY KEY (provider_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
- 
-$sql->setQuery("CREATE TABLE IF NOT EXISTS ". rex::getTablePrefix() ."d2u_immo_export_properties (
+
+$sql->setQuery('CREATE TABLE IF NOT EXISTS '. rex::getTablePrefix() ."d2u_immo_export_properties (
 	property_id int(10) NOT NULL,
 	provider_id int(10) NOT NULL,
 	export_action varchar(10) collate utf8mb4_unicode_ci default 'online',
