@@ -33,6 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.1.7-DEV:</p>
 <ul>
+	<li>PHP-CS-Fixer Code Verbesserungen.</li>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
 	<li>rexstan Anpassungen</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" kann jetzt auch Geolocation Karten verwenden.</li>
