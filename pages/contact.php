@@ -57,7 +57,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
     $uses_properties = $contact->getProperties();
 
     // If not used, delete
-    if (0 == count($uses_properties)) {
+    if (0 === count($uses_properties)) {
         $contact->delete();
     } else {
         $message = '<ul>';

@@ -75,7 +75,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
     $uses_categories = $category->getChildren();
 
     // If not used, delete
-    if (0 == count($uses_properties) && 0 == count($uses_categories)) {
+    if (0 === count($uses_properties) && 0 == count($uses_categories)) {
         $category->delete(true);
     } else {
         $message = '<ul>';
