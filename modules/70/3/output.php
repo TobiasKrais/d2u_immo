@@ -13,7 +13,7 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="row">';
             echo '<div class="col-12">';
 
-            echo '<a href="'. $property->getURL() .'"><div class="expose">';
+            echo '<a href="'. $property->getUrl() .'"><div class="expose">';
             echo '<div class="row">';
 
             echo '<div class="col-12 col-sm-4 col-lg-3">';

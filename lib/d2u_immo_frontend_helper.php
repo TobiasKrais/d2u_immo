@@ -24,7 +24,7 @@ class d2u_immo_frontend_helper
             foreach (rex_clang::getAllIds(true) as $this_lang_key) {
                 $lang_property = new D2U_Immo\Property($property_id, $this_lang_key);
                 if ('delete' != $lang_property->translation_needs_update) {
-                    $alternate_URLs[$this_lang_key] = $lang_property->getURL();
+                    $alternate_URLs[$this_lang_key] = $lang_property->getUrl();
                 }
             }
         } elseif (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'category_id' === $url_namespace) {
@@ -35,7 +35,7 @@ class d2u_immo_frontend_helper
             foreach (rex_clang::getAllIds(true) as $this_lang_key) {
                 $lang_category = new D2U_Immo\Category($category_id, $this_lang_key);
                 if ('delete' != $lang_category->translation_needs_update) {
-                    $alternate_URLs[$this_lang_key] = $lang_category->getURL();
+                    $alternate_URLs[$this_lang_key] = $lang_category->getUrl();
                 }
             }
         }

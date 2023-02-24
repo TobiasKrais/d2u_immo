@@ -49,7 +49,7 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="row">';
             echo '<div class="col-12">';
 
-            echo '<a href="'. $property->getURL() .'"><div class="expose">';
+            echo '<a href="'. $property->getUrl() .'"><div class="expose">';
             echo '<div class="row">';
 
             echo '<div class="col-12 col-sm-4 col-lg-3">';
@@ -162,8 +162,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<ul>';
         echo '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
         //	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
-        echo '<li><small><a href="'. $property->getURL(true).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
-        echo '<li><small><a href="'. $property->getURL(true).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
+        echo '<li><small><a href="'. $property->getUrl(true).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
+        echo '<li><small><a href="'. $property->getUrl(true).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
         if ('MIETE_PACHT' == $property->market_type && 'GEWERBE' != $property->type_of_use && '' != $d2u_immo->getConfig('even_informative_pdf', '')) {
             echo '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
         }
@@ -1103,7 +1103,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-12">';
         echo '<fieldset><legend>'. $tag_open .'d2u_immo_recommendation_title'. $tag_close .'</legend>';
         $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
-				hidden|immo_url|'. $property->getURL(true) .'|REQUEST
+				hidden|immo_url|'. $property->getUrl(true) .'|REQUEST
 				hidden|immo_contact_mail|'. $property->contact->email .'|REQUEST
 				hidden|immo_contact_name|'. $property->contact->firstname .' '. $property->contact->lastname .'|REQUEST
 

@@ -221,7 +221,7 @@ class SocialExportLinkedIn extends AExport
 
                     // <submitted-url>http://www.meier-krantechnik.de/de/produkte/gebrauchte-krane?action=detail&item=13</submitted-url>
                     $submitted_url = $xml->createElement('submitted-url');
-                    $submitted_url->appendChild($xml->createTextNode($property->getURL(true)));
+                    $submitted_url->appendChild($xml->createTextNode($property->getUrl(true)));
                     $content->appendChild($submitted_url);
 
                     // <submitted-image-url>http://www.meier-krantechnik.de/index.php?rex_img_type=d2u_baumaschinen_list&amp;rex_img_file=sjjdc_826.jpg</submitted-image-url>
@@ -252,7 +252,7 @@ class SocialExportLinkedIn extends AExport
                 // Post on group stream: prepare XML
                 else {
                     $title_text = $this->provider->company_name .' '. Sprog\Wildcard::get('d2u_immo_export_linkedin_offers', $this->provider->clang_id) .': '. $property->name;
-                    $summary_text = Sprog\Wildcard::get('d2u_immo_export_linkedin_details', $this->provider->clang_id) .' '. $property->getURL(true);
+                    $summary_text = Sprog\Wildcard::get('d2u_immo_export_linkedin_details', $this->provider->clang_id) .' '. $property->getUrl(true);
 
                     // <post>
                     $post = $xml->createElement('post');
