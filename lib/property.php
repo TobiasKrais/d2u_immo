@@ -665,7 +665,7 @@ class Property implements \D2U_Helper\ITranslationHelper
      * Get objects concerning translation updates.
      * @param int $clang_id Redaxo language ID
      * @param string $type 'update' or 'missing'
-     * @return Country[] array with country objects
+     * @return array<Property> array with property objects
      */
     public static function getTranslationHelperObjects($clang_id, $type)
     {
@@ -696,7 +696,7 @@ class Property implements \D2U_Helper\ITranslationHelper
 
     /**
      * Returns the URL of this object.
-     * @param string $including_domain true if Domain name should be included
+     * @param bool $including_domain true if Domain name should be included
      * @return string URL
      */
     public function getUrl($including_domain = false)
