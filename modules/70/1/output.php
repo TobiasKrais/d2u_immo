@@ -157,7 +157,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
     }
 
-    if ('' == $print) {
+    if ('' === $print) {
         echo '<div class="col-12 expose-navi d-print-none">';
         echo '<ul>';
         echo '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
@@ -178,7 +178,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
 
     // Tabs
-    if ('' == $print) {
+    if ('' === $print) {
         echo '<div class="col-12 d-print-none">';
         echo '<ul class="nav nav-pills" id="expose_tabs">';
         echo '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></a></li>';
@@ -197,7 +197,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
     }
 
-    if ('' == $print) {
+    if ('' === $print) {
         echo '<div class="col-12">'; // START div containing tab content
         echo '<div class="tab-content">'; // START tab content
         echo '<div id="tab_overview" class="tab-pane fade active show immo-tab">'; // START tab overview
@@ -239,7 +239,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     echo '<div class="row page-break-avoid">';
 
-    if ('KAUF' == strtoupper($property->market_type)) {
+    if ('KAUF' === strtoupper($property->market_type)) {
         if ($property->purchase_price > 0) {
             echo '<div class="col-6">'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</div>';
             echo '<div class="col-6"><b>'. number_format($property->purchase_price, 0, ',', '.') .',-&nbsp;'. $property->currency_code .'</b></div>';
@@ -275,11 +275,11 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
     }
 
-    if ('HAUS' == strtoupper($property->object_type) || 'WOHNUNG' == strtoupper($property->object_type) || 'BUERO_PRAXEN' == strtoupper($property->object_type)) {
+    if ('HAUS' === strtoupper($property->object_type) || 'WOHNUNG' === strtoupper($property->object_type) || 'BUERO_PRAXEN' === strtoupper($property->object_type)) {
         if ($property->living_area > 0) {
-            if ('HAUS' == strtoupper($property->object_type) || 'WOHNUNG' == strtoupper($property->object_type)) {
+            if ('HAUS' === strtoupper($property->object_type) || 'WOHNUNG' === strtoupper($property->object_type)) {
                 echo '<div class="col-6">'. $tag_open .'d2u_immo_living_area'. $tag_close .':</div>';
-            } elseif ('BUERO_PRAXEN' == strtoupper($property->object_type)) {
+            } elseif ('BUERO_PRAXEN' === strtoupper($property->object_type)) {
                 echo '<div class="col-6">'. $tag_open .'d2u_immo_office_area'. $tag_close .':</div>';
             }
             echo '<div class="col-6">'. number_format($property->living_area, 2, ',', '.') .'&nbsp;m²</div>';
@@ -448,7 +448,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-12">&nbsp;</div>';
     }
 
-    if (('HAUS' == strtoupper($property->object_type) || 'WOHNUNG' == strtoupper($property->object_type) || 'BUERO_PRAXEN' == strtoupper($property->object_type))
+    if (('HAUS' === strtoupper($property->object_type) || 'WOHNUNG' === strtoupper($property->object_type) || 'BUERO_PRAXEN' === strtoupper($property->object_type))
         && (count($property->bath) > 0 || count($property->kitchen) > 0 || count($property->floor_type) > 0 || count($property->elevator) > 0 || $property->cable_sat_tv || count($property->broadband_internet) > 0)) {
         if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
@@ -578,7 +578,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
 
     echo '</div>'; // END row overview
-    if ('' == $print) {
+    if ('' === $print) {
         echo '</div>'; // END tab overview
     }
     // End Overview
@@ -799,7 +799,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     // End Map
     // Calculator
-    if ('KAUF' == $property->market_type && '' == $print) {
+    if ('KAUF' == $property->market_type && '' === $print) {
         echo '<div id="tab_calculator" class="tab-pane immo-tab fade">'; // START tab calculator
         echo '<div class="row">';
         echo '<div class="col-12">';
@@ -1052,7 +1052,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
         echo '</div>';  // END tab calculator
     }
-    if ('' == $print) {
+    if ('' === $print) {
         echo '<div id="tab_request" class="tab-pane immo-tab fade">'; // START tab request
         echo '<div class="col-12">';
         echo '<fieldset><legend>'. $tag_open .'d2u_immo_form_title'. $tag_close .'</legend>';
@@ -1146,7 +1146,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>'; // END tab recommendation
         // End recommendation form
     }
-    if ('' == $print) {
+    if ('' === $print) {
         echo '</div>'; // END tab content
         echo '</div>'; // END div containing tab content
     }
