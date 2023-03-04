@@ -572,7 +572,7 @@ class Property implements \D2U_Helper\ITranslationHelper
     /**
      * Get all properties that are selected for window advertising.
      * @param int $clang_id redaxo clang id
-     * @return Properties[] array with Property objects
+     * @return Property[] array with Property objects
      */
     public static function getAllWindowAdvertisingProperties($clang_id)
     {
