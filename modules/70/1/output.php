@@ -157,7 +157,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
     }
 
-    if ('' === $print) {
+    if (null === $print) {
         echo '<div class="col-12 expose-navi d-print-none">';
         echo '<ul>';
         echo '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
@@ -178,7 +178,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
 
     // Tabs
-    if ('' === $print) {
+    if (null === $print) {
         echo '<div class="col-12 d-print-none">';
         echo '<ul class="nav nav-pills" id="expose_tabs">';
         echo '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></a></li>';
@@ -197,7 +197,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
     }
 
-    if ('' === $print) {
+    if (null === $print) {
         echo '<div class="col-12">'; // START div containing tab content
         echo '<div class="tab-content">'; // START tab content
         echo '<div id="tab_overview" class="tab-pane fade active show immo-tab">'; // START tab overview
@@ -380,7 +380,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '</div>'; // END short info
     echo '</div>';
     echo '</div>'; // END overview picture and short info
-    if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+    if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
         echo '</div>';
     }
 
@@ -390,7 +390,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             && 'parken' != strtolower($property->object_type)
             && 'projektiert' != strtolower($property->condition_type)
             && strlen($property->energy_pass) > 5) {
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_energy_pass'. $tag_close .'</h2></div>';
@@ -442,7 +442,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
         echo '</div>';
         echo '</div>';  // END energy pass
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
         }
         echo '<div class="col-12">&nbsp;</div>';
@@ -450,7 +450,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
     if (('HAUS' === strtoupper($property->object_type) || 'WOHNUNG' === strtoupper($property->object_type) || 'BUERO_PRAXEN' === strtoupper($property->object_type))
         && (count($property->bath) > 0 || count($property->kitchen) > 0 || count($property->floor_type) > 0 || count($property->elevator) > 0 || $property->cable_sat_tv || count($property->broadband_internet) > 0)) {
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_equipment'. $tag_close .'</h2></div>';
@@ -513,60 +513,60 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';  // END detail facts
 
         echo '<div class="col-12">&nbsp;</div>';
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
         }
     }
 
     if ('' != $property->description) {
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description'. $tag_close .'</h2></div>';
         echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
         }
     }
 
     if ('' != $property->description_location) {
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_location'. $tag_close .'</h2></div>';
         echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_location) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
         }
     }
 
     if ('' != $property->description_equipment) {
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_equipment'. $tag_close .'</h2></div>';
         echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_equipment) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
         }
     }
 
     if ('' != $property->description_others) {
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_others'. $tag_close .'</h2></div>';
         echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_others) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
-        if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+        if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
         }
     }
 
-    if ('' != $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
+    if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
         echo '<div class="row page-break-avoid">';
     }
     echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_courtage'. $tag_close .'</h2></div>';
@@ -578,7 +578,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
 
     echo '</div>'; // END row overview
-    if ('' === $print) {
+    if (null === $print) {
         echo '</div>'; // END tab overview
     }
     // End Overview
@@ -782,7 +782,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             } catch (Exception $e) {
             }
 
-            echo \Geolocation\mapset::take($map_type)
+            echo \Geolocation\mapset::take((int) $map_type)
                 ->attributes('id', $map_id)
                 ->dataset('position', [$property->latitude, $property->longitude])
                 ->dataset('center', [[$property->latitude, $property->longitude], 15])
@@ -1052,7 +1052,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
         echo '</div>';  // END tab calculator
     }
-    if ('' === $print) {
+    if (null === $print) {
         echo '<div id="tab_request" class="tab-pane immo-tab fade">'; // START tab request
         echo '<div class="col-12">';
         echo '<fieldset><legend>'. $tag_open .'d2u_immo_form_title'. $tag_close .'</legend>';
@@ -1146,7 +1146,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>'; // END tab recommendation
         // End recommendation form
     }
-    if ('' === $print) {
+    if (null === $print) {
         echo '</div>'; // END tab content
         echo '</div>'; // END div containing tab content
     }
@@ -1251,7 +1251,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 		}
 	});
 	<?php
-        if ('' != $print) {
+        if (null !== $print) {
             echo 'window.print();';
         }
     ?>
