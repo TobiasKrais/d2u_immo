@@ -203,7 +203,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
      */
     public function getUrl($including_domain = false)
     {
-        if ('' == $this->url) {
+        if ('' === $this->url) {
             $d2u_immo = rex_addon::get('d2u_immo');
 
             $parameterArray = [];
@@ -213,7 +213,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
         }
 
         if ($including_domain) {
-            if (rex_addon::get('yrewrite') && rex_addon::get('yrewrite')->isAvailable()) {
+            if (\rex_addon::get('yrewrite') instanceof \rex_addon_interface && rex_addon::get('yrewrite')->isAvailable()) {
                 return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
             }
 

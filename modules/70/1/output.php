@@ -15,13 +15,13 @@ if (!function_exists('sendRecommendation')) {
             }
 
             $mail = new rex_mailer();
-            $mail->IsHTML(false);
+            $mail->isHTML(false);
             $mail->CharSet = 'utf-8';
             $mail->From = $fields['immo_contact_mail'];
             $mail->FromName = $fields['immo_contact_name'];
             $mail->Sender = $fields['immo_contact_mail'];
 
-            $mail->AddAddress($fields['receipient_mail'], $fields['receipient_name']);
+            $mail->addAddress($fields['receipient_mail'], $fields['receipient_name']);
             $mail->addReplyTo($fields['sender_mail'], $fields['sender_name']);
             $mail->Subject = $fields['immo_name'];
             $mail_body = 'Guten Tag '. $fields['receipient_name'] .",\n\n";

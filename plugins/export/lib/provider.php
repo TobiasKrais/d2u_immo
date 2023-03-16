@@ -169,9 +169,9 @@ class Provider
         $d2u_immo = rex_addon::get('d2u_immo');
         if ($d2u_immo->hasConfig('export_failure_email') && $error) {
             $mail = new rex_mailer();
-            $mail->IsHTML(true);
+            $mail->isHTML(true);
             $mail->CharSet = 'utf-8';
-            $mail->AddAddress(trim($d2u_immo->getConfig('export_failure_email')));
+            $mail->addAddress(trim($d2u_immo->getConfig('export_failure_email')));
             $mail->Subject = rex_i18n::msg('d2u_immo_export_failure_report');
             $mail->Body = implode('<br>', $message);
             $mail->Send();
