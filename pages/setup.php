@@ -31,7 +31,7 @@ $d2u_module_manager->showManagerList();
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 
-<p>1.1.7-DEV:</p>
+<p>1.1.7:</p>
 <ul>
 	<li>PHP-CS-Fixer Code Verbesserungen.</li>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
