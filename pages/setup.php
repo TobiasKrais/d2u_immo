@@ -35,8 +35,8 @@ $d2u_module_manager->showManagerList();
 <ul>
 	<li>PHP-CS-Fixer Code Verbesserungen.</li>
 	<li>.github Verzeichnis aus Installer Action ausgeschlossen.</li>
-	<li>rexstan Anpassungen</li>
-	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" kann jetzt auch Geolocation Karten verwenden.</li>
+	<li>Erste rexstan Anpassungen</li>
+	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" kann jetzt auch Geolocation Karten verwenden. Außerdem Formular mit Formularnamen versehen um bessere YForm Spamprotection Kompatibilität bei mehreren Formularen auf einer Seite herzustellen.</li>
 	<li>Modul 70-3 "D2U Immo Addon - Ausgabe Kategorie" Bugfix. Überflüssiger Code hatte in Verbindung mit dem URL Addon 2 zu Fehler geführt.</li>
 </ul>
 <p>1.1.6:</p>
