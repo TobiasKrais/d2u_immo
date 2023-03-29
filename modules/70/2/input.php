@@ -9,11 +9,11 @@ $selected_contact_id = 'REX_VALUE[2]';
 	</div>
 	<div class="col-xs-8">
 		<input <?php if ('REX_VALUE[1]' != 'Nein') {
-		echo 'checked';
-		} ?> type="radio" name="REX_INPUT_VALUE[1]" value="Ja">&nbsp;Ja&nbsp;&nbsp;&nbsp;
+        echo 'checked';
+        } ?> type="radio" name="REX_INPUT_VALUE[1]" value="Ja">&nbsp;Ja&nbsp;&nbsp;&nbsp;
 		<input <?php if ('REX_VALUE[1]' == 'Nein') {
-		echo 'checked';
-		} ?> type="radio" name="REX_INPUT_VALUE[1]" value="Nein">&nbsp;Nein
+        echo 'checked';
+        } ?> type="radio" name="REX_INPUT_VALUE[1]" value="Nein">&nbsp;Nein
 	</div>
 </div>
 <div class="row">
