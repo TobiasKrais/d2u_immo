@@ -1,130 +1,130 @@
 <?php
-
-$sql = rex_sql::factory();
 // Install database
-$sql->setQuery('CREATE TABLE IF NOT EXISTS '. \rex::getTablePrefix() .'d2u_immo_contacts (
-	contact_id int(10) unsigned NOT NULL auto_increment,
-	firstname varchar(50) collate utf8mb4_unicode_ci default NULL,
-	lastname varchar(50) collate utf8mb4_unicode_ci NOT NULL,
-	company varchar(100) collate utf8mb4_unicode_ci default NULL,
-	street varchar(100) collate utf8mb4_unicode_ci default NULL,
-	house_number varchar(5) collate utf8mb4_unicode_ci default NULL,
-	zip_code varchar(10) collate utf8mb4_unicode_ci default NULL,
-	city varchar(255) collate utf8mb4_unicode_ci default NULL,
-	country_code varchar(3) collate utf8mb4_unicode_ci default NULL,
-	phone varchar(50) collate utf8mb4_unicode_ci default NULL,
-	fax varchar(50) collate utf8mb4_unicode_ci default NULL,
-	mobile varchar(50) collate utf8mb4_unicode_ci default NULL,
-	email varchar(255) collate utf8mb4_unicode_ci default NULL,
-	picture varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (contact_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;');
+\rex_sql_table::get(\rex::getTable('d2u_immo_contacts'))
+	->ensureColumn(new rex_sql_column('contact_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('contact_id')
+	->ensureColumn(new \rex_sql_column('firstname', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('lastname', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('company', 'VARCHAR(100)', true))
+	->ensureColumn(new \rex_sql_column('street', 'VARCHAR(100)', true))
+	->ensureColumn(new \rex_sql_column('house_number', 'VARCHAR(5)', true))
+	->ensureColumn(new \rex_sql_column('zip_code', 'VARCHAR(10)', true))
+	->ensureColumn(new \rex_sql_column('city', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('country_code', 'VARCHAR(3)', true))
+	->ensureColumn(new \rex_sql_column('phone', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('fax', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('mobile', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('email', 'VARCHAR(100)', true))
+	->ensureColumn(new \rex_sql_column('picture', 'VARCHAR(191)', true))
+	->ensure();
 
-$sql->setQuery('CREATE TABLE IF NOT EXISTS '. \rex::getTablePrefix() .'d2u_immo_categories (
-	category_id int(10) unsigned NOT NULL auto_increment,
-	priority int(10) default NULL,
-	parent_category_id int(10) default NULL,
-	picture varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (category_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;');
-$sql->setQuery('CREATE TABLE IF NOT EXISTS '. \rex::getTablePrefix() .'d2u_immo_categories_lang (
-	category_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	teaser varchar(255) collate utf8mb4_unicode_ci default NULL,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	updatedate DATETIME default NULL,
-	updateuser varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (category_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;');
+\rex_sql_table::get(\rex::getTable('d2u_immo_categories'))
+	->ensureColumn(new rex_sql_column('category_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('category_id')
+	->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
+	->ensureColumn(new \rex_sql_column('parent_category_id', 'INT(11)', true))
+	->ensureColumn(new \rex_sql_column('picture', 'VARCHAR(191)', true))
+	->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_immo_categories_lang'))
+    ->ensureColumn(new rex_sql_column('category_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+    ->setPrimaryKey(['category_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(191)'))
+    ->ensureColumn(new \rex_sql_column('teaser', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
+    ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', true))
+    ->ensure();
 
-$sql->setQuery('CREATE TABLE IF NOT EXISTS '. \rex::getTablePrefix() ."d2u_immo_properties (
-	property_id int(10) unsigned NOT NULL auto_increment,
-	internal_object_number varchar(255) collate utf8mb4_unicode_ci default NULL,
-	priority int(10) default 0,
-	contact_id int(10) default NULL,
-	category_id int(10) default NULL,
-	type_of_use varchar(255) collate utf8mb4_unicode_ci default NULL,
-	market_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	object_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	apartment_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	house_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	land_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	office_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	hall_warehouse_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	parking_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	other_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	street varchar(100) collate utf8mb4_unicode_ci default NULL,
-	house_number varchar(5) collate utf8mb4_unicode_ci default NULL,
-	zip_code varchar(10) collate utf8mb4_unicode_ci NOT NULL,
-	city varchar(255) collate utf8mb4_unicode_ci NOT NULL,
-	country_code varchar(3) collate utf8mb4_unicode_ci default NULL,
-	longitude varchar(20) collate utf8mb4_unicode_ci default NULL,
-	latitude varchar(20) collate utf8mb4_unicode_ci default NULL,
-	floor int(4) default NULL,
-	publish_address int(1) default 0,
-	purchase_price int(15) default 0,
-	purchase_price_m2 int(15) default 0,
-	cold_rent int(15) default 0,
-	price_plus_vat int(1) default 0,
-	additional_costs int(15) default 0,
-	deposit int(10) collate utf8mb4_unicode_ci default NULL,
-	courtage varchar(255) collate utf8mb4_unicode_ci,
-	courtage_incl_vat int(1) default 0,
-	currency_code varchar(3) collate utf8mb4_unicode_ci DEFAULT 'EUR',
-	parking_space_duplex int(5) default 0,
-	parking_space_simple int(5) default 0,
-	parking_space_garage int(5) default 0,
-	parking_space_undergroundcarpark int(5) default 0,
-	living_area decimal(10,2) default '0.00',
-	total_area decimal(10,2) default '0.00',
-	land_area decimal(10,2) default '0.00',
-	rooms decimal(10,2) default '0.00',
-	construction_year int(5) default 0,
-	flat_sharing_possible int(1) default 0,
-	bath varchar(255) collate utf8mb4_unicode_ci default NULL,
-	kitchen varchar(255) collate utf8mb4_unicode_ci default NULL,
-	floor_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	heating_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	firing_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	elevator varchar(255) collate utf8mb4_unicode_ci default NULL,
-	wheelchair_accessable int(1) default 0,
-	cable_sat_tv int(1) default 0,
-	broadband_internet varchar(255) collate utf8mb4_unicode_ci default NULL,
-	condition_type varchar(255) collate utf8mb4_unicode_ci default NULL,
-	energy_pass varchar(255) collate utf8mb4_unicode_ci default NULL,
-	energy_pass_valid_until varchar(50) collate utf8mb4_unicode_ci default NULL,
-	energy_consumption varchar(255) collate utf8mb4_unicode_ci default NULL,
-	including_warm_water int(1) default 0,
-	pictures text collate utf8mb4_unicode_ci,
-	ground_plans text collate utf8mb4_unicode_ci,
-	location_plans text collate utf8mb4_unicode_ci,
-	available_from varchar(255) collate utf8mb4_unicode_ci default NULL,
-	rented int(1) default 0,
-	animals int(1) default 0,
-	object_reserved int(1) default 0,
-	object_sold int(1) default 0,
-	openimmo_object_id varchar(31) collate utf8mb4_unicode_ci default NULL,
-	online_status varchar(10) collate utf8mb4_unicode_ci default 'online',
-	PRIMARY KEY (property_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
-$sql->setQuery('CREATE TABLE IF NOT EXISTS '. \rex::getTablePrefix() .'d2u_immo_properties_lang (
-	property_id int(10) NOT NULL,
-	clang_id int(10) NOT NULL,
-	name varchar(255) collate utf8mb4_unicode_ci default NULL,
-	teaser varchar(255) collate utf8mb4_unicode_ci default NULL,
-	description text collate utf8mb4_unicode_ci default NULL,
-	description_location text collate utf8mb4_unicode_ci default NULL,
-	description_equipment text collate utf8mb4_unicode_ci default NULL,
-	description_others text collate utf8mb4_unicode_ci default NULL,
-	documents text collate utf8mb4_unicode_ci,
-	translation_needs_update varchar(7) collate utf8mb4_unicode_ci default NULL,
-	updatedate DATETIME default NULL,
-	updateuser varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (property_id, clang_id)
-) ENGINE=INNODB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;');
+\rex_sql_table::get(\rex::getTable('d2u_immo_properties'))
+	->ensureColumn(new rex_sql_column('property_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+	->setPrimaryKey('property_id')
+	->ensureColumn(new \rex_sql_column('internal_object_number', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
+	->ensureColumn(new \rex_sql_column('contact_id', 'INT(11)', true))
+	->ensureColumn(new \rex_sql_column('category_id', 'INT(11)', true))
+	->ensureColumn(new \rex_sql_column('type_of_use', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('market_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('object_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('apartment_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('house_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('land_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('office_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('hall_warehouse_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('parking_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('other_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('street', 'VARCHAR(100)', true))
+	->ensureColumn(new \rex_sql_column('house_number', 'VARCHAR(5)', true))
+	->ensureColumn(new \rex_sql_column('zip_code', 'VARCHAR(10)', true))
+	->ensureColumn(new \rex_sql_column('city', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('country_code', 'VARCHAR(3)', true))
+	->ensureColumn(new \rex_sql_column('longitude', 'DECIMAL(14,10)', true))
+	->ensureColumn(new \rex_sql_column('latitude', 'DECIMAL(14,10)', true))
+	->ensureColumn(new \rex_sql_column('floor', 'INT(4)', true))
+	->ensureColumn(new \rex_sql_column('publish_address', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('purchase_price', 'INT(15)', true))
+	->ensureColumn(new \rex_sql_column('purchase_price_m2', 'INT(15)', true))
+	->ensureColumn(new \rex_sql_column('cold_rent', 'INT(15)', true))
+	->ensureColumn(new \rex_sql_column('price_plus_vat', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('additional_costs', 'INT(15)', true))
+	->ensureColumn(new \rex_sql_column('deposit', 'INT(10)', true))
+	->ensureColumn(new \rex_sql_column('courtage', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('courtage_incl_vat', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('currency_code', 'VARCHAR(3)', true))
+	->ensureColumn(new \rex_sql_column('parking_space_duplex', 'INT(5)', true))
+	->ensureColumn(new \rex_sql_column('parking_space_simple', 'INT(5)', true))
+	->ensureColumn(new \rex_sql_column('parking_space_garage', 'INT(5)', true))
+	->ensureColumn(new \rex_sql_column('parking_space_undergroundcarpark', 'INT(5)', true))
+	->ensureColumn(new \rex_sql_column('living_area', 'DECIMAL(10,2)', true))
+	->ensureColumn(new \rex_sql_column('total_area', 'DECIMAL(10,2)', true))
+	->ensureColumn(new \rex_sql_column('land_area', 'DECIMAL(10,2)', true))
+	->ensureColumn(new \rex_sql_column('rooms', 'DECIMAL(10,2)', true))
+	->ensureColumn(new \rex_sql_column('construction_year', 'INT(5)', true))
+	->ensureColumn(new \rex_sql_column('flat_sharing_possible', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('bath', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('kitchen', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('floor_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('heating_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('firing_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('elevator', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('wheelchair_accessable', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('cable_sat_tv', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('broadband_internet', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('condition_type', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('energy_pass', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('energy_pass_valid_until', 'VARCHAR(50)', true))
+	->ensureColumn(new \rex_sql_column('energy_consumption', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('including_warm_water', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
+	->ensureColumn(new \rex_sql_column('pictures_360', 'TEXT', true))
+	->ensureColumn(new \rex_sql_column('ground_plans', 'TEXT', true))
+	->ensureColumn(new \rex_sql_column('location_plans', 'TEXT', true))
+	->ensureColumn(new \rex_sql_column('available_from', 'VARCHAR(191)', true))
+	->ensureColumn(new \rex_sql_column('rented', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('animals', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('object_reserved', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('object_sold', 'TINYINT(1)', true))
+	->ensureColumn(new \rex_sql_column('openimmo_object_id', 'VARCHAR(31)', true))
+	->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
+	->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_immo_properties_lang'))
+    ->ensureColumn(new rex_sql_column('property_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+    ->setPrimaryKey(['property_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(191)'))
+    ->ensureColumn(new \rex_sql_column('teaser', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('description_location', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('description_equipment', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('description_others', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('documents', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
+    ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', true))
+    ->ensure();
 
 // Create views for url addon
+$sql = rex_sql::factory();
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_properties AS
 	SELECT lang.property_id, lang.clang_id, lang.name, CONCAT(lang.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(properties.pictures, ",", 1) as picture, properties.category_id, lang.updatedate
 	FROM '. \rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
@@ -194,6 +194,8 @@ $sql->setQuery('SELECT * FROM '. \rex::getTablePrefix() ."yform_email_template W
 if (0 === (int) $sql->getRows()) {
     $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `mail_reply_to`, `mail_reply_to_name`, `subject`, `body`, `body_html`, `attachments`) VALUES
 		('d2u_immo_request', '', '', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"name\"]', 'Immobilienanfrage', 'Immobilienanfrage von Internetseite:\r\nImmobilie: REX_YFORM_DATA[field=\"immo_name\"]\r\n\r\nEs fragt an:\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nTelefon Anrufe gestattet: <?php print REX_YFORM_DATA[field=\"phone_calls\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\nDatenschutzerklärung zugestimmt: <?php print REX_YFORM_DATA[field=\"privacy_policy_accepted\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n', '', '')");
+} elseif (rex_version::compare($this->getVersion(), '1.1.4', '<')) {
+    $sql->setQuery('UPDATE '. \rex::getTablePrefix() ."yform_email_template SET `mail_from` = '', `mail_from_name` = '', `mail_reply_to` = 'REX_YFORM_DATA[field=\"email\"]', `mail_reply_to_name` = 'REX_YFORM_DATA[field=\"vorname\"] REX_YFORM_DATA[field=\"name\"]' WHERE name = 'd2u_immo_request';");
 }
 
 // Insert frontend translations
@@ -204,10 +206,28 @@ if (class_exists('d2u_immo_lang_helper')) {
 // Standard settings
 if (!$this->hasConfig()) {
     $this->setConfig('article_id', rex_article::getSiteStartArticleId());
-    $this->setConfig('default_category_sort', 'name');
-    $this->setConfig('default_property_sort', 'name');
-    $this->setConfig('finance_calculator_real_estate_tax', '0.05');
-    $this->setConfig('finance_calculator_notary_costs', '0.015');
-    $this->setConfig('finance_calculator_interest_rate', '0.018');
-    $this->setConfig('finance_calculator_repayment', '0.02');
+}
+
+// Update language replacements
+if (!class_exists('d2u_immo_lang_helper')) {
+    // Load class in case addon is deactivated
+    require_once 'lib/d2u_immo_lang_helper.php';
+}
+d2u_immo_lang_helper::factory()->install();
+
+// Update modules
+if (class_exists('D2UModuleManager')) {
+    $modules = [];
+    $modules[] = new D2UModule('70-1',
+        'D2U Immo Addon - Hauptausgabe',
+        21);
+    $modules[] = new D2UModule('70-2',
+        'D2U Immo Addon - Infobox Ansprechpartner',
+        4);
+    $modules[] = new D2UModule('70-3',
+        'D2U Immo Addon - Ausgabe Kategorie',
+        4);
+
+    $d2u_module_manager = new D2UModuleManager($modules, '', 'd2u_immo');
+    $d2u_module_manager->autoupdate();
 }

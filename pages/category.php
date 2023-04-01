@@ -17,17 +17,17 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 
     $success = true;
     $category = false;
-    $category_id = $form['category_id'];
+    $category_id = (int) $form['category_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
         if (false === $category) {
             $category = new D2U_Immo\Category($category_id, $rex_clang->getId());
             $category->category_id = $category_id; // Ensure correct ID in case first language has no object
-            if (isset($form['parent_category_id']) && $form['parent_category_id'] > 0) {
-                $category->parent_category = new D2U_Immo\Category($form['parent_category_id'], $rex_clang->getId());
+            if (isset($form['parent_category_id']) && (int) $form['parent_category_id'] > 0) {
+                $category->parent_category = new D2U_Immo\Category((int) $form['parent_category_id'], $rex_clang->getId());
             } else {
                 $category->parent_category = false;
             }
-            $category->priority = $form['priority'];
+            $category->priority = (int) $form['priority'];
             $category->picture = $input_media[1];
         } else {
             $category->clang_id = $rex_clang->getId();

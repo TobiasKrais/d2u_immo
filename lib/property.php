@@ -20,286 +20,287 @@ use function is_array;
 class Property implements \D2U_Helper\ITranslationHelper
 {
     /** @var int probperty ID */
-    public $property_id = 0;
+    public int $property_id = 0;
 
     /** @var string internal project number */
-    public $internal_object_number = '';
+    public string$internal_object_number = '';
 
     /** @var int sort priority */
-    public $priority = 0;
+    public int$priority = 0;
 
-    /** @var Contact contact object */
-    public $contact = false;
+    /** @var Contact|bool contact object */
+    public Contact|bool $contact = false;
 
-    /** @var Category category object */
-    public $category = false;
+    /** @var Category|bool category object */
+    public Category|bool $category = false;
 
     /**
      * @var string Type of use. Values are defined in OpenImmo definition of
      * value "nutzungsart".
      */
-    public $type_of_use = '';
+    public string $type_of_use = '';
 
     /**
      * @var string Type of market, either KAUF, MIETE_PACHT, ERBPACHT, LEASING.
      * Values are defined in OpenImmo definition of value "vermarktungsart".
      */
-    public $market_type = '';
+    public string $market_type = '';
 
     /**
      * @var string Type of object. Values are defined in OpenImmo definition
      * of value "objektart".
      */
-    public $object_type = '';
+    public string $object_type = '';
 
     /**
      * @var string Type of apartment. Values are defined in OpenImmo definition
      * of value "wohnungtyp".
      */
-    public $apartment_type = '';
+    public string $apartment_type = '';
 
     /**
      * @var string Type of house. Values are defined in OpenImmo definition
      * of value "haustyp".
      */
-    public $house_type = '';
+    public string $house_type = '';
 
     /**
      * @var string Type of land. Values are defined in OpenImmo definition
      * of value "grundst_typ".
      */
-    public $land_type = '';
+    public string $land_type = '';
 
     /**
      * @var string Type of office. Values are defined in OpenImmo definition
      * of value "buero_typ".
      */
-    public $office_type = '';
+    public string $office_type = '';
 
     /**
      * @var string Type of hall / warehouse. Values are defined in OpenImmo definition
      * of value "hallen_lager_prod".
      */
-    public $hall_warehouse_type = '';
+    public string $hall_warehouse_type = '';
 
     /**
      * @var string Type of car parking places. Values are defined in OpenImmo definition
      * of value "parken".
      */
-    public $parking_type = '';
+    public string $parking_type = '';
 
     /**
      * @var string Type of office. Values are defined in OpenImmo definition
      * of value "sonstige_typ".
      */
-    public $other_type = '';
+    public string $other_type = '';
 
     /** @var string street */
-    public $street = '';
+    public string $street = '';
 
     /** @var string house number */
-    public $house_number = '';
+    public string $house_number = '';
 
     /** @var string ZIP code */
-    public $zip_code = '';
+    public string $zip_code = '';
 
     /** @var string City */
-    public $city = '';
+    public string $city = '';
 
     /** @var string Three char ISO country code */
-    public $country_code = '';
+    public string $country_code = '';
 
-    /** @var string Longitude */
-    public $longitude = '';
+    /** @var float Longitude */
+    public float $longitude = 0;
 
-    /** @var string Latitude */
-    public $latitude = '';
+    /** @var float Latitude */
+    public float$latitude = 0;
 
     /** @var int Floor */
-    public $floor = 0;
+    public int $floor = 0;
 
     /** @var bool true if property addess may be published */
-    public $publish_address = true;
+    public bool $publish_address = true;
 
     /** @var int price if object can be bought */
-    public $purchase_price = 0;
+    public int $purchase_price = 0;
 
     /** @var int Price per square meter */
-    public $purchase_price_m2 = 0;
+    public int $purchase_price_m2 = 0;
 
     /** @var int Monthly cold rent if object is for rent */
-    public $cold_rent = 0;
+    public int $cold_rent = 0;
 
     /** @var bool true if rent has additional VAT */
-    public $price_plus_vat = false;
+    public bool$price_plus_vat = false;
 
     /**
      * @var bool true if rent has additional VAT
      * @deprecated since version 1.1.1
      */
-    public $rent_plus_vat = false;
+    public bool $rent_plus_vat = false;
 
     /** @var int Additional monthly costs for rent */
-    public $additional_costs = 0;
+    public int $additional_costs = 0;
 
-    /** @var string Deposit */
-    public $deposit = 0;
+    /** @var int Deposit */
+    public int $deposit = 0;
 
     /** @var string Courtage */
-    public $courtage = '';
+    public string $courtage = '';
 
     /** @var bool true if VAT is included in courtage */
-    public $courtage_incl_vat = true;
+    public bool $courtage_incl_vat = true;
 
     /** @var string three digit ISO currency code */
-    public $currency_code = 'EUR';
+    public string $currency_code = 'EUR';
 
     /** @var int Number of duplex parking spaces */
-    public $parking_space_duplex = 0;
+    public int $parking_space_duplex = 0;
 
     /** @var int Number of parking space */
-    public $parking_space_simple = 0;
+    public int $parking_space_simple = 0;
 
     /** @var int Number of garage parking space */
-    public $parking_space_garage = 0;
+    public int $parking_space_garage = 0;
 
     /** @var int Number of underground car park spaces */
-    public $parking_space_undergroundcarpark = 0;
+    public int $parking_space_undergroundcarpark = 0;
 
     /** @var float Square meters of living area */
-    public $living_area = 0;
+    public float $living_area = 0;
 
     /** @var float Square meters of total area */
-    public $total_area = 0;
+    public float $total_area = 0;
 
     /** @var float Square meters of land area */
-    public $land_area = 0;
+    public float $land_area = 0;
 
     /** @var float Number of rooms */
-    public $rooms = 0;
+    public float $rooms = 0;
 
     /** @var int Year of construction */
-    public $construction_year = 0;
+    public int $construction_year = 0;
 
     /** @var bool true if property can be used */
-    public $flat_sharing_possible = 0;
+    public bool $flat_sharing_possible = false;
 
     /**
-     * @var array<string> bath room features as described in OpenImmo value of
-     * definition "bad"
+     * @var array<string> bath room features as described in OpenImmo value of definition "bad"
      */
-    public $bath = [];
+    public array $bath = [];
 
     /**
-     * @var array<string> Kitchen features as described in OpenImmo value of definition
-     * "kueche"
+     * @var array<string> Kitchen features as described in OpenImmo value of definition "kueche"
      */
-    public $kitchen = [];
+    public array $kitchen = [];
 
     /** @var array<string> floor type as described in OpenImmo value of definition "boden" */
-    public $floor_type = [];
+    public array $floor_type = [];
 
     /** @var array<string> heating type as described in OpenImmo value of definition "heizungsart" */
-    public $heating_type = [];
+    public array $heating_type = [];
 
     /** @var array<string> firing type as described in OpenImmo value of definition "befeuerung" */
-    public $firing_type = [];
+    public array $firing_type = [];
 
     /** @var array<string> elevator type as described in OpenImmo value of definition "fahrstuhl" */
-    public $elevator = [];
+    public array $elevator = [];
 
     /** @var bool true if home is wheelchair accessable */
     public $wheelchair_accessable = false;
 
     /** @var bool true if cable or sat tv is available */
-    public $cable_sat_tv = true;
+    public bool $cable_sat_tv = true;
 
     /** @var array<string> broadband type as described in OpenImmo value of definition "breitband_zugang" */
-    public $broadband_internet = [];
+    public array $broadband_internet = [];
 
     /** @var string condition type as described in OpenImmo value of definition "zustand" */
-    public $condition_type = '';
+    public string $condition_type = '';
 
     /** @var string Type of energy pass. Either "BEDARF" or "VERBRAUCH" */
-    public $energy_pass = '';
+    public string $energy_pass = '';
 
     /** @var string energy pass is valid until date */
-    public $energy_pass_valid_until = '';
+    public string $energy_pass_valid_until = '';
 
     /** @var string energy pass consumption value */
-    public $energy_consumption = '';
+    public string $energy_consumption = '';
 
     /** @var bool Energy pass including warm water */
-    public $including_warm_water = true;
+    public bool $including_warm_water = true;
 
     /** @var array<string> Picture filenames */
-    public $pictures = [];
+    public array $pictures = [];
+
+    /** @var array<string> 360° picture filenames */
+    public array $pictures_360 = [];
 
     /** @var array<string> filenames of available ground plans */
-    public $ground_plans = [];
+    public array $ground_plans = [];
 
     /** @var array<string> filenames of location plans */
-    public $location_plans = [];
+    public array $location_plans = [];
 
     /** @var string starting from when on is property available */
-    public $available_from = '';
+    public string $available_from = '';
 
     /** @var bool true if property rented */
-    public $rented = false;
+    public bool $rented = false;
 
     /** @var bool are animals permittet? If true, yes */
-    public $animals = true;
+    public bool $animals = true;
 
     /** @var bool true if property is reserved */
-    public $object_reserved = false;
+    public bool $object_reserved = false;
 
     /** @var bool true if property is already sold */
-    public $object_sold = false;
+    public bool $object_sold = false;
 
     /** @var string Unique OpenImmo property identifier */
-    public $openimmo_object_id = '';
+    public string $openimmo_object_id = '';
 
     /** @var string Online status. Either "online", "offline" or "archived". */
-    public $online_status = '';
+    public string $online_status = '';
 
     /** @var string Online status or window advertising plugin. Either "online" or "offline". */
-    public $window_advertising_status = '';
+    public string $window_advertising_status = '';
 
     /** @var string unix timestamp for update date */
-    public $updatedate = '';
+    public string $updatedate = '';
 
     /** @var string Redaxo user who last updated property */
-    public $updateuser = '';
+    public string $updateuser = '';
 
     /** @var int Redaxo language ID */
-    public $clang_id = 0;
+    public int $clang_id = 0;
 
     /** @var string Property title */
-    public $name = '';
+    public string $name = '';
 
     /** @var string Short description of property */
-    public $teaser = '';
+    public string $teaser = '';
 
     /** @var string General description */
-    public $description = '';
+    public string $description = '';
 
     /** @var string Description of the property location */
-    public $description_location = '';
+    public string $description_location = '';
 
     /** @var string Description of protperty equipment or furnishing */
-    public $description_equipment = '';
+    public string $description_equipment = '';
 
     /** @var string Description of other features */
-    public $description_others = '';
+    public string $description_others = '';
 
     /** @var array<string> Language specific documents of the property */
-    public $documents = [];
+    public array $documents = [];
 
     /** @var string Needs translation update? "no", "yes" or "delete" */
-    public $translation_needs_update = 'delete';
+    public string $translation_needs_update = 'delete';
 
     /** @var string URL der Maschine */
-    private $url = '';
+    private string $url = '';
 
     /**
      * Fetches a property object from database or creates an empty property object.
@@ -319,105 +320,107 @@ class Property implements \D2U_Helper\ITranslationHelper
         $num_rows = $result->getRows();
 
         if ($num_rows > 0) {
-            $this->property_id = $result->getValue('property_id');
-            $this->additional_costs = $result->getValue('additional_costs');
-            $this->animals = '1' == $result->getValue('animals') ? true : false;
-            $this->apartment_type = $result->getValue('apartment_type');
-            $this->available_from = $result->getValue('available_from');
-            $bath = preg_grep('/^\s*$/s', explode('|', $result->getValue('bath')), PREG_GREP_INVERT);
+            $this->property_id = (int) $result->getValue('property_id');
+            $this->additional_costs = (int) $result->getValue('additional_costs');
+            $this->animals = 1 === (int) $result->getValue('animals') ? true : false;
+            $this->apartment_type = (string) $result->getValue('apartment_type');
+            $this->available_from = (string) $result->getValue('available_from');
+            $bath = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('bath')), PREG_GREP_INVERT);
             $this->bath = is_array($bath) ? $bath : [];
-            $broadband_internet = preg_grep('/^\s*$/s', explode('|', $result->getValue('broadband_internet')), PREG_GREP_INVERT);
+            $broadband_internet = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('broadband_internet')), PREG_GREP_INVERT);
             $this->broadband_internet = is_array($broadband_internet) ? $broadband_internet : [];
-            $this->cable_sat_tv = '1' == $result->getValue('cable_sat_tv') ? true : false;
-            if ($result->getValue('category_id') > 0) {
-                $this->category = new Category($result->getValue('category_id'), $clang_id);
+            $this->cable_sat_tv = 1 === (int) $result->getValue('cable_sat_tv') ? true : false;
+            if ((int) $result->getValue('category_id') > 0) {
+                $this->category = new Category((int) $result->getValue('category_id'), $clang_id);
             }
-            $this->city = $result->getValue('city');
-            $this->cold_rent = $result->getValue('cold_rent');
-            $this->condition_type = $result->getValue('condition_type');
-            $this->construction_year = $result->getValue('construction_year');
-            if ($result->getValue('contact_id') > 0) {
-                $this->contact = new Contact($result->getValue('contact_id'));
+            $this->city = (string) $result->getValue('city');
+            $this->cold_rent = (int) $result->getValue('cold_rent');
+            $this->condition_type = (string) $result->getValue('condition_type');
+            $this->construction_year = (int) $result->getValue('construction_year');
+            if ((int) $result->getValue('contact_id') > 0) {
+                $this->contact = new Contact((int) $result->getValue('contact_id'));
             }
-            $this->country_code = $result->getValue('country_code');
-            $this->courtage = $result->getValue('courtage');
-            $this->courtage_incl_vat = '1' == $result->getValue('courtage_incl_vat') ? true : false;
-            $this->currency_code = $result->getValue('currency_code');
-            $this->deposit = $result->getValue('deposit');
-            $this->description = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue('description'))));
-            $this->description_equipment = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue('description_equipment'))));
-            $this->description_location = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue('description_location'))));
-            $this->description_others = html_entity_decode(stripslashes(htmlspecialchars_decode($result->getValue('description_others'))));
-            $documents = preg_grep('/^\s*$/s', explode(',', $result->getValue('documents')), PREG_GREP_INVERT);
+            $this->country_code = (string) $result->getValue('country_code');
+            $this->courtage = (string) $result->getValue('courtage');
+            $this->courtage_incl_vat = 1 === (int) $result->getValue('courtage_incl_vat') ? true : false;
+            $this->currency_code = (string) $result->getValue('currency_code');
+            $this->deposit = (int) $result->getValue('deposit');
+            $this->description = html_entity_decode(stripslashes(htmlspecialchars_decode((string) $result->getValue('description'))));
+            $this->description_equipment = html_entity_decode(stripslashes(htmlspecialchars_decode((string) $result->getValue('description_equipment'))));
+            $this->description_location = html_entity_decode(stripslashes(htmlspecialchars_decode((string) $result->getValue('description_location'))));
+            $this->description_others = html_entity_decode(stripslashes(htmlspecialchars_decode((string) $result->getValue('description_others'))));
+            $documents = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('documents')), PREG_GREP_INVERT);
             $this->documents = is_array($documents) ? $documents : [];
-            $elevator = preg_grep('/^\s*$/s', explode('|', $result->getValue('elevator')), PREG_GREP_INVERT);
+            $elevator = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('elevator')), PREG_GREP_INVERT);
             $this->elevator = is_array($elevator) ? $elevator : [];
-            $this->energy_consumption = $result->getValue('energy_consumption');
-            $this->energy_pass = $result->getValue('energy_pass');
-            $this->energy_pass_valid_until = $result->getValue('energy_pass_valid_until');
-            $firing_type = preg_grep('/^\s*$/s', explode('|', $result->getValue('firing_type')), PREG_GREP_INVERT);
+            $this->energy_consumption = (string) $result->getValue('energy_consumption');
+            $this->energy_pass = (string) $result->getValue('energy_pass');
+            $this->energy_pass_valid_until = (string) $result->getValue('energy_pass_valid_until');
+            $firing_type = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('firing_type')), PREG_GREP_INVERT);
             $this->firing_type = is_array($firing_type) ? $firing_type : [];
-            $this->floor = $result->getValue('floor');
-            $floor_type = preg_grep('/^\s*$/s', explode('|', $result->getValue('floor_type')), PREG_GREP_INVERT);
+            $this->floor = (int) $result->getValue('floor');
+            $floor_type = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('floor_type')), PREG_GREP_INVERT);
             $this->floor_type = is_array($floor_type) ? $floor_type : [];
-            $ground_plans = preg_grep('/^\s*$/s', explode(',', $result->getValue('ground_plans')), PREG_GREP_INVERT);
+            $ground_plans = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('ground_plans')), PREG_GREP_INVERT);
             $this->ground_plans = is_array($ground_plans) ? $ground_plans : [];
-            $heating_type = preg_grep('/^\s*$/s', explode('|', $result->getValue('heating_type')), PREG_GREP_INVERT);
+            $heating_type = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('heating_type')), PREG_GREP_INVERT);
             $this->heating_type = is_array($heating_type) ? $heating_type : [];
-            $this->house_number = $result->getValue('house_number');
-            $this->house_type = $result->getValue('house_type');
-            $this->including_warm_water = '1' == $result->getValue('including_warm_water') ? true : false;
-            $this->internal_object_number = $result->getValue('internal_object_number');
-            $kitchen = preg_grep('/^\s*$/s', explode('|', $result->getValue('kitchen')), PREG_GREP_INVERT);
+            $this->house_number = (string) $result->getValue('house_number');
+            $this->house_type = (string) $result->getValue('house_type');
+            $this->including_warm_water = 1 === (int) $result->getValue('including_warm_water') ? true : false;
+            $this->internal_object_number = (string) $result->getValue('internal_object_number');
+            $kitchen = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('kitchen')), PREG_GREP_INVERT);
             $this->kitchen = is_array($kitchen) ? $kitchen : [];
-            $this->land_area = $result->getValue('land_area');
-            $this->land_type = $result->getValue('land_type');
-            $this->latitude = '' == $result->getValue('latitude') ? 0 : $result->getValue('latitude');
-            $this->living_area = $result->getValue('living_area');
-            $location_plans = preg_grep('/^\s*$/s', explode(',', $result->getValue('location_plans')), PREG_GREP_INVERT);
+            $this->land_area = (float) $result->getValue('land_area');
+            $this->land_type = (string) $result->getValue('land_type');
+            $this->latitude = (float) $result->getValue('latitude');
+            $this->living_area = (float) $result->getValue('living_area');
+            $location_plans = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('location_plans')), PREG_GREP_INVERT);
             $this->location_plans = is_array($location_plans) ? $location_plans : [];
-            $this->longitude = '' == $result->getValue('longitude') ? 0 : $result->getValue('longitude');
-            $this->market_type = stripslashes($result->getValue('market_type'));
-            $this->name = $result->getValue('name');
-            $this->object_reserved = '1' == $result->getValue('object_reserved') ? true : false;
-            $this->object_sold = '1' == $result->getValue('object_sold') ? true : false;
-            $this->object_type = $result->getValue('object_type');
-            $this->office_type = $result->getValue('office_type');
-            $this->hall_warehouse_type = $result->getValue('hall_warehouse_type');
-            $this->online_status = $result->getValue('online_status');
-            $this->openimmo_object_id = '' == $result->getValue('openimmo_object_id') ? $this->createOpenImmoObjectID() : $result->getValue('openimmo_object_id');
-            $this->other_type = $result->getValue('other_type');
-            $this->parking_space_duplex = $result->getValue('parking_space_duplex');
-            $this->parking_space_garage = $result->getValue('parking_space_garage');
-            $this->parking_space_simple = $result->getValue('parking_space_simple');
-            $this->parking_space_undergroundcarpark = $result->getValue('parking_space_undergroundcarpark');
-            $this->parking_type = $result->getValue('parking_type');
-            $pictures = preg_grep('/^\s*$/s', explode(',', $result->getValue('pictures')), PREG_GREP_INVERT);
+            $this->longitude = (float) $result->getValue('longitude');
+            $this->market_type = stripslashes((string) $result->getValue('market_type'));
+            $this->name = (string) $result->getValue('name');
+            $this->object_reserved = 1 === (int) $result->getValue('object_reserved') ? true : false;
+            $this->object_sold = 1 === (int) $result->getValue('object_sold') ? true : false;
+            $this->object_type = (string) $result->getValue('object_type');
+            $this->office_type = (string) $result->getValue('office_type');
+            $this->hall_warehouse_type = (string) $result->getValue('hall_warehouse_type');
+            $this->online_status = (string) $result->getValue('online_status');
+            $this->openimmo_object_id = '' === $result->getValue('openimmo_object_id') ? $this->createOpenImmoObjectID() : (string) $result->getValue('openimmo_object_id');
+            $this->other_type = (string) $result->getValue('other_type');
+            $this->parking_space_duplex = (int) $result->getValue('parking_space_duplex');
+            $this->parking_space_garage = (int) $result->getValue('parking_space_garage');
+            $this->parking_space_simple = (int) $result->getValue('parking_space_simple');
+            $this->parking_space_undergroundcarpark = (int) $result->getValue('parking_space_undergroundcarpark');
+            $this->parking_type = (string) $result->getValue('parking_type');
+            $pictures = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pictures')), PREG_GREP_INVERT);
             $this->pictures = is_array($pictures) ? $pictures : [];
-            $this->price_plus_vat = '1' == $result->getValue('price_plus_vat') ? true : false;
+            $pictures_360 = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pictures_360')), PREG_GREP_INVERT);
+            $this->pictures_360 = is_array($pictures_360) ? $pictures_360 : [];
+            $this->price_plus_vat = 1 === (int) $result->getValue('price_plus_vat') ? true : false;
             // deprecated
             $this->rent_plus_vat = $this->price_plus_vat;
-            $this->priority = $result->getValue('priority');
-            $this->publish_address = '1' == $result->getValue('publish_address') ? true : false;
-            $this->purchase_price = $result->getValue('purchase_price');
-            $this->purchase_price_m2 = $result->getValue('purchase_price_m2');
-            $this->rented = '1' == $result->getValue('rented') ? true : false;
-            $this->flat_sharing_possible = '1' == $result->getValue('flat_sharing_possible') ? true : false;
-            $this->rooms = ($result->getValue('rooms') == round($result->getValue('rooms')) ? round($result->getValue('rooms')) : $result->getValue('rooms'));
-            $this->street = $result->getValue('street');
-            $this->teaser = $result->getValue('teaser');
-            $this->total_area = $result->getValue('total_area');
-            if ('' != $result->getValue('translation_needs_update')) {
-                $this->translation_needs_update = $result->getValue('translation_needs_update');
+            $this->priority = (int) $result->getValue('priority');
+            $this->publish_address = 1 === (int) $result->getValue('publish_address') ? true : false;
+            $this->purchase_price = (int) $result->getValue('purchase_price');
+            $this->purchase_price_m2 = (int) $result->getValue('purchase_price_m2');
+            $this->rented = 1 === (int) $result->getValue('rented') ? true : false;
+            $this->flat_sharing_possible = 1 === (int) $result->getValue('flat_sharing_possible') ? true : false;
+            $this->rooms = ((float) $result->getValue('rooms') == round((float) $result->getValue('rooms')) ? round((float) $result->getValue('rooms')) : (float) $result->getValue('rooms'));
+            $this->street = (string) $result->getValue('street');
+            $this->teaser = (string) $result->getValue('teaser');
+            $this->total_area = (float) $result->getValue('total_area');
+            if ('' !== $result->getValue('translation_needs_update')) {
+                $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
-            $this->type_of_use = $result->getValue('type_of_use');
-            $this->updatedate = $result->getValue('updatedate');
-            $this->updateuser = $result->getValue('updateuser');
-            $this->wheelchair_accessable = '1' == $result->getValue('wheelchair_accessable') ? true : false;
-            $this->zip_code = $result->getValue('zip_code');
+            $this->type_of_use = (string) $result->getValue('type_of_use');
+            $this->updatedate = (string) $result->getValue('updatedate');
+            $this->updateuser = (string) $result->getValue('updateuser');
+            $this->wheelchair_accessable = 1 === (int) $result->getValue('wheelchair_accessable') ? true : false;
+            $this->zip_code = (string) $result->getValue('zip_code');
             // Window advertising plugin fields
             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                $this->window_advertising_status = 'online' == $result->getValue('window_advertising_status') ? true : false;
+                $this->window_advertising_status = 'online' === (string) $result->getValue('window_advertising_status') ? true : false;
             }
         }
     }
@@ -740,7 +743,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->setPriority();
         }
 
-        if (0 === $this->property_id || $pre_save_object != $this) {
+        if (0 === $this->property_id || $pre_save_object !== $this) {
             $query = rex::getTablePrefix() .'d2u_immo_properties SET '
                     .'additional_costs = '. $this->additional_costs .', '
                     .'animals = '. ($this->animals ? 1 : 0) .', '
@@ -778,10 +781,10 @@ class Property implements \D2U_Helper\ITranslationHelper
                     ."kitchen = '|". implode('|', $this->kitchen) ."|', "
                     .'land_area = '. str_replace(',', '.', $this->land_area) .', '
                     ."land_type = '". $this->land_type ."', "
-                    ."latitude = '". $this->latitude ."', "
+                    ."latitude = ". $this->latitude .", "
                     .'living_area = '. (float) str_replace(',', '.', $this->living_area) .', '
                     ."location_plans = '". implode(',', $this->location_plans) ."', "
-                    ."longitude = '". $this->longitude ."', "
+                    ."longitude = ". $this->longitude .", "
                     ."market_type = '". $this->market_type ."', "
                     .'object_reserved = '. ($this->object_reserved ? 1 : 0) .', '
                     .'object_sold = '. ($this->object_sold ? 1 : 0) .', '
@@ -796,6 +799,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                     .'parking_space_undergroundcarpark = '. $this->parking_space_undergroundcarpark .', '
                     ."parking_type = '". $this->parking_type ."', "
                     ."pictures = '". implode(',', $this->pictures) ."', "
+                    ."pictures_360 = '". implode(',', $this->pictures_360) ."', "
                     .'publish_address = '. ($this->publish_address ? 1 : 0) .', '
                     .'purchase_price = '. $this->purchase_price .', '
                     .'purchase_price_m2 = '. $this->purchase_price_m2 .', '
@@ -824,7 +828,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             }
 
             // Remove from export
-            if (rex_plugin::get('d2u_immo', 'export')->isAvailable() && 'online' === $pre_save_object->online_status && 'online' != $this->online_status) {
+            if (rex_plugin::get('d2u_immo', 'export')->isAvailable() && 'online' === $pre_save_object->online_status && 'online' !== $this->online_status) {
                 ExportedProperty::removePropertyFromAllExports($this->property_id);
             }
         }
@@ -833,7 +837,7 @@ class Property implements \D2U_Helper\ITranslationHelper
         if (0 == $error) {
             // Save the language specific part
             $pre_save_object = new self($this->property_id, $this->clang_id);
-            if ($pre_save_object != $this) {
+            if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_immo_properties_lang SET '
                         ."property_id = '". $this->property_id ."', "
                         ."clang_id = '". $this->clang_id ."', "

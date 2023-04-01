@@ -144,7 +144,12 @@ $map_id = 'd2u' . md5((string) time());
 
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
 $url_id = d2u_addon_frontend_helper::getUrlId();
+?>
 
+<div id="d2u_immo_module_70_1" class="col-12">
+    <div class="row">
+
+<?php
 if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'property_id' === $url_namespace) {
     // Output property
     $property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
@@ -182,13 +187,13 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-12 d-print-none">';
         echo '<ul class="nav nav-pills" id="expose_tabs">';
         echo '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></a></li>';
-        if (count($property->pictures) > 0) {
+        if (count($property->pictures) > 0 || count($property->pictures_360) > 0) {
             echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</span></a></li>';
         }
         if ($property->publish_address) {
             echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></a></li>';
         }
-        if ('KAUF' == $property->market_type) {
+        if ('KAUF' === $property->market_type) {
             echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></a></li>';
         }
         echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_request" id="tab_request_pill"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></a></li>';
@@ -595,6 +600,43 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<h2>'. $property->name .'</h2>';
         echo '</div>';
         echo printImages($property->pictures);
+
+        // 360° pictures
+        $viewer_id = 0;
+        if (count($property->pictures_360) > 0) {
+            if (!function_exists('includePhotoSphereViewerJS')) {
+                /**
+                 * Echo Photo Sphere Viewer JS files.
+                 */
+                function includePhotoSphereViewerJS(): void
+                {
+                    $three_js = 'modules/03-3/three.min.js';
+                    echo '<script src="'. rex_url::addonAssets('d2u_helper', $three_js) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $three_js)) .'"></script>' . PHP_EOL;
+                    $photosphereviewer_js = 'modules/03-3/photosphereviewer.min.js';
+                    echo '<script src="'. rex_url::addonAssets('d2u_helper', $photosphereviewer_js) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $photosphereviewer_js)) .'"></script>' . PHP_EOL;
+
+                    $photosphereviewer_css = 'modules/03/3/style.css';
+                    if (file_exists(rex_path::addon('d2u_helper', $photosphereviewer_css))) {
+                        echo '<style>'. file_get_contents(rex_path::addon('d2u_helper', $photosphereviewer_css)) .'</style>';
+                    }
+                }
+
+                includePhotoSphereViewerJS();
+            }
+            foreach ($property->pictures_360 as $picture_360) {
+                echo '<div class="col-12 col-md-6 mb-4 d-print-none">';
+                echo '<div id="viewer_'. $viewer_id .'" style="height: 400px;"></div>';
+                echo '<script>'. PHP_EOL;
+                echo 'const viewer_'. $viewer_id .' = new PhotoSphereViewer.Viewer({'. PHP_EOL;
+                echo 'container: document.querySelector("#viewer_'. $viewer_id .'"),'. PHP_EOL;
+                echo 'panorama: "'. rex_url::media($picture_360) .'",'. PHP_EOL;
+                echo 'navbar: ["zoom", "move", "fullscreen"]'. PHP_EOL;
+                echo '});'. PHP_EOL;
+                echo '</script>';
+                echo '</div>';
+                $viewer_id++;
+            }
+        }
         echo '</div>'; // END pictures
 
         if (count($property->ground_plans) > 0) {
@@ -799,7 +841,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     // End Map
     // Calculator
-    if ('KAUF' == $property->market_type && '' === $print) {
+    if ('KAUF' === $property->market_type && null === $print) {
         echo '<div id="tab_calculator" class="tab-pane immo-tab fade">'; // START tab calculator
         echo '<div class="row">';
         echo '<div class="col-12">';
@@ -1043,8 +1085,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				</table>
 			</fieldset>
 			<br />
-			<input name="berechnen" id="berechnen" value="<?= $tag_open .'d2u_immo_finance_calc_calculate'. $tag_close ?>" type="submit" onClick="javascript:recalc(); return false;" class="btn btn-primary d-print-none">
-			<input name="drucken" id="drucken" value="<?= $tag_open .'d2u_immo_print'. $tag_close ?>" onClick="javascript:window.print(); return false;" type="submit" class="btn btn-primary d-print-none">
+			<input name="berechnen" id="berechnen" value="<?= $tag_open .'d2u_immo_finance_calc_calculate'. $tag_close ?>" type="submit" onClick="javascript:recalc(); return false;" class="mb-2 btn btn-primary d-print-none">
+			<input name="drucken" id="drucken" value="<?= $tag_open .'d2u_immo_print'. $tag_close ?>" onClick="javascript:window.print(); return false;" type="submit" class="mb-2 btn btn-primary d-print-none">
 		</form>
 
 <?php
@@ -1226,6 +1268,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '</div>';
 }
 ?>
+    </div>
+</div>
 <script>
 	// Allow activation of bootstrap tab via URL
 	$(function() {

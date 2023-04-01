@@ -22,75 +22,77 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
         if (false === $property) {
             $property = new D2U_Immo\Property($property_id, $rex_clang->getId());
             $property->property_id = $property_id; // Ensure correct ID in case first language has no object
-            $property->additional_costs = $form['additional_costs'] ?? 0;
+            $property->additional_costs = (int) $form['additional_costs'];
             $property->animals = array_key_exists('animals', $form);
             $property->apartment_type = $form['apartment_type'];
             $property->available_from = $form['available_from'];
-            $property->bath = $form['bath'] ?? [];
-            $property->broadband_internet = $form['broadband_internet'] ?? [];
+            $property->bath = is_array($form['bath']) ? $form['bath'] : [];
+            $property->broadband_internet = is_array($form['broadband_internet']) ? $form['broadband_internet'] : [];
             $property->cable_sat_tv = array_key_exists('cable_sat_tv', $form);
-            if (isset($form['category_id']) && $form['category_id'] > 0) {
-                $property->category = new D2U_Immo\Category($form['category_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
+            if (isset($form['category_id']) && (int) $form['category_id'] > 0) {
+                $property->category = new D2U_Immo\Category((int) $form['category_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
             }
             $property->city = $form['city'];
-            $property->cold_rent = $form['cold_rent'] ?? 0;
+            $property->cold_rent = (int) $form['cold_rent'];
             $property->price_plus_vat = array_key_exists('price_plus_vat', $form);
             $property->condition_type = $form['condition_type'];
-            $property->construction_year = $form['construction_year'];
-            if (isset($form['contact_id']) && $form['contact_id'] > 0) {
-                $property->contact = new D2U_Immo\Contact($form['contact_id']);
+            $property->construction_year = (int) $form['construction_year'];
+            if (isset($form['contact_id']) && (int) $form['contact_id'] > 0) {
+                $property->contact = new D2U_Immo\Contact((int) $form['contact_id']);
             }
             $property->country_code = $form['country_code'];
             $property->courtage = $form['courtage'];
             $property->courtage_incl_vat = array_key_exists('courtage_incl_vat', $form);
             $property->currency_code = $form['currency_code'];
-            $property->deposit = $form['deposit'] ?? 0;
-            $property->elevator = $form['elevator'] ?? [];
+            $property->deposit = (int) $form['deposit'];
+            $property->elevator = is_array($form['elevator']) ? $form['elevator'] : [];
             $property->energy_consumption = $form['energy_consumption'];
             $property->energy_pass = $form['energy_pass'];
             $property->energy_pass_valid_until = $form['energy_pass_valid_until'];
-            $property->firing_type = $form['firing_type'] ?? [];
-            $property->floor = $form['floor'];
-            $property->floor_type = $form['floor_type'] ?? [];
+            $property->firing_type = is_array($form['firing_type']) ? $form['firing_type'] : [];
+            $property->floor = (int) $form['floor'];
+            $property->floor_type = is_array($form['floor_type']) ? $form['floor_type'] : [];
             $ground_plans = preg_grep('/^\s*$/s', explode(',', $input_media_list[2]), PREG_GREP_INVERT);
             $property->ground_plans = is_array($ground_plans) ? $ground_plans : [];
-            $property->hall_warehouse_type = $form['hall_warehouse_type'] ?? '';
-            $property->heating_type = $form['heating_type'] ?? [];
+            $property->hall_warehouse_type = $form['hall_warehouse_type'];
+            $property->heating_type = is_array($form['heating_type']) ? $form['heating_type'] : [];
             $property->house_number = $form['house_number'];
-            $property->house_type = $form['house_type'] ?? '';
+            $property->house_type = $form['house_type'];
             $property->including_warm_water = array_key_exists('including_warm_water', $form);
             $property->internal_object_number = $form['internal_object_number'];
-            $property->kitchen = $form['kitchen'] ?? [];
-            $property->land_area = $form['land_area'];
-            $property->land_type = $form['land_type'] ?? '';
-            $property->latitude = $form['latitude'];
-            $property->living_area = $form['living_area'];
+            $property->kitchen = is_array($form['kitchen']) ? $form['kitchen'] : [];
+            $property->land_area = (float) $form['land_area'];
+            $property->land_type = $form['land_type'];
+            $property->latitude = (float) $form['latitude'];
+            $property->living_area = (float) $form['living_area'];
             $location_plans = preg_grep('/^\s*$/s', explode(',', $input_media_list[3]), PREG_GREP_INVERT);
             $property->location_plans = is_array($location_plans) ? $location_plans : [];
-            $property->longitude = $form['longitude'];
+            $property->longitude = (float) $form['longitude'];
             $property->market_type = $form['market_type'];
             $property->object_reserved = array_key_exists('object_reserved', $form);
             $property->object_sold = array_key_exists('object_sold', $form);
             $property->object_type = $form['object_type'];
-            $property->office_type = $form['office_type'] ?? '';
-            $property->online_status = $form['online_status'] ?? [];
-            $property->other_type = $form['other_type'] ?? '';
-            $property->parking_space_duplex = $form['parking_space_duplex'];
-            $property->parking_space_garage = $form['parking_space_garage'];
-            $property->parking_space_simple = $form['parking_space_simple'];
-            $property->parking_space_undergroundcarpark = $form['parking_space_undergroundcarpark'];
+            $property->office_type = $form['office_type'];
+            $property->online_status = $form['online_status'];
+            $property->other_type = $form['other_type'];
+            $property->parking_space_duplex = (int) $form['parking_space_duplex'];
+            $property->parking_space_garage = (int) $form['parking_space_garage'];
+            $property->parking_space_simple = (int) $form['parking_space_simple'];
+            $property->parking_space_undergroundcarpark = (int) $form['parking_space_undergroundcarpark'];
             $property->parking_type = $form['parking_type'];
             $pictures = preg_grep('/^\s*$/s', explode(',', $input_media_list[1]), PREG_GREP_INVERT);
             $property->pictures = is_array($pictures) ? $pictures : [];
-            $property->priority = $form['priority'];
+            $pictures_360 = preg_grep('/^\s*$/s', explode(',', $input_media_list[4]), PREG_GREP_INVERT);
+            $property->pictures_360 = is_array($pictures_360) ? $pictures_360 : [];
+            $property->priority = (int) $form['priority'];
             $property->publish_address = array_key_exists('publish_address', $form);
-            $property->purchase_price = $form['purchase_price'] ?? 0;
-            $property->purchase_price_m2 = $form['purchase_price_m2'] ?? 0;
+            $property->purchase_price = (int) $form['purchase_price'];
+            $property->purchase_price_m2 = (int) $form['purchase_price_m2'];
             $property->rented = array_key_exists('rented', $form);
             $property->flat_sharing_possible = array_key_exists('flat_sharing_possible', $form);
-            $property->rooms = $form['rooms'];
+            $property->rooms = (float) $form['rooms'];
             $property->street = $form['street'];
-            $property->total_area = $form['total_area'];
+            $property->total_area = (float) $form['total_area'];
             $property->type_of_use = $form['type_of_use'];
             $property->wheelchair_accessable = array_key_exists('wheelchair_accessable', $form);
             $property->zip_code = $form['zip_code'];
@@ -575,9 +577,10 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 }
                             }
                             d2u_addon_backend_helper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, false === $property->contact ? [] : [$property->contact->contact_id], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', '1', $property->pictures, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_ground_plans', '2', $property->ground_plans, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_location_plans', '3', $property->location_plans, $readonly);
+                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', 1, $property->pictures, $readonly);
+                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
+                            d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);
+                            d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_location_plans', 3, $property->location_plans, $readonly);
                             d2u_addon_backend_helper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, true, true, 'text');
                         ?>
 					</div>

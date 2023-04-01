@@ -10,7 +10,7 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper
      */
     public $replacements_english = [
         'd2u_immo_additional_costs' => 'Additional costs',
-        'd2u_immo_animals' => 'Animals allowed?',
+        'd2u_immo_animals' => 'Animals allowed',
         'd2u_immo_available_from' => 'Available from',
         'd2u_immo_back_to_list' => 'Back to list',
         'd2u_immo_bath' => 'Bathroom features',
@@ -147,7 +147,7 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper
         'd2u_immo_object_sold' => 'sold',
         'd2u_immo_office_area' => 'Office area',
         'd2u_immo_prices_plus_vat' => 'Prices plus VAT',
-        'd2u_immo_rented' => 'Rented?',
+        'd2u_immo_rented' => 'Rented',
         'd2u_immo_recommendation_privacy_policy' => 'Privacy policy: we will not save or evaluate any part of the message. It is directly sent to the receipient.',
         'd2u_immo_recommendation_message' => 'Message for Receipient',
         'd2u_immo_recommendation_receipient_mail' => 'Receipient emailaddress',
@@ -183,7 +183,7 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper
      */
     protected array $replacements_german = [
         'd2u_immo_additional_costs' => 'Nebenkosten',
-        'd2u_immo_animals' => 'Haustiere erlaubt?',
+        'd2u_immo_animals' => 'Haustiere erlaubt',
         'd2u_immo_available_from' => 'Verfügbar ab',
         'd2u_immo_back_to_list' => 'Zurück zur Übersicht',
         'd2u_immo_bath' => 'Bad mit',
@@ -322,7 +322,7 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper
         'd2u_immo_object_sold' => 'verkauft',
         'd2u_immo_office_area' => 'Bürofläche',
         'd2u_immo_prices_plus_vat' => 'Preise zuzüglich Mehrwertsteuer.',
-        'd2u_immo_rented' => 'Vermietet?',
+        'd2u_immo_rented' => 'Vermietet',
         'd2u_immo_recommendation_privacy_policy' => 'Hinweis zum Datenschutz: es werden keine Daten gespeichert oder ausgewertet.',
         'd2u_immo_recommendation_message' => 'Nachricht an den Empfänger',
         'd2u_immo_recommendation_receipient_mail' => 'E-Mail-Adresse des Empfängers',

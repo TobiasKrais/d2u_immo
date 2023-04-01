@@ -21,37 +21,37 @@ use rex_yrewrite;
 class Category implements \D2U_Helper\ITranslationHelper
 {
     /** @var int Database ID */
-    public $category_id = 0;
+    public int $category_id = 0;
 
     /** @var int Redaxo clang id */
-    public $clang_id = 0;
+    public int $clang_id = 0;
 
-    /** @var Category Father category object */
-    public $parent_category = false;
+    /** @var Category|bool Father category object */
+    public Category|bool$parent_category = false;
 
     /** @var string Name */
-    public $name = '';
+    public string $name = '';
 
     /** @var string Short description */
-    public $teaser = '';
+    public string $teaser = '';
 
     /** @var string Preview picture file name */
-    public $picture = '';
+    public string $picture = '';
 
     /** @var int Sort Priority */
-    public $priority = 0;
+    public int $priority = 0;
 
     /** @var string "yes" if translation needs update */
-    public $translation_needs_update = 'delete';
+    public string $translation_needs_update = 'delete';
 
-    /** @var int Unix timestamp containing the last update date */
-    public $updatedate = 0;
+    /** @var string Last update date */
+    public string $updatedate = '';
 
     /** @var string Redaxo update user name */
-    public $updateuser = '';
+    public string $updateuser = '';
 
     /** @var string URL */
-    public $url = '';
+    public string $url = '';
 
     /**
      * Constructor. Reads a category stored in database.
@@ -70,19 +70,19 @@ class Category implements \D2U_Helper\ITranslationHelper
         $result->setQuery($query);
 
         if ($result->getRows() > 0) {
-            $this->category_id = $result->getValue('category_id');
-            if ($result->getValue('parent_category_id') > 0) {
-                $this->parent_category = new self($result->getValue('parent_category_id'), $clang_id);
+            $this->category_id = (int) $result->getValue('category_id');
+            if ((int) $result->getValue('parent_category_id') > 0) {
+                $this->parent_category = new self((int) $result->getValue('parent_category_id'), $clang_id);
             }
-            $this->name = stripslashes($result->getValue('name'));
-            $this->teaser = stripslashes($result->getValue('teaser'));
-            $this->picture = $result->getValue('picture');
-            $this->priority = $result->getValue('priority');
-            if ('' != $result->getValue('translation_needs_update')) {
-                $this->translation_needs_update = $result->getValue('translation_needs_update');
+            $this->name = stripslashes((string) $result->getValue('name'));
+            $this->teaser = stripslashes((string) $result->getValue('teaser'));
+            $this->picture = (string) $result->getValue('picture');
+            $this->priority = (string) $result->getValue('priority');
+            if ('' !== $result->getValue('translation_needs_update')) {
+                $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
-            $this->updatedate = $result->getValue('updatedate');
-            $this->updateuser = $result->getValue('updateuser');
+            $this->updatedate = (string) $result->getValue('updatedate');
+            $this->updateuser = (string) $result->getValue('updateuser');
         }
     }
 
@@ -290,7 +290,7 @@ class Category implements \D2U_Helper\ITranslationHelper
             $this->setPriority();
         }
 
-        if (0 === $this->category_id || $pre_save_object != $this) {
+        if (0 === $this->category_id || $pre_save_object !== $this) {
             $query = rex::getTablePrefix() .'d2u_immo_categories SET '
                     .'parent_category_id = '. (false === $this->parent_category ? 0 : $this->parent_category->category_id) .', '
                     .'priority = '. $this->priority .', '
@@ -314,15 +314,15 @@ class Category implements \D2U_Helper\ITranslationHelper
         if (0 == $error) {
             // Save the language specific part
             $pre_save_object = new self($this->category_id, $this->clang_id);
-            if ($pre_save_object != $this) {
+            if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_immo_categories_lang SET '
                         ."category_id = '". $this->category_id ."', "
                         ."clang_id = '". $this->clang_id ."', "
                         ."name = '". addslashes($this->name) ."', "
                         ."teaser = '". addslashes($this->teaser) ."', "
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
-                        .'updatedate = '. time() .', '
-                        ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
+                        .'updatedate = CURRENT_TIMESTAMP, '
+                        ."updateuser = '". (rex::getUser() instanceof \rex_user ? rex::getUser()->getLogin() : '') ."' ";
 
                 $result = rex_sql::factory();
                 $result->setQuery($query);

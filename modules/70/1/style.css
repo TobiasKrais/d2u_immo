@@ -1,4 +1,4 @@
-.tab-pane {
+#d2u_immo_module_70_1 .tab-pane {
 	border: 1px solid navi_color_bg;
 	margin-bottom: 1em;
 	padding: 1em 1em 0 1em;
@@ -49,10 +49,16 @@
 	color: #3c3c3c;
 }
 
-.nav-item {
+#d2u_immo_module_70_1 #expose_tabs {
+	width: 100%;
+}
+#d2u_immo_module_70_1 .nav-pills {
+	border-bottom: none;
+}
+#d2u_immo_module_70_1 .nav-pills .nav-item {
 	margin-right: 1px;
 }
-.nav-item a, .nav-item a:focus, .nav-item a:visited {
+#d2u_immo_module_70_1 .nav-pills .nav-item a, #d2u_immo_module_70_1 .nav-pills .nav-item a:focus, #d2u_immo_module_70_1 .nav-pills .nav-item a:visited {
     background-color: navi_color_font;
 	border-left: 1px solid navi_color_bg;
 	border-right: 1px solid navi_color_bg;
@@ -62,15 +68,15 @@
 	font-weight: bold;
 	padding: 0.3em 0.75em;
 }
-.nav-pills .nav-item .nav-link.active, .nav-item a:hover {
+#d2u_immo_module_70_1 .nav-pills .nav-item .nav-link.active, #d2u_immo_module_70_1 .nav-pills .nav-item a:hover {
     background-color: navi_color_bg;
 	color: navi_color_font;
 	text-decoration: none;
 }
-.nav-pills .nav-link {
+#d2u_immo_module_70_1 .nav-pills .nav-link {
 	border-radius: 0px !important;
 }
-.nav-item a span.icon {
+#d2u_immo_module_70_1 .nav-pills .nav-item a span.icon {
 	font-size: 1em;
 	font-weight: normal;
 }
