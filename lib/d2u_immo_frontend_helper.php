@@ -1,5 +1,10 @@
 <?php
+
+use D2U_Immo\Category;
+use D2U_Immo\Property;
+
 /**
+ * @api
  * Offers helper functions for frontend.
  */
 class d2u_immo_frontend_helper
@@ -23,7 +28,7 @@ class d2u_immo_frontend_helper
             }
             foreach (rex_clang::getAllIds(true) as $this_lang_key) {
                 $lang_property = new D2U_Immo\Property($property_id, $this_lang_key);
-                if ('delete' != $lang_property->translation_needs_update) {
+                if ('delete' !== $lang_property->translation_needs_update) {
                     $alternate_URLs[$this_lang_key] = $lang_property->getUrl();
                 }
             }
@@ -34,7 +39,7 @@ class d2u_immo_frontend_helper
             }
             foreach (rex_clang::getAllIds(true) as $this_lang_key) {
                 $lang_category = new D2U_Immo\Category($category_id, $this_lang_key);
-                if ('delete' != $lang_category->translation_needs_update) {
+                if ('delete' !== $lang_category->translation_needs_update) {
                     $alternate_URLs[$this_lang_key] = $lang_category->getUrl();
                 }
             }
@@ -73,13 +78,13 @@ class d2u_immo_frontend_helper
         }
 
         // Breadcrumbs
-        if (false !== $category) {
-            if (false !== $category->parent_category) {
+        if ($category instanceof Category) {
+            if ($category->parent_category instanceof Category) {
                 $breadcrumbs[] = '<a href="' . $category->parent_category->getUrl() . '">' . $category->parent_category->name . '</a>';
             }
             $breadcrumbs[] = '<a href="' . $category->getUrl() . '">' . $category->name . '</a>';
         }
-        if (false !== $property) {
+        if ($property instanceof Property) {
             $breadcrumbs[] = '<a href="' . $property->getUrl() . '">' . $property->name . '</a>';
         }
 

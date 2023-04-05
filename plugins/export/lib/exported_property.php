@@ -119,7 +119,7 @@ class ExportedProperty
 
         $exported_properties = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $exported_properties[] = new self($result->getValue('property_id'), $result->getValue('provider_id'));
+            $exported_properties[] = new self((int) $result->getValue('property_id'), $result->getValue('provider_id'));
             $result->next();
         }
         return $exported_properties;

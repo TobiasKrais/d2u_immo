@@ -77,10 +77,10 @@ if ($category_id > 0) {
     $properties_rent = $category->getProperties('MIETE_PACHT', true);
     $properties_sale = $category->getProperties('KAUF', true);
 } else {
-    $properties_leasehold = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'ERBPACHT', true);
-    $properties_leasing = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'LEASING', true);
-    $properties_rent = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'MIETE_PACHT', true);
-    $properties_sale = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'KAUF', true);
+    $properties_leasehold = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'ERBPACHT', true);
+    $properties_leasing = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'LEASING', true);
+    $properties_rent = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'MIETE_PACHT', true);
+    $properties_sale = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'KAUF', true);
 }
 
 // Tabs

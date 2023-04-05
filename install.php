@@ -144,7 +144,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_
 
 // Insert url schemes
 if (\rex_addon::get('url')->isAvailable()) {
-    $clang_id = 1 == count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
+    $clang_id = 1 === count(rex_clang::getAllIds()) ? rex_clang::getStartId() : 0;
     $article_id = rex_config::get('d2u_immo', 'article_id', 0) > 0 ? rex_config::get('d2u_immo', 'article_id') : rex_article::getSiteStartArticleId();
 
     // Insert url schemes Version 2.x
@@ -194,7 +194,7 @@ $sql->setQuery('SELECT * FROM '. \rex::getTablePrefix() ."yform_email_template W
 if (0 === (int) $sql->getRows()) {
     $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `mail_reply_to`, `mail_reply_to_name`, `subject`, `body`, `body_html`, `attachments`) VALUES
 		('d2u_immo_request', '', '', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"name\"]', 'Immobilienanfrage', 'Immobilienanfrage von Internetseite:\r\nImmobilie: REX_YFORM_DATA[field=\"immo_name\"]\r\n\r\nEs fragt an:\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nTelefon Anrufe gestattet: <?php print REX_YFORM_DATA[field=\"phone_calls\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\nDatenschutzerklärung zugestimmt: <?php print REX_YFORM_DATA[field=\"privacy_policy_accepted\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n', '', '')");
-} elseif (rex_version::compare($this->getVersion(), '1.1.4', '<')) {
+} elseif (rex_version::compare($this->getVersion(), '1.1.4', '<')) { /** @phpstan-ignore-line */
     $sql->setQuery('UPDATE '. \rex::getTablePrefix() ."yform_email_template SET `mail_from` = '', `mail_from_name` = '', `mail_reply_to` = 'REX_YFORM_DATA[field=\"email\"]', `mail_reply_to_name` = 'REX_YFORM_DATA[field=\"vorname\"] REX_YFORM_DATA[field=\"name\"]' WHERE name = 'd2u_immo_request';");
 }
 
@@ -204,8 +204,8 @@ if (class_exists('d2u_immo_lang_helper')) {
 }
 
 // Standard settings
-if (!$this->hasConfig()) {
-    $this->setConfig('article_id', rex_article::getSiteStartArticleId());
+if (!$this->hasConfig()) { /** @phpstan-ignore-line */
+    $this->setConfig('article_id', rex_article::getSiteStartArticleId()); /** @phpstan-ignore-line */
 }
 
 // Update language replacements

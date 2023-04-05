@@ -948,10 +948,17 @@ class OpenImmo extends AFTPExport
                 if (strlen($bild) > 3 && $is_title_pic) {
                     $objekt_anhaenge[$zaehler] = ['TITELBILD' => $bild];
                     $is_title_pic = false;
+                    ++$zaehler;
                 } elseif (strlen($bild) > 3 && $zaehler < $this->max_pics) {
                     $objekt_anhaenge[$zaehler] = ['BILD' => $bild];
+                    ++$zaehler;
                 }
-                ++$zaehler;
+            }
+            foreach ($property->pictures_360 as $bild) {
+                if (strlen($bild) > 3) {
+                    $objekt_anhaenge[$zaehler] = ['PANORAMA' => $bild];
+                    ++$zaehler;
+                }
             }
             // Grundrisse auslesen
             foreach ($property->ground_plans as $grundriss) {

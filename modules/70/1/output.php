@@ -1,15 +1,18 @@
 <?php
+
+use D2U_Immo\Contact;
+
 if (!function_exists('sendRecommendation')) {
     /**
      * Sends recommendation mail.
-     * @param yform $yform YForm object with fields and values
+     * @param \rex_yform $yform YForm object with fields and values
      */
-    function sendRecommendation($yform)
+    function sendRecommendation($yform):void
     {
         if (isset($yform->params['values'])) {
             $fields = [];
             foreach ($yform->params['values'] as $value) {
-                if ('' != $value->name) {
+                if ('' !== $value->name) {
                     $fields[$value->name] = $value->value;
                 }
             }
@@ -30,7 +33,7 @@ if (!function_exists('sendRecommendation')) {
             $mail_body .= $fields['sender_name'] ." hat Ihnen dazu folgende Nachricht hinterlassen:\n\n";
             $mail_body .= $fields['message'];
             $mail->Body = $mail_body;
-            $mail->Send();
+            $mail->send();
         }
     }
 }
@@ -38,9 +41,9 @@ if (!function_exists('sendRecommendation')) {
 if (!function_exists('printPropertylist')) {
     /**
      * Prints property list.
-     * @param Property $properties Array with properties
+     * @param array<D2U_Immo\Property> $properties Array with properties
      */
-    function printPropertylist($properties)
+    function printPropertylist($properties):void
     {
         $sprog = rex_addon::get('sprog');
         $tag_open = $sprog->getConfig('wildcard_open_tag');
@@ -70,11 +73,11 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="row">';
             echo '<div class="col-12"><strong>'. $property->name .'</strong></div>';
             echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_form_city'. $tag_close .':</b> '. $property->city .'</div>';
-            if ('KAUF' == $property->market_type) {
+            if ('KAUF' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</b> '. number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code .'</div>';
-            } elseif ('MIETE_PACHT' == $property->market_type || 'ERBPACHT' == $property->market_type) {
+            } elseif ('MIETE_PACHT' === $property->market_type || 'ERBPACHT' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_cold_rent'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
-            } elseif ('LEASING' == $property->market_type) {
+            } elseif ('LEASING' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_leasehold'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
             }
             if ($property->living_area > 0) {
@@ -98,9 +101,9 @@ if (!function_exists('printPropertylist')) {
 if (!function_exists('printImages')) {
     /**
      * Prints images in Ekko Lightbox module format.
-     * @param string[] $pics Array with images
+     * @param array<string> $pics Array with images
      */
-    function printImages($pics)
+    function printImages($pics):void
     {
         $type_thumb = 'd2u_helper_gallery_thumb';
         $type_detail = 'd2u_helper_gallery_detail';
@@ -139,7 +142,7 @@ $sprog = rex_addon::get('sprog');
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_immo = rex_addon::get('d2u_immo');
-$map_type = 'REX_VALUE[1]' == '' ? 'google' : 'REX_VALUE[1]'; // Backward compatibility
+$map_type = 'REX_VALUE[1]' === '' ? 'google' : 'REX_VALUE[1]'; // Backward compatibility
 $map_id = 'd2u' . md5((string) time());
 
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
@@ -158,7 +161,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     $property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
     // Redirect if object is not online
-    if ('online' != $property->online_status) {
+    if ('online' !== $property->online_status) {
         rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
     }
 
@@ -169,17 +172,19 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         //	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
         echo '<li><small><a href="'. $property->getUrl(true).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
         echo '<li><small><a href="'. $property->getUrl(true).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
-        if ('MIETE_PACHT' == $property->market_type && 'GEWERBE' != $property->type_of_use && '' != $d2u_immo->getConfig('even_informative_pdf', '')) {
+        if ('MIETE_PACHT' === $property->market_type && 'GEWERBE' !== $property->type_of_use && '' !== $d2u_immo->getConfig('even_informative_pdf', '')) {
             echo '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
         }
         echo '</ul>';
         echo '</div>';
 
-        echo '<div class="col-12 d-none d-print-inline">';
-        echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
-        echo $tag_open .'d2u_immo_form_phone'. $tag_close .': '. $property->contact->phone .'<br>';
-        echo $tag_open .'d2u_immo_form_email'. $tag_close .': '. $property->contact->email .'<p>';
-        echo '</div>';
+        if ($property->contact instanceof Contact) {
+            echo '<div class="col-12 d-none d-print-inline">';
+            echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
+            echo $tag_open .'d2u_immo_form_phone'. $tag_close .': '. $property->contact->phone .'<br>';
+            echo $tag_open .'d2u_immo_form_email'. $tag_close .': '. $property->contact->email .'<p>';
+            echo '</div>';
+        }
     }
 
     // Tabs
@@ -274,7 +279,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12">'. $tag_open .'d2u_immo_prices_plus_vat'. $tag_close .'</div>';
             echo '<div class="col-12">&nbsp;</div>';
         }
-        if ('' != $property->deposit) {
+        if ('' !== $property->deposit) {
             echo '<div class="col-6">'. $tag_open .'d2u_immo_deposit'. $tag_close .':</div>';
             echo '<div class="col-6">'. number_format($property->deposit, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</div>';
         }
@@ -310,14 +315,17 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-6">'. $tag_open .'d2u_immo_yes'. $tag_close .'</div>';
         }
 
-        if ('' != $property->condition_type) {
+        if ('' !== $property->condition_type) {
             echo '<div class="col-6">'. $tag_open .'d2u_immo_condition'. $tag_close .':</div>';
             echo '<div class="col-6">'. $tag_open .'d2u_immo_condition_'. $property->condition_type . $tag_close .'</div>';
         }
 
-        if ('' != $property->available_from) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_available_from'. $tag_close .':</div>';
-            echo '<div class="col-6">'. date_format(date_create_from_format('Y-m-d', $property->available_from), 'd.m.Y') .'</div>';
+        if ('' !== $property->available_from) {
+            $date = date_create_from_format('Y-m-d', $property->available_from);
+            if (false !== $date) {
+                echo '<div class="col-6">'. $tag_open .'d2u_immo_available_from'. $tag_close .':</div>';
+                echo '<div class="col-6">'. date_format($date, 'd.m.Y') .'</div>';
+            }
         }
 
         if ($property->animals) {
@@ -360,7 +368,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-6">'. round($property->land_area) .'&nbsp;m²</div>';
     }
 
-    if (count($property->documents) > 0 || ('MIETE_PACHT' == $property->market_type && 'GEWERBE' != $property->type_of_use && '' != $d2u_immo->getConfig('even_informative_pdf', ''))) {
+    if (count($property->documents) > 0 || ('MIETE_PACHT' === $property->market_type && 'GEWERBE' !== $property->type_of_use && '' !== $d2u_immo->getConfig('even_informative_pdf', ''))) {
         echo '<div class="col-12"><ul>';
         foreach ($property->documents as $document) {
             $media = rex_media::get($document);
@@ -371,11 +379,11 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                     $has_permission = rex_ycom_media_auth::checkPerm(rex_media_manager::create('', $document));
                 }
                 if ($has_permission) {
-                    echo '<li><span class="icon pdf"></span> <a href="'. rex_url::media($document) .'">'. ('' != $media->getTitle() ? $media->getTitle() : $document) .'</a></li>';
+                    echo '<li><span class="icon pdf"></span> <a href="'. rex_url::media($document) .'">'. ('' !== $media->getTitle() ? $media->getTitle() : $document) .'</a></li>';
                 }
             }
         }
-        if ('MIETE_PACHT' == $property->market_type && 'GEWERBE' != $property->type_of_use && '' != $d2u_immo->getConfig('even_informative_pdf', '')) {
+        if ('MIETE_PACHT' === $property->market_type && 'GEWERBE' !== $property->type_of_use && '' !== $d2u_immo->getConfig('even_informative_pdf', '')) {
             echo '<li class="d-print-none"><span class="icon pdf"></span> <a href="'. rex_url::media('mieterselbstauskunft.pdf') .'">'. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></li>';
         }
         echo '</ul></div>';
@@ -391,9 +399,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
     echo '<div class="col-12">&nbsp;</div>';
 
-    if ('grundstueck' != strtolower($property->object_type)
-            && 'parken' != strtolower($property->object_type)
-            && 'projektiert' != strtolower($property->condition_type)
+    if ('grundstueck' !== strtolower($property->object_type)
+            && 'parken' !== strtolower($property->object_type)
+            && 'projektiert' !== strtolower($property->condition_type)
             && strlen($property->energy_pass) > 5) {
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
@@ -406,9 +414,12 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_type'. $tag_close .':</li></ul></div>';
         echo '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_energy_pass_'. $property->energy_pass . $tag_close .'</div>';
 
-        if ('' != $property->energy_pass_valid_until) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_valid_until'. $tag_close .':</li></ul></div>';
-            echo '<div class="col-6 col-md-8 col-lg-9">'. date_format(date_create_from_format('Y-m-d', $property->energy_pass_valid_until), 'd.m.Y') .'</div>';
+        if ('' !== $property->energy_pass_valid_until) {
+            $energy_pass_date = date_create_from_format('Y-m-d', $property->energy_pass_valid_until);
+            if (false !== $energy_pass_date) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_valid_until'. $tag_close .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. date_format($energy_pass_date, 'd.m.Y') .'</div>';
+            }
         }
 
         echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_value'. $tag_close .':</li></ul></div>';
@@ -424,7 +435,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-6 col-md-8 col-lg-9">'. $property->construction_year .'</div>';
         }
 
-        if ($property->firing_type > 0) {
+        if (count($property->firing_type) > 0) {
             echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_firing_type'. $tag_close .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">';
             $first_element = true;
@@ -440,7 +451,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo "<div style='position: absolute;'>";
         echo "<img src='". $d2u_immo->getAssetsUrl('energieskala.png') ."' class='energy_scale'>";
         echo '</div>';
-        echo "<div style='position: absolute; margin-left: ". round($property->energy_consumption - 10, 0) ."px !important;'>";
+        echo "<div style='position: absolute; margin-left: ". round((int) $property->energy_consumption - 10, 0) ."px !important;'>";
         echo "<img src='". $d2u_immo->getAssetsUrl('zeiger.png') ."'>";
         echo '</div>';
         echo '</div>';
@@ -523,7 +534,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
     }
 
-    if ('' != $property->description) {
+    if ('' !== $property->description) {
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
@@ -535,7 +546,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
     }
 
-    if ('' != $property->description_location) {
+    if ('' !== $property->description_location) {
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
@@ -547,7 +558,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
     }
 
-    if ('' != $property->description_equipment) {
+    if ('' !== $property->description_equipment) {
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
@@ -559,7 +570,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
     }
 
-    if ('' != $property->description_others) {
+    if ('' !== $property->description_others) {
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
@@ -575,7 +586,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="row page-break-avoid">';
     }
     echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_courtage'. $tag_close .'</h2></div>';
-    if ('' == $property->courtage) {
+    if ('' === $property->courtage) {
         echo '<div class="col-12 print-border">'. $tag_open .'d2u_immo_courtage_no'. $tag_close .'</div>';
     } else {
         echo '<div class="col-12 print-border">'. $property->courtage .' '. $tag_open .'d2u_immo_courtage_incl_vat'. $tag_close .'</div>';
@@ -588,8 +599,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     // End Overview
     // Pictures
-    if (count($property->pictures) > 0 && 'small' != $print) {
-        if ('full' != $print) {
+    if (count($property->pictures) > 0 && 'small' !== $print) {
+        if ('full' !== $print) {
             echo '<div id="tab_pictures" class="tab-pane immo-tab fade">'; // START tab picures
         }
         echo '<div class="row">'; // START pictures
@@ -599,7 +610,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-12 d-none d-print-none">';
         echo '<h2>'. $property->name .'</h2>';
         echo '</div>';
-        echo printImages($property->pictures);
+        printImages($property->pictures);
 
         // 360° pictures
         $viewer_id = 0;
@@ -654,23 +665,23 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 print-border-h">';
             echo '<h2>'. $tag_open .'d2u_immo_location_plans'. $tag_close .'</h2>';
             echo '</div>';
-            echo printImages($property->location_plans);
+            printImages($property->location_plans);
             echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
             echo '</div>';
         }
-        if ('full' != $print) {
+        if ('full' !== $print) {
             echo '</div>'; // END tab picures
         }
     }
     // End Pictures
     // Map
-    if ($property->publish_address && 'small' != $print) {
+    if ($property->publish_address && 'small' !== $print) {
         $d2u_helper = rex_addon::get('d2u_helper');
         $api_key = '';
         if ($d2u_helper->hasConfig('maps_key')) {
             $api_key = $d2u_helper->getConfig('maps_key');
         }
-        if ('full' != $print) {
+        if ('full' !== $print) {
             echo '<div id="tab_map" class="tab-pane immo-tab fade page-break-avoid">'; // START tab map
         }
         echo '<div class="row page-break-avoid">';
@@ -681,10 +692,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<h2 class="d-print-none">'. $property->name .'</h2>';
         echo '<p class="d-print-none">'. $property->street .' '. $property->house_number .'<br /> '. $property->zip_code .' '. $property->city .'</p>';
 
-        if ('google' == $map_type) {
+        if ('google' === $map_type) {
 ?>
 		<script src="https://maps.googleapis.com/maps/api/js?key=<?= $api_key ?>"></script>
-		<div id="map_canvas" style="display: block; <?= '' != $print ? 'width: 900px' : 'width: 100%' ?>; height: 500px"></div>
+		<div id="map_canvas" style="display: block; <?= '' !== $print ? 'width: 900px' : 'width: 100%' ?>; height: 500px"></div>
 		<script>
 			var map;
 			var myLatlng;
@@ -696,7 +707,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				var myOptions = {
 					zoom: 15,
 					center: myLatlng,
-					mapTypeId: google.maps.MapTypeId.<?= 'full' == $print ? 'ROADMAP' : 'HYBRID' ?>
+					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>
 				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
@@ -730,7 +741,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
 				var myOptions = {
 					zoom: 15,
-					mapTypeId: google.maps.MapTypeId.<?= 'full' == $print ? 'ROADMAP' : 'HYBRID' ?>
+					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>
 				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 			<?php
@@ -738,7 +749,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             ?>
 		</script>
 		<?php
-        } elseif ('osm' == $map_type && rex_addon::get('osmproxy')->isAvailable()) {
+        } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) {
             $map_id = random_int(0, getrandmax());
 
             $leaflet_js_file = 'modules/04-2/leaflet.js';
@@ -833,7 +844,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
         echo '</div>';
         echo '</div>';
-        if ('full' != $print) {
+        if ('full' !== $print) {
             echo '</div>';  // END tab map
         } else {
             echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
@@ -1122,7 +1133,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'
 				validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
-				action|tpl2email|d2u_immo_request|'. $property->contact->email;
+				action|tpl2email|d2u_immo_request|'. ($property->contact instanceof Contact ? $property->contact->email : rex::getErrorEmail());
 
         $yform = new rex_yform();
         $yform->setFormData(trim($form_data));
@@ -1198,10 +1209,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<p>'. $tag_open .'d2u_immo_print_foot'. $tag_close .'</p>';
     echo '<p>'. $tag_open .'d2u_immo_print_foot_greetings'. $tag_close .'</p>';
     echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname;
-    if ('' != $property->contact->phone) {
+    if ('' !== $property->contact->phone) {
         echo '<br>'. $property->contact->phone;
     }
-    if ('' != $property->contact->email) {
+    if ('' !== $property->contact->email) {
         echo '<br>'. $property->contact->email;
     }
     echo '</p>';
@@ -1209,10 +1220,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
 } else {
     // Output property list
-    $properties_leasehold = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'ERBPACHT', true);
-    $properties_leasing = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'LEASING', true);
-    $properties_rent = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'MIETE_PACHT', true);
-    $properties_sale = D2U_Immo\Property::getAll(Rex_clang::getCurrentId(), 'KAUF', true);
+    $properties_leasehold = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'ERBPACHT', true);
+    $properties_leasing = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'LEASING', true);
+    $properties_rent = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'MIETE_PACHT', true);
+    $properties_sale = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'KAUF', true);
 
     // Tabs
     echo '<div class="col-12">';
@@ -1283,10 +1294,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 		var target_anchor = target_url.substr(target_url.indexOf("#")).toString();
 		if(target_anchor === "#tab_map") {
 			<?php
-                if ('google' == $map_type) {
+                if ('google' === $map_type) {
                     echo "google.maps.event.trigger(map, 'resize');";
                     echo 'map.setCenter(myLatlng);';
-                } elseif ('osm' == $map_type && rex_addon::get('osmproxy')->isAvailable()) {
+                } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) {
                     echo 'L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);';
                 } elseif (rex_addon::get('geolocation')->isAvailable()) {
                     echo 'let container = document.getElementById(\''.$map_id.'\');'. PHP_EOL;

@@ -15,20 +15,18 @@
             if (rex_addon::get('osmproxy')->isAvailable()) {
                 $map_types['osm'] = 'OSM Proxy Addon: OpenStreetMap Karte';
             }
-            $map_types['google'] = 'Google Maps'. ('' != rex_config::get('d2u_helper', 'maps_key', '') ? '' : ' (in den Einstellung des D2U Helper Addons muss hierfür noch ein Google Maps API Key eingegeben werden)');
+            $map_types['google'] = 'Google Maps'. ('' !== rex_config::get('d2u_helper', 'maps_key', '') ? '' : ' (in den Einstellung des D2U Helper Addons muss hierfür noch ein Google Maps API Key eingegeben werden)');
 
-            if (count($map_types) > 0) {
-                echo '<select name="REX_INPUT_VALUE[1]" class="form-control">';
-                foreach ($map_types as $map_type_id => $map_type_name) {
-                    echo '<option value="'. $map_type_id .'"';
+            echo '<select name="REX_INPUT_VALUE[1]" class="form-control">';
+            foreach ($map_types as $map_type_id => $map_type_name) {
+                echo '<option value="'. $map_type_id .'"';
 
-                    if ('REX_VALUE[1]' == $map_type_id) {
-                        echo ' selected="selected" ';
-                    }
-                    echo '>'. $map_type_name .'</option>';
+                if ('REX_VALUE[1]' === (string) $map_type_id) {
+                    echo ' selected="selected" ';
                 }
-                echo '</select>';
+                echo '>'. $map_type_name .'</option>';
             }
+            echo '</select>';
         ?>
 	</div>
 </div>

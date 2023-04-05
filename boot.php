@@ -28,20 +28,17 @@ function rex_d2u_immo_article_is_in_use(rex_extension_point $ep)
     // Prepare warnings
     // Settings
     $addon = rex_addon::get('d2u_immo');
-    if ($addon->hasConfig('article_id') && $addon->getConfig('article_id') == $article_id) {
+    if ($addon->hasConfig('article_id') && (int) $addon->getConfig('article_id') === $article_id) {
         $message = '<a href="index.php?page=d2u_immo/settings">'.
              rex_i18n::msg('d2u_immo_rights_all') .' - '. rex_i18n::msg('d2u_immo_meta_settings') . '</a>';
-        if (!in_array($message, $warning, true)) {
-            $warning[] = $message;
-        }
+        $warning[] = $message;
     }
 
     if (count($warning) > 0) {
         throw new rex_api_exception(rex_i18n::msg('d2u_helper_rex_article_cannot_delete') .'<ul><li>'. implode('</li><li>', $warning) .'</li></ul>');
     }
 
-    return '';
-
+    return [];
 }
 
 /**
@@ -135,7 +132,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep)
     }
 
     $addon = rex_addon::get('d2u_immo');
-    if ($addon->hasConfig('even_informative_pdf') && $addon->getConfig('even_informative_pdf') == $filename) {
+    if ($addon->hasConfig('even_informative_pdf') && (string) $addon->getConfig('even_informative_pdf') === $filename) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/settings\')">'.
              rex_i18n::msg('d2u_immo') .' - '. rex_i18n::msg('d2u_helper_settings') . '</a>';
         if (!in_array($message, $warning, true)) {

@@ -1,5 +1,5 @@
 <?php
-$contact_id = 'REX_VALUE[2]';
+$contact_id = (int) 'REX_VALUE[2]';
 $contact_form_url = 'REX_LINK[id=1 output=url]';
 $contact = new D2U_Immo\Contact($contact_id);
 $property = false;

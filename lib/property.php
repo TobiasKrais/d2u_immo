@@ -23,10 +23,10 @@ class Property implements \D2U_Helper\ITranslationHelper
     public int $property_id = 0;
 
     /** @var string internal project number */
-    public string$internal_object_number = '';
+    public string $internal_object_number = '';
 
     /** @var int sort priority */
-    public int$priority = 0;
+    public int $priority = 0;
 
     /** @var Contact|bool contact object */
     public Contact|bool $contact = false;
@@ -406,7 +406,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->purchase_price_m2 = (int) $result->getValue('purchase_price_m2');
             $this->rented = 1 === (int) $result->getValue('rented') ? true : false;
             $this->flat_sharing_possible = 1 === (int) $result->getValue('flat_sharing_possible') ? true : false;
-            $this->rooms = ((float) $result->getValue('rooms') == round((float) $result->getValue('rooms')) ? round((float) $result->getValue('rooms')) : (float) $result->getValue('rooms'));
+            $this->rooms = ((float) $result->getValue('rooms') === round((float) $result->getValue('rooms')) ? round((float) $result->getValue('rooms')) : (float) $result->getValue('rooms'));
             $this->street = (string) $result->getValue('street');
             $this->teaser = (string) $result->getValue('teaser');
             $this->total_area = (float) $result->getValue('total_area');
@@ -420,7 +420,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->zip_code = (string) $result->getValue('zip_code');
             // Window advertising plugin fields
             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                $this->window_advertising_status = 'online' === (string) $result->getValue('window_advertising_status') ? true : false;
+                $this->window_advertising_status = (string) $result->getValue('window_advertising_status');
             }
         }
     }
@@ -463,10 +463,10 @@ class Property implements \D2U_Helper\ITranslationHelper
     /**
      * Changes the status of a property.
      */
-    public function changeWindowAdvertisingStatus()
+    public function changeWindowAdvertisingStatus():void
     {
         if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-            if ('online' == $this->window_advertising_status) {
+            if ('online' === $this->window_advertising_status) {
                 if ($this->property_id > 0) {
                     $query = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_properties '
                         ."SET window_advertising_status = 'offline' "
@@ -548,17 +548,17 @@ class Property implements \D2U_Helper\ITranslationHelper
         $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
                 .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' ';
-        if ($only_online || '' != $market_type) {
+        if ($only_online || '' !== $market_type) {
             $where = [];
             if ($only_online) {
                 $where[] = "online_status = 'online'";
             }
-            if ('' != $market_type) {
+            if ('' !== $market_type) {
                 $where[] = "market_type = '". $market_type ."'";
             }
             $query .= 'WHERE '. implode(' AND ', $where) .' ';
         }
-        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' == rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
+        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
             $query .= 'ORDER BY priority ASC';
         } else {
             $query .= 'ORDER BY name ASC';
@@ -587,7 +587,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                 .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
                     .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
                 ."WHERE window_advertising_status = 'online' ";
-            if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' == rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
+            if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
                 $query .= 'ORDER BY priority ASC';
             } else {
                 $query .= 'ORDER BY name ASC';
@@ -596,7 +596,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $result->setQuery($query);
 
             for ($i = 0; $i < $result->getRows(); ++$i) {
-                $properties[] = new self($result->getValue('property_id'), $clang_id);
+                $properties[] = new self((int) $result->getValue('property_id'), $clang_id);
                 $result->next();
             }
         }
@@ -605,12 +605,12 @@ class Property implements \D2U_Helper\ITranslationHelper
 
     /**
      * Creates a short description suiteable for social networks.
-     * @return Short description
+     * @return string description
      */
     public function getSocialNetworkDescription()
     {
         $social_description = '';
-        if ('KAUF' == strtoupper($this->market_type)) {
+        if ('KAUF' === strtoupper($this->market_type)) {
             if ($this->purchase_price > 0) {
                 $social_description .= \Sprog\Wildcard::get('d2u_immo_purchase_price', $this->clang_id) .':&nbsp;'. number_format($this->purchase_price, 0, ',', '.') .',-&nbsp;'. $this->currency_code .'; ';
             }
@@ -626,11 +626,11 @@ class Property implements \D2U_Helper\ITranslationHelper
             }
         }
 
-        if ('HAUS' == strtoupper($this->object_type) || 'WOHNUNG' == strtoupper($this->object_type) || 'BUERO_PRAXEN' == strtoupper($this->object_type)) {
+        if ('HAUS' === strtoupper($this->object_type) || 'WOHNUNG' === strtoupper($this->object_type) || 'BUERO_PRAXEN' === strtoupper($this->object_type)) {
             if ($this->living_area > 0) {
-                if ('HAUS' == strtoupper($this->object_type) || 'WOHNUNG' == strtoupper($this->object_type)) {
+                if ('HAUS' === strtoupper($this->object_type) || 'WOHNUNG' === strtoupper($this->object_type)) {
                     $social_description .= \Sprog\Wildcard::get('d2u_immo_living_area', $this->clang_id) .':&nbsp;';
-                } elseif ('BUERO_PRAXEN' == strtoupper($this->object_type)) {
+                } elseif ('BUERO_PRAXEN' === strtoupper($this->object_type)) {
                     $social_description .= \Sprog\Wildcard::get('d2u_immo_office_area', $this->clang_id) .':&nbsp;';
                 }
                 $social_description .= number_format($this->living_area, 2, ',', '.') .'m²; ';
@@ -692,7 +692,7 @@ class Property implements \D2U_Helper\ITranslationHelper
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $objects[] = new self($result->getValue('property_id'), $clang_id);
+            $objects[] = new self((int) $result->getValue('property_id'), $clang_id);
             $result->next();
         }
 
@@ -715,7 +715,7 @@ class Property implements \D2U_Helper\ITranslationHelper
         }
 
         if ($including_domain) {
-            if (rex_addon::get('yrewrite') instanceof rex_addon_interface && rex_addon::get('yrewrite')->isAvailable()) {
+            if (rex_addon::get('yrewrite')->isAvailable()) {
                 return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
             }
 
@@ -733,7 +733,7 @@ class Property implements \D2U_Helper\ITranslationHelper
      */
     public function save()
     {
-        $error = 0;
+        $error = false;
 
         // Save the not language specific part
         $pre_save_object = new self($this->property_id, $this->clang_id);
@@ -752,13 +752,13 @@ class Property implements \D2U_Helper\ITranslationHelper
                     ."bath = '|". implode('|', $this->bath) ."|', "
                     ."broadband_internet = '|". implode('|', $this->broadband_internet) ."|', "
                     .'cable_sat_tv = '. ($this->cable_sat_tv ? 1 : 0) .', '
-                    .'category_id = '. (false !== $this->category ? $this->category->category_id : 0) .', '
+                    .'category_id = '. ($this->category instanceof Category ? $this->category->category_id : 0) .', '
                     ."city = '". $this->city ."', "
                     .'cold_rent = '. $this->cold_rent .', '
                     .'price_plus_vat = '. ($this->price_plus_vat ? 1 : 0) .', '
                     ."condition_type = '". $this->condition_type ."', "
                     .'construction_year = '. $this->construction_year .', '
-                    .'contact_id = '. (false !== $this->contact ? $this->contact->contact_id : 0) .', '
+                    .'contact_id = '. ($this->contact instanceof Contact ? $this->contact->contact_id : 0) .', '
                     ."country_code = '". $this->country_code ."', "
                     ."courtage = '". $this->courtage ."', "
                     .'courtage_incl_vat = '. ($this->courtage_incl_vat ? 1 : 0) .', '
@@ -779,10 +779,10 @@ class Property implements \D2U_Helper\ITranslationHelper
                     .'including_warm_water = '. ($this->including_warm_water ? 1 : 0) .', '
                     ."internal_object_number = '". $this->internal_object_number ."', "
                     ."kitchen = '|". implode('|', $this->kitchen) ."|', "
-                    .'land_area = '. str_replace(',', '.', $this->land_area) .', '
+                    .'land_area = '. $this->land_area .', '
                     ."land_type = '". $this->land_type ."', "
                     ."latitude = ". $this->latitude .", "
-                    .'living_area = '. (float) str_replace(',', '.', $this->living_area) .', '
+                    .'living_area = '. $this->living_area .', '
                     ."location_plans = '". implode(',', $this->location_plans) ."', "
                     ."longitude = ". $this->longitude .", "
                     ."market_type = '". $this->market_type ."', "
@@ -807,12 +807,12 @@ class Property implements \D2U_Helper\ITranslationHelper
                     .'flat_sharing_possible = '. ($this->flat_sharing_possible ? 1 : 0) .', '
                     .'rooms = '. $this->rooms .', '
                     ."street = '". $this->street ."', "
-                    .'total_area = '. str_replace(',', '.', $this->total_area) .', '
+                    .'total_area = '. $this->total_area .', '
                     ."type_of_use = '". $this->type_of_use ."', "
                     .'wheelchair_accessable = '. ($this->wheelchair_accessable ? 1 : 0) .', '
                     ."zip_code = '". $this->zip_code ."' ";
             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                $query .= ", window_advertising_status = '". ($this->window_advertising_status ? 'online' : 'offline') ."' ";
+                $query .= ", window_advertising_status = '". ($this->window_advertising_status === 'online' ? 'online' : 'offline') ."' ";
             }
 
             if (0 === $this->property_id) {
@@ -834,7 +834,7 @@ class Property implements \D2U_Helper\ITranslationHelper
         }
 
         $regenerate_urls = false;
-        if (0 == $error) {
+        if (!$error) {
             // Save the language specific part
             $pre_save_object = new self($this->property_id, $this->clang_id);
             if ($pre_save_object !== $this) {
@@ -850,7 +850,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                         ."name = '". addslashes($this->name) ."', "
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
+                        ."updateuser = '". (rex::getUser() instanceof \rex_user ? rex::getUser()->getLogin() : '') ."' ";
                 $result = rex_sql::factory();
                 $result->setQuery($query);
                 $error = $result->hasError();

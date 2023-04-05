@@ -18,46 +18,46 @@ use rex_sql;
 class Contact
 {
     /** @var int Database ID */
-    public $contact_id = 0;
+    public int $contact_id = 0;
 
     /** @var string First name */
-    public $firstname = '';
+    public string $firstname = '';
 
     /** @var string Last name */
-    public $lastname = '';
+    public string $lastname = '';
 
     /** @var string Company */
-    public $company = '';
+    public string $company = '';
 
     /** @var string Street name */
-    public $street = '';
+    public string $street = '';
 
     /** @var string House number */
-    public $house_number = '';
+    public string $house_number = '';
 
     /** @var string ZIP code */
-    public $zip_code = '';
+    public string $zip_code = '';
 
     /** @var string City */
-    public $city = '';
+    public string $city = '';
 
     /** @var string ISO three digit country code */
-    public $country_code = '';
+    public string $country_code = '';
 
     /** @var string Phone number */
-    public $phone = '';
+    public string $phone = '';
 
     /** @var string Fax number */
-    public $fax = '';
+    public string $fax = '';
 
     /** @var string Mobile phone number */
-    public $mobile = '';
+    public string $mobile = '';
 
     /** @var string E-Mail address */
-    public $email = '';
+    public string $email = '';
 
     /** @var string Picture */
-    public $picture = '';
+    public string $picture = '';
 
     /**
      * Constructor. Reads a contact stored in database.
@@ -72,20 +72,20 @@ class Contact
         $num_rows = $result->getRows();
 
         if ($num_rows > 0) {
-            $this->contact_id = $result->getValue('contact_id');
-            $this->city = $result->getValue('city');
-            $this->company = $result->getValue('company');
-            $this->country_code = $result->getValue('country_code');
-            $this->email = $result->getValue('email');
-            $this->fax = $result->getValue('fax');
-            $this->firstname = $result->getValue('firstname');
-            $this->house_number = $result->getValue('house_number');
-            $this->lastname = $result->getValue('lastname');
-            $this->mobile = $result->getValue('mobile');
-            $this->phone = $result->getValue('phone');
-            $this->picture = $result->getValue('picture');
-            $this->street = $result->getValue('street');
-            $this->zip_code = $result->getValue('zip_code');
+            $this->contact_id = (int) $result->getValue('contact_id');
+            $this->city = (string) $result->getValue('city');
+            $this->company = (string) $result->getValue('company');
+            $this->country_code = (string) $result->getValue('country_code');
+            $this->email = (string) $result->getValue('email');
+            $this->fax = (string) $result->getValue('fax');
+            $this->firstname = (string) $result->getValue('firstname');
+            $this->house_number = (string) $result->getValue('house_number');
+            $this->lastname = (string) $result->getValue('lastname');
+            $this->mobile = (string) $result->getValue('mobile');
+            $this->phone = (string) $result->getValue('phone');
+            $this->picture = (string) $result->getValue('picture');
+            $this->street = (string) $result->getValue('street');
+            $this->zip_code = (string) $result->getValue('zip_code');
         }
     }
 
@@ -112,7 +112,7 @@ class Contact
 
         $contacts = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $contacts[] = new self($result->getValue('contact_id'));
+            $contacts[] = new self((int) $result->getValue('contact_id'));
             $result->next();
         }
         return $contacts;
@@ -126,9 +126,9 @@ class Contact
     {
         $query = 'SELECT properties.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
-                .'ON properties.property_id = lang.property_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
+                .'ON properties.property_id = lang.property_id AND lang.clang_id = '. (int) \rex_config::get('d2u_helper', 'default_lang') .' '
             .'WHERE contact_id = '. $this->contact_id .' ';
-        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' == rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
+        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
             $query .= 'ORDER BY priority ASC';
         } else {
             $query .= 'ORDER BY name ASC';
@@ -138,7 +138,7 @@ class Contact
 
         $properties = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $properties[] = new Property($result->getValue('property_id'), rex_clang::getCurrentId());
+            $properties[] = new Property((int) $result->getValue('property_id'), rex_clang::getCurrentId());
             $result->next();
         }
         return $properties;
@@ -146,11 +146,11 @@ class Contact
 
     /**
      * Updates or inserts the object into database.
-     * @return in error code if error occurs
+     * @return bool error code if error occurs
      */
     public function save()
     {
-        $error = 0;
+        $error = false;
 
         $query = rex::getTablePrefix() .'d2u_immo_contacts SET '
                 ."city = '". $this->city ."', "

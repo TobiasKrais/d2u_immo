@@ -45,13 +45,13 @@ class Category implements \D2U_Helper\ITranslationHelper
     public string $translation_needs_update = 'delete';
 
     /** @var string Last update date */
-    public string $updatedate = '';
+    private string $updatedate = '';
 
     /** @var string Redaxo update user name */
-    public string $updateuser = '';
+    private string $updateuser = '';
 
     /** @var string URL */
-    public string $url = '';
+    private string $url = '';
 
     /**
      * Constructor. Reads a category stored in database.
@@ -77,7 +77,7 @@ class Category implements \D2U_Helper\ITranslationHelper
             $this->name = stripslashes((string) $result->getValue('name'));
             $this->teaser = stripslashes((string) $result->getValue('teaser'));
             $this->picture = (string) $result->getValue('picture');
-            $this->priority = (string) $result->getValue('priority');
+            $this->priority = (int) $result->getValue('priority');
             if ('' !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
@@ -129,7 +129,7 @@ class Category implements \D2U_Helper\ITranslationHelper
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories AS categories '
                 .'ON lang.category_id = categories.category_id '
             .'WHERE clang_id = '. $clang_id .' ';
-        if ('priority' == rex_addon::get('d2u_immo')->getConfig('default_category_sort', 'name')) {
+        if ('priority' === (string) rex_addon::get('d2u_immo')->getConfig('default_category_sort', 'name')) {
             $query .= 'ORDER BY priority';
         } else {
             $query .= 'ORDER BY name';
@@ -139,7 +139,7 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         $categories = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $categories[] = new self($result->getValue('category_id'), $clang_id);
+            $categories[] = new self((int) $result->getValue('category_id'), $clang_id);
             $result->next();
         }
         return $categories;
@@ -158,7 +158,7 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         $children = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $children[] = new self($result->getValue('category_id'), $this->clang_id);
+            $children[] = new self((int) $result->getValue('category_id'), $this->clang_id);
             $result->next();
         }
         return $children;
@@ -190,15 +190,15 @@ class Category implements \D2U_Helper\ITranslationHelper
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
                     .'ON lang.property_id = properties.property_id '
             .'WHERE category_id = '. $this->category_id .' AND clang_id = '. $this->clang_id .' ';
-        if ($only_online || '' != $market_type) {
+        if ($only_online || '' !== $market_type) {
             if ($only_online) {
                 $query .= "AND online_status = 'online' ";
             }
-            if ('' != $market_type) {
+            if ('' !== $market_type) {
                 $query .= "AND market_type = '". $market_type ."' ";
             }
         }
-        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' == rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
+        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === (string) rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
             $query .= 'ORDER BY priority ASC';
         } else {
             $query .= 'ORDER BY name ASC';
@@ -208,7 +208,7 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         $properties = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $properties[] = new Property($result->getValue('property_id'), $this->clang_id);
+            $properties[] = new Property((int) $result->getValue('property_id'), $this->clang_id);
             $result->next();
         }
         return $properties;
@@ -240,7 +240,7 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $objects[] = new self($result->getValue('category_id'), $clang_id);
+            $objects[] = new self((int) $result->getValue('category_id'), $clang_id);
             $result->next();
         }
 
@@ -262,7 +262,7 @@ class Category implements \D2U_Helper\ITranslationHelper
         }
 
         if ($including_domain) {
-            if (rex_addon::get('yrewrite') instanceof rex_addon_interface && rex_addon::get('yrewrite')->isAvailable()) {
+            if (rex_addon::get('yrewrite')->isAvailable()) {
                 return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
             }
 
@@ -280,7 +280,7 @@ class Category implements \D2U_Helper\ITranslationHelper
      */
     public function save()
     {
-        $error = 0;
+        $error = false;
 
         // Save the not language specific part
         $pre_save_object = new self($this->category_id, $this->clang_id);
@@ -292,7 +292,7 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         if (0 === $this->category_id || $pre_save_object !== $this) {
             $query = rex::getTablePrefix() .'d2u_immo_categories SET '
-                    .'parent_category_id = '. (false === $this->parent_category ? 0 : $this->parent_category->category_id) .', '
+                    .'parent_category_id = '. ($this->parent_category instanceof Category ? $this->parent_category->category_id : 0) .', '
                     .'priority = '. $this->priority .', '
                     ."picture = '". $this->picture ."' ";
 
@@ -311,7 +311,7 @@ class Category implements \D2U_Helper\ITranslationHelper
         }
 
         $regenerate_urls = false;
-        if (0 == $error) {
+        if (!$error) {
             // Save the language specific part
             $pre_save_object = new self($this->category_id, $this->clang_id);
             if ($pre_save_object !== $this) {

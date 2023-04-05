@@ -174,7 +174,7 @@ class Provider
             $mail->addAddress(trim($d2u_immo->getConfig('export_failure_email')));
             $mail->Subject = rex_i18n::msg('d2u_immo_export_failure_report');
             $mail->Body = implode('<br>', $message);
-            $mail->Send();
+            $mail->send();
         }
 
         if ($error) {
