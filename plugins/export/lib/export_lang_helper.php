@@ -1,5 +1,6 @@
 <?php
 /**
+ * @api
  * Offers helper functions for language issues.
  */
 class export_lang_helper extends d2u_immo_lang_helper
@@ -26,7 +27,7 @@ class export_lang_helper extends d2u_immo_lang_helper
 
     /**
      * Factory method.
-     * @return used_machines_lang_helper Object
+     * @return export_lang_helper Object
      */
     public static function factory()
     {

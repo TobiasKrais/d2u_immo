@@ -36,7 +36,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
         // Install / remove Cronjob
         if (rex_plugin::get('d2u_immo', 'export')->isAvailable()) {
             $export_cronjob = d2u_immo_export_cronjob::factory();
-            if ('active' == $this->getConfig('export_autoexport')) {
+            if ('active' === rex_config::get('d2u_immo', 'export_autoexport')) {
                 if (!$export_cronjob->isInstalled()) {
                     $export_cronjob->install();
                 }
@@ -57,7 +57,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?= rex_i18n::msg('d2u_helper_settings') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        d2u_addon_backend_helper::form_linkfield('d2u_immo_settings_article', '1', $this->getConfig('article_id'), (int) rex_config::get('d2u_helper', 'default_lang'));
+                        d2u_addon_backend_helper::form_linkfield('d2u_immo_settings_article', '1', rex_config::get('d2u_immo', 'article_id'), (int) rex_config::get('d2u_helper', 'default_lang'));
                     ?>
 				</div>
 			</fieldset>
@@ -65,7 +65,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?= rex_i18n::msg('d2u_helper_lang_replacements') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        d2u_addon_backend_helper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' == $this->getConfig('lang_wildcard_overwrite'));
+                        d2u_addon_backend_helper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' === rex_config::get('d2u_immo', 'lang_wildcard_overwrite'));
                         foreach (rex_clang::getAll() as $rex_clang) {
                             echo '<dl class="rex-form-group form-group">';
                             echo '<dt><label>'. $rex_clang->getName() .'</label></dt>';
@@ -76,7 +76,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
                                 'd2u_helper_lang_german' => 'german',
                             ];
                             foreach ($replacement_options as $key => $value) {
-                                $selected = $value == $this->getConfig('lang_replacement_'. $rex_clang->getId()) ? ' selected="selected"' : '';
+                                $selected = $value === rex_config::get('d2u_immo', 'lang_replacement_'. $rex_clang->getId()) ? ' selected="selected"' : '';
                                 echo '<option value="'. $value .'"'. $selected .'>'. rex_i18n::msg('d2u_helper_lang_replacements_install') .' '. rex_i18n::msg($key) .'</option>';
                             }
                             echo '</select>';
@@ -90,7 +90,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         $options_category_sort = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-                        d2u_addon_backend_helper::form_select('d2u_helper_sort', 'settings[default_category_sort]', $options_category_sort, [$this->getConfig('default_category_sort')]);
+                        d2u_addon_backend_helper::form_select('d2u_helper_sort', 'settings[default_category_sort]', $options_category_sort, [rex_config::get('d2u_immo', 'default_category_sort')]);
                     ?>
 				</div>
 			</fieldset>
@@ -99,8 +99,8 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         $options = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-                        d2u_addon_backend_helper::form_select('d2u_helper_sort', 'settings[default_property_sort]', $options, [$this->getConfig('default_property_sort')]);
-                        d2u_addon_backend_helper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', $this->hasConfig('even_informative_pdf') ? $this->getConfig('even_informative_pdf') : '')
+                        d2u_addon_backend_helper::form_select('d2u_helper_sort', 'settings[default_property_sort]', $options, [rex_config::get('d2u_immo', 'default_property_sort')]);
+                        d2u_addon_backend_helper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', rex_config::get('d2u_immo', 'even_informative_pdf') ? rex_config::get('d2u_immo', 'even_informative_pdf') : '')
                     ?>
 				</div>
 			</fieldset>
@@ -109,10 +109,10 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         echo '<p>'. rex_i18n::msg('d2u_immo_settings_finance_calculator_hint') .'</p>';
-                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_real_estate_tax', 'settings[finance_calculator_real_estate_tax]', $this->getConfig('finance_calculator_real_estate_tax'), true, false, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_notary_costs', 'settings[finance_calculator_notary_costs]', $this->getConfig('finance_calculator_notary_costs'), true, false, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_interest_rate', 'settings[finance_calculator_interest_rate]', $this->getConfig('finance_calculator_interest_rate'), true, false, 'text');
-                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_repayment', 'settings[finance_calculator_repayment]', $this->getConfig('finance_calculator_repayment'), true, false, 'text');
+                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_real_estate_tax', 'settings[finance_calculator_real_estate_tax]', rex_config::get('d2u_immo', 'finance_calculator_real_estate_tax'), true, false, 'text');
+                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_notary_costs', 'settings[finance_calculator_notary_costs]', rex_config::get('d2u_immo', 'finance_calculator_notary_costs'), true, false, 'text');
+                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_interest_rate', 'settings[finance_calculator_interest_rate]', rex_config::get('d2u_immo', 'finance_calculator_interest_rate'), true, false, 'text');
+                        d2u_addon_backend_helper::form_input('d2u_immo_settings_finance_calculator_repayment', 'settings[finance_calculator_repayment]', rex_config::get('d2u_immo', 'finance_calculator_repayment'), true, false, 'text');
                     ?>
 				</div>
 			</fieldset>
@@ -123,8 +123,8 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 					<legend><small><i class="rex-icon fa-cloud-upload"></i></small> <?= rex_i18n::msg('d2u_immo_export') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                        d2u_addon_backend_helper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' == $this->getConfig('export_autoexport'));
-                        d2u_addon_backend_helper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', $this->getConfig('export_failure_email'), true, false, 'email');
+                        d2u_addon_backend_helper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' === rex_config::get('d2u_immo', 'export_autoexport'));
+                        d2u_addon_backend_helper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', rex_config::get('d2u_immo', 'export_failure_email'), true, false, 'email');
                         ?>
 					</div>
 				</fieldset>
@@ -136,7 +136,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 					<legend><small><i class="rex-icon fa-desktop"></i></small> <?= rex_i18n::msg('d2u_immo_window_advertising') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                        d2u_addon_backend_helper::form_linkfield('d2u_immo_window_advertising_settings_article', '2', $this->getConfig('window_advertising_settings_article'), (int) rex_config::get('d2u_helper', 'default_lang'))
+                        d2u_addon_backend_helper::form_linkfield('d2u_immo_window_advertising_settings_article', '2', rex_config::get('d2u_immo', 'window_advertising_settings_article'), (int) rex_config::get('d2u_helper', 'default_lang'))
                         ?>
 					</div>
 				</fieldset>

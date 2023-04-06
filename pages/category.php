@@ -1,4 +1,7 @@
 <?php
+
+use D2U_Immo\Category;
+
 $func = rex_request('func', 'string');
 $entry_id = (int) rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -161,12 +164,12 @@ if ('edit' === $func || 'add' === $func) {
                             $options = ['-1' => rex_i18n::msg('d2u_immo_category_parent_none')];
                             $selected_values = [];
                             foreach (D2U_Immo\Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $parent_category) {
-                                if (!$parent_category->isChild() && $parent_category->category_id != $category->category_id) {
+                                if (!$parent_category->isChild() && $parent_category->category_id !== $category->category_id) {
                                     $options[$parent_category->category_id] = $parent_category->name;
                                 }
                             }
 
-                            d2u_addon_backend_helper::form_select('d2u_immo_category_parent', 'form[parent_category_id]', $options, false === $category->parent_category ? [] : [$category->parent_category->category_id], 1, false, $readonly);
+                            d2u_addon_backend_helper::form_select('d2u_immo_category_parent', 'form[parent_category_id]', $options, $category->parent_category instanceof Category ? [$category->parent_category->category_id] : [], 1, false, $readonly);
                             d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $category->priority, true, $readonly, 'number');
                             d2u_addon_backend_helper::form_mediafield('d2u_helper_picture', '1', $category->picture, $readonly);
                         ?>
@@ -202,7 +205,7 @@ if ('' === $func) {
             . 'ON categories.category_id = lang.category_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS parents_lang '
             . 'ON categories.parent_category_id = parents_lang.category_id AND parents_lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' ';
-    if ('priority' == $this->getConfig('default_category_sort')) {
+    if ('priority' === rex_config::get('d2u_immo', 'default_category_sort')) {
         $query .= 'ORDER BY priority ASC';
     } else {
         $query .= 'ORDER BY categoryname ASC';

@@ -34,6 +34,7 @@ abstract class AExport
      * tags are converted to new lines: </p>, <br>, </h1>, </h2>, </h3>, </h4>,
      * </h5>, </h6>, </li>.
      * @param string $html HTML string
+     * @return string Converted string
      */
     protected static function convertToExportString($html)
     {
@@ -52,6 +53,7 @@ abstract class AExport
 
     /**
      * Export properties that are added to export list for the provider.
+     * @return string error message - if no errors occured, empty string is returned
      */
     abstract public function export();
 
@@ -83,14 +85,14 @@ abstract class AExport
     /**
      * Save export results.
      */
-    protected function saveExportedProperties()
+    protected function saveExportedProperties():void
     {
         foreach ($this->export_properties as $exported_property) {
-            if ('add' == $exported_property->export_action || 'update' == $exported_property->export_action) {
+            if ('add' === $exported_property->export_action || 'update' === $exported_property->export_action) {
                 $exported_property->export_timestamp = date('Y-m-d H:i:s');
                 $exported_property->export_action = '';
                 $exported_property->save();
-            } elseif ('delete' == $exported_property->export_action) {
+            } elseif ('delete' === $exported_property->export_action) {
                 $exported_property->delete();
             }
         }

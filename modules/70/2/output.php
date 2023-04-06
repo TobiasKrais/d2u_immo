@@ -1,4 +1,7 @@
 <?php
+
+use D2U_Immo\Contact;
+
 $contact_id = (int) 'REX_VALUE[2]';
 $contact_form_url = 'REX_LINK[id=1 output=url]';
 $contact = new D2U_Immo\Contact($contact_id);
@@ -20,19 +23,19 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $property_id = $url_id;
     }
     $property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
-    if ('REX_VALUE[1]' == 'Ja') {
+    if ('REX_VALUE[1]' === 'Ja') { /** @phpstan-ignore-line */
         $contact = $property->contact;
     }
 }
 
-if ($contact && $contact->contact_id > 0) {
+if ($contact->contact_id > 0) {
 ?>
 <div class="col-12 col-sm-6 col-md-4 col-lg-12">
 	<div class="infobox">
 		<div class="infobox-header"><?= $tag_open .'d2u_immo_contact_person'. $tag_close ?></div>
 		<div class="infobox-content">
 			<?php
-                if ('' != $contact->picture) {
+                if ('' !== $contact->picture) {
                     echo "<img class='contactpic' src='index.php?rex_media_type=d2u_immo_contact&rex_media_file=". $contact->picture ."' alt='". $contact->firstname .' '. $contact->lastname ."' />";
                 }
                 echo '<br>';
@@ -40,7 +43,7 @@ if ($contact && $contact->contact_id > 0) {
                 echo "<span class='right'>";
                 if (false !== $property) {
                     echo '<a href="javascript:show_request_form()">';
-                } elseif ('' != $contact_form_url) {
+                } elseif ('' !== $contact_form_url) {
                     echo '<a href="'. $contact_form_url .'">';
                 }
                 echo 'E-Mail <span class="icon mail"></span>';

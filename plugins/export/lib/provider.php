@@ -16,76 +16,76 @@ use function function_exists;
 class Provider
 {
     /** @var string Database ID */
-    public $provider_id = '';
+    public string $provider_id = '';
 
     /** @var string Provider name */
-    public $name = '';
+    public string $name = '';
 
     /** @var string provider interface name */
-    public $type = '';
+    public string $type = '';
 
     /**
      * @var int Redaxo language id. Represents the language, the object should
      * be exported.
      */
-    public $clang_id = 0;
+    public int $clang_id = 0;
 
     /** @var string Company name (your company name) */
-    public $company_name = '';
+    public string $company_name = '';
 
     /** @var string Company e-mail address (your e-mail address) */
-    public $company_email = '';
+    public string $company_email = '';
 
     /** @var string Customer number (your customer number of the provider) */
-    public $customer_number = '';
+    public string $customer_number = '';
 
     /** @var string FTP server address. Needed if transmission type is FTP. */
-    public $ftp_server = '';
+    public string $ftp_server = '';
 
     /** @var string FTP server username */
-    public $ftp_username = '';
+    public string $ftp_username = '';
 
     /** @var string FTP server password */
-    public $ftp_password = '';
+    public string $ftp_password = '';
 
     /** @var string FTP filename (including file type, normally .zip) */
-    public $ftp_filename = '';
+    public string $ftp_filename = '';
 
     /** @var string media manager type for exporting pictures */
-    public $media_manager_type = 'd2u_immo_list_tile';
+    public string $media_manager_type = 'd2u_immo_list_tile';
 
     /** @var string path where attachments can be found */
-    public $attachment_path = '';
+    public string $attachment_path = '';
 
     /** @var string app ID of social networks */
-    public $social_app_id = '';
+    public string $social_app_id = '';
 
     /** @var string app Secret of social networks */
-    public $social_app_secret = '';
+    public string $social_app_secret = '';
 
     /** @var string Twitter or LinkedIn OAuth Token. This token is valid until user revokes it. */
-    public $social_oauth_token = '';
+    public string $social_oauth_token = '';
 
     /**
      * @var string Twitter or LinkedIn OAuth Token Secret. This secret is valid until user
      * revokes it.
      */
-    public $social_oauth_token_secret = '';
+    public string $social_oauth_token_secret = '';
 
     /** @var string Twitter or LinkedIn OAuth Token Secret. Expiry time. */
-    public $social_oauth_token_valid_until = '';
+    public string $social_oauth_token_valid_until = '';
 
     /** @var string linkedin id */
-    public $linkedin_email = '';
+    public string $linkedin_email = '';
 
     /** @var string linkedin group id */
-    public $linkedin_groupid = '';
+    public string $linkedin_groupid = '';
 
     /** @var string twitter id */
-    public $twitter_id = '';
+    public string $twitter_id = '';
 
     /** @var string Online status. Either "online" or "offline". */
-    public $online_status = 'online';
+    public string $online_status = 'online';
 
     /**
      * Fetches the object from database.

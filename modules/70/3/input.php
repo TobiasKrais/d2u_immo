@@ -31,7 +31,7 @@
         // Vorselektierung
         $select_category->setSelected('REX_VALUE[1]');
 
-        echo $select_category->show();
+        $select_category->show();
         ?>
 		<br>
 		Alle weiteren Einstellungen können im <a href="index.php?page=d2u_immo">

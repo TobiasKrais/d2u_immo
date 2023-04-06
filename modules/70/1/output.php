@@ -142,7 +142,7 @@ $sprog = rex_addon::get('sprog');
 $tag_open = $sprog->getConfig('wildcard_open_tag');
 $tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_immo = rex_addon::get('d2u_immo');
-$map_type = 'REX_VALUE[1]' === '' ? 'google' : 'REX_VALUE[1]'; // Backward compatibility
+$map_type = 'REX_VALUE[1]' === '' ? 'google' : 'REX_VALUE[1]'; // Backward compatibility /** @phpstan-ignore-line */
 $map_id = 'd2u' . md5((string) time());
 
 $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
@@ -279,7 +279,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12">'. $tag_open .'d2u_immo_prices_plus_vat'. $tag_close .'</div>';
             echo '<div class="col-12">&nbsp;</div>';
         }
-        if ('' !== $property->deposit) {
+        if ($property->deposit > 0) {
             echo '<div class="col-6">'. $tag_open .'d2u_immo_deposit'. $tag_close .':</div>';
             echo '<div class="col-6">'. number_format($property->deposit, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</div>';
         }
@@ -655,7 +655,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12 print-border-h">';
             echo '<h2>'. $tag_open .'d2u_immo_ground_plans'. $tag_close .'</h2>';
             echo '</div>';
-            echo printImages($property->ground_plans);
+            printImages($property->ground_plans);
             echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
             echo '</div>';
         }
@@ -692,7 +692,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<h2 class="d-print-none">'. $property->name .'</h2>';
         echo '<p class="d-print-none">'. $property->street .' '. $property->house_number .'<br /> '. $property->zip_code .' '. $property->city .'</p>';
 
-        if ('google' === $map_type) {
+        if ('google' === $map_type) { /** @phpstan-ignore-line */
 ?>
 		<script src="https://maps.googleapis.com/maps/api/js?key=<?= $api_key ?>"></script>
 		<div id="map_canvas" style="display: block; <?= '' !== $print ? 'width: 900px' : 'width: 100%' ?>; height: 500px"></div>
@@ -701,7 +701,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 			var myLatlng;
 			<?php
                 // if longitude and latitude are available
-                if (0 != $property->longitude && 0 != $property->latitude) {
+                if (0.0 !== $property->longitude && 0.0 !== $property->latitude) {
             ?>
 				var myLatlng = new google.maps.LatLng(<?= $property->latitude .', '. $property->longitude ?>);
 				var myOptions = {
@@ -749,7 +749,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             ?>
 		</script>
 		<?php
-        } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) {
+        } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) { /** @phpstan-ignore-line */
             $map_id = random_int(0, getrandmax());
 
             $leaflet_js_file = 'modules/04-2/leaflet.js';
@@ -1158,8 +1158,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<fieldset><legend>'. $tag_open .'d2u_immo_recommendation_title'. $tag_close .'</legend>';
         $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
 				hidden|immo_url|'. $property->getUrl(true) .'|REQUEST
-				hidden|immo_contact_mail|'. $property->contact->email .'|REQUEST
-				hidden|immo_contact_name|'. $property->contact->firstname .' '. $property->contact->lastname .'|REQUEST
+				hidden|immo_contact_mail|'. ($property->contact instanceof Contact ? $property->contact->email : '') .'|REQUEST
+				hidden|immo_contact_name|'. ($property->contact instanceof Contact ? $property->contact->firstname .' '. $property->contact->lastname : '') .'|REQUEST
 
 				text|sender_name|'. $tag_open .'d2u_immo_recommendation_sender_name'. $tag_close .' *
 				text|sender_mail|'. $tag_open .'d2u_immo_recommendation_sender_mail'. $tag_close .' *
@@ -1205,18 +1205,20 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>'; // END div containing tab content
     }
 
-    echo '<div class="col-12 d-none d-print-inline">';
-    echo '<p>'. $tag_open .'d2u_immo_print_foot'. $tag_close .'</p>';
-    echo '<p>'. $tag_open .'d2u_immo_print_foot_greetings'. $tag_close .'</p>';
-    echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname;
-    if ('' !== $property->contact->phone) {
-        echo '<br>'. $property->contact->phone;
+    if ($property->contact instanceof Contact) {
+        echo '<div class="col-12 d-none d-print-inline">';
+        echo '<p>'. $tag_open .'d2u_immo_print_foot'. $tag_close .'</p>';
+        echo '<p>'. $tag_open .'d2u_immo_print_foot_greetings'. $tag_close .'</p>';
+        echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname;
+        if ('' !== $property->contact->phone) {
+            echo '<br>'. $property->contact->phone;
+        }
+        if ('' !== $property->contact->email) {
+            echo '<br>'. $property->contact->email;
+        }
+        echo '</p>';
+        echo '</div>';
     }
-    if ('' !== $property->contact->email) {
-        echo '<br>'. $property->contact->email;
-    }
-    echo '</p>';
-    echo '</div>';
 
 } else {
     // Output property list
@@ -1230,7 +1232,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<ul class="nav nav-pills d-print-none">';
     $tab_active = true;
     if (count($properties_sale) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
         $tab_active = false;
     }
     if (count($properties_rent) > 0) {
@@ -1252,7 +1254,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="tab-content">';
     $tab_active = true;
     if (count($properties_sale) > 0) {
-        echo '<div id="tab_sale" class="tab-pane immo-tab fade'. ($tab_active ? ' active show' : '') .'">';
+        echo '<div id="tab_sale" class="tab-pane immo-tab fade active show">';
         printPropertylist($properties_sale);
         echo '</div>';
         $tab_active = false;
@@ -1294,10 +1296,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 		var target_anchor = target_url.substr(target_url.indexOf("#")).toString();
 		if(target_anchor === "#tab_map") {
 			<?php
-                if ('google' === $map_type) {
+                if ('google' === $map_type) { /** @phpstan-ignore-line */
                     echo "google.maps.event.trigger(map, 'resize');";
                     echo 'map.setCenter(myLatlng);';
-                } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) {
+                } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) { /** @phpstan-ignore-line */
                     echo 'L.Util.requestAnimFrame(map.invalidateSize,map,!1,map._container);';
                 } elseif (rex_addon::get('geolocation')->isAvailable()) {
                     echo 'let container = document.getElementById(\''.$map_id.'\');'. PHP_EOL;

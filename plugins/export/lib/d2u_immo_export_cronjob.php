@@ -6,7 +6,7 @@ class d2u_immo_export_cronjob extends D2U_Helper\ACronJob
 {
     /**
      * Create a new instance of object.
-     * @return multinewsletter_cronjob_cleanup CronJob object
+     * @return d2u_immo_export_cronjob CronJob object
      */
     public static function factory()
     {

@@ -17,16 +17,16 @@ use function strlen;
 abstract class AFTPExport extends AExport
 {
     /** @var string Path to cache of the plugin. Initialized in constructor. */
-    protected $cache_path = '';
+    protected string $cache_path = '';
 
     /** @var array<string> list of documents that need to be added to ZIP export file */
-    protected $documents_for_zip = [];
+    protected array $documents_for_zip = [];
 
     /** @var array<string> list of files that need to be added to ZIP export file */
-    protected $files_for_zip = [];
+    protected array $files_for_zip = [];
 
     /** @var string filename of the ZIP file for this export */
-    protected $zip_filename = '';
+    protected string $zip_filename = '';
 
     /**
      * Constructor. Initializes variables.
@@ -38,7 +38,7 @@ abstract class AFTPExport extends AExport
 
         // Set exported properties without export action to action "update"
         foreach ($this->export_properties as $exported_property) {
-            if ('' == $exported_property->export_action) {
+            if ('' === $exported_property->export_action) {
                 $exported_property->export_action = 'update';
                 $exported_property->save();
             }
@@ -58,9 +58,9 @@ abstract class AFTPExport extends AExport
      */
     protected function getZipFileName()
     {
-        if ('' != $this->provider->ftp_filename) {
+        if ('' !== $this->provider->ftp_filename) {
             $this->zip_filename = $this->provider->ftp_filename;
-        } elseif ('' == $this->zip_filename) {
+        } elseif ('' === $this->zip_filename) {
             $this->zip_filename = preg_replace('/[^a-zA-Z0-9]/', '', $this->provider->name) .'_'
                 . trim($this->provider->customer_number) .'_'. $this->provider->type .'.zip';
         }
@@ -71,15 +71,15 @@ abstract class AFTPExport extends AExport
      * Prepares all documents for export.
      * @param int $max_attachments Maximum number of attatchments per property
      */
-    protected function prepareDocuments($max_attachments)
+    protected function prepareDocuments($max_attachments): void
     {
         foreach ($this->export_properties as $exported_property) {
-            if ('add' == $exported_property->export_action || 'update' == $exported_property->export_action) {
+            if ('add' === $exported_property->export_action || 'update' === $exported_property->export_action) {
                 $property = new Property($exported_property->property_id, $this->provider->clang_id);
                 $number_free_docs = $max_attachments - count($property->pictures) - count($property->ground_plans) - count($property->location_plans);
                 if ($max_attachments > $number_free_docs) {
                     foreach ($property->documents as $document) {
-                        if (strlen($document) > 3 && $number_free_docs > 0 && !in_array($document, $this->documents_for_zip)) {
+                        if (strlen($document) > 3 && $number_free_docs > 0 && !in_array($document, $this->documents_for_zip, true)) {
                             $this->documents_for_zip[] = $document;
                             --$number_free_docs;
                         }
@@ -111,7 +111,7 @@ abstract class AFTPExport extends AExport
     {
         foreach ($this->export_properties as $exported_property) {
             $pics_counter = 0;
-            if ('add' == $exported_property->export_action || 'update' == $exported_property->export_action) {
+            if ('add' === $exported_property->export_action || 'update' === $exported_property->export_action) {
                 $property = new Property($exported_property->property_id, $this->provider->clang_id);
                 foreach ($property->pictures as $picture) {
                     if (strlen($picture) > 3 && $pics_counter < $max_pics) {
@@ -143,11 +143,13 @@ abstract class AFTPExport extends AExport
     {
         // Establish connection and ...
         $connection_id = ftp_connect($this->provider->ftp_server);
-        // ... login
-        $login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
+        if (false !== $connection_id) {
+            // ... login
+            $login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);
+        }
 
         // Is connection not healthy: send error message
-        if ((!$connection_id) || (!$login_result)) {
+        if ((false === $connection_id) || !$login_result) {
             return rex_i18n::msg('d2u_immo_export_ftp_error_connection');
         }
         // Passive mode
@@ -166,7 +168,7 @@ abstract class AFTPExport extends AExport
 
     /**
      * ZIPs pictures and property filename.
-     * @param type $filename
+     * @param string $filename
      * @return string error message or empty if no errors occur
      */
     protected function zip($filename)
@@ -180,8 +182,8 @@ abstract class AFTPExport extends AExport
         foreach ($this->files_for_zip as $original_filename => $cachefilename) {
             $zip->addFile($cachefilename, $original_filename);
         }
-        foreach ($this->documents_for_zip as $filename) {
-            $zip->addFile(rex_url::media($filename), $filename);
+        foreach ($this->documents_for_zip as $document_filename) {
+            $zip->addFile(rex_url::media($document_filename), $document_filename);
         }
         $zip->close();
         return '';

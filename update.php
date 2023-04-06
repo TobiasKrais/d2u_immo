@@ -1,6 +1,6 @@
 <?php
 
-if (rex_version::compare($this->getVersion(), '1.1.2', '<')) {
+if (rex_version::compare($this->getVersion(), '1.1.2', '<')) { /** @phpstan-ignore-line */
     $sql = rex_sql::factory();
     $sql->setQuery('ALTER TABLE '. \rex::getTablePrefix() .'d2u_immo_properties_lang ADD COLUMN `updatedate_new` DATETIME NOT NULL AFTER `updatedate`;');
     $sql->setQuery('UPDATE '. \rex::getTablePrefix() .'d2u_immo_properties_lang SET `updatedate_new` = FROM_UNIXTIME(`updatedate`);');
@@ -9,8 +9,8 @@ if (rex_version::compare($this->getVersion(), '1.1.2', '<')) {
 }
 
 // remove default lang setting
-if ($this->hasConfig('default_lang')) {
-    $this->removeConfig('default_lang');
+if ($this->hasConfig('default_lang')) { /** @phpstan-ignore-line */
+    $this->removeConfig('default_lang'); /** @phpstan-ignore-line */
 }
 
 // use path relative to __DIR__ to get correct path in update temp dir

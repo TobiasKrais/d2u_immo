@@ -2,7 +2,7 @@
 
 require_once 'property.php';
 
-if ('' === $func) {
+if ('' === $func) { /** @phpstan-ignore-line */
     $query = 'SELECT properties.property_id, lang.name AS propertyname, categories.name AS categoryname, priority '
         .'FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
         .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
@@ -10,7 +10,7 @@ if ('' === $func) {
         .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories '
             .'ON properties.category_id = categories.category_id AND categories.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
         .'WHERE online_status = "archived" ';
-    if ('priority' == $this->getConfig('default_property_sort')) {
+    if ('priority' === rex_config::get('d2u_immo', 'default_property_sort')) {
         $query .= 'ORDER BY online_status DESC, priority ASC';
     } else {
         $query .= 'ORDER BY online_status DESC, propertyname ASC';
