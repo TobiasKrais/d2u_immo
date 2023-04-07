@@ -62,7 +62,7 @@ if (count($providers) > 0) {
     foreach ($providers as $provider) {
         echo '<td>';
         if ('' !== $provider->getLastExportTimestamp()) {
-            echo date('d.m.Y H:i', strtotime($provider->getLastExportTimestamp())) .' '. rex_i18n::msg('d2u_immo_export_uhr');
+            echo date('d.m.Y H:i', (int) strtotime($provider->getLastExportTimestamp())) .' '. rex_i18n::msg('d2u_immo_export_uhr');
         }
         echo '</td>';
     }

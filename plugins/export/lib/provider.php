@@ -245,7 +245,8 @@ class Provider
 
             $linkedin = new SocialExportLinkedIn($this);
             if (!$linkedin->hasAccessToken()) {
-                if (null !== filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && !isset($_SESSION['linkedin']['requesttoken'])) {
+                $session_linkedin = \rex_request::session('linkedin');
+                if (null !== filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && is_array($session_linkedin) && !array_key_exists('requesttoken', $session_linkedin)) {
                     // Verifier pin and Requesttoken not available? Login
                     $rt_error = $linkedin->getRequestToken();
                     if ('' === $rt_error) {
@@ -257,7 +258,7 @@ class Provider
                     return $rt_error;
 
                 }
-                if (filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 && isset($_SESSION['linkedin']['requesttoken'])) {
+                if (filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 && is_array($session_linkedin) && array_key_exists('requesttoken', $session_linkedin)) {
                     // Logged in an verifiert pin available? Get access token and ...
                     $at_error = $linkedin->getAccessToken(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
                     if ('' !== $at_error) {
@@ -265,7 +266,7 @@ class Provider
                     }
                 }
                 // Fuer den Fall dass mehrere Profile da sind und Requesttoken schon geholt wurde.
-                elseif (isset($_SESSION['linkedin']['requesttoken'])) {
+                elseif (is_array($session_linkedin) && array_key_exists('requesttoken', $session_linkedin)) {
                     // Login URL
                     header('Location: '. $linkedin->getLoginURL());
                     exit;
@@ -281,10 +282,6 @@ class Provider
                 }
                 // Correct user? Perform export
                 return $linkedin->export();
-
-                // Login error occured: inform user
-                return $is_logged_in;
-
             }
         }
         return '';

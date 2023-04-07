@@ -3,6 +3,7 @@
 namespace D2U_Immo;
 
 use DOMDocument;
+use DOMElement;
 use OAuth;
 use OAuthException;
 use rex;
@@ -11,9 +12,12 @@ use rex_addon;
 
 use rex_i18n;
 use rex_url;
+use rex_view;
 use rex_yrewrite;
 
 use function count;
+
+use function is_array;
 
 use const OAUTH_HTTP_METHOD_GET;
 use const OAUTH_HTTP_METHOD_POST;
@@ -24,7 +28,7 @@ use const OAUTH_HTTP_METHOD_POST;
 class SocialExportLinkedIn extends AExport
 {
     /** @var OAuth LinkedIn OAuth object */
-    public OAuth $oauth;
+    private OAuth $oauth;
 
     /**
      * Constructor. Initializes variables.
@@ -59,10 +63,19 @@ class SocialExportLinkedIn extends AExport
      */
     public function getAccessToken($verifier_pin)
     {
-        $requesttoken = $_SESSION['linkedin']['requesttoken'];
-        $requesttoken_secret = $_SESSION['linkedin']['requesttoken_secret'];
-        unset($_SESSION['linkedin']['requesttoken']);
-        unset($_SESSION['linkedin']['requesttoken_secret']);
+        $session_linkedin = \rex_request::session('linkedin');
+        $requesttoken = '';
+        $requesttoken_secret = '';
+        if (is_array($session_linkedin)) {
+            if(array_key_exists('requesttoken', $session_linkedin) && array_key_exists('requesttoken_secret', $session_linkedin))
+            $requesttoken = $session_linkedin['requesttoken'];
+            $requesttoken_secret = $session_linkedin['requesttoken_secret'];
+
+            unset($session_linkedin['requesttoken']);
+            unset($session_linkedin['requesttoken_secret']);
+
+            \rex_request::setSession('linkedin', $session_linkedin);
+        }
 
         try {
             // now set the token so we can get our access token
@@ -71,13 +84,15 @@ class SocialExportLinkedIn extends AExport
             // get the access token now that we have the verifier pin
             $at_info = $this->oauth->getAccessToken('https://api.linkedin.com/uas/oauth/accessToken', '', (string) $verifier_pin);
             // store in DB
-            $this->provider->social_oauth_token = $at_info['oauth_token'];
-            $this->provider->social_oauth_token_secret = $at_info['oauth_token_secret'];
-            $this->provider->social_oauth_token_valid_until = time() + $at_info['oauth_expires_in'];
-            $this->provider->save();
+            if (is_array($at_info)) {
+                $this->provider->social_oauth_token = $at_info['oauth_token'];
+                $this->provider->social_oauth_token_secret = $at_info['oauth_token_secret'];
+                $this->provider->social_oauth_token_valid_until = (string) (time() + (int) $at_info['oauth_expires_in']);
+                $this->provider->save();
 
-            // set the access token so we can make authenticated requests
-            $this->oauth->setToken($this->provider->social_oauth_token, $this->provider->social_oauth_token_secret);
+                // set the access token so we can make authenticated requests
+                $this->oauth->setToken($this->provider->social_oauth_token, $this->provider->social_oauth_token_secret);
+            }
         } catch (OAuthException $e) {
             return $e->getMessage();
         }
@@ -90,7 +105,13 @@ class SocialExportLinkedIn extends AExport
      */
     public function getLoginURL()
     {
-        return 'https://www.linkedin.com/uas/oauth/authenticate?oauth_token='. $_SESSION['linkedin']['requesttoken'];
+        $session_linkedin = \rex_request::session('linkedin');
+        $requesttoken = '';
+        if (is_array($session_linkedin)) {
+            if(array_key_exists('requesttoken', $session_linkedin))
+            $requesttoken = $session_linkedin['requesttoken'];
+        }
+        return 'https://www.linkedin.com/uas/oauth/authenticate?oauth_token='. $requesttoken;
     }
 
     /**
@@ -101,8 +122,16 @@ class SocialExportLinkedIn extends AExport
     {
         try {
             $rt_info = $this->oauth->getRequestToken('https://api.linkedin.com/uas/oauth/requestToken?scope=r_basicprofile+r_emailaddress+w_share', $this->getCallbackURL());
-            $_SESSION['linkedin']['requesttoken'] = $rt_info['oauth_token'];
-            $_SESSION['linkedin']['requesttoken_secret'] = $rt_info['oauth_token_secret'];
+            if (is_array($rt_info)) {
+                $session_linkedin = \rex_request::session('linkedin');
+                if (!is_array($session_linkedin)) {
+                    $session_linkedin = [];
+                }
+                $session_linkedin['requesttoken'] = $rt_info['oauth_token'];
+                $session_linkedin['requesttoken_secret'] = $rt_info['oauth_token_secret'];
+        
+                \rex_request::setSession('linkedin', $session_linkedin);
+            }
         } catch (OAuthException $e) {
             return $e->getMessage();
         }
@@ -138,7 +167,7 @@ class SocialExportLinkedIn extends AExport
         try {
             // Fetch id from LinkedIn
             $api_url = 'https://api.linkedin.com/v1/people/~:(id,email-address)';
-            $this->oauth->fetch($api_url, null, OAUTH_HTTP_METHOD_GET);
+            $this->oauth->fetch($api_url, [], OAUTH_HTTP_METHOD_GET);
             $response = $this->oauth->getLastResponse();
 
             $linkedin_email = '';
@@ -147,20 +176,25 @@ class SocialExportLinkedIn extends AExport
             $persons = $xml->getElementsByTagName('person');
             foreach ($persons as $person) {
                 $email = $person->getElementsByTagName('email-address');
-                $linkedin_email = $email->item(0)->nodeValue;
+                if ($email->item(0) instanceof DOMElement) {
+                    $linkedin_email = $email->item(0)->nodeValue;
+                }
             }
             if ('' === $linkedin_email) {
-                return rex_i18n::msg('d2u_immo_export_linkedin_mail_failed');
+                echo rex_view::error(rex_i18n::msg('d2u_immo_export_linkedin_mail_failed'));
+                return false;
             }
-            if (strtolower($linkedin_email) !== strtolower($this->provider->linkedin_email)) {
-                unset($_SESSION['linkedin']);
-                return rex_i18n::msg('d2u_immo_export_linkedin_login_again');
+            if (null !== $linkedin_email && strtolower($linkedin_email) !== strtolower($this->provider->linkedin_email)) {
+                \rex_request::setSession('linkedin', null);
+                echo rex_view::error(rex_i18n::msg('d2u_immo_export_linkedin_login_again'));
+                return false;
             }
 
             return true;
 
         } catch (OAuthException $e) {
-            return 'Error: '. $e->getMessage() .'<br />';
+            echo rex_view::error('Error: '. $e->getMessage() .'<br />');
+            return false;
         }
     }
 
@@ -286,12 +320,13 @@ class SocialExportLinkedIn extends AExport
                         $api_url = 'https://api.linkedin.com/v1/groups/'. $this->provider->linkedin_groupid .'/posts';
                     }
 
-                    $this->oauth->fetch($api_url, $xml->saveXML(), OAUTH_HTTP_METHOD_POST, ['Content-Type' => 'text/xml']);
+                    $this->oauth->fetch($api_url, [$xml->saveXML()], OAUTH_HTTP_METHOD_POST, ['Content-Type' => 'text/xml']);
 
                     // Getting stream id
-                    $response_headers = self::http_parse_headers($this->oauth->getLastResponseHeaders());
-                    if (false !== $response_headers) {
-                        if (isset($response_headers['Location'])) {
+                    $unparsed_response_headers = $this->oauth->getLastResponseHeaders();
+                    if (false !== $unparsed_response_headers) {
+                        $response_headers = self::http_parse_headers($unparsed_response_headers);
+                        if (array_key_exists('Location', $response_headers)) {
                             $exported_property->provider_import_id = $response_headers['Location'];
                         }
                         // Save results
@@ -310,19 +345,16 @@ class SocialExportLinkedIn extends AExport
 
     /**
      * Parses HTTP headers into an associative array.
-     * @param string $header string containing HTTP headers
-     * @return Returns an array on success or false on failure
+     * @param string $r string containing HTTP headers
+     * @return array<string|int,string> an array on success or false on failure
      */
     private static function http_parse_headers($r)
     {
         $o = [];
-        $r = substr($r, stripos($r, "\r\n"));
+        $r = substr($r, (int) stripos($r, "\r\n"));
         $r = explode("\r\n", $r);
         foreach ($r as $h) {
             [$v, $val] = explode(': ', $h);
-            if (null === $v) {
-                continue;
-            }
             $o[$v] = $val;
         }
         return $o;
@@ -331,14 +363,15 @@ class SocialExportLinkedIn extends AExport
     /**
      * Logout by cleaning LinkedIn session vars and removing access token.
      */
-    public function logout()
+    public function logout():void
     {
-        if (isset($_SESSION['linkedin'])) {
-            unset($_SESSION['linkedin']);
+        $session_linkedin = \rex_request::session('linkedin');
+        if (is_array($session_linkedin)) {
+            \rex_request::setSession('linkedin', null);
         }
 
         $this->provider->social_oauth_token = '';
         $this->provider->social_oauth_token_secret = '';
-        $this->save();
+        $this->provider->save();
     }
 }
