@@ -29,16 +29,15 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $provider->social_app_secret = $form['social_app_secret'];
     $provider->linkedin_email = $form['linkedin_email'];
     $provider->linkedin_groupid = $form['linkedin_groupid'];
-//	$provider->twitter_id = $form['twitter_id'];
 
-    if (false == $provider->save()) {
+    if (!$provider->save()) {
         $message = 'form_save_error';
     } else {
         $message = 'form_saved';
     }
 
     // Redirect to make reload and thus double save impossible
-    if (1 === (int) filter_input(INPUT_POST, 'btn_apply', FILTER_VALIDATE_INT) && 'form_save_error' != $message) {
+    if (1 === (int) filter_input(INPUT_POST, 'btn_apply', FILTER_VALIDATE_INT) && 'form_save_error' !== $message) {
         header('Location: '. rex_url::currentBackendPage(['entry_id' => $provider->provider_id, 'func' => 'edit', 'message' => $message], false));
     } else {
         header('Location: '. rex_url::currentBackendPage(['message' => $message], false));

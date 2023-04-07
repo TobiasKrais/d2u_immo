@@ -85,7 +85,7 @@ abstract class AExport
     /**
      * Save export results.
      */
-    protected function saveExportedProperties():void
+    protected function saveExportedProperties(): void
     {
         foreach ($this->export_properties as $exported_property) {
             if ('add' === $exported_property->export_action || 'update' === $exported_property->export_action) {

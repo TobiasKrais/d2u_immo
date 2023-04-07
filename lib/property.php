@@ -5,16 +5,18 @@ namespace D2U_Immo;
 use d2u_addon_backend_helper;
 use rex;
 use rex_addon;
-use rex_addon_interface;
 use rex_config;
 use rex_plugin;
 use rex_sql;
+
+use rex_user;
 
 use rex_yrewrite;
 
 use function is_array;
 
 /**
+ * @api
  * Property objects.
  */
 class Property implements \D2U_Helper\ITranslationHelper
@@ -133,12 +135,6 @@ class Property implements \D2U_Helper\ITranslationHelper
     /** @var bool true if rent has additional VAT */
     public bool$price_plus_vat = false;
 
-    /**
-     * @var bool true if rent has additional VAT
-     * @deprecated since version 1.1.1
-     */
-    public bool $rent_plus_vat = false;
-
     /** @var int Additional monthly costs for rent */
     public int $additional_costs = 0;
 
@@ -184,14 +180,10 @@ class Property implements \D2U_Helper\ITranslationHelper
     /** @var bool true if property can be used */
     public bool $flat_sharing_possible = false;
 
-    /**
-     * @var array<string> bath room features as described in OpenImmo value of definition "bad"
-     */
+    /** @var array<string> bath room features as described in OpenImmo value of definition "bad" */
     public array $bath = [];
 
-    /**
-     * @var array<string> Kitchen features as described in OpenImmo value of definition "kueche"
-     */
+    /** @var array<string> Kitchen features as described in OpenImmo value of definition "kueche" */
     public array $kitchen = [];
 
     /** @var array<string> floor type as described in OpenImmo value of definition "boden" */
@@ -398,8 +390,6 @@ class Property implements \D2U_Helper\ITranslationHelper
             $pictures_360 = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pictures_360')), PREG_GREP_INVERT);
             $this->pictures_360 = is_array($pictures_360) ? $pictures_360 : [];
             $this->price_plus_vat = 1 === (int) $result->getValue('price_plus_vat') ? true : false;
-            // deprecated
-            $this->rent_plus_vat = $this->price_plus_vat;
             $this->priority = (int) $result->getValue('priority');
             $this->publish_address = 1 === (int) $result->getValue('publish_address') ? true : false;
             $this->purchase_price = (int) $result->getValue('purchase_price');
@@ -463,7 +453,7 @@ class Property implements \D2U_Helper\ITranslationHelper
     /**
      * Changes the status of a property.
      */
-    public function changeWindowAdvertisingStatus():void
+    public function changeWindowAdvertisingStatus(): void
     {
         if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
             if ('online' === $this->window_advertising_status) {
@@ -781,10 +771,10 @@ class Property implements \D2U_Helper\ITranslationHelper
                     ."kitchen = '|". implode('|', $this->kitchen) ."|', "
                     .'land_area = '. $this->land_area .', '
                     ."land_type = '". $this->land_type ."', "
-                    ."latitude = ". $this->latitude .", "
+                    .'latitude = '. $this->latitude .', '
                     .'living_area = '. $this->living_area .', '
                     ."location_plans = '". implode(',', $this->location_plans) ."', "
-                    ."longitude = ". $this->longitude .", "
+                    .'longitude = '. $this->longitude .', '
                     ."market_type = '". $this->market_type ."', "
                     .'object_reserved = '. ($this->object_reserved ? 1 : 0) .', '
                     .'object_sold = '. ($this->object_sold ? 1 : 0) .', '
@@ -812,7 +802,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                     .'wheelchair_accessable = '. ($this->wheelchair_accessable ? 1 : 0) .', '
                     ."zip_code = '". $this->zip_code ."' ";
             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                $query .= ", window_advertising_status = '". ($this->window_advertising_status === 'online' ? 'online' : 'offline') ."' ";
+                $query .= ", window_advertising_status = '". ('online' === $this->window_advertising_status ? 'online' : 'offline') ."' ";
             }
 
             if (0 === $this->property_id) {
@@ -850,7 +840,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                         ."name = '". addslashes($this->name) ."', "
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (rex::getUser() instanceof \rex_user ? rex::getUser()->getLogin() : '') ."' ";
+                        ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
                 $result = rex_sql::factory();
                 $result->setQuery($query);
                 $error = $result->hasError();

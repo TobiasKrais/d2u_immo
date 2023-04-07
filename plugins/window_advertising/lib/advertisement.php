@@ -12,6 +12,7 @@ use rex_addon;
 use rex_addon_interface;
 use rex_config;
 use rex_sql;
+use rex_user;
 use rex_yrewrite;
 
 /**
@@ -20,37 +21,37 @@ use rex_yrewrite;
 class Advertisement implements \D2U_Helper\ITranslationHelper
 {
     /** @var int Database ID */
-    public $ad_id = 0;
+    public int $ad_id = 0;
 
     /** @var int Redaxo clang id */
-    public $clang_id = 0;
+    public int $clang_id = 0;
 
     /** @var int Sort Priority */
-    public $priority = 0;
+    public int $priority = 0;
 
     /** @var string Title */
-    public $title = '';
+    public string $title = '';
 
     /** @var string Advertisement */
-    public $description = '';
+    public string $description = '';
 
     /** @var string Preview picture file name */
-    public $picture = '';
+    public string $picture = '';
 
     /** @var string Online status. Either "online" or "offline". */
-    public $online_status = '';
+    public string $online_status = '';
 
     /** @var string "yes" if translation needs update */
-    public $translation_needs_update = 'delete';
+    public string $translation_needs_update = 'delete';
 
     /** @var string Timestamp containing the last update date */
-    public $updatedate = '';
+    public string $updatedate = '';
 
     /** @var string Redaxo update user name */
-    public $updateuser = '';
+    public string $updateuser = '';
 
     /** @var string URL */
-    public $url = '';
+    public string $url = '';
 
     /**
      * Constructor. Reads a object stored in database.
@@ -69,17 +70,17 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
         $num_rows = $result->getRows();
 
         if ($num_rows > 0) {
-            $this->ad_id = $result->getValue('ad_id');
-            $this->priority = $result->getValue('priority');
-            $this->title = stripslashes(htmlspecialchars_decode($result->getValue('title')));
-            $this->description = stripslashes(htmlspecialchars_decode($result->getValue('description')));
-            $this->picture = $result->getValue('picture');
-            $this->online_status = $result->getValue('online_status');
+            $this->ad_id = (int) $result->getValue('ad_id');
+            $this->priority = (int) $result->getValue('priority');
+            $this->title = stripslashes(htmlspecialchars_decode((string) $result->getValue('title')));
+            $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
+            $this->picture = (string) $result->getValue('picture');
+            $this->online_status = (string) $result->getValue('online_status');
             if ('' !== $result->getValue('translation_needs_update')) {
-                $this->translation_needs_update = $result->getValue('translation_needs_update');
+                $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
-            $this->updatedate = $result->getValue('updatedate');
-            $this->updateuser = $result->getValue('updateuser');
+            $this->updatedate = (string) $result->getValue('updatedate');
+            $this->updateuser = (string) $result->getValue('updateuser');
         }
     }
 
@@ -158,7 +159,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
 
         $advertisements = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $advertisements[] = new self($result->getValue('ad_id'), $clang_id);
+            $advertisements[] = new self((int) $result->getValue('ad_id'), $clang_id);
             $result->next();
         }
         return $advertisements;
@@ -242,7 +243,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
             $this->setPriority();
         }
 
-        if (0 === $this->ad_id || $pre_save_advertisement != $this) {
+        if (0 === $this->ad_id || $pre_save_advertisement !== $this) {
             $query = rex::getTablePrefix() .'d2u_immo_window_advertising SET '
                     .'priority = '. $this->priority .', '
                     ."picture = '". $this->picture ."', "
@@ -265,7 +266,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
         if (!$error) {
             // Save the language specific part
             $pre_save_advertisement = new self($this->ad_id, $this->clang_id);
-            if ($pre_save_advertisement != $this) {
+            if ($pre_save_advertisement !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_immo_window_advertising_lang SET '
                         ."ad_id = '". $this->ad_id ."', "
                         ."clang_id = '". $this->clang_id ."', "

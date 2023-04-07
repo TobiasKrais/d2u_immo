@@ -1,6 +1,7 @@
 <?php
 
 use D2U_Immo\Category;
+use D2U_Immo\Contact;
 
 $func = rex_request('func', 'string');
 $entry_id = (int) rex_request('entry_id', 'int');
@@ -563,7 +564,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'archived' => rex_i18n::msg('d2u_immo_status_archived')];
                             d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$property->online_status], 1, false, $readonly);
                             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                                d2u_addon_backend_helper::form_checkbox('d2u_immo_window_advertising_show', 'form[window_advertising_status]', 'true', $property->window_advertising_status === 'online', $readonly);
+                                d2u_addon_backend_helper::form_checkbox('d2u_immo_window_advertising_show', 'form[window_advertising_status]', 'true', 'online' === $property->window_advertising_status, $readonly);
                             }
                             d2u_addon_backend_helper::form_input('d2u_immo_property_internal_object_number', 'form[internal_object_number]', $property->internal_object_number, true, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $property->priority, true, $readonly, 'number');
@@ -578,7 +579,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options_contacts[$contact->contact_id] = $contact->lastname .', '. $contact->firstname;
                                 }
                             }
-                            d2u_addon_backend_helper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, false === $property->contact ? [] : [$property->contact->contact_id], 1, false, $readonly);
+                            d2u_addon_backend_helper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, $property->contact instanceof Contact ? [$property->contact->contact_id] : [], 1, false, $readonly);
                             d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', 1, $property->pictures, $readonly);
                             d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
                             d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);

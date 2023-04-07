@@ -10,6 +10,7 @@ namespace D2U_Immo;
 use rex;
 use rex_addon;
 use rex_clang;
+use rex_config;
 use rex_sql;
 
 /**
@@ -126,7 +127,7 @@ class Contact
     {
         $query = 'SELECT properties.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
-                .'ON properties.property_id = lang.property_id AND lang.clang_id = '. (int) \rex_config::get('d2u_helper', 'default_lang') .' '
+                .'ON properties.property_id = lang.property_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
             .'WHERE contact_id = '. $this->contact_id .' ';
         if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
             $query .= 'ORDER BY priority ASC';

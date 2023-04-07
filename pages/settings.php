@@ -100,7 +100,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 					<?php
                         $options = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
                         d2u_addon_backend_helper::form_select('d2u_helper_sort', 'settings[default_property_sort]', $options, [rex_config::get('d2u_immo', 'default_property_sort')]);
-                        d2u_addon_backend_helper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', rex_config::get('d2u_immo', 'even_informative_pdf') ? rex_config::get('d2u_immo', 'even_informative_pdf') : '')
+                        d2u_addon_backend_helper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', '' !== rex_config::get('d2u_immo', 'even_informative_pdf') ? rex_config::get('d2u_immo', 'even_informative_pdf') : '')
                     ?>
 				</div>
 			</fieldset>

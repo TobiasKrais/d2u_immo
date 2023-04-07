@@ -1,31 +1,31 @@
 <?php
 
 $func = rex_request('func', 'string');
-$provider_id = rex_request('provider_id', 'int');
-$property_id = rex_request('property_id', 'int');
+$provider_id = (int) rex_request('provider_id', 'int');
+$property_id = (int) rex_request('property_id', 'int');
 
 /*
  * Do actions
  */
-if ('online' == $func) {
+if ('online' === $func) {
     // Add to next export
     $export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
     $export_property->addToExport();
-} elseif ('offline' == $func) {
+} elseif ('offline' === $func) {
     // Remove to next export
     $export_property = new D2U_Immo\ExportedProperty($property_id, $provider_id);
     $export_property->removeFromExport();
-} elseif ('all_online' == $func) {
+} elseif ('all_online' === $func) {
     // Add all to next export
     D2U_Immo\ExportedProperty::addAllToExport($provider_id);
-} elseif ('all_offline' == $func) {
+} elseif ('all_offline' === $func) {
     // Remove all from next export
     D2U_Immo\ExportedProperty::removeAllFromExport($provider_id);
-} elseif ('export' == $func) {
+} elseif ('export' === $func) {
     // Export
     $provider = new D2U_Immo\Provider($provider_id);
     $error = $provider->export();
-    if ('' != $error) {
+    if ('' !== $error) {
         echo rex_view::error($provider->name .': '. $error);
     } else {
         echo rex_view::success($provider->name .': '. rex_i18n::msg('d2u_immo_export_success'));
@@ -61,7 +61,7 @@ if (count($providers) > 0) {
     echo '<td><b>'. rex_i18n::msg('d2u_immo_export_last_export_date') .'</b></td>';
     foreach ($providers as $provider) {
         echo '<td>';
-        if ('' != $provider->getLastExportTimestamp()) {
+        if ('' !== $provider->getLastExportTimestamp()) {
             echo date('d.m.Y H:i', strtotime($provider->getLastExportTimestamp())) .' '. rex_i18n::msg('d2u_immo_export_uhr');
         }
         echo '</td>';

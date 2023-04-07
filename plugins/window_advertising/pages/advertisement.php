@@ -73,7 +73,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 // Change online status of machine
 elseif ('changestatus' === $func) {
     $advertisement = new D2U_Immo\Advertisement($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
-    $advertisement->ad_id = $ad_id; // Ensure correct ID in case language has no object
+    $advertisement->ad_id = $entry_id; // Ensure correct ID in case language has no object
     $advertisement->changeStatus();
 
     header('Location: '. rex_url::currentBackendPage());
@@ -94,7 +94,7 @@ if ('edit' === $func || 'add' === $func) {
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
-                        if (rex::getUser()->isAdmin() || (rex::getUser()->hasPerm('d2u_immo[edit_lang]') && rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId()))) {
+                        if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || (\rex::getUser()->hasPerm('d2u_immo[edit_lang]') && \rex::getUser()->getComplexPerm('clang') instanceof rex_clang_perm && \rex::getUser()->getComplexPerm('clang')->hasPerm($rex_clang->getId())))) {
                             $readonly_lang = false;
                         }
                 ?>

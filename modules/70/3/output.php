@@ -4,7 +4,7 @@ if (!function_exists('printPropertylist')) {
      * Prints property list.
      * @param array<D2U_Immo\Property> $properties Array with properties
      */
-    function printPropertylist($properties):void
+    function printPropertylist($properties): void
     {
         $sprog = rex_addon::get('sprog');
         $tag_open = $sprog->getConfig('wildcard_open_tag');
@@ -34,11 +34,11 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="row">';
             echo '<div class="col-12"><strong>'. $property->name .'</strong></div>';
             echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_form_city'. $tag_close .':</b> '. $property->city .'</div>';
-            if ($property->market_type === 'KAUF') {
+            if ('KAUF' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</b> '. number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code .'</div>';
-            } elseif ($property->market_type === 'MIETE_PACHT' || $property->market_type === 'ERBPACHT') {
+            } elseif ('MIETE_PACHT' === $property->market_type || 'ERBPACHT' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_cold_rent'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
-            } elseif ($property->market_type === 'LEASING') {
+            } elseif ('LEASING' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_leasehold'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
             }
             if ($property->living_area > 0) {

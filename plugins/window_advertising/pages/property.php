@@ -32,7 +32,7 @@ if (count($properties) > 0) {
     foreach ($properties as $property) {
         echo '<tr>';
         echo '<td>'. $property->name .'</td>';
-        if ($property->window_advertising_status === 'online') {
+        if ('online' === $property->window_advertising_status) {
             echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'offline', 'property_id' => $property->property_id])
                 .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
         } else {

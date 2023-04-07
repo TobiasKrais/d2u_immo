@@ -1,41 +1,42 @@
 <?php
 
-$sql = rex_sql::factory();
-
 // Create database
-$sql->setQuery('CREATE TABLE IF NOT EXISTS '. rex::getTablePrefix() ."d2u_immo_export_provider (
-	provider_id int(10) unsigned NOT NULL auto_increment,
-	name varchar(50) collate utf8mb4_unicode_ci default NULL,
-	type varchar(50) collate utf8mb4_unicode_ci default NULL,
-	clang_id int(10) default NULL,
-	company_name varchar(100) collate utf8mb4_unicode_ci default NULL,
-	company_email varchar(255) collate utf8mb4_unicode_ci default NULL,
-	customer_number varchar(50) collate utf8mb4_unicode_ci default NULL,
-	media_manager_type varchar(255) collate utf8mb4_unicode_ci default 'd2u_helper_sm',
-	online_status varchar(10) collate utf8mb4_unicode_ci DEFAULT 'online',
-	ftp_server varchar(100) collate utf8mb4_unicode_ci default NULL,
-	ftp_username varchar(50) collate utf8mb4_unicode_ci default NULL,
-	ftp_password varchar(20) collate utf8mb4_unicode_ci default NULL,
-	ftp_filename varchar(50) collate utf8mb4_unicode_ci default NULL,
-	social_app_id varchar(255) collate utf8mb4_unicode_ci default NULL,
-	social_app_secret varchar(255) collate utf8mb4_unicode_ci default NULL,
-	social_oauth_token varchar(255) collate utf8mb4_unicode_ci default NULL,
-	social_oauth_token_secret varchar(255) collate utf8mb4_unicode_ci default NULL,
-	social_oauth_token_valid_until int(11) collate utf8mb4_unicode_ci default NULL,
-	linkedin_email varchar(255) collate utf8mb4_unicode_ci default NULL,
-	linkedin_groupid varchar(255) collate utf8mb4_unicode_ci default NULL,
-	twitter_id varchar(255) collate utf8mb4_unicode_ci default NULL,
-	PRIMARY KEY (provider_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_immo_export_provider'))
+    ->ensureColumn(new rex_sql_column('provider_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('provider_id')
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('type', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('company_name', 'VARCHAR(100)', true))
+    ->ensureColumn(new \rex_sql_column('company_email', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('customer_number', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('media_manager_type', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_server', 'VARCHAR(100)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_username', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_password', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_filename', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('social_app_id', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('social_app_secret', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('social_oauth_token', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('social_oauth_token_secret', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('social_oauth_token_valid_until', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('linkedin_email', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('linkedin_groupid', 'VARCHAR(191)', true))
+    ->ensure();
 
-$sql->setQuery('CREATE TABLE IF NOT EXISTS '. rex::getTablePrefix() ."d2u_immo_export_properties (
-	property_id int(10) NOT NULL,
-	provider_id int(10) NOT NULL,
-	export_action varchar(10) collate utf8mb4_unicode_ci default 'online',
-	provider_import_id varchar(255) collate utf8mb4_unicode_ci default NULL,
-	export_timestamp DATETIME NULL,
-	PRIMARY KEY (property_id, provider_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci AUTO_INCREMENT=1;");
+\rex_sql_table::get(\rex::getTable('d2u_immo_export_properties'))
+    ->ensureColumn(new rex_sql_column('property_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('provider_id', 'INT(11)', false))
+    ->setPrimaryKey(['property_id', 'provider_id'])
+    ->ensureColumn(new \rex_sql_column('export_action', 'VARCHAR(10)'))
+    ->ensureColumn(new \rex_sql_column('provider_import_id', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('export_timestamp', 'DATETIME', true))
+    ->ensure();
 
 // Insert frontend translations
+if (!class_exists('export_lang_helper')) {
+    // Load class in case addon is deactivated
+    require_once 'lib/export_lang_helper.php';
+}
 export_lang_helper::factory()->install();

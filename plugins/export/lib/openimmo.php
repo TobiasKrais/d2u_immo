@@ -4,7 +4,10 @@ namespace D2U_Immo;
 
 use d2u_addon_frontend_helper;
 use DOMDocument;
+use DOMNode;
+use Exception;
 use rex_i18n;
+
 use rex_media;
 
 use function count;
@@ -43,7 +46,7 @@ class OpenImmo extends AFTPExport
 
         // Create XML file
         $error = $this->createXML();
-        if ('' != $error) {
+        if ('' !== $error) {
             return $error;
         }
 
@@ -55,7 +58,7 @@ class OpenImmo extends AFTPExport
 
         // Upload
         $error = $this->upload();
-        if ('' != $error) {
+        if ('' !== $error) {
             return $error;
         }
 
@@ -94,7 +97,7 @@ class OpenImmo extends AFTPExport
         $uebertragung_senderversion = $xml->createAttribute('senderversion');
         $uebertragung_senderversion->appendChild($xml->createTextNode('1.0'));
         $uebertragung->appendChild($uebertragung_senderversion);
-        if ('' != $this->provider->company_email) {
+        if ('' !== $this->provider->company_email) {
             $uebertragung_techn_email = $xml->createAttribute('techn_email');
             $uebertragung_techn_email->appendChild($xml->createTextNode($this->provider->company_email));
             $uebertragung->appendChild($uebertragung_techn_email);
@@ -122,7 +125,7 @@ class OpenImmo extends AFTPExport
         // TODO: <xsd:element ref="lizenzkennung" minOccurs="0"/>
 
         foreach ($this->export_properties as $export_property) {
-            if ('delete' == $export_property->export_action) {
+            if ('delete' === $export_property->export_action) {
                 // Only full export supported. Do not include properties with action "delete"
                 continue;
             }
@@ -138,7 +141,7 @@ class OpenImmo extends AFTPExport
             $nutzungsarten = ['WOHNEN', 'GEWERBE', 'ANLAGE', 'WAZ'];
             foreach ($nutzungsarten as $type_of_use) {
                 $nutzungsart_art = $xml->createAttribute($type_of_use);
-                if (false != stristr($property->type_of_use, $type_of_use)) {
+                if (false !== stristr($property->type_of_use, $type_of_use)) {
                     $nutzungsart_art->appendChild($xml->createTextNode('true'));
                 } else {
                     $nutzungsart_art->appendChild($xml->createTextNode('false'));
@@ -151,7 +154,7 @@ class OpenImmo extends AFTPExport
             $vermarktungsarten = ['KAUF', 'MIETE_PACHT', 'ERBPACHT', 'LEASING'];
             foreach ($vermarktungsarten as $market_type) {
                 $vermarktungsart_art = $xml->createAttribute($market_type);
-                if (false != stristr($property->market_type, $market_type)) {
+                if (false !== stristr($property->market_type, $market_type)) {
                     $vermarktungsart_art->appendChild($xml->createTextNode('true'));
                 } else {
                     $vermarktungsart_art->appendChild($xml->createTextNode('false'));
@@ -164,30 +167,32 @@ class OpenImmo extends AFTPExport
             // <wohnung wohnungtyp="ERDGESCHOSS" />
             $objektart_sub = $xml->createElement(strtolower($property->object_type));
             $objektart_sub_typ = '';
-            if ('wohnung' == strtolower($property->object_type)) {
+            if ('wohnung' === strtolower($property->object_type)) {
                 $objektart_sub_typ = $xml->createAttribute('wohnungtyp');
                 $objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->apartment_type)));
-            } elseif ('haus' == strtolower($property->object_type)) {
+            } elseif ('haus' === strtolower($property->object_type)) {
                 $objektart_sub_typ = $xml->createAttribute('haustyp');
                 $objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->house_type)));
-            } elseif ('grundstueck' == strtolower($property->object_type)) {
+            } elseif ('grundstueck' === strtolower($property->object_type)) {
                 $objektart_sub_typ = $xml->createAttribute('grundst_typ');
                 $objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->land_type)));
-            } elseif ('buero_praxen' == strtolower($property->object_type)) {
+            } elseif ('buero_praxen' === strtolower($property->object_type)) {
                 $objektart_sub_typ = $xml->createAttribute('buero_typ');
                 $objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->office_type)));
-            } elseif ('hallen_lager_prod' == strtolower($property->object_type)) {
+            } elseif ('hallen_lager_prod' === strtolower($property->object_type)) {
                 $objektart_sub_typ = $xml->createAttribute('hallen_typ');
                 $objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->hall_warehouse_type)));
-            } elseif ('parken' == strtolower($property->object_type)) {
+            } elseif ('parken' === strtolower($property->object_type)) {
                 $objektart_sub_typ = $xml->createAttribute('parken_typ');
                 $objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->parking_type)));
-            } elseif ('sonstige' == strtolower($property->object_type)) {
+            } elseif ('sonstige' === strtolower($property->object_type)) {
                 $objektart_sub_typ = $xml->createAttribute('sonstige_typ');
                 $objektart_sub_typ->appendChild($xml->createTextNode(strtoupper($property->other_type)));
             }
             // TODO: add more if needed, see XSD file
-            $objektart_sub->appendChild($objektart_sub_typ);
+            if ($objektart_sub_typ instanceof DOMNode) {
+                $objektart_sub->appendChild($objektart_sub_typ);
+            }
             $objektart->appendChild($objektart_sub);
             // </objektart>
             $objektkategorie->appendChild($objektart);
@@ -205,13 +210,13 @@ class OpenImmo extends AFTPExport
             $objekt_ort->appendChild($xml->createTextNode($property->city));
             $geo->appendChild($objekt_ort);
             // <geokoordinaten breitengrad="" laengengrad=""/>
-            if ('' !== $property->latitude && '' !== $property->longitude) {
+            if (0.0 !== $property->latitude && 0.0 !== $property->longitude) {
                 $geokoordinaten = $xml->createElement('geokoordinaten');
                 $breitengrad = $xml->createAttribute('breitengrad');
-                $breitengrad->appendChild($xml->createTextNode($property->latitude));
+                $breitengrad->appendChild($xml->createTextNode((string) $property->latitude));
                 $geokoordinaten->appendChild($breitengrad);
                 $laengengrad = $xml->createAttribute('laengengrad');
-                $laengengrad->appendChild($xml->createTextNode($property->longitude));
+                $laengengrad->appendChild($xml->createTextNode((string) $property->longitude));
                 $geokoordinaten->appendChild($laengengrad);
                 $geo->appendChild($geokoordinaten);
             }
@@ -236,7 +241,7 @@ class OpenImmo extends AFTPExport
             // <etage>0</etage>
             if ($property->floor > 0) {
                 $objekt_etage = $xml->createElement('etage');
-                $objekt_etage->appendChild($xml->createTextNode($property->floor));
+                $objekt_etage->appendChild($xml->createTextNode((string) $property->floor));
                 $geo->appendChild($objekt_etage);
             }
             // TODO: <xsd:element ref="anzahl_etagen" minOccurs="0"/>
@@ -257,99 +262,101 @@ class OpenImmo extends AFTPExport
             // </geo>
             $immobilie->appendChild($geo);
 
-            // <kontaktperson>
-            $kontakt = $xml->createElement('kontaktperson');
-            // <email_direkt>tk@design-to-use.de</email_direkt>
-            $kontakt_email = $xml->createElement('email_direkt');
-            $kontakt_email->appendChild($xml->createTextNode($property->contact->email));
-            $kontakt->appendChild($kontakt_email);
-            // <tel_durchwahl>07621-9161022</tel_durchwahl>
-            if ('' !== $property->contact->phone) {
-                $kontakt_tel_durchwahl = $xml->createElement('tel_durchw');
-                $kontakt_tel_durchwahl->appendChild($xml->createTextNode($property->contact->phone));
-                $kontakt->appendChild($kontakt_tel_durchwahl);
+            if ($property->contact instanceof Contact) {
+                // <kontaktperson>
+                $kontakt = $xml->createElement('kontaktperson');
+                // <email_direkt>tk@design-to-use.de</email_direkt>
+                $kontakt_email = $xml->createElement('email_direkt');
+                $kontakt_email->appendChild($xml->createTextNode($property->contact->email));
+                $kontakt->appendChild($kontakt_email);
+                // <tel_durchwahl>07621-9161022</tel_durchwahl>
+                if ('' !== $property->contact->phone) {
+                    $kontakt_tel_durchwahl = $xml->createElement('tel_durchw');
+                    $kontakt_tel_durchwahl->appendChild($xml->createTextNode($property->contact->phone));
+                    $kontakt->appendChild($kontakt_tel_durchwahl);
+                }
+                // <tel_fax>07621-9161022</tel_fax>
+                if ('' !== $property->contact->fax) {
+                    $kontakt_fax = $xml->createElement('tel_fax');
+                    $kontakt_fax->appendChild($xml->createTextNode($property->contact->fax));
+                    $kontakt->appendChild($kontakt_fax);
+                }
+                // <tel_handy>07621-9161022</tel_handy>
+                if ('' !== $property->contact->mobile) {
+                    $kontakt_handy = $xml->createElement('tel_handy');
+                    $kontakt_handy->appendChild($xml->createTextNode($property->contact->mobile));
+                    $kontakt->appendChild($kontakt_handy);
+                }
+                // <name>Krais</name>
+                $kontakt_name = $xml->createElement('name');
+                $kontakt_name->appendChild($xml->createTextNode($property->contact->lastname));
+                $kontakt->appendChild($kontakt_name);
+                // <vorname>Tobias</vorname>
+                $kontakt_vorname = $xml->createElement('vorname');
+                $kontakt_vorname->appendChild($xml->createTextNode($property->contact->firstname));
+                $kontakt->appendChild($kontakt_vorname);
+                // TODO: <xsd:element ref="titel" minOccurs="0"/>
+                // TODO: <anrede>Herr</anrede>
+                // $kontakt_anrede = $xml->createElement("anrede");
+                // if($property->contact->salutation == "0") {
+                //	$kontakt_anrede->appendChild($xml->createTextNode($I18N_REXIMMO_EXPORT->msg("herr")));
+                // }
+                // else if($property->contact->salutation == "1") {
+                //	$kontakt_anrede->appendChild($xml->createTextNode($I18N_REXIMMO_EXPORT->msg("frau")));
+                // }
+                // $kontakt->appendChild($kontakt_anrede);
+                // TODO: <xsd:element ref="anrede_brief" minOccurs="0"/>
+                // <firma>www.design-to-use.de</firma>
+                $kontakt_firma = $xml->createElement('firma');
+                $kontakt_firma->appendChild($xml->createTextNode($property->contact->company));
+                $kontakt->appendChild($kontakt_firma);
+                // TODO: <xsd:element ref="zusatzfeld" minOccurs="0"/>
+                // <strasse>Steinsack</strasse>
+                $kontakt_strasse = $xml->createElement('strasse');
+                $kontakt_strasse->appendChild($xml->createTextNode($property->contact->street));
+                $kontakt->appendChild($kontakt_strasse);
+                // <hausnummer>10</hausnummer>
+                $kontakt_hausnummer = $xml->createElement('hausnummer');
+                $kontakt_hausnummer->appendChild($xml->createTextNode($property->contact->house_number));
+                $kontakt->appendChild($kontakt_hausnummer);
+                // <plz>79541</plz>
+                $kontakt_plz = $xml->createElement('plz');
+                $kontakt_plz->appendChild($xml->createTextNode($property->contact->zip_code));
+                $kontakt->appendChild($kontakt_plz);
+                // <ort>Lörrach</ort>
+                $kontakt_ort = $xml->createElement('ort');
+                $kontakt_ort->appendChild($xml->createTextNode($property->contact->city));
+                $kontakt->appendChild($kontakt_ort);
+                // TODO: <xsd:element ref="postfach" minOccurs="0"/>
+                // TODO: <xsd:element ref="postf_plz" minOccurs="0"/>
+                // TODO: <xsd:element ref="postf_ort" minOccurs="0"/>
+                // <land iso_land="DEU" />
+                $kontakt_land = $xml->createElement('land');
+                $kontakt_land_iso = $xml->createAttribute('iso_land');
+                $kontakt_land_iso->appendChild($xml->createTextNode($property->contact->country_code));
+                $kontakt_land->appendChild($kontakt_land_iso);
+                $kontakt->appendChild($kontakt_land);
+                // TODO: <xsd:element ref="tel_zentrale"/>
+                // TODO: <xsd:element ref="email_zentrale"/>
+                // TODO: <xsd:element ref="email_privat" minOccurs="0"/>
+                // TODO: <xsd:element ref="email_sonstige" minOccurs="0" maxOccurs="unbounded"/>
+                // TODO: <xsd:element ref="tel_privat" minOccurs="0"/>
+                // TODO: <xsd:element ref="tel_sonstige" minOccurs="0" maxOccurs="unbounded"/>
+                // TODO: <url>http://www.design-to-use.de</url>
+                // if($property->contact->url != "") {
+                //	$kontakt_url = $xml->createElement("url");
+                //	$kontakt_url->appendChild($xml->createTextNode($property->contact->));
+                //	$kontakt->appendChild($kontakt_url);
+                // }
+                // TODO: <xsd:element ref="adressfreigabe" minOccurs="0"/>
+                // TODO: <xsd:element ref="personennummer" minOccurs="0"/>
+                // TODO: <xsd:element ref="freitextfeld" minOccurs="0"/>
+                // TODO: <xsd:element ref="user_defined_simplefield" minOccurs="0" maxOccurs="unbounded"/>
+                // TODO: <xsd:element ref="user_defined_anyfield" minOccurs="0" maxOccurs="unbounded"/>
+                // TODO: <xsd:element ref="user_defined_extend" minOccurs="0" maxOccurs="unbounded"/>
+                // </kontaktperson>
+                $immobilie->appendChild($kontakt);
             }
-            // <tel_fax>07621-9161022</tel_fax>
-            if ('' !== $property->contact->fax) {
-                $kontakt_fax = $xml->createElement('tel_fax');
-                $kontakt_fax->appendChild($xml->createTextNode($property->contact->fax));
-                $kontakt->appendChild($kontakt_fax);
-            }
-            // <tel_handy>07621-9161022</tel_handy>
-            if ('' !== $property->contact->mobile) {
-                $kontakt_handy = $xml->createElement('tel_handy');
-                $kontakt_handy->appendChild($xml->createTextNode($property->contact->mobile));
-                $kontakt->appendChild($kontakt_handy);
-            }
-            // <name>Krais</name>
-            $kontakt_name = $xml->createElement('name');
-            $kontakt_name->appendChild($xml->createTextNode($property->contact->lastname));
-            $kontakt->appendChild($kontakt_name);
-            // <vorname>Tobias</vorname>
-            $kontakt_vorname = $xml->createElement('vorname');
-            $kontakt_vorname->appendChild($xml->createTextNode($property->contact->firstname));
-            $kontakt->appendChild($kontakt_vorname);
-            // TODO: <xsd:element ref="titel" minOccurs="0"/>
-            // TODO: <anrede>Herr</anrede>
-            // $kontakt_anrede = $xml->createElement("anrede");
-            // if($property->contact->salutation == "0") {
-            //	$kontakt_anrede->appendChild($xml->createTextNode($I18N_REXIMMO_EXPORT->msg("herr")));
-            // }
-            // else if($property->contact->salutation == "1") {
-            //	$kontakt_anrede->appendChild($xml->createTextNode($I18N_REXIMMO_EXPORT->msg("frau")));
-            // }
-            // $kontakt->appendChild($kontakt_anrede);
-            // TODO: <xsd:element ref="anrede_brief" minOccurs="0"/>
-            // <firma>www.design-to-use.de</firma>
-            $kontakt_firma = $xml->createElement('firma');
-            $kontakt_firma->appendChild($xml->createTextNode($property->contact->company));
-            $kontakt->appendChild($kontakt_firma);
-            // TODO: <xsd:element ref="zusatzfeld" minOccurs="0"/>
-            // <strasse>Steinsack</strasse>
-            $kontakt_strasse = $xml->createElement('strasse');
-            $kontakt_strasse->appendChild($xml->createTextNode($property->contact->street));
-            $kontakt->appendChild($kontakt_strasse);
-            // <hausnummer>10</hausnummer>
-            $kontakt_hausnummer = $xml->createElement('hausnummer');
-            $kontakt_hausnummer->appendChild($xml->createTextNode($property->contact->house_number));
-            $kontakt->appendChild($kontakt_hausnummer);
-            // <plz>79541</plz>
-            $kontakt_plz = $xml->createElement('plz');
-            $kontakt_plz->appendChild($xml->createTextNode($property->contact->zip_code));
-            $kontakt->appendChild($kontakt_plz);
-            // <ort>Lörrach</ort>
-            $kontakt_ort = $xml->createElement('ort');
-            $kontakt_ort->appendChild($xml->createTextNode($property->contact->city));
-            $kontakt->appendChild($kontakt_ort);
-            // TODO: <xsd:element ref="postfach" minOccurs="0"/>
-            // TODO: <xsd:element ref="postf_plz" minOccurs="0"/>
-            // TODO: <xsd:element ref="postf_ort" minOccurs="0"/>
-            // <land iso_land="DEU" />
-            $kontakt_land = $xml->createElement('land');
-            $kontakt_land_iso = $xml->createAttribute('iso_land');
-            $kontakt_land_iso->appendChild($xml->createTextNode($property->contact->country_code));
-            $kontakt_land->appendChild($kontakt_land_iso);
-            $kontakt->appendChild($kontakt_land);
-            // TODO: <xsd:element ref="tel_zentrale"/>
-            // TODO: <xsd:element ref="email_zentrale"/>
-            // TODO: <xsd:element ref="email_privat" minOccurs="0"/>
-            // TODO: <xsd:element ref="email_sonstige" minOccurs="0" maxOccurs="unbounded"/>
-            // TODO: <xsd:element ref="tel_privat" minOccurs="0"/>
-            // TODO: <xsd:element ref="tel_sonstige" minOccurs="0" maxOccurs="unbounded"/>
-            // TODO: <url>http://www.design-to-use.de</url>
-            // if($property->contact->url != "") {
-            //	$kontakt_url = $xml->createElement("url");
-            //	$kontakt_url->appendChild($xml->createTextNode($property->contact->));
-            //	$kontakt->appendChild($kontakt_url);
-            // }
-            // TODO: <xsd:element ref="adressfreigabe" minOccurs="0"/>
-            // TODO: <xsd:element ref="personennummer" minOccurs="0"/>
-            // TODO: <xsd:element ref="freitextfeld" minOccurs="0"/>
-            // TODO: <xsd:element ref="user_defined_simplefield" minOccurs="0" maxOccurs="unbounded"/>
-            // TODO: <xsd:element ref="user_defined_anyfield" minOccurs="0" maxOccurs="unbounded"/>
-            // TODO: <xsd:element ref="user_defined_extend" minOccurs="0" maxOccurs="unbounded"/>
-            // </kontaktperson>
-            $immobilie->appendChild($kontakt);
 
             // TODO:
             /*
@@ -401,26 +408,26 @@ class OpenImmo extends AFTPExport
             // <kaufpreis>100000.00</kaufpreis>
             if ($property->purchase_price > 0) {
                 $kaufpreis = $xml->createElement('kaufpreis');
-                $kaufpreis->appendChild($xml->createTextNode($property->purchase_price));
+                $kaufpreis->appendChild($xml->createTextNode((string) $property->purchase_price));
                 $preise->appendChild($kaufpreis);
             }
             // <nettokaltmiete>500.00</nettokaltmiete>
             if ($property->cold_rent > 0) {
                 $nettokaltmiete = $xml->createElement('nettokaltmiete');
-                $nettokaltmiete->appendChild($xml->createTextNode($property->cold_rent));
+                $nettokaltmiete->appendChild($xml->createTextNode((string) $property->cold_rent));
                 $preise->appendChild($nettokaltmiete);
             }
             // TODO: <xsd:element ref="kaltmiete" minOccurs="0"/>
             // <warmmiete>600.00</warmmiete>
             if ($property->cold_rent > 0 && $property->additional_costs > 0) {
                 $warmmiete = $xml->createElement('warmmiete');
-                $warmmiete->appendChild($xml->createTextNode($property->cold_rent + $property->additional_costs));
+                $warmmiete->appendChild($xml->createTextNode((string) ($property->cold_rent + $property->additional_costs)));
                 $preise->appendChild($warmmiete);
             }
             // <nebenkosten>200.00</nebenkosten>
             if ($property->additional_costs > 0) {
                 $nebenkosten = $xml->createElement('nebenkosten');
-                $nebenkosten->appendChild($xml->createTextNode($property->additional_costs));
+                $nebenkosten->appendChild($xml->createTextNode((string) $property->additional_costs));
                 $preise->appendChild($nebenkosten);
             }
             // TODO: <xsd:element ref="heizkosten_enthalten" minOccurs="0"/>
@@ -448,12 +455,12 @@ class OpenImmo extends AFTPExport
             // <kaufpreis_pro_qm>100.99</kaufpreis_pro_qm>
             if ($property->purchase_price_m2 > 0) {
                 $kaufpreis_pro_qm = $xml->createElement('kaufpreis_pro_qm');
-                $kaufpreis_pro_qm->appendChild($xml->createTextNode($property->purchase_price_m2));
+                $kaufpreis_pro_qm->appendChild($xml->createTextNode((string) $property->purchase_price_m2));
                 $preise->appendChild($kaufpreis_pro_qm);
             }
             // TODO: <xsd:element ref="innen_courtage" minOccurs="0"/>
             // <aussen_courtage mit_mwst="true">provisionsfrei</aussen_courtage>
-            if ('' != $property->courtage) {
+            if ('' !== $property->courtage) {
                 $aussen_courtage = $xml->createElement('aussen_courtage');
                 $aussen_courtage_mwst = $xml->createAttribute('mit_mwst');
                 if ($property->courtage_incl_vat) {
@@ -479,9 +486,9 @@ class OpenImmo extends AFTPExport
             // TODO: <xsd:element ref="mieteinnahmen_soll" minOccurs="0"/>
             // TODO: <xsd:element ref="erschliessungskosten" minOccurs="0"/>
             // <kaution>1</kaution>
-            if ('' !== $property->deposit) {
+            if ($property->deposit > 0) {
                 $kaution = $xml->createElement('kaution');
-                $kaution->appendChild($xml->createTextNode($property->deposit));
+                $kaution->appendChild($xml->createTextNode((string) $property->deposit));
                 $preise->appendChild($kaution);
             }
             // TODO: <xsd:element ref="geschaeftsguthaben" minOccurs="0"/>
@@ -490,7 +497,7 @@ class OpenImmo extends AFTPExport
             if ($property->parking_space_duplex > 0) {
                 $stp_duplex = $xml->createElement('stp_duplex');
                 $stp_duplex_anzahl = $xml->createAttribute('anzahl');
-                $stp_duplex_anzahl->appendChild($xml->createTextNode($property->parking_space_duplex));
+                $stp_duplex_anzahl->appendChild($xml->createTextNode((string) $property->parking_space_duplex));
                 $stp_duplex->appendChild($stp_duplex_anzahl);
                 $preise->appendChild($stp_duplex);
             }
@@ -498,7 +505,7 @@ class OpenImmo extends AFTPExport
             if ($property->parking_space_simple > 0) {
                 $stp_freiplatz = $xml->createElement('stp_freiplatz');
                 $stp_freiplatz_anzahl = $xml->createAttribute('anzahl');
-                $stp_freiplatz_anzahl->appendChild($xml->createTextNode($property->parking_space_simple));
+                $stp_freiplatz_anzahl->appendChild($xml->createTextNode((string) $property->parking_space_simple));
                 $stp_freiplatz->appendChild($stp_freiplatz_anzahl);
                 $preise->appendChild($stp_freiplatz);
             }
@@ -506,7 +513,7 @@ class OpenImmo extends AFTPExport
             if ($property->parking_space_garage > 0) {
                 $stp_garage = $xml->createElement('stp_garage');
                 $stp_garage_anzahl = $xml->createAttribute('anzahl');
-                $stp_garage_anzahl->appendChild($xml->createTextNode($property->parking_space_garage));
+                $stp_garage_anzahl->appendChild($xml->createTextNode((string) $property->parking_space_garage));
                 $stp_garage->appendChild($stp_garage_anzahl);
                 $preise->appendChild($stp_garage);
             }
@@ -515,7 +522,7 @@ class OpenImmo extends AFTPExport
             if ($property->parking_space_undergroundcarpark > 0) {
                 $stp_tiefgarage = $xml->createElement('stp_tiefgarage');
                 $stp_tiefgarage_anzahl = $xml->createAttribute('anzahl');
-                $stp_tiefgarage_anzahl->appendChild($xml->createTextNode($property->parking_space_undergroundcarpark));
+                $stp_tiefgarage_anzahl->appendChild($xml->createTextNode((string) $property->parking_space_undergroundcarpark));
                 $stp_tiefgarage->appendChild($stp_tiefgarage_anzahl);
                 $preise->appendChild($stp_tiefgarage);
             }
@@ -554,7 +561,7 @@ class OpenImmo extends AFTPExport
             // <wohnflaeche>52.08</wohnflaeche>
             if ($property->living_area > 0) {
                 $wohnflaeche = $xml->createElement('wohnflaeche');
-                $wohnflaeche->appendChild($xml->createTextNode($property->living_area));
+                $wohnflaeche->appendChild($xml->createTextNode((string) $property->living_area));
                 $flaechen->appendChild($wohnflaeche);
             }
             // TODO: <xsd:element ref="nutzflaeche" minOccurs="0"/>
@@ -568,7 +575,7 @@ class OpenImmo extends AFTPExport
             // <gesamtflaeche>100.99</gesamtflaeche>
             if ($property->total_area > 0) {
                 $gesamtflaeche = $xml->createElement('gesamtflaeche');
-                $gesamtflaeche->appendChild($xml->createTextNode($property->total_area));
+                $gesamtflaeche->appendChild($xml->createTextNode((string) $property->total_area));
                 $flaechen->appendChild($gesamtflaeche);
             }
             // TODO: <xsd:element ref="ladenflaeche" minOccurs="0"/>
@@ -587,14 +594,14 @@ class OpenImmo extends AFTPExport
             // <grundstuecksflaeche>100.99</grundstuecksflaeche>
             if ($property->land_area > 0) {
                 $grundstuecksflaeche = $xml->createElement('grundstuecksflaeche');
-                $grundstuecksflaeche->appendChild($xml->createTextNode($property->land_area));
+                $grundstuecksflaeche->appendChild($xml->createTextNode((string) $property->land_area));
                 $flaechen->appendChild($grundstuecksflaeche);
             }
             // TODO: <xsd:element ref="sonstflaeche" minOccurs="0"/>
             // <anzahl_zimmer>5</anzahl_zimmer>
             if ($property->rooms > 0) {
                 $anzahl_zimmer = $xml->createElement('anzahl_zimmer');
-                $anzahl_zimmer->appendChild($xml->createTextNode($property->rooms));
+                $anzahl_zimmer->appendChild($xml->createTextNode((string) $property->rooms));
                 $flaechen->appendChild($anzahl_zimmer);
             }
             // TODO: <xsd:element ref="anzahl_schlafzimmer" minOccurs="0"/>
@@ -772,7 +779,7 @@ class OpenImmo extends AFTPExport
             // }
             // TODO: <xsd:element ref="telefon_ferienimmobilie" minOccurs="0"/>
             // <breitband_zugang DSL="true" />
-            if ('' != $property->broadband_internet) {
+            if (count($property->broadband_internet) > 0) {
                 $breitband_zugang = $xml->createElement('breitband_zugang');
                 foreach ($property->broadband_internet as $broadband_option) {
                     $option = $xml->createAttribute(strtoupper(trim($broadband_option)));
@@ -797,10 +804,10 @@ class OpenImmo extends AFTPExport
             $zustand_angaben = $xml->createElement('zustand_angaben');
             // <baujahr>1970</baujahr>
             $baujahr = $xml->createElement('baujahr');
-            $baujahr->appendChild($xml->createTextNode($property->construction_year));
+            $baujahr->appendChild($xml->createTextNode((string) $property->construction_year));
             $zustand_angaben->appendChild($baujahr);
             // <zustand zustand_art="BAUFAELLIG" />
-            if ('' != $property->condition_type) {
+            if ('' !== $property->condition_type) {
                 $zustand = $xml->createElement('zustand');
                 $zustand_art = $xml->createAttribute('zustand_art');
                 $zustand_art->appendChild($xml->createTextNode($property->condition_type));
@@ -812,9 +819,9 @@ class OpenImmo extends AFTPExport
             // TODO: <xsd:element ref="erschliessung" minOccurs="0"/>
             // TODO: <xsd:element ref="altlasten" minOccurs="0"/>
             // <energiepass>
-            if ('grundstueck' != strtolower($property->object_type)
-                    && 'parken' != strtolower($property->object_type)
-                    && 'projektiert' != strtolower($property->condition_type)
+            if ('grundstueck' !== strtolower($property->object_type)
+                    && 'parken' !== strtolower($property->object_type)
+                    && 'projektiert' !== strtolower($property->condition_type)
                     && strlen($property->energy_pass) > 5) {
                 $energiepass = $xml->createElement('energiepass');
                 // <epart>BEDARF</epart>
@@ -823,7 +830,7 @@ class OpenImmo extends AFTPExport
                 $energiepass->appendChild($energiepass_art);
                 // <gueltig_bis>2010-12-31</gueltig_bis>
                 $energiepass_gueltig_bis = $xml->createElement('gueltig_bis');
-                if ('' != $property->energy_pass_valid_until) {
+                if ('' !== $property->energy_pass_valid_until) {
                     $energiepass_gueltig_bis->appendChild($xml->createTextNode($property->energy_pass_valid_until));
                 } else {
                     $energiepass_gueltig_bis->appendChild($xml->createTextNode('Wert fehlt.'));
@@ -831,7 +838,7 @@ class OpenImmo extends AFTPExport
                 $energiepass->appendChild($energiepass_gueltig_bis);
                 // <energieverbrauchkennwert>97</energieverbrauchkennwert>
                 $energiepass_kennwert = $xml->createElement('energieverbrauchkennwert');
-                if ('BEDARF' == $property->energy_pass) {
+                if ('BEDARF' === $property->energy_pass) {
                     $energiepass_kennwert = $xml->createElement('endenergiebedarf');
                 }
                 $energiepass_kennwert->appendChild($xml->createTextNode($property->energy_consumption));
@@ -906,13 +913,13 @@ class OpenImmo extends AFTPExport
             $dreizeiler->appendChild($xml->createTextNode($property->teaser));
             $freitexte->appendChild($dreizeiler);
             // <lage>Traumhafte Lage</lage>
-            if ('' != $property->description_location) {
+            if ('' !== $property->description_location) {
                 $lage = $xml->createElement('lage');
                 $lage->appendChild($xml->createTextNode(strip_tags(d2u_addon_frontend_helper::prepareEditorField($property->description_location))));
                 $freitexte->appendChild($lage);
             }
             // <ausstatt_beschr>Beschreibung Austattung</ausstatt_beschr>
-            if ('' != $property->description_equipment) {
+            if ('' !== $property->description_equipment) {
                 $ausstatt_beschr = $xml->createElement('ausstatt_beschr');
                 $ausstatt_beschr->appendChild($xml->createTextNode(strip_tags(d2u_addon_frontend_helper::prepareEditorField($property->description_equipment))));
                 $freitexte->appendChild($ausstatt_beschr);
@@ -927,7 +934,7 @@ class OpenImmo extends AFTPExport
             $objektbeschreibung->appendChild($xml->createTextNode(strip_tags($description)));
             $freitexte->appendChild($objektbeschreibung);
             // <sonstige_angaben>Sonstige Angaben</sonstige_angaben>
-            if ('' != $property->description_others) {
+            if ('' !== $property->description_others) {
                 $sonstige_angaben = $xml->createElement('sonstige_angaben');
                 $sonstige_angaben->appendChild($xml->createTextNode(strip_tags(d2u_addon_frontend_helper::prepareEditorField($property->description_others))));
                 $freitexte->appendChild($sonstige_angaben);
@@ -993,7 +1000,7 @@ class OpenImmo extends AFTPExport
                         $anhang_location->appendChild($xml->createTextNode('EXTERN'));
                         $anhang->appendChild($anhang_location);
                         $anhang_gruppe = $xml->createAttribute('gruppe');
-                        if (str_contains($anhang_media->getType(), 'image') && 'DOKUMENTE' == $media_type) {
+                        if (str_contains($anhang_media->getType(), 'image') && 'DOKUMENTE' === $media_type) {
                             // Falls Bilder im Dokumentenbereich eingefuegt wurden
                             $anhang_gruppe->appendChild($xml->createTextNode('BILD'));
                         } else {
@@ -1037,7 +1044,7 @@ class OpenImmo extends AFTPExport
             }
             $verwaltung_objekt->appendChild($objektadresse_freigeben);
             // <verfuegbar_ab>2010-01-26</verfuegbar_ab>
-            if ('' != $property->available_from) {
+            if ('' !== $property->available_from) {
                 $verfuegbar_ab = $xml->createElement('verfuegbar_ab');
                 $verfuegbar_ab->appendChild($xml->createTextNode($property->available_from));
                 $verwaltung_objekt->appendChild($verfuegbar_ab);
@@ -1091,11 +1098,11 @@ class OpenImmo extends AFTPExport
             $verwaltung_techn->appendChild($objektnr_extern);
             // <aktion />
             $aktion = $xml->createElement('aktion');
-            if ('' == $export_property->export_action || 'update' == $export_property->export_action || 'delete' == $property->aktion) {
+            if ('' === $export_property->export_action || 'update' === $export_property->export_action || 'delete' === $export_property->export_action) {
                 $aktion_art = $xml->createAttribute('aktionart');
-                if ('' == $export_property->export_action || 'update' == $export_property->export_action) {
+                if ('' === $export_property->export_action || 'update' === $export_property->export_action) {
                     $aktion_art->appendChild($xml->createTextNode(strtoupper('CHANGE')));
-                } elseif ('delete' == $property->aktion) {
+                } elseif ('delete' === $export_property->export_action) {
                     $aktion_art->appendChild($xml->createTextNode(strtoupper('DELETE')));
                 }
                 $aktion->appendChild($aktion_art);

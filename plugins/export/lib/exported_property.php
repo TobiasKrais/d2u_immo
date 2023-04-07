@@ -16,23 +16,23 @@ use rex_sql;
 class ExportedProperty
 {
     /** @var int Database ID */
-    public $property_id = 0;
+    public int $property_id = 0;
 
-    /** @var Provider Export provider object */
-    public $provider_id;
+    /** @var int Export provider object */
+    private int $provider_id = 0;
 
     /** @var string Export status. Either "add", "update" or "delete" */
-    public $export_action = '';
+    public string $export_action = '';
 
     /**
      * @var string ID provider returned after import. Not all providers return
      * this value. But some so and it is needed for deleting the property later
      * on provider website.
      */
-    public $provider_import_id = '';
+    public string $provider_import_id = '';
 
     /** @var string export timestamp */
-    public $export_timestamp = '';
+    public string $export_timestamp = '';
 
     /**
      * Constructor. Fetches the object from database.
@@ -51,10 +51,10 @@ class ExportedProperty
         $this->property_id = $property_id;
         $this->provider_id = $provider_id;
         if ($num_rows > 0) {
-            $this->export_action = $result->getValue('export_action');
-            $this->provider_import_id = $result->getValue('provider_import_id');
-            if ('' != $result->getValue('export_timestamp')) {
-                $this->export_timestamp = $result->getValue('export_timestamp');
+            $this->export_action = (string) $result->getValue('export_action');
+            $this->provider_import_id = (string) $result->getValue('provider_import_id');
+            if ('' !== $result->getValue('export_timestamp')) {
+                $this->export_timestamp = (string) $result->getValue('export_timestamp');
             }
         }
     }
@@ -62,11 +62,11 @@ class ExportedProperty
     /**
      * Add used property to export for this provider.
      */
-    public function addToExport()
+    public function addToExport(): void
     {
-        if ('' == $this->export_action) {
+        if ('' === $this->export_action) {
             $this->export_action = 'add';
-        } elseif ('add' == $this->export_action || 'delete' == $this->export_action) {
+        } elseif ('add' === $this->export_action || 'delete' === $this->export_action) {
             $this->export_action = 'update';
         }
 
@@ -77,15 +77,15 @@ class ExportedProperty
      * Add all properties to export for given provider.
      * @param int $provider_id Provider id
      */
-    public static function addAllToExport($provider_id)
+    public static function addAllToExport($provider_id): void
     {
         $provider = new Provider($provider_id);
         $properties = Property::getAll($provider->clang_id, '', true);
         foreach ($properties as $property) {
             $exported_property = new self($property->property_id, $provider_id);
-            if ('' == $exported_property->export_action && '' == $exported_property->export_timestamp) {
+            if ('' === $exported_property->export_action && '' === $exported_property->export_timestamp) {
                 $exported_property->export_action = 'add';
-            } elseif (('' == $exported_property->export_action && '' != $exported_property->export_timestamp) || 'delete' == $exported_property->export_action) {
+            } elseif (('' === $exported_property->export_action && '' !== $exported_property->export_timestamp) || 'delete' === $exported_property->export_action) {
                 $exported_property->export_action = 'update';
             }
             $exported_property->save();
@@ -105,13 +105,13 @@ class ExportedProperty
 
     /**
      * Get all exported used machines.
-     * @param Provider $provider Optional provider object
-     * @return ExportedProperty[] array with exported properties objects
+     * @param Provider|bool $provider Optional provider object
+     * @return array<ExportedProperty> array with exported properties objects
      */
     public static function getAll($provider = false)
     {
         $query = 'SELECT property_id, provider_id FROM '. rex::getTablePrefix() .'d2u_immo_export_properties AS export';
-        if (false !== $provider && $provider->provider_id > 0) {
+        if ($provider instanceof Provider && $provider->provider_id > 0) {
             $query .= ' WHERE provider_id = '. $provider->provider_id;
         }
         $result = rex_sql::factory();
@@ -119,7 +119,7 @@ class ExportedProperty
 
         $exported_properties = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $exported_properties[] = new self((int) $result->getValue('property_id'), $result->getValue('provider_id'));
+            $exported_properties[] = new self((int) $result->getValue('property_id'), (int) $result->getValue('provider_id'));
             $result->next();
         }
         return $exported_properties;
@@ -131,7 +131,7 @@ class ExportedProperty
      */
     public function isSetForExport()
     {
-        if ('add' == $this->export_action || 'update' == $this->export_action || ('' == $this->export_action && '' != $this->export_timestamp)) {
+        if ('add' === $this->export_action || 'update' === $this->export_action || ('' === $this->export_action && '' !== $this->export_timestamp)) {
             return true;
         }
 
@@ -142,7 +142,7 @@ class ExportedProperty
     /**
      * Remove all properties to export for given provider.
      */
-    public static function removeAllDeletedFromExport()
+    public static function removeAllDeletedFromExport(): void
     {
         $query = 'SELECT exported_properties.property_id FROM '. rex::getTablePrefix() .'d2u_immo_export_properties AS exported_properties '
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_used_properties AS used_properties '
@@ -167,7 +167,7 @@ class ExportedProperty
      * Remove all properties to export for given provider.
      * @param int $provider_id Provider ID
      */
-    public static function removeAllFromExport($provider_id)
+    public static function removeAllFromExport($provider_id): void
     {
         $query_lang = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_export_properties '
             ."SET export_action = 'delete' "
@@ -180,7 +180,7 @@ class ExportedProperty
      * Remove a property from export of all providers.
      * @param int $property_id Used property id
      */
-    public static function removePropertyFromAllExports($property_id)
+    public static function removePropertyFromAllExports($property_id): void
     {
         $query_lang = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_export_properties '
             ."SET export_action = 'delete' "
@@ -192,7 +192,7 @@ class ExportedProperty
     /**
      * Remove from export list for this provider.
      */
-    public function removeFromExport()
+    public function removeFromExport(): void
     {
         $this->export_action = 'delete';
         $this->save();

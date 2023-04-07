@@ -2,15 +2,21 @@
 
 namespace D2U_Immo;
 
+use DOMDocument;
+use OAuth;
+use OAuthException;
 use rex;
+
 use rex_addon;
-use rex_addon_interface;
+
 use rex_i18n;
 use rex_url;
-
 use rex_yrewrite;
 
 use function count;
+
+use const OAUTH_HTTP_METHOD_GET;
+use const OAUTH_HTTP_METHOD_POST;
 
 /**
  * LinkedIn export.
@@ -18,7 +24,7 @@ use function count;
 class SocialExportLinkedIn extends AExport
 {
     /** @var OAuth LinkedIn OAuth object */
-    public $oauth;
+    public OAuth $oauth;
 
     /**
      * Constructor. Initializes variables.
@@ -42,7 +48,7 @@ class SocialExportLinkedIn extends AExport
      */
     public function getCallbackURL()
     {
-        return (rex_addon::get('yrewrite') instanceof rex_addon_interface && rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer())
+        return (rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer())
             .'redaxo/'. rex_url::currentBackendPage(['func' => 'export', 'provider_id' => $this->provider->provider_id], false);
     }
 
@@ -63,7 +69,7 @@ class SocialExportLinkedIn extends AExport
             $this->oauth->setToken($requesttoken, $requesttoken_secret);
 
             // get the access token now that we have the verifier pin
-            $at_info = $this->oauth->getAccessToken('https://api.linkedin.com/uas/oauth/accessToken', '', $verifier_pin);
+            $at_info = $this->oauth->getAccessToken('https://api.linkedin.com/uas/oauth/accessToken', '', (string) $verifier_pin);
             // store in DB
             $this->provider->social_oauth_token = $at_info['oauth_token'];
             $this->provider->social_oauth_token_secret = $at_info['oauth_token_secret'];
@@ -109,14 +115,14 @@ class SocialExportLinkedIn extends AExport
      */
     public function hasAccessToken()
     {
-        if ('' != $this->provider->social_oauth_token && '' != $this->provider->social_oauth_token_secret) {
+        if ('' !== $this->provider->social_oauth_token && '' !== $this->provider->social_oauth_token_secret) {
             if ($this->provider->social_oauth_token_valid_until > time()) {
                 return true;
             }
 
             $this->provider->social_oauth_token = '';
             $this->provider->social_oauth_token_secret = '';
-            $this->provider->social_oauth_token_valid_until = 0;
+            $this->provider->social_oauth_token_valid_until = '';
             $this->provider->save();
 
         }
@@ -143,10 +149,10 @@ class SocialExportLinkedIn extends AExport
                 $email = $person->getElementsByTagName('email-address');
                 $linkedin_email = $email->item(0)->nodeValue;
             }
-            if ('' == $linkedin_email) {
+            if ('' === $linkedin_email) {
                 return rex_i18n::msg('d2u_immo_export_linkedin_mail_failed');
             }
-            if (strtolower($linkedin_email) != strtolower($this->provider->linkedin_email)) {
+            if (strtolower($linkedin_email) !== strtolower($this->provider->linkedin_email)) {
                 unset($_SESSION['linkedin']);
                 return rex_i18n::msg('d2u_immo_export_linkedin_login_again');
             }
@@ -170,7 +176,7 @@ class SocialExportLinkedIn extends AExport
         foreach ($this->export_properties as $exported_property) {
             $property = new Property($exported_property->property_id, $this->provider->clang_id);
             // Delete from stream
-            if ('delete' == $exported_property->export_action || 'update' == $exported_property->export_action) {
+            if ('delete' === $exported_property->export_action || 'update' === $exported_property->export_action) {
                 // State April 2015: deleting is not supported
                 /*
                 if($exported_property->provider_import_id != "") {
@@ -182,7 +188,7 @@ class SocialExportLinkedIn extends AExport
                 */
 
                 // delete in database
-                if ('delete' == $exported_property->export_action) {
+                if ('delete' === $exported_property->export_action) {
                     $exported_property->delete();
                 } else {
                     $exported_property->export_action = 'add';
@@ -191,7 +197,7 @@ class SocialExportLinkedIn extends AExport
             }
 
             // Post on wall
-            if ('add' == $exported_property->export_action) {
+            if ('add' === $exported_property->export_action) {
                 // Create XML for LinkedIn Social Stream
                 // Documentation: https://developer.linkedin.com/documents/share-api
                 // <?xml version="1.0" encoding="UTF-8">
@@ -199,13 +205,13 @@ class SocialExportLinkedIn extends AExport
                 $xml->formatOutput = true;
 
                 // Post on Social Stream: prepare XML
-                if ('' == $this->provider->linkedin_groupid) {
+                if ('' === $this->provider->linkedin_groupid) {
                     // <share>
                     $share = $xml->createElement('share');
 
                     // <comment>Bester Kran auf dem Markt</comment>
                     $comment = $xml->createElement('comment');
-                    $comment->appendChild($xml->createTextNode(Sprog\Wildcard::get('d2u_immo_export_linkedin_comment_text', $this->provider->clang_id)));
+                    $comment->appendChild($xml->createTextNode(\Sprog\Wildcard::get('d2u_immo_export_linkedin_comment_text', $this->provider->clang_id)));
                     $share->appendChild($comment);
 
                     // <content>
@@ -229,7 +235,7 @@ class SocialExportLinkedIn extends AExport
                     // <submitted-image-url>http://www.meier-krantechnik.de/index.php?rex_img_type=d2u_baumaschinen_list&amp;rex_img_file=sjjdc_826.jpg</submitted-image-url>
                     if (count($property->pictures) > 0) {
                         $submitted_image_url = $xml->createElement('submitted-image-url');
-                        $submitted_image_url->appendChild($xml->createTextNode((rex_addon::get('yrewrite') instanceof rex_addon_interface && rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer())
+                        $submitted_image_url->appendChild($xml->createTextNode((rex_addon::get('yrewrite')->isAvailable() ? rex_yrewrite::getCurrentDomain()->getUrl() : rex::getServer())
                             .'index.php?rex_media_type='. $this->provider->media_manager_type .'&rex_media_file='. $property->pictures[0]));
                         $content->appendChild($submitted_image_url);
                     }
@@ -276,7 +282,7 @@ class SocialExportLinkedIn extends AExport
                 // Let's post it
                 try {
                     $api_url = 'https://api.linkedin.com/v1/people/~/shares';
-                    if ('' != $this->provider->linkedin_groupid) {
+                    if ('' !== $this->provider->linkedin_groupid) {
                         $api_url = 'https://api.linkedin.com/v1/groups/'. $this->provider->linkedin_groupid .'/posts';
                     }
 
@@ -314,7 +320,7 @@ class SocialExportLinkedIn extends AExport
         $r = explode("\r\n", $r);
         foreach ($r as $h) {
             [$v, $val] = explode(': ', $h);
-            if (null == $v) {
+            if (null === $v) {
                 continue;
             }
             $o[$v] = $val;

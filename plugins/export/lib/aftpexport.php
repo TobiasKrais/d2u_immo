@@ -97,7 +97,7 @@ abstract class AFTPExport extends AExport
     protected function preparePicture($pic)
     {
         $cached_pic = parent::preparePicture($pic);
-        if (!in_array($cached_pic, $this->files_for_zip)) {
+        if (!in_array($cached_pic, $this->files_for_zip, true)) {
             $this->files_for_zip[$pic] = $cached_pic;
         }
         return $cached_pic;
@@ -107,7 +107,7 @@ abstract class AFTPExport extends AExport
      * Prepares all pictures for export.
      * @param int $max_pics Maximum number of pictures, default is 10
      */
-    protected function preparePictures($max_pics = 10)
+    protected function preparePictures($max_pics = 10): void
     {
         foreach ($this->export_properties as $exported_property) {
             $pics_counter = 0;

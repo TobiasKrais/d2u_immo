@@ -4,19 +4,22 @@ namespace D2U_Immo;
 
 use rex;
 use rex_addon;
+use rex_config;
 use rex_i18n;
 use rex_mailer;
+
 use rex_sql;
 
 use function function_exists;
 
 /**
+ * @api
  * Provider export configurations.
  */
 class Provider
 {
-    /** @var string Database ID */
-    public string $provider_id = '';
+    /** @var int Database ID */
+    public int $provider_id = 0;
 
     /** @var string Provider name */
     public string $name = '';
@@ -54,9 +57,6 @@ class Provider
     /** @var string media manager type for exporting pictures */
     public string $media_manager_type = 'd2u_immo_list_tile';
 
-    /** @var string path where attachments can be found */
-    public string $attachment_path = '';
-
     /** @var string app ID of social networks */
     public string $social_app_id = '';
 
@@ -66,10 +66,7 @@ class Provider
     /** @var string Twitter or LinkedIn OAuth Token. This token is valid until user revokes it. */
     public string $social_oauth_token = '';
 
-    /**
-     * @var string Twitter or LinkedIn OAuth Token Secret. This secret is valid until user
-     * revokes it.
-     */
+    /** @var string Twitter or LinkedIn OAuth Token Secret. This secret is valid until user revokes it. */
     public string $social_oauth_token_secret = '';
 
     /** @var string Twitter or LinkedIn OAuth Token Secret. Expiry time. */
@@ -80,9 +77,6 @@ class Provider
 
     /** @var string linkedin group id */
     public string $linkedin_groupid = '';
-
-    /** @var string twitter id */
-    public string $twitter_id = '';
 
     /** @var string Online status. Either "online" or "offline". */
     public string $online_status = 'online';
@@ -101,34 +95,33 @@ class Provider
 
         if ($num_rows > 0) {
             // Wenn Verbindung ueber Redaxo hergestellt wurde
-            $this->provider_id = $result->getValue('provider_id');
-            $this->name = $result->getValue('name');
-            $this->type = $result->getValue('type');
-            $this->clang_id = $result->getValue('clang_id');
-            $this->customer_number = $result->getValue('customer_number');
-            $this->ftp_server = $result->getValue('ftp_server');
-            $this->ftp_username = $result->getValue('ftp_username');
-            $this->ftp_password = $result->getValue('ftp_password');
-            $this->ftp_filename = $result->getValue('ftp_filename');
-            $this->company_name = $result->getValue('company_name');
-            $this->company_email = $result->getValue('company_email');
-            $this->media_manager_type = $result->getValue('media_manager_type');
-            $this->online_status = $result->getValue('online_status');
-            $this->social_app_id = $result->getValue('social_app_id');
-            $this->social_app_secret = $result->getValue('social_app_secret');
-            $this->social_oauth_token = $result->getValue('social_oauth_token');
-            $this->social_oauth_token_secret = $result->getValue('social_oauth_token_secret');
-            $this->social_oauth_token_valid_until = $result->getValue('social_oauth_token_valid_until');
-            $this->linkedin_email = $result->getValue('linkedin_email');
-            $this->linkedin_groupid = $result->getValue('linkedin_groupid');
-            $this->twitter_id = $result->getValue('twitter_id');
+            $this->provider_id = (int) $result->getValue('provider_id');
+            $this->name = (string) $result->getValue('name');
+            $this->type = (string) $result->getValue('type');
+            $this->clang_id = (int) $result->getValue('clang_id');
+            $this->customer_number = (string) $result->getValue('customer_number');
+            $this->ftp_server = (string) $result->getValue('ftp_server');
+            $this->ftp_username = (string) $result->getValue('ftp_username');
+            $this->ftp_password = (string) $result->getValue('ftp_password');
+            $this->ftp_filename = (string) $result->getValue('ftp_filename');
+            $this->company_name = (string) $result->getValue('company_name');
+            $this->company_email = (string) $result->getValue('company_email');
+            $this->media_manager_type = (string) $result->getValue('media_manager_type');
+            $this->online_status = (string) $result->getValue('online_status');
+            $this->social_app_id = (string) $result->getValue('social_app_id');
+            $this->social_app_secret = (string) $result->getValue('social_app_secret');
+            $this->social_oauth_token = (string) $result->getValue('social_oauth_token');
+            $this->social_oauth_token_secret = (string) $result->getValue('social_oauth_token_secret');
+            $this->social_oauth_token_valid_until = (string) $result->getValue('social_oauth_token_valid_until');
+            $this->linkedin_email = (string) $result->getValue('linkedin_email');
+            $this->linkedin_groupid = (string) $result->getValue('linkedin_groupid');
         }
     }
 
     /**
      * Exports property for provider type OpenImmo XML (ftp based exports).
      * Export starts only, if changes were made or last export is older than a week.
-     * @return string HTML formatted string with success or failure message
+     * @return bool true if export was successful
      */
     public static function autoexport()
     {
@@ -138,22 +131,22 @@ class Provider
         $error = false;
 
         foreach ($providers as $provider) {
-            if ($provider->isExportPossible() && ($provider->isExportNeeded() || $provider->getLastExportTimestamp() < strtotime('-1 week'))) {
-                if ('openimmo' == strtolower($provider->type)) {
+            if ($provider->isExportPossible() && ($provider->isExportNeeded() || $provider->getLastExportTimestamp() < date('Y-m-d H:i:s', strtotime('-1 week')))) {
+                if ('openimmo' === strtolower($provider->type)) {
                     $openimmo = new OpenImmo($provider);
                     $openimmo_error = $openimmo->export();
-                    if ('' != $openimmo_error) {
+                    if ('' !== $openimmo_error) {
                         $message[] = $provider->name .': '. $openimmo_error;
                         echo $provider->name .': '. $openimmo_error .'; ';
                         $error = true;
                     } else {
                         $message[] = $provider->name .': '. rex_i18n::msg('d2u_immo_export_success');
                     }
-                } elseif ('linkedin' == strtolower($provider->type)) {
+                } elseif ('linkedin' === strtolower($provider->type)) {
                     $linkedin = new SocialExportLinkedIn($provider);
                     if ($linkedin->hasAccessToken()) {
                         $linkedin_error = $linkedin->export();
-                        if ('' != $mascus_error) {
+                        if ('' !== $linkedin_error) {
                             $message[] = $provider->name .': '. $linkedin_error;
                             echo $provider->name .': '. $linkedin_error .'; ';
                             $error = true;
@@ -236,15 +229,12 @@ class Provider
      */
     public function export()
     {
-        if ('openimmo' == strtolower($this->type)) {
+        if ('openimmo' === strtolower($this->type)) {
             $openimmo = new OpenImmo($this);
 
             return $openimmo->export();
         }
-        if ('twitter' == strtolower($this->type)) {
-            return 'Schnittstelle ist nicht programmiert.';
-        }
-        if ('linkedin' == strtolower($this->type)) {
+        if ('linkedin' === strtolower($this->type)) {
             // Check requirements
             if (!function_exists('curl_init')) {
                 return rex_i18n::msg('d2u_immo_export_failure_curl');
@@ -255,10 +245,10 @@ class Provider
 
             $linkedin = new SocialExportLinkedIn($this);
             if (!$linkedin->hasAccessToken()) {
-                if (!filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && !isset($_SESSION['linkedin']['requesttoken'])) {
+                if (null !== filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && !isset($_SESSION['linkedin']['requesttoken'])) {
                     // Verifier pin and Requesttoken not available? Login
                     $rt_error = $linkedin->getRequestToken();
-                    if ('' == $rt_error) {
+                    if ('' === $rt_error) {
                         // Forward to login URL
                         header('Location: '. $linkedin->getLoginURL());
                         exit;
@@ -270,7 +260,7 @@ class Provider
                 if (filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 && isset($_SESSION['linkedin']['requesttoken'])) {
                     // Logged in an verifiert pin available? Get access token and ...
                     $at_error = $linkedin->getAccessToken(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
-                    if ('' != $at_error) {
+                    if ('' !== $at_error) {
                         return $at_error;
                     }
                 }
@@ -284,21 +274,20 @@ class Provider
             if ($linkedin->hasAccessToken()) {
                 // set the access token so we can make authenticated requests
                 $is_logged_in = $linkedin->isUserLoggedIn();
-                if (false === $is_logged_in) {
+                if (!$is_logged_in) {
                     // Wrong user? Logout and inform user
                     $linkedin->logout();
-                    return rex_i18n('d2u_immo_export_linkedin_login_again');
+                    return rex_i18n::msg('d2u_immo_export_linkedin_login_again');
                 }
-                if (true === $is_logged_in) {
-                    // Correct user? Perform export
-                    return $linkedin->export();
-                }
+                // Correct user? Perform export
+                return $linkedin->export();
 
                 // Login error occured: inform user
                 return $is_logged_in;
 
             }
         }
+        return '';
     }
 
     /**
@@ -318,7 +307,7 @@ class Provider
 
         $providers = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $providers[] = new self($result->getValue('provider_id'));
+            $providers[] = new self((int) $result->getValue('provider_id'));
             $result->next();
         }
         return $providers;
@@ -328,7 +317,7 @@ class Provider
      * Checks if an export is needed. This is the case if:
      * a) An object needs to be deleted from export
      * b) An object is updated after the last export.
-     * @return int timestamp of latest object update
+     * @return bool true if export is needed
      */
     public function isExportNeeded()
     {
@@ -357,7 +346,7 @@ class Provider
     /**
      * Checks if an export is possible. This is the case if there are objects
      * set for export.
-     * @return int timestamp of latest object update
+     * @return bool true if there are objects for export available
      */
     public function isExportPossible()
     {
@@ -386,7 +375,7 @@ class Provider
 
         $time = '';
         if ($result->getRows() > 0) {
-            $time = $result->getValue('export_timestamp');
+            $time = (string) $result->getValue('export_timestamp');
         }
         return $time;
     }
@@ -402,7 +391,7 @@ class Provider
         $result = rex_sql::factory();
         $result->setQuery($query);
 
-        return $result->getValue('number');
+        return (int) $result->getValue('number');
     }
 
     /**
@@ -432,8 +421,7 @@ class Provider
                 ."social_oauth_token_secret = '". $this->social_oauth_token_secret ."', "
                 ."social_oauth_token_valid_until = '". $this->social_oauth_token_valid_until ."', "
                 ."linkedin_email = '". $this->linkedin_email ."', "
-                ."linkedin_groupid = '". $this->linkedin_groupid ."', "
-                ."twitter_id = '". $this->twitter_id ."' ";
+                ."linkedin_groupid = '". $this->linkedin_groupid ."' ";
 
         if (0 === $this->provider_id) {
             $query = 'INSERT INTO '. $query;

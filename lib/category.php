@@ -10,9 +10,9 @@ namespace D2U_Immo;
 use d2u_addon_backend_helper;
 use rex;
 use rex_addon;
-use rex_addon_interface;
 use rex_config;
 use rex_sql;
+use rex_user;
 use rex_yrewrite;
 
 /**
@@ -292,7 +292,7 @@ class Category implements \D2U_Helper\ITranslationHelper
 
         if (0 === $this->category_id || $pre_save_object !== $this) {
             $query = rex::getTablePrefix() .'d2u_immo_categories SET '
-                    .'parent_category_id = '. ($this->parent_category instanceof Category ? $this->parent_category->category_id : 0) .', '
+                    .'parent_category_id = '. ($this->parent_category instanceof self ? $this->parent_category->category_id : 0) .', '
                     .'priority = '. $this->priority .', '
                     ."picture = '". $this->picture ."' ";
 
@@ -322,7 +322,7 @@ class Category implements \D2U_Helper\ITranslationHelper
                         ."teaser = '". addslashes($this->teaser) ."', "
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (rex::getUser() instanceof \rex_user ? rex::getUser()->getLogin() : '') ."' ";
+                        ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
 
                 $result = rex_sql::factory();
                 $result->setQuery($query);
