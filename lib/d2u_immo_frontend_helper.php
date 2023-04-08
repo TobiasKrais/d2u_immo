@@ -22,7 +22,7 @@ class d2u_immo_frontend_helper
         $url_id = d2u_addon_frontend_helper::getUrlId();
 
         if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'property_id' === $url_namespace) {
-            $property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
+            $property_id = (int) filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
             if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
                 $property_id = $url_id;
             }
@@ -33,7 +33,7 @@ class d2u_immo_frontend_helper
                 }
             }
         } elseif (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'category_id' === $url_namespace) {
-            $category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+            $category_id = (int) filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
             if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
                 $category_id = $url_id;
             }
@@ -63,14 +63,14 @@ class d2u_immo_frontend_helper
         $category = false;
         $property = false;
         if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'property_id' === $url_namespace) {
-            $property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
+            $property_id = (int) filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
             if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
                 $property_id = $url_id;
             }
             $property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
         }
         if (filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'category_id' === $url_namespace) {
-            $category_id = filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
+            $category_id = (int) filter_input(INPUT_GET, 'category_id', FILTER_VALIDATE_INT);
             if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
                 $category_id = $url_id;
             }

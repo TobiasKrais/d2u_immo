@@ -36,7 +36,10 @@ $d2u_module_manager->showManagerList();
 	<li>Feld für 360° Bilder hinzugefügt.</li>
 	<li>Feld "Property::rent_plus_vat" war seit Version 1.1.1 deprecated und ist nun entfernt.</li>
 	<li>Twitter Support endgültig entfernt.</li>
+	<li>Ca. 1400 rexstan Level 9 Anpassungen.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe" CSS Scope auf Modul eingegrenzt und 360° Bilder hinzugefügt.</li>
+	<li>Modul 70-2 "D2U Immo Addon - Infobox Ansprechpartner" rexstan Anpassungen.</li>
+	<li>Modul 70-3 "D2U Immo Addon - Ausgabe Kategorie" rexstan Anpassungen.</li>
 </ul>
 <p>1.1.7:</p>
 <ul>

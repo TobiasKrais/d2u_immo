@@ -11,12 +11,15 @@ use rex;
 use rex_addon;
 
 use rex_i18n;
+use rex_request;
 use rex_url;
 use rex_view;
+
 use rex_yrewrite;
 
-use function count;
+use function array_key_exists;
 
+use function count;
 use function is_array;
 
 use const OAUTH_HTTP_METHOD_GET;
@@ -63,18 +66,19 @@ class SocialExportLinkedIn extends AExport
      */
     public function getAccessToken($verifier_pin)
     {
-        $session_linkedin = \rex_request::session('linkedin');
+        $session_linkedin = rex_request::session('linkedin');
         $requesttoken = '';
         $requesttoken_secret = '';
         if (is_array($session_linkedin)) {
-            if(array_key_exists('requesttoken', $session_linkedin) && array_key_exists('requesttoken_secret', $session_linkedin))
-            $requesttoken = $session_linkedin['requesttoken'];
+            if (array_key_exists('requesttoken', $session_linkedin) && array_key_exists('requesttoken_secret', $session_linkedin)) {
+                $requesttoken = $session_linkedin['requesttoken'];
+            }
             $requesttoken_secret = $session_linkedin['requesttoken_secret'];
 
             unset($session_linkedin['requesttoken']);
             unset($session_linkedin['requesttoken_secret']);
 
-            \rex_request::setSession('linkedin', $session_linkedin);
+            rex_request::setSession('linkedin', $session_linkedin);
         }
 
         try {
@@ -105,11 +109,12 @@ class SocialExportLinkedIn extends AExport
      */
     public function getLoginURL()
     {
-        $session_linkedin = \rex_request::session('linkedin');
+        $session_linkedin = rex_request::session('linkedin');
         $requesttoken = '';
         if (is_array($session_linkedin)) {
-            if(array_key_exists('requesttoken', $session_linkedin))
-            $requesttoken = $session_linkedin['requesttoken'];
+            if (array_key_exists('requesttoken', $session_linkedin)) {
+                $requesttoken = $session_linkedin['requesttoken'];
+            }
         }
         return 'https://www.linkedin.com/uas/oauth/authenticate?oauth_token='. $requesttoken;
     }
@@ -123,14 +128,14 @@ class SocialExportLinkedIn extends AExport
         try {
             $rt_info = $this->oauth->getRequestToken('https://api.linkedin.com/uas/oauth/requestToken?scope=r_basicprofile+r_emailaddress+w_share', $this->getCallbackURL());
             if (is_array($rt_info)) {
-                $session_linkedin = \rex_request::session('linkedin');
+                $session_linkedin = rex_request::session('linkedin');
                 if (!is_array($session_linkedin)) {
                     $session_linkedin = [];
                 }
                 $session_linkedin['requesttoken'] = $rt_info['oauth_token'];
                 $session_linkedin['requesttoken_secret'] = $rt_info['oauth_token_secret'];
-        
-                \rex_request::setSession('linkedin', $session_linkedin);
+
+                rex_request::setSession('linkedin', $session_linkedin);
             }
         } catch (OAuthException $e) {
             return $e->getMessage();
@@ -185,7 +190,7 @@ class SocialExportLinkedIn extends AExport
                 return false;
             }
             if (null !== $linkedin_email && strtolower($linkedin_email) !== strtolower($this->provider->linkedin_email)) {
-                \rex_request::setSession('linkedin', null);
+                rex_request::setSession('linkedin', null);
                 echo rex_view::error(rex_i18n::msg('d2u_immo_export_linkedin_login_again'));
                 return false;
             }
@@ -363,11 +368,11 @@ class SocialExportLinkedIn extends AExport
     /**
      * Logout by cleaning LinkedIn session vars and removing access token.
      */
-    public function logout():void
+    public function logout(): void
     {
-        $session_linkedin = \rex_request::session('linkedin');
+        $session_linkedin = rex_request::session('linkedin');
         if (is_array($session_linkedin)) {
-            \rex_request::setSession('linkedin', null);
+            rex_request::setSession('linkedin', null);
         }
 
         $this->provider->social_oauth_token = '';

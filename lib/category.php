@@ -44,12 +44,6 @@ class Category implements \D2U_Helper\ITranslationHelper
     /** @var string "yes" if translation needs update */
     public string $translation_needs_update = 'delete';
 
-    /** @var string Last update date */
-    private string $updatedate = '';
-
-    /** @var string Redaxo update user name */
-    private string $updateuser = '';
-
     /** @var string URL */
     private string $url = '';
 
@@ -81,8 +75,6 @@ class Category implements \D2U_Helper\ITranslationHelper
             if ('' !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
-            $this->updatedate = (string) $result->getValue('updatedate');
-            $this->updateuser = (string) $result->getValue('updateuser');
         }
     }
 
@@ -233,7 +225,7 @@ class Category implements \D2U_Helper\ITranslationHelper
                         .'ON main.category_id = default_lang.category_id AND default_lang.clang_id = '. rex_config::get('d2u_helper', 'default_lang') .' '
                     .'WHERE target_lang.category_id IS NULL '
                     .'ORDER BY default_lang.name';
-            $clang_id = rex_config::get('d2u_helper', 'default_lang');
+            $clang_id = (int) rex_config::get('d2u_helper', 'default_lang');
         }
         $result = rex_sql::factory();
         $result->setQuery($query);

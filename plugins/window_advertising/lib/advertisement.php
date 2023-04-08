@@ -9,13 +9,13 @@ namespace D2U_Immo;
 
 use rex;
 use rex_addon;
-use rex_addon_interface;
 use rex_config;
 use rex_sql;
 use rex_user;
 use rex_yrewrite;
 
 /**
+ * @api
  * Advertisement.
  */
 class Advertisement implements \D2U_Helper\ITranslationHelper
@@ -51,7 +51,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
     public string $updateuser = '';
 
     /** @var string URL */
-    public string $url = '';
+    private string $url = '';
 
     /**
      * Constructor. Reads a object stored in database.
@@ -184,14 +184,14 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
                         .'ON main.ad_id = default_lang.ad_id AND default_lang.clang_id = '. rex_config::get('d2u_helper', 'default_lang') .' '
                     .'WHERE target_lang.ad_id IS NULL '
                     .'ORDER BY default_lang.title';
-            $clang_id = rex_config::get('d2u_helper', 'default_lang');
+            $clang_id = (int) rex_config::get('d2u_helper', 'default_lang');
         }
         $result = rex_sql::factory();
         $result->setQuery($query);
 
         $objects = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $objects[] = new self($result->getValue('ad_id'), $clang_id);
+            $objects[] = new self((int) $result->getValue('ad_id'), $clang_id);
             $result->next();
         }
 
@@ -211,11 +211,11 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
             $parameterArray = [];
             $parameterArray['ad_id'] = $this->ad_id;
 
-            $this->url = rex_getUrl($d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, '&');
+            $this->url = rex_getUrl((int) $d2u_immo->getConfig('article_id'), $this->clang_id, $parameterArray, '&');
         }
 
         if ($including_domain) {
-            if (rex_addon::get('yrewrite') instanceof rex_addon_interface && rex_addon::get('yrewrite')->isAvailable()) {
+            if (rex_addon::get('yrewrite')->isAvailable()) {
                 return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
             }
 

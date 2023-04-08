@@ -5,7 +5,7 @@ use D2U_Immo\Contact;
 if (!function_exists('sendRecommendation')) {
     /**
      * Sends recommendation mail.
-     * @param \rex_yform $yform YForm object with fields and values
+     * @param \rex_yform_action_callback $yform YForm object with fields and values
      */
     function sendRecommendation($yform):void
     {
@@ -155,7 +155,7 @@ $url_id = d2u_addon_frontend_helper::getUrlId();
 <?php
 if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'property_id' === $url_namespace) {
     // Output property
-    $property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
+    $property_id = (int) filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
     if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
         $property_id = $url_id;
     }
@@ -168,7 +168,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     if (null === $print) {
         echo '<div class="col-12 expose-navi d-print-none">';
         echo '<ul>';
-        echo '<li><small><a href="'. rex_getUrl($d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
+        echo '<li><small><a href="'. rex_getUrl((int) $d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
         //	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
         echo '<li><small><a href="'. $property->getUrl(true).'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
         echo '<li><small><a href="'. $property->getUrl(true).'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
@@ -615,7 +615,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         // 360° pictures
         $viewer_id = 0;
         if (count($property->pictures_360) > 0) {
-            if (!function_exists('includePhotoSphereViewerJS')) {
+            echo '<div class="col-12 d-print-none">&nbsp;</div>';
+                if (!function_exists('includePhotoSphereViewerJS')) {
                 /**
                  * Echo Photo Sphere Viewer JS files.
                  */
@@ -679,7 +680,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $d2u_helper = rex_addon::get('d2u_helper');
         $api_key = '';
         if ($d2u_helper->hasConfig('maps_key')) {
-            $api_key = $d2u_helper->getConfig('maps_key');
+            $api_key = (string) $d2u_helper->getConfig('maps_key');
         }
         if ('full' !== $print) {
             echo '<div id="tab_map" class="tab-pane immo-tab fade page-break-avoid">'; // START tab map
@@ -786,7 +787,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                 }
 ?>
 <script>
-	Geolocation.default.positionColor = '<?= rex_config::get('d2u_helper', 'article_color_h') ?>';
+	Geolocation.default.positionColor = '<?= (string) rex_config::get('d2u_helper', 'article_color_h') ?>';
 
 	// adjust zoom level
 	Geolocation.Tools.Center = class extends Geolocation.Tools.Template{
@@ -858,7 +859,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-12">';
         $real_estate_tax = $d2u_immo->getConfig('finance_calculator_real_estate_tax');
         $notary_costs = $d2u_immo->getConfig('finance_calculator_notary_costs');
-        $courtage = is_numeric($property->courtage) ? (strtr(strtr($property->courtage, ',', '.') * 1, ',', '.') / 100) : 0;
+        $courtage = is_numeric($property->courtage) ? ((int) strtr((string) ((int) strtr($property->courtage, ',', '.') * 1), ',', '.') / 100) : 0;
         $interest_rate = $d2u_immo->getConfig('finance_calculator_interest_rate');
         $repayment = $d2u_immo->getConfig('finance_calculator_repayment');
 
@@ -924,8 +925,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				var eigenkapital = substractNumber(document.getElementById("eigenkapital").value);
 				var zins = substractNumber(document.getElementById("zinssatz").value) / 100;
 				var tilgung = substractNumber(document.getElementById("tilgung").value) / 100;
-				var grundsteuer = <?= $real_estate_tax ?>;
-				var notarkosten = <?= $notary_costs ?>;
+				var grundsteuer = <?= (string) $real_estate_tax ?>;
+				var notarkosten = <?= (string) $notary_costs ?>;
 
 				// Neue Werte berechnen
 				var gesamtkosten = (kaufpreis * (provision + notarkosten + grundsteuer + 1));
@@ -1107,6 +1108,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     if (null === $print) {
         echo '<div id="tab_request" class="tab-pane immo-tab fade">'; // START tab request
+        echo '<div class="row">';
         echo '<div class="col-12">';
         echo '<fieldset><legend>'. $tag_open .'d2u_immo_form_title'. $tag_close .'</legend>';
         $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
@@ -1149,11 +1151,13 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo $yform->getForm();
         echo '</fieldset>';
         echo '</div>';
+        echo '</div>';
         echo '</div>'; // END tab request
         // End request form
 
         // Recommendation form
         echo '<div id="tab_recommendation" class="tab-pane immo-tab fade">'; // START tab recommendation
+        echo '<div class="row">';
         echo '<div class="col-12">';
         echo '<fieldset><legend>'. $tag_open .'d2u_immo_recommendation_title'. $tag_close .'</legend>';
         $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
@@ -1196,6 +1200,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
         echo $yform_recommend->getForm();
         echo '</fieldset>';
+        echo '</div>';
         echo '</div>';
         echo '</div>'; // END tab recommendation
         // End recommendation form

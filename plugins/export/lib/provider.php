@@ -8,9 +8,13 @@ use rex_config;
 use rex_i18n;
 use rex_mailer;
 
+use rex_request;
+
 use rex_sql;
 
+use function array_key_exists;
 use function function_exists;
+use function is_array;
 
 /**
  * @api
@@ -164,7 +168,7 @@ class Provider
             $mail = new rex_mailer();
             $mail->isHTML(true);
             $mail->CharSet = 'utf-8';
-            $mail->addAddress(trim($d2u_immo->getConfig('export_failure_email')));
+            $mail->addAddress(trim((string) $d2u_immo->getConfig('export_failure_email')));
             $mail->Subject = rex_i18n::msg('d2u_immo_export_failure_report');
             $mail->Body = implode('<br>', $message);
             $mail->send();
@@ -245,7 +249,7 @@ class Provider
 
             $linkedin = new SocialExportLinkedIn($this);
             if (!$linkedin->hasAccessToken()) {
-                $session_linkedin = \rex_request::session('linkedin');
+                $session_linkedin = rex_request::session('linkedin');
                 if (null !== filter_input(INPUT_GET, 'oauth_verifier', FILTER_NULL_ON_FAILURE) && is_array($session_linkedin) && !array_key_exists('requesttoken', $session_linkedin)) {
                     // Verifier pin and Requesttoken not available? Login
                     $rt_error = $linkedin->getRequestToken();
@@ -260,7 +264,7 @@ class Provider
                 }
                 if (filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 && is_array($session_linkedin) && array_key_exists('requesttoken', $session_linkedin)) {
                     // Logged in an verifiert pin available? Get access token and ...
-                    $at_error = $linkedin->getAccessToken(filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
+                    $at_error = $linkedin->getAccessToken((int) filter_input(INPUT_GET, 'oauth_verifier', FILTER_VALIDATE_INT));
                     if ('' !== $at_error) {
                         return $at_error;
                     }

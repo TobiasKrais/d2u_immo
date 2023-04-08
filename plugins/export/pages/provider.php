@@ -97,7 +97,7 @@ if ('edit' === $func || 'add' === $func) {
                             $media_sql = rex_sql::factory();
                             $media_sql->setQuery('SELECT name FROM '. rex::getTablePrefix() .'media_manager_type');
                             for ($i = 0; $i < $media_sql->getRows(); ++$i) {
-                                $options_media[$media_sql->getValue('name')] = $media_sql->getValue('name');
+                                $options_media[(string) $media_sql->getValue('name')] = (string) $media_sql->getValue('name');
                                 $media_sql->next();
                             }
                             d2u_addon_backend_helper::form_select('d2u_immo_export_media_manager_type', 'form[media_manager_type]', $options_media, [$provider->media_manager_type]);

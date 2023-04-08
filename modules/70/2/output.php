@@ -18,7 +18,7 @@ $url_id = d2u_addon_frontend_helper::getUrlId();
 // If contact from object should be added
 if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'property_id' === $url_namespace) {
     // Output property
-    $property_id = filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
+    $property_id = (int) filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
     if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
         $property_id = $url_id;
     }
