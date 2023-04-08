@@ -18,10 +18,10 @@ class D2UImmoModules
             21);
         $modules[] = new D2UModule('70-2',
             'D2U Immo Addon - Infobox Ansprechpartner',
-            4);
+            5);
         $modules[] = new D2UModule('70-3',
             'D2U Immo Addon - Ausgabe Kategorie',
-            4);
+            5);
         return $modules;
     }
 }

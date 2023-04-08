@@ -224,10 +224,10 @@ if (class_exists('D2UModuleManager')) {
         21);
     $modules[] = new D2UModule('70-2',
         'D2U Immo Addon - Infobox Ansprechpartner',
-        4);
+        5);
     $modules[] = new D2UModule('70-3',
         'D2U Immo Addon - Ausgabe Kategorie',
-        4);
+        5);
 
     $d2u_module_manager = new D2UModuleManager($modules, '', 'd2u_immo');
     $d2u_module_manager->autoupdate();
