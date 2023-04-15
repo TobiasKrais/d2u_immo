@@ -25,6 +25,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $provider->ftp_username = $form['ftp_username'];
     $provider->ftp_password = $form['ftp_password'];
     $provider->ftp_filename = $form['ftp_filename'];
+    $provider->ftp_supports_360_pictures = array_key_exists('ftp_supports_360_pictures', $form);
     $provider->social_app_id = $form['social_app_id'];
     $provider->social_app_secret = $form['social_app_secret'];
     $provider->linkedin_email = $form['linkedin_email'];
@@ -113,6 +114,7 @@ if ('edit' === $func || 'add' === $func) {
                             d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_username', 'form[ftp_username]', $provider->ftp_username, false, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_password', 'form[ftp_password]', $provider->ftp_password, false, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('d2u_immo_export_ftp_filename', 'form[ftp_filename]', $provider->ftp_filename, false, $readonly, 'text');
+                            d2u_addon_backend_helper::form_checkbox('d2u_immo_export_ftp_supports_360_pictures', 'form[ftp_supports_360_pictures]', 'true', $provider->ftp_supports_360_pictures, $readonly);
                         ?>
 					</div>
 				</fieldset>

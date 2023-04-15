@@ -16,6 +16,7 @@ d2u_immo_export_ftp_filename = Dateiname (nur wenn Name vom Portal vorgeschriebe
 d2u_immo_export_ftp_password = FTP Passwort
 d2u_immo_export_ftp_server = FTP Server
 d2u_immo_export_ftp_settings = FTP Einstellungen für OpenImmo Schnittstellen
+d2u_immo_export_ftp_supports_360_pictures = Portal unterstützt die Darstellung von 360° Bildern
 d2u_immo_export_ftp_username = FTP Benutzername
 d2u_immo_export_last_export_date = Letzter Export am
 d2u_immo_export_image_too_large = Bilddatei ist zu groß um für den Export vorbereitet zu werden. Bitte ersetzen Sie das Bild im Medienpool mit einer verkleinerten Version.

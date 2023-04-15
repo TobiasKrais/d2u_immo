@@ -119,10 +119,12 @@ abstract class AFTPExport extends AExport
                         ++$pics_counter;
                     }
                 }
-                foreach ($property->pictures_360 as $picture_360) {
-                    if (strlen($picture_360) > 3 && $pics_counter < $max_pics) {
-                        $this->preparePicture($picture_360);
-                        ++$pics_counter;
+                if ($this->provider->ftp_supports_360_pictures) {
+                    foreach ($property->pictures_360 as $picture_360) {
+                        if (strlen($picture_360) > 3 && $pics_counter < $max_pics) {
+                            $this->preparePicture($picture_360);
+                            ++$pics_counter;
+                        }
                     }
                 }
                 foreach ($property->ground_plans as $groundplan) {

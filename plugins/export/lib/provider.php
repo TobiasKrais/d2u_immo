@@ -31,10 +31,7 @@ class Provider
     /** @var string provider interface name */
     public string $type = '';
 
-    /**
-     * @var int Redaxo language id. Represents the language, the object should
-     * be exported.
-     */
+    /** @var int Redaxo language id. Represents the language, the object should be exported. */
     public int $clang_id = 0;
 
     /** @var string Company name (your company name) */
@@ -57,6 +54,9 @@ class Provider
 
     /** @var string FTP filename (including file type, normally .zip) */
     public string $ftp_filename = '';
+
+    /** @var bool If true, 360° pictures are supported */
+    public bool $ftp_supports_360_pictures = false;
 
     /** @var string media manager type for exporting pictures */
     public string $media_manager_type = 'd2u_immo_list_tile';
@@ -108,6 +108,7 @@ class Provider
             $this->ftp_username = (string) $result->getValue('ftp_username');
             $this->ftp_password = (string) $result->getValue('ftp_password');
             $this->ftp_filename = (string) $result->getValue('ftp_filename');
+            $this->ftp_supports_360_pictures = 1 === (int) $result->getValue('ftp_supports_360_pictures') ? true : false;
             $this->company_name = (string) $result->getValue('company_name');
             $this->company_email = (string) $result->getValue('company_email');
             $this->media_manager_type = (string) $result->getValue('media_manager_type');
@@ -416,6 +417,7 @@ class Provider
                 ."ftp_username = '". $this->ftp_username ."', "
                 ."ftp_password = '". $this->ftp_password ."', "
                 ."ftp_filename = '". $this->ftp_filename ."', "
+                .'ftp_supports_360_pictures = '. (int) $this->ftp_supports_360_pictures .', '
                 ."social_app_id = '". $this->social_app_id ."', "
                 ."social_app_secret = '". $this->social_app_secret ."', "
                 ."social_oauth_token = '". $this->social_oauth_token ."', "

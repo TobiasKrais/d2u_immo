@@ -16,6 +16,7 @@
     ->ensureColumn(new \rex_sql_column('ftp_username', 'VARCHAR(50)', true))
     ->ensureColumn(new \rex_sql_column('ftp_password', 'VARCHAR(50)', true))
     ->ensureColumn(new \rex_sql_column('ftp_filename', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_supports_360_pictures', 'TINYINT(1)', true, '0'))
     ->ensureColumn(new \rex_sql_column('social_app_id', 'VARCHAR(191)', true))
     ->ensureColumn(new \rex_sql_column('social_app_secret', 'VARCHAR(191)', true))
     ->ensureColumn(new \rex_sql_column('social_oauth_token', 'VARCHAR(191)', true))

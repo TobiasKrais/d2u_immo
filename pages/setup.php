@@ -33,7 +33,7 @@ $d2u_module_manager->showManagerList();
 
 <p>1.2.0:</p>
 <ul>
-	<li>Feld für 360° Bilder hinzugefügt.</li>
+	<li>Feld für 360° Bilder hinzugefügt. Der Export von 360° Bildern kann in den Einstellungen jedes Portals manuell aktiviert werden.</li>
 	<li>Feld "Property::rent_plus_vat" war seit Version 1.1.1 deprecated und ist nun entfernt.</li>
 	<li>Twitter Support endgültig entfernt.</li>
 	<li>Ca. 1400 rexstan Level 9 Anpassungen.</li>
