@@ -6,7 +6,7 @@
 class export_lang_helper extends d2u_immo_lang_helper
 {
     /**
-     * @var array<string, string> Array with englisch replacements. Key is the wildcard,
+     * @var array<string,string> Array with englisch replacements. Key is the wildcard,
      * value the replacement.
      */
     public $replacements_english = [
@@ -16,7 +16,7 @@ class export_lang_helper extends d2u_immo_lang_helper
     ];
 
     /**
-     * @var array<string, string> Array with german replacements. Key is the wildcard,
+     * @var array<string,string> Array with german replacements. Key is the wildcard,
      * value the replacement.
      */
     protected array $replacements_german = [

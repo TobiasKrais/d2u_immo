@@ -5,9 +5,9 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 
     // Linkmap Link and media needs special treatment
     $link_ids = filter_input_array(INPUT_POST, ['REX_INPUT_LINK' => ['filter' => FILTER_VALIDATE_INT, 'flags' => FILTER_REQUIRE_ARRAY]]);
-    $settings['article_id'] = !is_array($link_ids) ? 0 : $link_ids['REX_INPUT_LINK'][1];
+    $settings['article_id'] = is_array($link_ids['REX_INPUT_LINK']) ? $link_ids['REX_INPUT_LINK'][1] : 0;
     if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-        $settings['window_advertising_settings_article'] = !is_array($link_ids) ? 0 : $link_ids['REX_INPUT_LINK'][2];
+        $settings['window_advertising_settings_article'] = !is_array($link_ids['REX_INPUT_LINK']) ? 0 : $link_ids['REX_INPUT_LINK'][2];
     }
 
     $input_media = rex_post('REX_INPUT_MEDIA', 'array', []);

@@ -6,7 +6,7 @@
 class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper
 {
     /**
-     * @var array<string, string> Array with english replacements. Key is the wildcard,
+     * @var array<string,string> Array with english replacements. Key is the wildcard,
      * value the replacement.
      */
     public $replacements_english = [
@@ -179,7 +179,7 @@ class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper
         'd2u_immo_yes' => 'Yes',
     ];
     /**
-     * @var array<string, string> Array with german replacements. Key is the wildcard,
+     * @var array<string,string> Array with german replacements. Key is the wildcard,
      * value the replacement.
      */
     protected array $replacements_german = [
