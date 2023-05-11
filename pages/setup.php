@@ -31,9 +31,9 @@ $d2u_module_manager->showManagerList();
 <p>Fehlermeldungen bitte im <a href="https://github.com/TobiasKrais/d2u_immo" target="_blank">GitHub Repository</a> melden.</p>
 <h2>Changelog</h2>
 
-<p>1.2.1-DEV:</p>
+<p>1.3.0-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>import Plugin hinzugefügt: es ist nun möglich OpenImmo ZIP Dateien zu importieren.</li>
 </ul>
 <p>1.2.0:</p>
 <ul>
