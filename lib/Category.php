@@ -27,7 +27,7 @@ class Category implements \D2U_Helper\ITranslationHelper
     public int $clang_id = 0;
 
     /** @var Category|bool Father category object */
-    public Category|bool$parent_category = false;
+    public Category|bool $parent_category = false;
 
     /** @var string Name */
     public string $name = '';

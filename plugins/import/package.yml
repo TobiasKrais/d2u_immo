@@ -1,0 +1,20 @@
+package: d2u_immo/import
+version: '1.3.0'
+author: Tobias Krais
+supportpage: http://github.com/tobiaskrais/d2u_immo
+
+page:
+    title: 'translate:d2u_immo_import'
+    perm: 'd2u_immo[import]'
+    icon: rex-icon fa-cloud-download
+    subpages:
+        import: { title: 'translate:d2u_immo_import', icon: rex-icon fa-cloud-download }
+
+requires:
+    php:
+        extensions: [xml, zip]
+    packages:
+        cronjob: '>=2.1.1'
+        media_manager: '>=2.3'
+        phpmailer: '>=2.1'
+        sprog: '>=1.0.0'

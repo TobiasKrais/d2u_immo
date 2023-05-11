@@ -115,7 +115,7 @@ class Property implements \D2U_Helper\ITranslationHelper
     public float $longitude = 0;
 
     /** @var float Latitude */
-    public float$latitude = 0;
+    public float $latitude = 0;
 
     /** @var int Floor */
     public int $floor = 0;
@@ -199,7 +199,7 @@ class Property implements \D2U_Helper\ITranslationHelper
     public array $elevator = [];
 
     /** @var bool true if home is wheelchair accessable */
-    public $wheelchair_accessable = false;
+    public bool $wheelchair_accessable = false;
 
     /** @var bool true if cable or sat tv is available */
     public bool $cable_sat_tv = true;
@@ -302,6 +302,10 @@ class Property implements \D2U_Helper\ITranslationHelper
     public function __construct($property_id, $clang_id)
     {
         $this->clang_id = $clang_id;
+        if($property_id <= 0) {
+            return;
+        }
+
         $query = 'SELECT * FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
                 .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
                     .'ON properties.property_id = lang.property_id '
@@ -527,11 +531,21 @@ class Property implements \D2U_Helper\ITranslationHelper
     }
 
     /**
+     * Create a new, empty Property
+     * @param int $clang_id Redaxo language id
+     * @return Property Empty property
+     */
+    public static function factory($clang_id)
+    {
+        return new self(0, $clang_id);
+    }
+
+    /**
      * Get all properties.
      * @param int $clang_id redaxo clang id
      * @param string $market_type KAUF, MIETE_PACHT, ERBPACHT, LEASING or empty (all)
      * @param bool $only_online Show only online properties
-     * @return array<Property> array with Property objects
+     * @return array<int,Property> array with Property objects
      */
     public static function getAll($clang_id, $market_type = '', $only_online = false)
     {
@@ -558,7 +572,7 @@ class Property implements \D2U_Helper\ITranslationHelper
 
         $properties = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $properties[] = new self((int) $result->getValue('property_id'), $clang_id);
+            $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
             $result->next();
         }
         return $properties;
@@ -567,7 +581,7 @@ class Property implements \D2U_Helper\ITranslationHelper
     /**
      * Get all properties that are selected for window advertising.
      * @param int $clang_id redaxo clang id
-     * @return Property[] array with Property objects
+     * @return array<int,Property> array with Property objects
      */
     public static function getAllWindowAdvertisingProperties($clang_id)
     {
@@ -586,13 +600,32 @@ class Property implements \D2U_Helper\ITranslationHelper
             $result->setQuery($query);
 
             for ($i = 0; $i < $result->getRows(); ++$i) {
-                $properties[] = new self((int) $result->getValue('property_id'), $clang_id);
+                $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
                 $result->next();
             }
         }
         return $properties;
     }
 
+    /**
+     * Get property by OpenImmo object ID
+     * @param string $openimmo_object_id OpenImmo object ID
+     * @param int $clang_id redaxo clang id
+     * @return Property|null Property or null if no propterty was found
+     */
+    public static function getByOpenImmoID($openimmo_object_id, $clang_id)
+    {
+        $query = 'SELECT property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties '
+                .'WHERE openimmo_object_id = "'. $openimmo_object_id .'"';
+        $result = rex_sql::factory();
+        $result->setQuery($query);
+
+        for ($i = 0; $i < $result->getRows(); ++$i) {
+            return new self((int) $result->getValue('property_id'), $clang_id);
+        }
+        return null;
+    }
+    
     /**
      * Creates a short description suiteable for social networks.
      * @return string description

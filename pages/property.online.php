@@ -11,9 +11,9 @@ if ('' === $func) { /** @phpstan-ignore-line */
             .'ON properties.category_id = categories.category_id AND categories.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
         .'WHERE online_status = "online" OR online_status = "offline"';
     if ('priority' === rex_config::get('d2u_immo', 'default_property_sort')) {
-        $query .= 'ORDER BY online_status DESC, priority ASC';
+        $query .= ' ORDER BY online_status DESC, priority ASC';
     } else {
-        $query .= 'ORDER BY online_status DESC, propertyname ASC';
+        $query .= ' ORDER BY online_status DESC, propertyname ASC';
     }
     $list = rex_list::factory($query, 1000);
 
@@ -56,7 +56,7 @@ if ('' === $func) { /** @phpstan-ignore-line */
         $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
     }
 
-    $list->setNoRowsMessage(rex_i18n::msg('d2u_helper_no_categories_found'));
+    $list->setNoRowsMessage(rex_i18n::msg('d2u_immo_properties_not_found'));
 
     $fragment = new rex_fragment();
     $fragment->setVar('title', rex_i18n::msg('d2u_immo_properties'), false);

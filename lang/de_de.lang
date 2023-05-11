@@ -29,6 +29,7 @@ d2u_immo_contact_phone = Telefonnummer
 d2u_immo_contact_street = Straße
 d2u_immo_contact_zip_code = PLZ
 
+d2u_immo_properties_not_found = Es wurden noch keine Immobilien angelegt.
 d2u_immo_property = Immobilie
 d2u_immo_property_additional_costs = Nebenkosten
 d2u_immo_property_address = Adresse

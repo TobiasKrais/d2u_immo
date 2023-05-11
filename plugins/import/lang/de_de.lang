@@ -1,0 +1,8 @@
+d2u_immo_import = Import
+
+d2u_immo_import_settings_autoimport = Automatischer Import von OpenImmo Dateien im Importverzeichnis
+d2u_immo_import_settings_category = D2U Immo Kategorie
+d2u_immo_import_settings_default_lang = Sprache des Imports
+d2u_immo_import_settings_email = E-Mail-Adresse für Benachrichtigungen
+d2u_immo_import_settings_import_folder = Ordner der zu importierenden Dateien
+d2u_immo_import_settings_media_category = Medienpool Kategorie für importierte Medien

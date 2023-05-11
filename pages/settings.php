@@ -14,8 +14,13 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
     $settings['even_informative_pdf'] = $input_media['even_informative_pdf'];
 
     // Checkbox also need special treatment if empty
-    $settings['export_autoexport'] = array_key_exists('export_autoexport', $settings) ? 'active' : 'inactive';
     $settings['lang_wildcard_overwrite'] = array_key_exists('lang_wildcard_overwrite', $settings) ? 'true' : 'false';
+    if (rex_plugin::get('d2u_immo', 'export')->isAvailable()) {
+        $settings['export_autoexport'] = array_key_exists('export_autoexport', $settings);
+    }
+    if (rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
+        $settings['import_autoimport'] = array_key_exists('import_autoimport', $settings);
+    }
 
     // Save settings
     if (rex_config::set('d2u_immo', $settings)) {
@@ -33,15 +38,25 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
             export_lang_helper::factory()->install();
         }
 
-        // Install / remove Cronjob
+        // Install / remove Cronjob(s)
         if (rex_plugin::get('d2u_immo', 'export')->isAvailable()) {
             $export_cronjob = d2u_immo_export_cronjob::factory();
-            if ('active' === rex_config::get('d2u_immo', 'export_autoexport')) {
+            if ((bool) rex_config::get('d2u_immo', 'export_autoexport')) {
                 if (!$export_cronjob->isInstalled()) {
                     $export_cronjob->install();
                 }
             } else {
                 $export_cronjob->delete();
+            }
+        }
+        if (rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
+            $import_cronjob = \D2U_Immo\ImportCronjob::factory();
+            if ((bool) rex_config::get('d2u_immo', 'import_autoimport')) {
+                if (!$import_cronjob->isInstalled()) {
+                    $import_cronjob->install();
+                }
+            } else {
+                $import_cronjob->delete();
             }
         }
     } else {
@@ -129,6 +144,52 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 					</div>
 				</fieldset>
 			<?php
+                }
+                if (rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
+                    // Default language for import
+                    if (count(rex_clang::getAll()) > 1) {
+                        $lang_options = [];
+                        foreach (rex_clang::getAll() as $rex_clang) {
+                            $lang_options[$rex_clang->getId()] = $rex_clang->getName();
+                        }
+                        d2u_addon_backend_helper::form_select('d2u_immo_import_settings_default_lang', 'settings[hr4you_default_lang]', $lang_options, [(int) rex_config::get('d2u_immo', 'import_default_lang')]);
+                    }
+            ?>
+                <fieldset>
+                    <legend><small><i class="rex-icon fa-cloud-download"></i></small> <?= rex_i18n::msg('d2u_immo_import') ?></legend>
+                    <div class="panel-body-wrapper slide">
+                        <?php
+                        $options_categories = [];
+                        foreach (D2U_Immo\Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
+                            if ('' !== $category->name) {
+                                $options_categories[$category->category_id] = ($category->parent_category instanceof D2U_Immo\Category ? $category->parent_category->name .' → ' : '') . $category->name;
+                            }
+                        }
+                        asort($options_categories);
+                        d2u_addon_backend_helper::form_select('d2u_immo_import_settings_category', 'settings[import_category_id]', $options_categories, [(int) rex_config::get('d2u_immo', 'import_category_id', 0)]);
+                        ?>
+                        <dl class="rex-form-group form-group" id="settings[import_media_category]">
+							<dt><label><?= rex_i18n::msg('d2u_immo_import_settings_media_category') ?></label></dt>
+							<dd>
+								<?php
+                                    $media_category = new rex_media_category_select(false);
+                                    $media_category->addOption(rex_i18n::msg('pool_kats_no'), 0);
+                                    $media_category->get();
+                                    $media_category->setSelected((int) rex_config::get('d2u_immo', 'import_media_category', 0));
+                                    $media_category->setName('settings[import_media_category]');
+                                    $media_category->setAttribute('class', 'form-control');
+                                    $media_category->show();
+                                ?>
+							</dd>
+						</dl>
+						<?php
+                        d2u_addon_backend_helper::form_input('d2u_immo_import_settings_email', 'settings[import_email]', (string) rex_config::get('d2u_immo', 'import_email'), true, false, 'email');
+                        d2u_addon_backend_helper::form_input('d2u_immo_import_settings_import_folder', 'settings[import_folder]', (string) rex_config::get('d2u_immo', 'import_folder'), false, false);
+                        d2u_addon_backend_helper::form_checkbox('d2u_immo_import_settings_autoimport', 'settings[import_autoimport]', 'active', 'active' === rex_config::get('d2u_immo', 'import_autoimport'));
+                        ?>
+                    </div>
+                </fieldset>
+            <?php
                 }
                 if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
             ?>

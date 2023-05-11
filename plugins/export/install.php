@@ -35,6 +35,11 @@
     ->ensureColumn(new \rex_sql_column('export_timestamp', 'DATETIME', true))
     ->ensure();
 
+// Update config to version 1.3.0
+if (!is_bool(rex_config::get('d2u_immo', 'export_autoexport', false))) {
+    rex_config::set('d2u_immo', 'export_autoexport', 'active' === rex_config::get('d2u_immo', 'export_autoexport'));
+}
+
 // Insert frontend translations
 if (!class_exists('export_lang_helper')) {
     // Load class in case addon is deactivated

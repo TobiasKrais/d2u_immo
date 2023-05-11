@@ -6,6 +6,7 @@ use d2u_addon_frontend_helper;
 use DOMDocument;
 use DOMNode;
 use Exception;
+use rex_addon;
 use rex_i18n;
 
 use rex_media;
@@ -95,7 +96,7 @@ class OpenImmo extends AFTPExport
         $uebertragung_sendersoftware->appendChild($xml->createTextNode('D2U_IMMO'));
         $uebertragung->appendChild($uebertragung_sendersoftware);
         $uebertragung_senderversion = $xml->createAttribute('senderversion');
-        $uebertragung_senderversion->appendChild($xml->createTextNode('1.0'));
+        $uebertragung_senderversion->appendChild($xml->createTextNode(\rex_plugin::get('d2u_immo', 'export')->getVersion()));
         $uebertragung->appendChild($uebertragung_senderversion);
         if ('' !== $this->provider->company_email) {
             $uebertragung_techn_email = $xml->createAttribute('techn_email');
@@ -149,7 +150,7 @@ class OpenImmo extends AFTPExport
                 $nutzungsart->appendChild($nutzungsart_art);
             }
             $objektkategorie->appendChild($nutzungsart);
-            // <vermarktungsart KAUF="1" />
+            // <vermarktungsart KAUF="true" MIETE_PACHT="false" ERBPACHT="false" LEASING="false"/>
             $vermarktungsart = $xml->createElement('vermarktungsart');
             $vermarktungsarten = ['KAUF', 'MIETE_PACHT', 'ERBPACHT', 'LEASING'];
             foreach ($vermarktungsarten as $market_type) {

@@ -66,6 +66,10 @@ class Contact
      */
     public function __construct($contact_id)
     {
+        if($contact_id <= 0) {
+            return;
+        }
+
         $query = 'SELECT * FROM '. rex::getTablePrefix() .'d2u_immo_contacts '
                 .'WHERE contact_id = '. $contact_id;
         $result = rex_sql::factory();
@@ -102,6 +106,15 @@ class Contact
     }
 
     /**
+     * Create a new, empty Contact
+     * @return Contact Empty contact
+     */
+    public static function factory()
+    {
+        return new self(0);
+    }
+
+    /**
      * Get all contacts.
      * @return Contact[] array with Contact objects
      */
@@ -117,6 +130,26 @@ class Contact
             $result->next();
         }
         return $contacts;
+    }
+
+    /**
+     * Get contact by e-mail-address.
+     * @param string $email E-mail-address
+     * @return Contact|null
+     */
+    public static function getByMail($email)
+    {
+        $query = 'SELECT contact_id FROM '. rex::getTablePrefix() .'d2u_immo_contacts '
+                .'WHERE email = "'. $email .'"';
+        $result = rex_sql::factory();
+        $result->setQuery($query);
+        $num_rows = $result->getRows();
+
+        if ($num_rows > 0) {
+            return new self((int) $result->getValue('contact_id'));
+        }
+
+        return null;
     }
 
     /**
@@ -147,7 +180,7 @@ class Contact
 
     /**
      * Updates or inserts the object into database.
-     * @return bool error code if error occurs
+     * @return bool true if error occurs
      */
     public function save()
     {

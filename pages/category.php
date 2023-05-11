@@ -78,7 +78,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
     $uses_categories = $category->getChildren();
 
     // If not used, delete
-    if (0 === count($uses_properties) && 0 === count($uses_categories)) {
+    if (0 === count($uses_properties) && 0 === count($uses_categories) && $category_id !== (int) rex_config::get('d2u_immo', 'import_category_id', 0)) {
         $category->delete(true);
     } else {
         $message = '<ul>';
@@ -87,6 +87,9 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         }
         foreach ($uses_properties as $uses_property) {
             $message .= '<li><a href="index.php?page=d2u_immo/property&func=edit&entry_id='. $uses_property->property_id .'">'. $uses_property->name .'</a></li>';
+        }
+        if(0 < (int) rex_config::get('d2u_immo', 'import_category_id', 0)) {
+            $message .= '<li><a href="index.php?page=d2u_immo/settings">'. rex_i18n::msg('d2u_immo') .' '. rex_i18n::msg('d2u_helper_settings') .'</a></li>';
         }
         $message .= '</ul>';
 
