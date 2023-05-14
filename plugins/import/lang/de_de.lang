@@ -1,5 +1,14 @@
 d2u_immo_import = Import
 
+d2u_immo_import_import_list = Übersicht über verfügbaren ZIP Dateien im Importverzeichnis
+d2u_immo_import_import_none = Keine ZIP Dateien um Importverzeichnis verfügbar.
+d2u_immo_import_import_select = Wählen Sie die zu importierende ZIP Datei:
+
+d2u_immo_import_log = Log
+d2u_immo_import_log_list = Übersicht über die letzten OpenImmo Importe
+d2u_immo_import_log_none = Keine Import Logdateien verfügbar. Entweder wurde der Redaxo Cache gelöscht oder es wurde noch kein Import durchgeführt.
+d2u_immo_import_log_title = Import Logdateien
+
 d2u_immo_import_settings_autoimport = Automatischer Import von OpenImmo Dateien im Importverzeichnis
 d2u_immo_import_settings_category = D2U Immo Kategorie
 d2u_immo_import_settings_default_lang = Sprache des Imports

@@ -1,7 +1,7 @@
 <?php
 namespace D2U_Immo;
 
-use Directory;
+use Exception;
 use rex_config;
 use rex_media;
 use rex_path;
@@ -13,10 +13,10 @@ use SimpleXMLElement;
 class ImportOpenImmo
 {
     /** @var string complete folder name including parent folders for extracting OpenImmo import files */
-    private string $extract_cache_folder = '';
+    public string $extract_cache_folder = '';
 
     /** @var string complete folder name including parent folders containing OpenImmo import files */
-    private string $import_folder = '';
+    public string $import_folder = '';
 
     /** @var string complete file name including parent folders containing OpenImmo log file for current import */
     private string $log_file = '';
@@ -48,7 +48,6 @@ class ImportOpenImmo
         $zip_filenames = $openimmoimport->getZIPFiles();
 
         // Extract zip file
-        $openimmo_xml = '';
         foreach ($zip_filenames as $zip_filename) {
             $zip = new \ZipArchive();
             if (true === $zip->open($openimmoimport->import_folder . $zip_filename)) {
@@ -56,41 +55,51 @@ class ImportOpenImmo
                 $zip->close();
 
                 $openimmo_xml = $openimmoimport->getOpenImmoXMLFile();
-                if ('' !== $openimmo_xml) {
-                    $openimmoimport->log('ZIP file "'. $zip_filename .'" with OpenImmo content extracted.');
-                    break;
+                if ('' === $openimmo_xml) {
+                    $openimmoimport->log('No OpenImmo XML file in "'. $zip_filename .'" detected.');
                 }
                 else {
-                    $files = glob($openimmoimport->extract_cache_folder .'/*');
-                    if (is_array($files)) {
-                        // delete extracted files
-                        array_map('unlink', $files);
-                        // delete the Non-OpenImmo-ZIP file
-                        unlink($openimmoimport->import_folder . $zip_filename);
-                        $openimmoimport->log('ZIP file "'. $zip_filename .'" deleted, because did not contain an OpenImmo xml file.');
-                    }
+                    $openimmoimport->log('ZIP file "'. $zip_filename .'" with OpenImmo content extracted.');
+                    // Read and import XML file
+                    $openimmoimport->importXML($openimmo_xml);
+                    // Property actions: TEIL va. VOLL TODO
                 }
             } else {
-                $openimmoimport->log('ZIP file "'. $zip_filename .'" deleted, because did not contain an OpenImmo xml file.');
+                $openimmoimport->log('ZIP file "'. $zip_filename .'" deleted, because it was not possible to read it.');
             }
-        }
-
-        // Read and import XML file
-        $openimmoimport->import($openimmo_xml);
-        // Property actions: TEIL va. VOLL
-
-        // Clean unzipped files
-        $files = glob($openimmoimport->extract_cache_folder .'/*');
-        if (is_array($files)) {
-            // delete extracted files
-            array_map('unlink', $files);
-            // delete the Non-OpenImmo-ZIP file
-            unlink($openimmoimport->import_folder . $zip_filename);
-            $openimmoimport->log('Cleaning work after import done.');
+            // Clean unzipped files
+            $openimmoimport->cleanUp($zip_filename);
         }
 
         // send mail
-        print nl2br(file_get_contents($openimmoimport->log_file));
+        $openimmoimport->sendImportLog();
+    }
+
+    /**
+     * Deletes all extracted files and the zip file itself.
+     * @param string $zip_filename ZIP filesname without folder names.
+     * @return bool true if deletion was successful, false if failur for at least one file occured
+     */
+    private function cleanUp($zip_filename)
+    {
+        $this->log('Cleaning up import cache and file.');
+        $return = true;
+        $files = glob($this->extract_cache_folder .'/*');
+        if (is_array($files)) {
+            // delete extracted files
+            foreach ($files as $file) {
+                if(false === unlink($file)) {
+                    $return = false;
+                    $this->log('Could not delete file "'. $file .'".');
+                }
+            }
+            // delete the ZIP file
+            if(false === unlink($this->import_folder . $zip_filename)) {
+                $this->log('Could not delete file "'. $this->import_folder .$zip_filename .'".');
+                $return = false;
+            }
+        }
+        return $return;
     }
 
     /**
@@ -136,11 +145,11 @@ class ImportOpenImmo
     }
 
     /**
-     * Perform HR4You XML import.
+     * Perform OpenImmo XML import.
      * @param string $openimmo_xml_filename XML file name
      * @return bool true if successfull
      */
-    public function import($openimmo_xml_filename)
+    public function importXML($openimmo_xml_filename)
     {
         $clang_id = (int) \rex_config::get('d2u_immo', 'import_default_lang', \rex_clang::getStartId());
         $xml_contents = file_get_contents($this->extract_cache_folder . $openimmo_xml_filename);
@@ -184,7 +193,7 @@ class ImportOpenImmo
                             // <verwaltung_techn>
                             // <aktion aktionart="CHANGE"/>
                             // </verwaltung_techn>
-                            if(count($xml_immobilie->verwaltung_techn[0]->aktion) > 0 && 'DELETE' === (string) $xml_immobilie->verwaltung_techn[0]->aktion['aktionart']) {
+                            if($property instanceof Property && count($xml_immobilie->verwaltung_techn[0]->aktion) > 0 && 'DELETE' === (string) $xml_immobilie->verwaltung_techn[0]->aktion['aktionart']) {
                                 $property->delete();
                                 continue;
                             }
@@ -599,10 +608,10 @@ class ImportOpenImmo
                                         }
                                     }
                                     if (count($ausstattung->rollstuhlgerecht) > 0) {
-                                        $property->wheelchair_accessable = 'true' === $preise->rollstuhlgerecht;
+                                        $property->wheelchair_accessable = 'true' === $ausstattung->rollstuhlgerecht;
                                     }
                                     if (count($ausstattung->kabel_sat_tv) > 0) {
-                                        $property->cable_sat_tv = 'true' === $preise->kabel_sat_tv;
+                                        $property->cable_sat_tv = 'true' === $ausstattung->kabel_sat_tv;
                                     }
                                     if (count($ausstattung->breitband_zugang) > 0) {
                                         $property->broadband_internet = [];
@@ -631,7 +640,7 @@ class ImportOpenImmo
                                         $property->construction_year = (int) $zustand_angaben->baujahr;
                                     }
                                     if (count($zustand_angaben->zustand) > 0) {
-                                        $property->condition_type = (int) $zustand_angaben->zustand['zustand_art'];
+                                        $property->condition_type = $zustand_angaben->zustand['zustand_art'];
                                     }
                                     if (count($zustand_angaben->energiepass) > 0) {
                                         $energiepass = $zustand_angaben->energiepass[0];
@@ -698,7 +707,8 @@ class ImportOpenImmo
 
                                     foreach ($xml_immobilie->anhaenge->anhang as $anhang) {
                                         if (count($anhang->daten) > 0 && count($anhang->daten->pfad) > 0) {
-                                            $anhang_url = strtoupper($anhang['location']) === 'EXTERN' ? $this->extract_cache_folder . trim($anhang->daten->pfad, DIRECTORY_SEPARATOR) : $anhang->daten->pfad;
+                                            $pfad = (string) $anhang->daten->pfad;
+                                            $anhang_url = strtoupper((string) $anhang['location']) === 'EXTERN' ? $this->extract_cache_folder . trim($pfad, DIRECTORY_SEPARATOR) : $pfad;
                                             $anhang_pathInfo = pathinfo($anhang_url);
                                             $anhang_filename = \d2u_addon_backend_helper::getMediapoolFilename($anhang_pathInfo['basename']);
                                             $anhang_rex_media = \rex_media::get($anhang_filename);
@@ -726,9 +736,7 @@ class ImportOpenImmo
                         
                                                     $data = [];
                                                     $data['category_id'] = (int) \rex_config::get('d2u_immo', 'import_media_category', 0);
-                                                    if(count($anhang->anhangtitel) > 0) {
-                                                        $data['title'] = $anhang->anhangtitel;
-                                                    }
+                                                    $data['title'] = count($anhang->anhangtitel) > 0 ? (string) $anhang->anhangtitel : '';
                                                     $data['file'] = [
                                                         'name' => $anhang_pathInfo['basename'],
                                                         'path' => rex_path::media($anhang_pathInfo['basename']),
@@ -810,7 +818,7 @@ class ImportOpenImmo
                             }
                         }
                         else {
-                            self::log('Error: saving property '. $contact->firstname .' '. $contact->lastname .' failed.');
+                            self::log('Error: saving property '. $property->name .' failed.');
                         }
 
 
@@ -859,5 +867,28 @@ class ImportOpenImmo
 
         // Write to log
         file_put_contents($this->log_file, $log);
+    }
+
+    /**
+     * Send log file. Recipient is set in addon settings.
+     * @return bool true if email was sent, otherwise false
+     */
+    private function sendImportLog() {
+        $mail = new \rex_mailer();
+        $mail->isHTML(false);
+        $mail->CharSet = 'utf-8';
+        $mail->addAddress((string) rex_config::get('d2u_immo', 'import_email'));
+
+        $mail->Subject = 'D2U Immo Importbericht';
+
+        $mail->Body = file_exists($this->log_file) ? file_get_contents($this->log_file) : '';
+        try {
+            return $mail->send();
+        }
+        catch (Exception $e) {
+            $this->log('Error sending log file via email: '. $e->getMessage());
+        }
+
+        return false;
     }
 }

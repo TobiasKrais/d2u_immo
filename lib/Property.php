@@ -288,6 +288,9 @@ class Property implements \D2U_Helper\ITranslationHelper
     /** @var array<string> Language specific documents of the property */
     public array $documents = [];
 
+    /** @var string OpenImmo Provider ID */
+    public string $openimmo_anid = '';
+
     /** @var string Needs translation update? "no", "yes" or "delete" */
     public string $translation_needs_update = 'delete';
 
@@ -412,6 +415,10 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->updateuser = (string) $result->getValue('updateuser');
             $this->wheelchair_accessable = 1 === (int) $result->getValue('wheelchair_accessable') ? true : false;
             $this->zip_code = (string) $result->getValue('zip_code');
+            // Import plugin
+            if (rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
+                $this->openimmo_anid = (string) $result->getValue('openimmo_anid');
+            }
             // Window advertising plugin fields
             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
                 $this->window_advertising_status = (string) $result->getValue('window_advertising_status');
@@ -834,6 +841,9 @@ class Property implements \D2U_Helper\ITranslationHelper
                     ."type_of_use = '". $this->type_of_use ."', "
                     .'wheelchair_accessable = '. ($this->wheelchair_accessable ? 1 : 0) .', '
                     ."zip_code = '". $this->zip_code ."' ";
+            if (rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
+                $query .= ", openimmo_anid = '". $this->openimmo_anid ."' ";
+            }
             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
                 $query .= ", window_advertising_status = '". ('online' === $this->window_advertising_status ? 'online' : 'offline') ."' ";
             }

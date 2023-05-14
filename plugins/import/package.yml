@@ -9,12 +9,12 @@ page:
     icon: rex-icon fa-cloud-download
     subpages:
         import: { title: 'translate:d2u_immo_import', icon: rex-icon fa-cloud-download }
+        view_logs: { title: 'translate:d2u_immo_import_log', icon: rex-icon fa-files-o }
 
 requires:
     php:
         extensions: [xml, zip]
     packages:
-        cronjob: '>=2.1.1'
-        media_manager: '>=2.3'
-        phpmailer: '>=2.1'
-        sprog: '>=1.0.0'
+        cronjob: '>=2.10.0'
+        mediapool: '>=2.13.0'
+        phpmailer: '>=2.12.0'
