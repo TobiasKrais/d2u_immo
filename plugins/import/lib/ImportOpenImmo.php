@@ -266,6 +266,11 @@ class ImportOpenImmo
                             $property = Property::factory($clang_id);
                         }
 
+                        // <openimmo_anid>...</openimmo_anid>
+                        if(count($xml_anbieter->openimmo_anid) > 0) {
+                            $property->openimmo_anid = $xml_anbieter->openimmo_anid;
+                        }
+
                         // <verwaltung_techn>
                         // <objektnr_intern>123456</objektnr_intern>
                         // <openimmo_obid>OD2U202304011137030002492344769</openimmo_obid>
