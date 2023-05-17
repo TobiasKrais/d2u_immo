@@ -26,16 +26,18 @@ $show_file = (string) rex_request('file', 'string');
                                 }
                                 $logfile_info = pathinfo($file);
                                 $zip_file = $logfile_info['filename'] .'.zip';
-                                echo '<li>';
                                 $timestamp = filectime($dir . $file);
-                                echo date('d.m.Y H:i:s', $timestamp) .': ';
-                                echo '<a href="'. rex_url::currentBackendPage(['file' => $file])  .'"'. ($show_file === $file ? ' style="color:white"' : '') .'>'. rex_i18n::msg('d2u_immo_import_log_view_log') .'</a>';
-                                if (file_exists(rex_path::addonCache('d2u_immo', $zip_file))) {
-                                    $filesize = filesize(rex_path::addonCache('d2u_immo', $zip_file));
-                                    $filesize_mb = round($filesize / (1024 * 1024), 2);
-                                    echo ' - <a href="'. rex_url::currentBackendPage(['download_file' => $zip_file])  .'">'. rex_i18n::msg('d2u_immo_import_log_download_zip') .' ('. $filesize_mb .' MB)</a>';
+                                if (false !== $timestamp) {
+                                    echo '<li>';
+                                    echo date('d.m.Y H:i:s', $timestamp) .': ';
+                                    echo '<a href="'. rex_url::currentBackendPage(['file' => $file])  .'"'. ($show_file === $file ? ' style="color:white"' : '') .'>'. rex_i18n::msg('d2u_immo_import_log_view_log') .'</a>';
+                                    if (file_exists(rex_path::addonCache('d2u_immo', $zip_file))) {
+                                        $filesize = filesize(rex_path::addonCache('d2u_immo', $zip_file));
+                                        $filesize_mb = round($filesize / (1024 * 1024), 2);
+                                        echo ' - <a href="'. rex_url::currentBackendPage(['download_file' => $zip_file])  .'">'. rex_i18n::msg('d2u_immo_import_log_download_zip') .' ('. $filesize_mb .' MB)</a>';
+                                    }
+                                    echo '</li>';
                                 }
-                                echo '</li>';
                             }
                         }
                         echo '</ul>';

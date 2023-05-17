@@ -595,7 +595,7 @@ class Property implements \D2U_Helper\ITranslationHelper
     public static function getAllForOpenImmoAnID($openimmo_anid, $clang_id, $only_online = false)
     {
         $properties = [];
-        if(rex_plugin::get('d2u_immo', 'import')) {
+        if(rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
             $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
                 .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
                     .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
