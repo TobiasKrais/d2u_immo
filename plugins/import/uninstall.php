@@ -1,4 +1,5 @@
 <?php
+
 \rex_sql_table::get(\rex::getTable('d2u_immo_properties'))
 ->ensureColumn(new \rex_sql_column('openimmo_anid', 'INT(10)'))
 ->alter();

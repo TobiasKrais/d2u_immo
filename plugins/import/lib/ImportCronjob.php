@@ -1,4 +1,5 @@
 <?php
+
 namespace D2U_Immo;
 
 /**

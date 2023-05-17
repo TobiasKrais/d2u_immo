@@ -1,14 +1,28 @@
 <?php
+
 namespace D2U_Immo;
 
+use d2u_addon_backend_helper;
 use Exception;
+use rex;
+use rex_api_exception;
+use rex_clang;
 use rex_config;
+use rex_dir;
+use rex_mailer;
 use rex_media;
+use rex_media_service;
 use rex_path;
 use SimpleXMLElement;
+use ZipArchive;
+
+use function array_key_exists;
+use function count;
+use function in_array;
+use function is_array;
 
 /**
- * Imports an OpenImmo ZIP file
+ * Imports an OpenImmo ZIP file.
  */
 class ImportOpenImmo
 {
@@ -19,56 +33,38 @@ class ImportOpenImmo
     public string $import_folder = '';
 
     /** @var string complete file name including parent folders containing OpenImmo log file for current import */
-    private string $log_file = '';
+    public string $log_file = '';
 
     /**
-     * Create OpenImmo import object
+     * Create OpenImmo import object.
      */
     public function __construct()
     {
-        $this->extract_cache_folder = \rex_path::addonCache('d2u_immo', 'import'). DIRECTORY_SEPARATOR;
+        $this->extract_cache_folder = rex_path::addonCache('d2u_immo', 'import'). DIRECTORY_SEPARATOR;
         if (!file_exists($this->extract_cache_folder)) {
-            \rex_dir::create(\rex_path::base($this->extract_cache_folder));
+            rex_dir::create(rex_path::base($this->extract_cache_folder));
         }
-        $this->import_folder = \rex_path::base(trim((string) rex_config::get('d2u_immo', 'import_folder'), DIRECTORY_SEPARATOR)). DIRECTORY_SEPARATOR;
+        $this->import_folder = rex_path::base(trim((string) rex_config::get('d2u_immo', 'import_folder'), DIRECTORY_SEPARATOR)). DIRECTORY_SEPARATOR;
         if (!file_exists($this->import_folder)) {
-            \rex_dir::create(\rex_path::base($this->import_folder));
+            rex_dir::create(rex_path::base($this->import_folder));
         }
-        
+
         $this->log_file = rex_path::addonCache('d2u_immo', 'openimmo_import_'. date('Y-m-d_H-i-s', time()) .'.log');
     }
 
     /**
-     * Automatically import OpenImmo ZIP file
+     * Automatically import OpenImmo ZIP files.
      */
-    public static function autoimport():void {
+    public static function autoimport(): void
+    {
         $openimmoimport = new self();
 
         // Check folder for extract files
         $zip_filenames = $openimmoimport->getZIPFiles();
 
-        // Extract zip file
+        // Extract zip file an import
         foreach ($zip_filenames as $zip_filename) {
-            $zip = new \ZipArchive();
-            if (true === $zip->open($openimmoimport->import_folder . $zip_filename)) {
-                $zip->extractTo($openimmoimport->extract_cache_folder);
-                $zip->close();
-
-                $openimmo_xml = $openimmoimport->getOpenImmoXMLFile();
-                if ('' === $openimmo_xml) {
-                    $openimmoimport->log('No OpenImmo XML file in "'. $zip_filename .'" detected.');
-                }
-                else {
-                    $openimmoimport->log('ZIP file "'. $zip_filename .'" with OpenImmo content extracted.');
-                    // Read and import XML file
-                    $openimmoimport->importXML($openimmo_xml);
-                    // Property actions: TEIL va. VOLL TODO
-                }
-            } else {
-                $openimmoimport->log('ZIP file "'. $zip_filename .'" deleted, because it was not possible to read it.');
-            }
-            // Clean unzipped files
-            $openimmoimport->cleanUp($zip_filename);
+            $openimmoimport->importZIP($zip_filename);
         }
 
         // send mail
@@ -77,25 +73,42 @@ class ImportOpenImmo
 
     /**
      * Deletes all extracted files and the zip file itself.
-     * @param string $zip_filename ZIP filesname without folder names.
+     * @param string $zip_filename ZIP filesname without folder names
      * @return bool true if deletion was successful, false if failur for at least one file occured
      */
     private function cleanUp($zip_filename)
     {
         $this->log('Cleaning up import cache and file.');
         $return = true;
-        $files = glob($this->extract_cache_folder .'/*');
+        // keep only the 10 latest log- and zipfiles in addon cache, delete older ones
+        $log_files = glob(rex_path::addonCache('d2u_immo') .'*.log');
+        if (is_array($log_files) && count($log_files) > 10) {
+            for ($i = 0; $i < count($log_files) - 10; ++$i) {
+                if (false === unlink($log_files[$i])) {
+                    $return = false;
+                    $this->log('Could not delete old file "'. $log_files[$i] .'".');
+                }
+                $logfile_info = pathinfo($log_files[$i]);
+                if (false === unlink(rex_path::addonCache('d2u_immo', $logfile_info['filename'] .'.zip'))) {
+                    $return = false;
+                    $this->log('Could not delete old file "'. $log_files[$i] .'".');
+                }
+            }
+        }
+
+        $files = glob($this->extract_cache_folder .'*');
         if (is_array($files)) {
             // delete extracted files
             foreach ($files as $file) {
-                if(false === unlink($file)) {
+                if (false === unlink($file)) {
                     $return = false;
                     $this->log('Could not delete file "'. $file .'".');
                 }
             }
-            // delete the ZIP file
-            if(false === unlink($this->import_folder . $zip_filename)) {
-                $this->log('Could not delete file "'. $this->import_folder .$zip_filename .'".');
+            // move imported ZIP file to cache
+            $logfile_info = pathinfo($this->log_file);
+            if (false === rename($this->import_folder . $zip_filename, rex_path::addonCache('d2u_immo', $logfile_info['filename'] .'.zip'))) {
+                $this->log('Could not move import file "'. $zip_filename .'" to cache.');
                 $return = false;
             }
         }
@@ -106,15 +119,16 @@ class ImportOpenImmo
      * Get OpenImmo XML filename from export folder.
      * @return string file name including OpenImmo XML file
      */
-    public function getOpenImmoXMLFile() {
+    public function getOpenImmoXMLFile()
+    {
         $all_filenames = scandir($this->extract_cache_folder);
-        if(false === $all_filenames) {
+        if (false === $all_filenames) {
             return '';
         }
         foreach ($all_filenames as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'xml') {
+            if ('xml' === pathinfo($file, PATHINFO_EXTENSION)) {
                 $xml = simplexml_load_file($this->extract_cache_folder . $file);
-                if ($xml instanceof SimpleXMLElement && $xml->xpath('//openimmo') !== false) {
+                if ($xml instanceof SimpleXMLElement && false !== $xml->xpath('//openimmo')) {
                     return $file;
                 }
             }
@@ -125,23 +139,58 @@ class ImportOpenImmo
 
     /**
      * Get ZIP file names from import folder.
-     * @return array<string> file names for all zip files in import folder.
+     * @return array<string> file names for all zip files in import folder
      */
-    public function getZIPFiles() {
+    public function getZIPFiles()
+    {
         $zip_filenames = [];
 
         // find ZIP files
         $all_filenames = scandir($this->import_folder);
-        if(false === $all_filenames) {
+        if (false === $all_filenames) {
             return $zip_filenames;
         }
         foreach ($all_filenames as $file) {
-            if (pathinfo($file, PATHINFO_EXTENSION) === 'zip') {
+            if ('zip' === pathinfo($file, PATHINFO_EXTENSION)) {
                 $zip_filenames[] = $file;
             }
         }
 
         return $zip_filenames;
+    }
+
+    /**
+     * Import an OpenImmo ZIP file.
+     * @param string $zip_filename Name of the file to be imported
+     * @return bool true if import is successful
+     */
+    public function importZIP($zip_filename)
+    {
+        $this->log('Start importing "'. $zip_filename .'".');
+        $return = true;
+        $zip = new ZipArchive();
+        if (true === $zip->open($this->import_folder . $zip_filename)) {
+            $zip->extractTo($this->extract_cache_folder);
+            $zip->close();
+
+            $openimmo_xml = $this->getOpenImmoXMLFile();
+            if ('' === $openimmo_xml) {
+                $this->log('No OpenImmo XML file in "'. $zip_filename .'" detected.');
+                $return = false;
+            } else {
+                $this->log('ZIP file "'. $zip_filename .'" with OpenImmo content extracted.');
+                // Read and import XML file
+                $this->importXML($openimmo_xml);
+                // Property actions: TEIL va. VOLL TODO
+            }
+        } else {
+            $this->log('ZIP file "'. $zip_filename .'" deleted, because it was not possible to read it.');
+            $return = false;
+        }
+        // Clean up
+        $this->cleanUp($zip_filename);
+
+        return $return;
     }
 
     /**
@@ -151,7 +200,7 @@ class ImportOpenImmo
      */
     public function importXML($openimmo_xml_filename)
     {
-        $clang_id = (int) \rex_config::get('d2u_immo', 'import_default_lang', \rex_clang::getStartId());
+        $clang_id = (int) rex_config::get('d2u_immo', 'import_default_lang', rex_clang::getStartId());
         $xml_contents = file_get_contents($this->extract_cache_folder . $openimmo_xml_filename);
         if (false === $xml_contents) {
             $this->log('Error reading "'. $openimmo_xml_filename .'" file with OpenImmo content.');
@@ -165,7 +214,7 @@ class ImportOpenImmo
         foreach ($old_properties as $old_property) {
             // Media
             $property_medias = array_merge($old_property->documents, $old_property->ground_plans, $old_property->location_plans, $old_property->pictures, $old_property->pictures_360);
-            if(count($property_medias) > 0) {
+            if (count($property_medias) > 0) {
                 foreach ($property_medias as $property_media) {
                     if (!in_array($property_media, $old_medias, true)) {
                         $old_medias[$property_media] = $property_media;
@@ -183,17 +232,17 @@ class ImportOpenImmo
 
         // Get new properties
         $xml = new SimpleXMLElement($xml_contents);
-        if(count($xml->anbieter) > 0) {
+        if (count($xml->anbieter) > 0) {
             foreach ($xml->anbieter as $xml_anbieter) {
-                if(count($xml_anbieter->immobilie) > 0) {
+                if (count($xml_anbieter->immobilie) > 0) {
                     foreach ($xml_anbieter->immobilie as $xml_immobilie) {
                         $property = null;
-                        if(count($xml_immobilie->verwaltung_techn) > 0 && count($xml_immobilie->verwaltung_techn[0]->openimmo_obid) > 0) {
+                        if (count($xml_immobilie->verwaltung_techn) > 0 && count($xml_immobilie->verwaltung_techn[0]->openimmo_obid) > 0) {
                             $property = Property::getByOpenImmoID($xml_immobilie->verwaltung_techn[0]->openimmo_obid, $clang_id);
                             // <verwaltung_techn>
                             // <aktion aktionart="CHANGE"/>
                             // </verwaltung_techn>
-                            if($property instanceof Property && count($xml_immobilie->verwaltung_techn[0]->aktion) > 0 && 'DELETE' === (string) $xml_immobilie->verwaltung_techn[0]->aktion['aktionart']) {
+                            if ($property instanceof Property && count($xml_immobilie->verwaltung_techn[0]->aktion) > 0 && 'DELETE' === (string) $xml_immobilie->verwaltung_techn[0]->aktion['aktionart']) {
                                 $property->delete();
                                 continue;
                             }
@@ -206,7 +255,7 @@ class ImportOpenImmo
                         // <objektnr_intern>123456</objektnr_intern>
                         // <openimmo_obid>OD2U202304011137030002492344769</openimmo_obid>
                         // </verwaltung_techn>
-                        if(count($xml_immobilie->verwaltung_techn) > 0) {
+                        if (count($xml_immobilie->verwaltung_techn) > 0) {
                             $verwaltung_techn = $xml_immobilie->verwaltung_techn[0];
                             if (count($verwaltung_techn->objektnr_intern) > 0) {
                                 $property->internal_object_number = $verwaltung_techn->objektnr_intern;
@@ -217,13 +266,13 @@ class ImportOpenImmo
                         }
 
                         // <objektkategorie>
-                        if(count($xml_immobilie->objektkategorie) > 0) {
+                        if (count($xml_immobilie->objektkategorie) > 0) {
                             $objektkategorie = $xml_immobilie->objektkategorie[0];
 
                             // <nutzungsart WOHNEN="true" GEWERBE="false" ANLAGE="false" WAZ="false"/>
-                            if(count($objektkategorie->nutzungsart) > 0) {
-                                foreach($objektkategorie->nutzungsart[0]->attributes() as $attribute => $value) {
-                                    if ((string) $value === 'true') {
+                            if (count($objektkategorie->nutzungsart) > 0) {
+                                foreach ($objektkategorie->nutzungsart[0]->attributes() as $attribute => $value) {
+                                    if ('true' === (string) $value) {
                                         $property->type_of_use = (string) $attribute;
                                         break;
                                     }
@@ -231,9 +280,9 @@ class ImportOpenImmo
                             }
 
                             // <vermarktungsart KAUF="true" MIETE_PACHT="false" ERBPACHT="false" LEASING="false"/>
-                            if(count($objektkategorie->vermarktungsart) > 0) {
-                                foreach($objektkategorie->vermarktungsart[0]->attributes() as $attribute => $value) {
-                                    if ((string) $value === 'true') {
+                            if (count($objektkategorie->vermarktungsart) > 0) {
+                                foreach ($objektkategorie->vermarktungsart[0]->attributes() as $attribute => $value) {
+                                    if ('true' === (string) $value) {
                                         $property->market_type = (string) $attribute;
                                         break;
                                     }
@@ -243,33 +292,27 @@ class ImportOpenImmo
                             // <objektart>
                             // <wohnung wohnungtyp="PENTHOUSE"/>
                             // </objektart>
-                            if(count($objektkategorie->objektart) > 0) {
+                            if (count($objektkategorie->objektart) > 0) {
                                 $objektart = $objektkategorie->objektart[0];
                                 if (count($objektart->buero_praxen) > 0) {
                                     $property->object_type = 'BUERO_PRAXEN';
                                     $property->office_type = $objektart->buero_praxen['buero_typ'];
-                                }
-                                else if (count($objektart->grundstueck) > 0) {
+                                } elseif (count($objektart->grundstueck) > 0) {
                                     $property->object_type = 'GRUNDSTUECK';
                                     $property->land_type = $objektart->grundstueck['grundst_typ'];
-                                }
-                                else if (count($objektart->hallen_lager_prod) > 0) {
+                                } elseif (count($objektart->hallen_lager_prod) > 0) {
                                     $property->object_type = 'HALLEN_LAGER_PROD';
                                     $property->hall_warehouse_type = $objektart->grundstueck['hallen_typ'];
-                                }
-                                else if (count($objektart->haus) > 0) {
+                                } elseif (count($objektart->haus) > 0) {
                                     $property->object_type = 'HAUS';
                                     $property->house_type = $objektart->haus['haustyp'];
-                                }
-                                else if (count($objektart->parken) > 0) {
+                                } elseif (count($objektart->parken) > 0) {
                                     $property->object_type = 'PARKEN';
                                     $property->parking_type = $objektart->haus['parken_typ'];
-                                }
-                                else if (count($objektart->wohnung) > 0) {
+                                } elseif (count($objektart->wohnung) > 0) {
                                     $property->object_type = 'WOHNUNG';
                                     $property->apartment_type = $objektart->wohnung['wohnungtyp'];
-                                }
-                                else if (count($objektart->sonstige) > 0) {
+                                } elseif (count($objektart->sonstige) > 0) {
                                     $property->object_type = 'SONSTIGE';
                                     $property->other_type = $objektart->sonstige['sonstige_typ'];
                                 }
@@ -284,7 +327,7 @@ class ImportOpenImmo
                             // <land iso_land="DEU"/>
                             // <etage>1</etage>
                             // </geo>
-                            if(count($xml_immobilie->geo) > 0) {
+                            if (count($xml_immobilie->geo) > 0) {
                                 $geo = $xml_immobilie->geo[0];
                                 if (count($geo->plz) > 0) {
                                     $property->zip_code = $geo->plz;
@@ -333,13 +376,13 @@ class ImportOpenImmo
                             // </daten>
                             // </foto>
                             // </kontaktperson>
-                            if(count($xml_immobilie->kontaktperson) > 0) {
+                            if (count($xml_immobilie->kontaktperson) > 0) {
                                 $kontaktperson = $xml_immobilie->kontaktperson[0];
                                 $contact = null;
-                                if(count($kontaktperson->email_direkt) > 0 || count($kontaktperson->email_zentrale) > 0) {
+                                if (count($kontaktperson->email_direkt) > 0 || count($kontaktperson->email_zentrale) > 0) {
                                     $contact = Contact::getByMail('' !== $kontaktperson->email_direkt ? $kontaktperson->email_direkt : $kontaktperson->email_zentrale);
                                 }
-                                if(null === $contact) {
+                                if (null === $contact) {
                                     $contact = Contact::factory();
                                 }
 
@@ -381,11 +424,11 @@ class ImportOpenImmo
                                 }
                                 $contact_picture_filename = '';
                                 if (count($kontaktperson->foto) > 0 && count($kontaktperson->foto->daten) > 0 && count($kontaktperson->foto->daten->pfad) > 0) {
-                                    $contact_picture_url = strtoupper($kontaktperson->foto['location']) === 'EXTERN' ? $this->extract_cache_folder . trim($kontaktperson->foto->daten->pfad, DIRECTORY_SEPARATOR) : $kontaktperson->foto->daten->pfad;
+                                    $contact_picture_url = 'EXTERN' === strtoupper($kontaktperson->foto['location']) ? $this->extract_cache_folder . trim($kontaktperson->foto->daten->pfad, DIRECTORY_SEPARATOR) : $kontaktperson->foto->daten->pfad;
                                     $contact_picture_pathInfo = pathinfo($contact_picture_url);
-                                    $contact_picture_filename = \d2u_addon_backend_helper::getMediapoolFilename($contact_picture_pathInfo['basename']);
-                                    $contact_picture = \rex_media::get($contact_picture_filename);
-                                    if ($contact_picture instanceof \rex_media && $contact_picture->fileExists()) {
+                                    $contact_picture_filename = d2u_addon_backend_helper::getMediapoolFilename($contact_picture_pathInfo['basename']);
+                                    $contact_picture = rex_media::get($contact_picture_filename);
+                                    if ($contact_picture instanceof rex_media && $contact_picture->fileExists()) {
                                         // File already imported, unset in $old_medias, because remaining ones will be deleted
                                         if (in_array($contact_picture->getFileName(), $old_medias, true)) {
                                             unset($old_medias[$contact_picture->getFileName()]);
@@ -393,52 +436,50 @@ class ImportOpenImmo
                                         self::log('Contact picture '. $contact_picture_filename .' already available in mediapool.');
                                     } else {
                                         // File exists only in database, but no more in file system: remove it before import
-                                        if ($contact_picture instanceof \rex_media) {
+                                        if ($contact_picture instanceof rex_media) {
                                             try {
-                                                \rex_media_service::deleteMedia($contact_picture->getFileName());
-                                            } catch (\Exception $e) {
+                                                rex_media_service::deleteMedia($contact_picture->getFileName());
+                                            } catch (Exception $e) {
                                                 self::log('Contact picture not found in file system. Error deleting media from mediapool database.');
                                             }
                                         }
-                
+
                                         // Import
-                                        $target_picture = \rex_path::media($contact_picture_pathInfo['basename']);
+                                        $target_picture = rex_path::media($contact_picture_pathInfo['basename']);
                                         // Copy first
                                         if (copy($contact_picture_url, $target_picture)) {
-                                            chmod($target_picture, \rex::getFilePerm());
-                
+                                            chmod($target_picture, rex::getFilePerm());
+
                                             $data = [];
-                                            $data['category_id'] = (int) \rex_config::get('d2u_immo', 'import_media_category');
+                                            $data['category_id'] = (int) rex_config::get('d2u_immo', 'import_media_category');
                                             $data['title'] = $contact->firstname .' '. $contact->lastname;
                                             $data['file'] = [
                                                 'name' => $contact_picture_pathInfo['basename'],
                                                 'path' => rex_path::media($contact_picture_pathInfo['basename']),
                                             ];
-                
+
                                             try {
-                                                $media_info = \rex_media_service::addMedia($data, false);
+                                                $media_info = rex_media_service::addMedia($data, false);
                                                 $contact_picture_filename = $media_info['filename'];
-                                                $contact_picture = \rex_media::get($contact_picture_filename);
+                                                $contact_picture = rex_media::get($contact_picture_filename);
                                                 self::log('Contact picture '. $media_info['filename'] .' importet into mediapool.');
-                                            } catch (\rex_api_exception $e) {
+                                            } catch (rex_api_exception $e) {
                                                 self::log('Error: Contact picture '. $contact_picture_pathInfo['basename'] .' not importet: '. $e->getMessage());
                                             }
                                         }
                                     }
-                                    if($contact_picture instanceof rex_media) {
+                                    if ($contact_picture instanceof rex_media) {
                                         $contact->picture = $contact_picture->getFileName();
                                     }
                                 }
-                                if(false === $contact->save()) {
-                                    if(array_key_exists($contact->contact_id, $old_contacts)) {
+                                if (false === $contact->save()) {
+                                    if (array_key_exists($contact->contact_id, $old_contacts)) {
                                         self::log('Contact '. $contact->firstname .' '. $contact->lastname .' updated.');
                                         unset($old_contacts[$contact->contact_id]);
-                                    }
-                                    else {
+                                    } else {
                                         self::log('Contact '. $contact->firstname .' '. $contact->lastname .' added.');
                                     }
-                                }
-                                else {
+                                } else {
                                     self::log('Error: saving contact '. $contact->firstname .' '. $contact->lastname .' failed.');
                                 }
                                 $property->contact = $contact;
@@ -462,8 +503,8 @@ class ImportOpenImmo
                                 // <stp_garage stellplatzmiete="1" stellplatzkaufpreis="1" anzahl="1"/>
                                 // <stp_parkhaus stellplatzmiete="1" stellplatzkaufpreis="1" anzahl="1"/>
                                 // <stp_tiefgarage stellplatzmiete="1" stellplatzkaufpreis="1" anzahl="1"/>
-                                // </preise>                                
-                                if(count($xml_immobilie->preise) > 0) {
+                                // </preise>
+                                if (count($xml_immobilie->preise) > 0) {
                                     $preise = $xml_immobilie->preise[0];
                                     if (count($preise->kaufpreis) > 0) {
                                         $property->purchase_price = (int) $preise->kaufpreis;
@@ -503,13 +544,13 @@ class ImportOpenImmo
                                         $property->parking_space_undergroundcarpark = (int) $preise->stp_tiefgarage['anzahl'];
                                     }
                                 }
-    
+
                                 // <flaechen>
                                 // <wohnflaeche>1</wohnflaeche>
                                 // <gesamtflaeche>1</gesamtflaeche>
                                 // <anzahl_zimmer>1</anzahl_zimmer>
                                 // </flaechen>
-                                if(count($xml_immobilie->flaechen) > 0) {
+                                if (count($xml_immobilie->flaechen) > 0) {
                                     $flaechen = $xml_immobilie->flaechen[0];
                                     if (count($flaechen->wohnflaeche) > 0) {
                                         $property->living_area = (float) $flaechen->wohnflaeche;
@@ -538,71 +579,68 @@ class ImportOpenImmo
                                 // <kabel_sat_tv>false</kabel_sat_tv>
                                 // <breitband_zugang DSL="true" />
                                 // </ausstattung>
-                                if(count($xml_immobilie->ausstattung) > 0) {
+                                if (count($xml_immobilie->ausstattung) > 0) {
                                     $ausstattung = $xml_immobilie->ausstattung[0];
                                     if (count($ausstattung->wg_geeignet) > 0) {
                                         $property->flat_sharing_possible = 'TRUE' === strtoupper($ausstattung->wg_geeignet);
                                     }
                                     if (count($ausstattung->bad) > 0) {
                                         $property->bath = [];
-                                        foreach($ausstattung->bad[0]->attributes() as $attribute => $value) {
-                                            if('TRUE' === strtoupper($value)) {
+                                        foreach ($ausstattung->bad[0]->attributes() as $attribute => $value) {
+                                            if ('TRUE' === strtoupper($value)) {
                                                 $property->bath[] = $attribute;
                                             }
                                         }
                                     }
                                     if (count($ausstattung->kueche) > 0) {
                                         $property->kitchen = [];
-                                        foreach($ausstattung->kueche[0]->attributes() as $attribute => $value) {
-                                            if('TRUE' === strtoupper($value)) {
+                                        foreach ($ausstattung->kueche[0]->attributes() as $attribute => $value) {
+                                            if ('TRUE' === strtoupper($value)) {
                                                 $property->kitchen[] = $attribute;
                                             }
                                         }
                                     }
                                     if (count($ausstattung->boden) > 0) {
                                         $property->floor_type = [];
-                                        foreach($ausstattung->boden[0]->attributes() as $attribute => $value) {
-                                            if('TRUE' === strtoupper($value)) {
+                                        foreach ($ausstattung->boden[0]->attributes() as $attribute => $value) {
+                                            if ('TRUE' === strtoupper($value)) {
                                                 $property->floor_type[] = $attribute;
                                             }
                                         }
                                     }
                                     if (count($ausstattung->heizungsart) > 0) {
                                         $property->heating_type = [];
-                                        foreach($ausstattung->heizungsart[0]->attributes() as $attribute => $value) {
-                                            if('TRUE' === strtoupper($value)) {
+                                        foreach ($ausstattung->heizungsart[0]->attributes() as $attribute => $value) {
+                                            if ('TRUE' === strtoupper($value)) {
                                                 $property->heating_type[] = $attribute;
                                             }
                                         }
                                     }
                                     if (count($ausstattung->befeuerung) > 0) {
                                         $property->firing_type = [];
-                                        foreach($ausstattung->befeuerung[0]->attributes() as $attribute => $value) {
-                                            if('TRUE' === strtoupper($value)) {
+                                        foreach ($ausstattung->befeuerung[0]->attributes() as $attribute => $value) {
+                                            if ('TRUE' === strtoupper($value)) {
                                                 $property->firing_type[] = $attribute;
                                             }
                                         }
                                     }
                                     if (count($ausstattung->fahrstuhl) > 0) {
                                         $property->elevator = [];
-                                        foreach($ausstattung->fahrstuhl[0]->attributes() as $attribute => $value) {
-                                            if('TRUE' === strtoupper($value)) {
+                                        foreach ($ausstattung->fahrstuhl[0]->attributes() as $attribute => $value) {
+                                            if ('TRUE' === strtoupper($value)) {
                                                 $property->elevator[] = $attribute;
                                             }
                                         }
                                     }
                                     if (count($ausstattung->stellplatzart) > 0) {
-                                        foreach($ausstattung->stellplatzart->attributes() as $attribute => $value) {
-                                            if('DUPLEX' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                        foreach ($ausstattung->stellplatzart->attributes() as $attribute => $value) {
+                                            if ('DUPLEX' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
                                                 $property->parking_space_duplex = 1;
-                                            }
-                                            else if('FREIPLATZ' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                            } elseif ('FREIPLATZ' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
                                                 $property->parking_space_simple = 1;
-                                            }
-                                            else if('GARAGE' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                            } elseif ('GARAGE' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
                                                 $property->parking_space_garage = 1;
-                                            }
-                                            else if('TIEFGARAGE' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                            } elseif ('TIEFGARAGE' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
                                                 $property->parking_space_undergroundcarpark = 1;
                                             }
                                         }
@@ -615,8 +653,8 @@ class ImportOpenImmo
                                     }
                                     if (count($ausstattung->breitband_zugang) > 0) {
                                         $property->broadband_internet = [];
-                                        foreach($ausstattung->breitband_zugang[0]->attributes() as $attribute => $value) {
-                                            if('TRUE' === strtoupper($value)) {
+                                        foreach ($ausstattung->breitband_zugang[0]->attributes() as $attribute => $value) {
+                                            if ('TRUE' === strtoupper($value)) {
                                                 $property->broadband_internet[] = $attribute;
                                             }
                                         }
@@ -634,7 +672,7 @@ class ImportOpenImmo
                                 // <endenergiebedarf/>
                                 // </energiepass>
                                 // </zustand_angaben>
-                                if(count($xml_immobilie->zustand_angaben) > 0) {
+                                if (count($xml_immobilie->zustand_angaben) > 0) {
                                     $zustand_angaben = $xml_immobilie->zustand_angaben[0];
                                     if (count($zustand_angaben->baujahr) > 0) {
                                         $property->construction_year = (int) $zustand_angaben->baujahr;
@@ -667,7 +705,7 @@ class ImportOpenImmo
                                 // <objektbeschreibung>Traumwohnung mit sagenhafter Aussicht Preise zuzüglich Mehrwertsteuer.</objektbeschreibung>
                                 // <sonstige_angaben>Sonstige Angaben</sonstige_angaben>
                                 // </freitexte>
-                                if(count($xml_immobilie->freitexte) > 0) {
+                                if (count($xml_immobilie->freitexte) > 0) {
                                     $freitexte = $xml_immobilie->freitexte[0];
                                     if (count($freitexte->objekttitel) > 0) {
                                         $property->name = $freitexte->objekttitel;
@@ -698,7 +736,7 @@ class ImportOpenImmo
                                 // </daten>
                                 // </anhang>
                                 // </anhaenge>
-                                if(count($xml_immobilie->anhaenge) > 0 && count($xml_immobilie->anhaenge->anhang) > 0) {
+                                if (count($xml_immobilie->anhaenge) > 0 && count($xml_immobilie->anhaenge->anhang) > 0) {
                                     $property->pictures = [];
                                     $property->pictures_360 = [];
                                     $property->ground_plans = [];
@@ -708,67 +746,62 @@ class ImportOpenImmo
                                     foreach ($xml_immobilie->anhaenge->anhang as $anhang) {
                                         if (count($anhang->daten) > 0 && count($anhang->daten->pfad) > 0) {
                                             $pfad = (string) $anhang->daten->pfad;
-                                            $anhang_url = strtoupper((string) $anhang['location']) === 'EXTERN' ? $this->extract_cache_folder . trim($pfad, DIRECTORY_SEPARATOR) : $pfad;
+                                            $anhang_url = 'EXTERN' === strtoupper((string) $anhang['location']) ? $this->extract_cache_folder . trim($pfad, DIRECTORY_SEPARATOR) : $pfad;
                                             $anhang_pathInfo = pathinfo($anhang_url);
-                                            $anhang_filename = \d2u_addon_backend_helper::getMediapoolFilename($anhang_pathInfo['basename']);
-                                            $anhang_rex_media = \rex_media::get($anhang_filename);
-                                            if ($anhang_rex_media instanceof \rex_media && $anhang_rex_media->fileExists()) {
+                                            $anhang_filename = d2u_addon_backend_helper::getMediapoolFilename($anhang_pathInfo['basename']);
+                                            $anhang_rex_media = rex_media::get($anhang_filename);
+                                            if ($anhang_rex_media instanceof rex_media && $anhang_rex_media->fileExists()) {
                                                 // File already imported, unset in $old_medias, because remaining ones will be deleted
                                                 if (in_array($anhang_rex_media->getFileName(), $old_medias, true)) {
                                                     unset($old_medias[$anhang_rex_media->getFileName()]);
                                                 }
-                                                self::log('Property attachment "'. $anhang['gruppe'] .'" '. $anhang_filename .' already available in mediapool.');
+                                                self::log('Property attachment "'. $anhang_filename .'" of type "'. $anhang['gruppe'] .'" already available in mediapool.');
                                             } else {
                                                 // File exists only in database, but no more in file system: remove it before import
-                                                if ($anhang_rex_media instanceof \rex_media) {
+                                                if ($anhang_rex_media instanceof rex_media) {
                                                     try {
-                                                        \rex_media_service::deleteMedia($anhang_rex_media->getFileName());
-                                                    } catch (\Exception $e) {
-                                                        self::log('Property attachment "'. $anhang['gruppe'] .'" not found in file system. Error deleting media from mediapool database.');
+                                                        rex_media_service::deleteMedia($anhang_rex_media->getFileName());
+                                                    } catch (Exception $e) {
+                                                        self::log('Property attachment "'. $anhang_filename .'" of type"'. $anhang['gruppe'] .'" not found in file system. Error deleting media from mediapool database.');
                                                     }
                                                 }
-                        
+
                                                 // Import
-                                                $target_attachment = \rex_path::media($anhang_pathInfo['basename']);
+                                                $target_attachment = rex_path::media($anhang_pathInfo['basename']);
                                                 // Copy first
                                                 if (copy($anhang_url, $target_attachment)) {
-                                                    chmod($target_attachment, \rex::getFilePerm());
-                        
+                                                    chmod($target_attachment, rex::getFilePerm());
+
                                                     $data = [];
-                                                    $data['category_id'] = (int) \rex_config::get('d2u_immo', 'import_media_category', 0);
+                                                    $data['category_id'] = (int) rex_config::get('d2u_immo', 'import_media_category', 0);
                                                     $data['title'] = count($anhang->anhangtitel) > 0 ? (string) $anhang->anhangtitel : '';
                                                     $data['file'] = [
                                                         'name' => $anhang_pathInfo['basename'],
                                                         'path' => rex_path::media($anhang_pathInfo['basename']),
                                                     ];
-                        
+
                                                     try {
-                                                        $media_info = \rex_media_service::addMedia($data, false);
+                                                        $media_info = rex_media_service::addMedia($data, false);
                                                         $anhang_filename = $media_info['filename'];
-                                                        $anhang_rex_media = \rex_media::get($anhang_filename);
-                                                        self::log('Property attachment "'. $anhang['gruppe'] .'" '. $media_info['filename'] .' importet into mediapool.');
-                                                    } catch (\rex_api_exception $e) {
-                                                        self::log('Error: Property attachment "'. $anhang['gruppe'] .'" '. $anhang_pathInfo['basename'] .' not importet: '. $e->getMessage());
+                                                        $anhang_rex_media = rex_media::get($anhang_filename);
+                                                        self::log('Property attachment "'. $media_info['filename'] .'" of type "'. $anhang['gruppe'] .'" importet into mediapool.');
+                                                    } catch (rex_api_exception $e) {
+                                                        self::log('Error: Property attachment "'. $anhang_pathInfo['basename'] .'" of type "'. $anhang['gruppe'] .'"  not importet: '. $e->getMessage());
                                                     }
                                                 }
                                             }
-                                            if($anhang_rex_media instanceof rex_media) {
-                                                if('TITELBILD' === (string) $anhang['gruppe']) {
+                                            if ($anhang_rex_media instanceof rex_media) {
+                                                if ('TITELBILD' === (string) $anhang['gruppe']) {
                                                     array_unshift($property->pictures, $anhang_rex_media->getFileName());
-                                                }
-                                                else if('BILD' === (string) $anhang['gruppe']) {
+                                                } elseif ('BILD' === (string) $anhang['gruppe']) {
                                                     $property->pictures[] = $anhang_rex_media->getFileName();
-                                                }
-                                                else if('PANORAMA' === (string) $anhang['gruppe']) {
+                                                } elseif ('PANORAMA' === (string) $anhang['gruppe']) {
                                                     $property->pictures_360[] = $anhang_rex_media->getFileName();
-                                                }
-                                                else if('GRUNDRISS' === (string) $anhang['gruppe']) {
+                                                } elseif ('GRUNDRISS' === (string) $anhang['gruppe']) {
                                                     $property->ground_plans[] = $anhang_rex_media->getFileName();
-                                                }
-                                                else if('KARTEN_LAGEPLAN' === (string) $anhang['gruppe']) {
+                                                } elseif ('KARTEN_LAGEPLAN' === (string) $anhang['gruppe']) {
                                                     $property->location_plans[] = $anhang_rex_media->getFileName();
-                                                }
-                                                else if('DOKUMENTE' === (string) $anhang['gruppe']) {
+                                                } elseif ('DOKUMENTE' === (string) $anhang['gruppe']) {
                                                     $property->documents[] = $anhang_rex_media->getFileName();
                                                 }
 
@@ -786,7 +819,7 @@ class ImportOpenImmo
                                 // <vermietet>true</vermietet>
                                 // <haustiere>true</haustiere>
                                 // </verwaltung_objekt>
-                                if(count($xml_immobilie->verwaltung_objekt) > 0) {
+                                if (count($xml_immobilie->verwaltung_objekt) > 0) {
                                     $verwaltung_objekt = $xml_immobilie->verwaltung_objekt[0];
                                     if (count($verwaltung_objekt->objektadresse_freigeben) > 0) {
                                         $property->publish_address = 'true' === (string) $verwaltung_objekt->objektadresse_freigeben;
@@ -808,28 +841,22 @@ class ImportOpenImmo
                         $property->online_status = 'online';
                         $property->translation_needs_update = 'no';
 
-                        if(false === $property->save()) {
-                            if(array_key_exists($property->property_id, $old_properties)) {
+                        if (false === $property->save()) {
+                            if (array_key_exists($property->property_id, $old_properties)) {
                                 self::log('Property '. $property->name .' updated.');
                                 unset($old_properties[$property->property_id]);
-                            }
-                            else {
+                            } else {
                                 self::log('Property '. $property->name .' added.');
                             }
-                        }
-                        else {
+                        } else {
                             self::log('Error: saving property '. $property->name .' failed.');
                         }
-
-
-                        dump($property);
-                        dump($xml_immobilie);
                     }
                 }
             }
         }
 
-        // Delete unused old jobs
+        // Delete unused old properties
         foreach ($old_properties as $old_property) {
             $old_property->delete(true);
             self::log('Property '. $old_property->name .' deleted.');
@@ -844,9 +871,9 @@ class ImportOpenImmo
         // Delete unused old pictures
         foreach ($old_medias as $old_picture) {
             try {
-                \rex_media_service::deleteMedia($old_picture);
+                rex_media_service::deleteMedia($old_picture);
                 self::log('Picture '. $old_picture .' deleted.');
-            } catch (\rex_api_exception $exception) {
+            } catch (rex_api_exception $exception) {
                 self::log('Picture '. $old_picture .' deletion requested, but is in use.');
             }
         }
@@ -863,7 +890,7 @@ class ImportOpenImmo
         $log = file_exists($this->log_file) ? file_get_contents($this->log_file) : '';
 
         $microtime = microtime(true);
-        $log .= date('d.m.Y H:i:s', time()). '.' . sprintf("%03d", ($microtime - floor($microtime)) * 1000) .': '. $message . PHP_EOL;
+        $log .= date('d.m.Y H:i:s', time()). '.' . sprintf('%03d', ($microtime - floor($microtime)) * 1000) .': '. $message . PHP_EOL;
 
         // Write to log
         file_put_contents($this->log_file, $log);
@@ -873,20 +900,23 @@ class ImportOpenImmo
      * Send log file. Recipient is set in addon settings.
      * @return bool true if email was sent, otherwise false
      */
-    private function sendImportLog() {
-        $mail = new \rex_mailer();
+    private function sendImportLog()
+    {
+        $mail = new rex_mailer();
         $mail->isHTML(false);
         $mail->CharSet = 'utf-8';
         $mail->addAddress((string) rex_config::get('d2u_immo', 'import_email'));
 
         $mail->Subject = 'D2U Immo Importbericht';
 
-        $mail->Body = file_exists($this->log_file) ? file_get_contents($this->log_file) : '';
-        try {
-            return $mail->send();
-        }
-        catch (Exception $e) {
-            $this->log('Error sending log file via email: '. $e->getMessage());
+        $log_content = file_exists($this->log_file) ? file_get_contents($this->log_file) : '';
+        if (false !== $log_content) {
+            $mail->Body = $log_content;
+            try {
+                return $mail->send();
+            } catch (Exception $e) {
+                $this->log('Error sending log file via email: '. $e->getMessage());
+            }
         }
 
         return false;
