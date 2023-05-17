@@ -9,9 +9,11 @@ d2u_immo_import_import_success = Import erfolgreich abgeschlossen. Für Details 
 
 d2u_immo_import_log = Log
 d2u_immo_import_log_details = Zum Anzeigen einer Logdatei bitte auf auf einen der folgenden Dateinamen klicken:
+d2u_immo_import_log_download_zip = OpenImmo ZIP Datei herunterladen
 d2u_immo_import_log_list = Übersicht über die letzten OpenImmo Importe
 d2u_immo_import_log_none = Keine Import Logdateien verfügbar. Entweder wurde der Redaxo Cache gelöscht oder es wurde noch kein Import durchgeführt.
 d2u_immo_import_log_title = Import Logdateien
+d2u_immo_import_log_view_log = Logdatei anzeigen
 
 d2u_immo_import_settings_autoimport = Automatischer Import von OpenImmo Dateien im Importverzeichnis
 d2u_immo_import_settings_category = D2U Immo Kategorie

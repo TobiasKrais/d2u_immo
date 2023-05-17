@@ -179,6 +179,20 @@ class Contact
     }
 
     /**
+     * Checks if at least one property has this contact
+     * @return bool true if at least one property uses this contact
+     */
+    public function hasProperties()
+    {
+        $query = 'SELECT properties.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
+            .'WHERE contact_id = '. $this->contact_id .' ';
+        $result = rex_sql::factory();
+        $result->setQuery($query);
+
+        return $result->getRows() > 0;
+    }
+
+    /**
      * Updates or inserts the object into database.
      * @return bool true if error occurs
      */

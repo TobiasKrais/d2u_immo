@@ -207,33 +207,37 @@ class ImportOpenImmo
             return false;
         }
 
-        // Get old stuff to be able to delete it later
-        $old_properties = \D2U_Immo\Property::getAll($clang_id);
-        $old_contacts = []; // Get them later from Properties
-        $old_medias = [];
-        foreach ($old_properties as $old_property) {
-            // Media
-            $property_medias = array_merge($old_property->documents, $old_property->ground_plans, $old_property->location_plans, $old_property->pictures, $old_property->pictures_360);
-            if (count($property_medias) > 0) {
-                foreach ($property_medias as $property_media) {
-                    if (!in_array($property_media, $old_medias, true)) {
-                        $old_medias[$property_media] = $property_media;
-                    }
-                }
-            }
-            // Contacts
-            if ($old_property->contact instanceof Contact && !array_key_exists($old_property->contact->contact_id, $old_contacts)) {
-                $old_contacts[$old_property->contact->contact_id] = $old_property->contact;
-                if ('' !== $old_property->contact->picture && !in_array($old_property->contact->picture, $old_medias, true)) {
-                    $old_medias[$old_property->contact->picture] = $old_property->contact->picture;
-                }
-            }
-        }
-
         // Get new properties
         $xml = new SimpleXMLElement($xml_contents);
+        $import_type = 'VOLL';
+        if (count($xml->uebertragung) > 0) {
+            $import_type = $xml->uebertragung['umfang']->__toString();
+        }
         if (count($xml->anbieter) > 0) {
             foreach ($xml->anbieter as $xml_anbieter) {
+                // Get old stuff to be able to delete it later
+                $old_properties = count($xml_anbieter->openimmo_anid) > 0 ? \D2U_Immo\Property::getAllForOpenImmoAnID($xml_anbieter->openimmo_anid, $clang_id) : [];
+                $old_contacts = []; // Get them later from Properties
+                $old_medias = [];
+                foreach ($old_properties as $old_property) {
+                    // Media
+                    $property_medias = array_merge($old_property->documents, $old_property->ground_plans, $old_property->location_plans, $old_property->pictures, $old_property->pictures_360);
+                    if (count($property_medias) > 0) {
+                        foreach ($property_medias as $property_media) {
+                            if (!in_array($property_media, $old_medias, true)) {
+                                $old_medias[$property_media] = $property_media;
+                            }
+                        }
+                    }
+                    // Contacts
+                    if ($old_property->contact instanceof Contact && !array_key_exists($old_property->contact->contact_id, $old_contacts)) {
+                        $old_contacts[$old_property->contact->contact_id] = $old_property->contact;
+                        if ('' !== $old_property->contact->picture && !in_array($old_property->contact->picture, $old_medias, true)) {
+                            $old_medias[$old_property->contact->picture] = $old_property->contact->picture;
+                        }
+                    }
+                }
+
                 if (count($xml_anbieter->immobilie) > 0) {
                     foreach ($xml_anbieter->immobilie as $xml_immobilie) {
                         $property = null;
@@ -243,7 +247,18 @@ class ImportOpenImmo
                             // <aktion aktionart="CHANGE"/>
                             // </verwaltung_techn>
                             if ($property instanceof Property && count($xml_immobilie->verwaltung_techn[0]->aktion) > 0 && 'DELETE' === (string) $xml_immobilie->verwaltung_techn[0]->aktion['aktionart']) {
+                                $medias_to_delete = array_merge($property->documents, $property->ground_plans, $property->location_plans, $property->pictures, $property->pictures_360);
                                 $property->delete();
+                                // Delete unused old pictures
+                                foreach ($medias_to_delete as $media_to_delete) {
+                                    try {
+                                        rex_media_service::deleteMedia($media_to_delete);
+                                        unset($old_medias[$media_to_delete]);
+                                        self::log('Media '. $media_to_delete .' deleted.');
+                                    } catch (rex_api_exception $exception) {
+                                        self::log('Media '. $media_to_delete .' deletion requested, but is in use.');
+                                    }
+                                }
                                 continue;
                             }
                         }
@@ -853,28 +868,31 @@ class ImportOpenImmo
                         }
                     }
                 }
-            }
-        }
+                
+                // Delete unused old properties
+                if('VOLL' === $import_type) {
+                    foreach ($old_properties as $old_property) {
+                        $old_property->delete(true);
+                        self::log('Property '. $old_property->name .' deleted.');
+                    }
+                    // Delete unused old pictures
+                    foreach ($old_medias as $old_picture) {
+                        try {
+                            rex_media_service::deleteMedia($old_picture);
+                            self::log('Media '. $old_picture .' deleted.');
+                        } catch (rex_api_exception $exception) {
+                            self::log('Media '. $old_picture .' deletion requested, but is in use.');
+                        }
+                    }
+                }
 
-        // Delete unused old properties
-        foreach ($old_properties as $old_property) {
-            $old_property->delete(true);
-            self::log('Property '. $old_property->name .' deleted.');
-        }
-
-        // Delete unused old contacts
-        foreach ($old_contacts as $old_contact) {
-            $old_contact->delete();
-            self::log('Contact '. $old_contact->firstname .' deleted.');
-        }
-
-        // Delete unused old pictures
-        foreach ($old_medias as $old_picture) {
-            try {
-                rex_media_service::deleteMedia($old_picture);
-                self::log('Picture '. $old_picture .' deleted.');
-            } catch (rex_api_exception $exception) {
-                self::log('Picture '. $old_picture .' deletion requested, but is in use.');
+                // Delete unused old contacts
+                foreach ($old_contacts as $old_contact) {
+                    if(!$old_contact->hasProperties()) {
+                        $old_contact->delete();
+                        self::log('Contact '. $old_contact->firstname .' deleted.');
+                    }
+                }
             }
         }
 

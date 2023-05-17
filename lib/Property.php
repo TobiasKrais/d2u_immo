@@ -586,6 +586,40 @@ class Property implements \D2U_Helper\ITranslationHelper
     }
 
     /**
+     * Get all properties.
+     * @param string $openimmo_anid Unique OpenImmo Anbieter ID
+     * @param int $clang_id redaxo clang id
+     * @param bool $only_online Show only online properties
+     * @return array<int,Property> array with Property objects
+     */
+    public static function getAllForOpenImmoAnID($openimmo_anid, $clang_id, $only_online = false)
+    {
+        $properties = [];
+        if(rex_plugin::get('d2u_immo', 'import')) {
+            $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
+                .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
+                    .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
+                .'WHERE openimmo_anid = "'. $openimmo_anid .'"';
+            if ($only_online) {
+                $query .= ' AND online_status = "online"';
+            }
+            if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
+                $query .= ' ORDER BY priority ASC';
+            } else {
+                $query .= ' ORDER BY name ASC';
+            }
+            $result = rex_sql::factory();
+            $result->setQuery($query);
+
+            for ($i = 0; $i < $result->getRows(); ++$i) {
+                $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
+                $result->next();
+            }
+        }
+        return $properties;
+    }
+
+    /**
      * Get all properties that are selected for window advertising.
      * @param int $clang_id redaxo clang id
      * @return array<int,Property> array with Property objects

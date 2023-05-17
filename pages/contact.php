@@ -54,13 +54,13 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
     }
     $contact = new D2U_Immo\Contact($contact_id);
 
-    // Check if object is used
-    $uses_properties = $contact->getProperties();
-
-    // If not used, delete
-    if (0 === count($uses_properties)) {
+    // If contact is not used by at least one property, delete it
+    if (!$contact->hasProperties()) {
         $contact->delete();
     } else {
+        // Check if object is used
+        $uses_properties = $contact->getProperties();
+
         $message = '<ul>';
         foreach ($uses_properties as $uses_property) {
             $message .= '<li><a href="index.php?page=d2u_immo/property&func=edit&entry_id='. $uses_property->property_id .'">'. $uses_property->name.'</a></li>';
