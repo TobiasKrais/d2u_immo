@@ -124,8 +124,11 @@
     ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(255)', true))
     ->ensure();
 
-// Create views for url addon
 $sql = rex_sql::factory();
+// Bugfix < 1.3.0
+$sql->setQuery('UPDATE '. \rex::getTablePrefix() .'d2u_immo_properties SET apartment_type = "ETAGE" WHERE apartment_type = "WETAGE"');
+
+// Create views for url addon
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_properties AS
 	SELECT lang.property_id, lang.clang_id, lang.name, CONCAT(lang.name, " - ", categories.name) AS seo_title, lang.teaser AS seo_description, SUBSTRING_INDEX(properties.pictures, ",", 1) as picture, properties.category_id, lang.updatedate
 	FROM '. \rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
