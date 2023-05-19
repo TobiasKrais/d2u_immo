@@ -31,7 +31,7 @@
                         echo '<ul>';
                         foreach ($zip_filenames as $zip_file) {
                             if ('zip' === pathinfo($zip_file, PATHINFO_EXTENSION)) {
-                                $filesize = filesize(rex_path::addonCache('d2u_immo', $zip_file));
+                                $filesize = filesize($openimmoimport->import_folder . $zip_file);
                                 $filesize_mb = round($filesize / (1024 * 1024), 2);
                                 echo '<li><a href="'. rex_url::currentBackendPage(['import' => $zip_file])  .'"'. ($import_file === $zip_file ? ' style="color:white"' : '') .'>'. $zip_file .' ('. $filesize_mb .' MB)</a></li>';
                             }

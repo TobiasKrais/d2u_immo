@@ -76,7 +76,7 @@ class Advertisement implements \D2U_Helper\ITranslationHelper
             $this->description = stripslashes(htmlspecialchars_decode((string) $result->getValue('description')));
             $this->picture = (string) $result->getValue('picture');
             $this->online_status = (string) $result->getValue('online_status');
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
             $this->updatedate = (string) $result->getValue('updatedate');

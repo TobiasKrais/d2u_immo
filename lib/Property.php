@@ -407,7 +407,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->street = (string) $result->getValue('street');
             $this->teaser = (string) $result->getValue('teaser');
             $this->total_area = (float) $result->getValue('total_area');
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
             $this->type_of_use = (string) $result->getValue('type_of_use');

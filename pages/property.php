@@ -271,7 +271,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'LOFTSTUDIOATELIER' => rex_i18n::msg('d2u_immo_property_apartment_type_LOFTSTUDIOATELIER'),
                                 'PENTHOUSE' => rex_i18n::msg('d2u_immo_property_apartment_type_PENTHOUSE'),
                                 'TERRASSEN' => rex_i18n::msg('d2u_immo_property_apartment_type_TERRASSEN'),
-                                'WETAGE' => rex_i18n::msg('d2u_immo_property_apartment_type_WETAGE'),
+                                'ETAGE' => rex_i18n::msg('d2u_immo_property_apartment_type_ETAGE'),
                                 'ERDGESCHOSS' => rex_i18n::msg('d2u_immo_property_apartment_type_ERDGESCHOSS'),
                                 'SOUTERRAIN' => rex_i18n::msg('d2u_immo_property_apartment_type_SOUTERRAIN')];
                             d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[apartment_type]', $options_apartment_type, [$property->apartment_type], 1, false, $readonly);
@@ -353,7 +353,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'KRANKENHAUS' => rex_i18n::msg('d2u_immo_property_other_type_KRANKENHAUS'),
                                 'SONSTIGE' => rex_i18n::msg('d2u_immo_property_other_type_SONSTIGE')];
                             d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[other_type]', $options_other_type, [$property->other_type], 1, false, $readonly);
-                            $options_condition_type = ['ABRISSOBJEKT' => rex_i18n::msg('d2u_immo_property_condition_type_ABRISSOBJEKT'),
+                            $options_condition_type = ['' => rex_i18n::msg('d2u_immo_property_type_KEINE_ANGABE'),
+                                'ABRISSOBJEKT' => rex_i18n::msg('d2u_immo_property_condition_type_ABRISSOBJEKT'),
                                 'BAUFAELLIG' => rex_i18n::msg('d2u_immo_property_condition_type_BAUFAELLIG'),
                                 'ENTKERNT' => rex_i18n::msg('d2u_immo_property_condition_type_ENTKERNT'),
                                 'ERSTBEZUG' => rex_i18n::msg('d2u_immo_property_condition_type_ERSTBEZUG'),

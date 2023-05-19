@@ -72,7 +72,7 @@ class Category implements \D2U_Helper\ITranslationHelper
             $this->teaser = stripslashes((string) $result->getValue('teaser'));
             $this->picture = (string) $result->getValue('picture');
             $this->priority = (int) $result->getValue('priority');
-            if ('' !== $result->getValue('translation_needs_update')) {
+            if ('' !== $result->getValue('translation_needs_update') && null !== $result->getValue('translation_needs_update')) {
                 $this->translation_needs_update = (string) $result->getValue('translation_needs_update');
             }
         }
