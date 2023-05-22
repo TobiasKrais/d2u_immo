@@ -1143,7 +1143,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $yform->setObjectparams('form_anchor', 'tab_request');
         $yform->setObjectparams('Error-occured', $tag_open .'d2u_immo_form_validate_title'. $tag_close);
         $yform->setObjectparams('real_field_names', true);
-        $yform->setObjectparams('form_name', 'd2u_immo_module_70_1_'. random_int(1, 100));
+        $yform->setObjectparams('form_name', 'd2u_immo_module_70_1_request_'. $this->getCurrentSlice()->getId()); /** @phpstan-ignore-line */
 
         // action - showtext
         $yform->setActionField('showtext', [$tag_open .'d2u_immo_form_thanks'. $tag_close]);
@@ -1194,6 +1194,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $yform_recommend->setObjectparams('form_anchor', 'tab_recommendation');
         $yform_recommend->setObjectparams('Error-occured', $tag_open .'d2u_immo_form_validate_title'. $tag_close);
         $yform_recommend->setObjectparams('real_field_names', true);
+        $yform_recommend->setObjectparams('form_name', 'd2u_immo_module_70_1_recommend_'. $this->getCurrentSlice()->getId()); /** @phpstan-ignore-line */
 
         // action - showtext
         $yform_recommend->setActionField('showtext', [$tag_open .'d2u_immo_recommendation_thanks'. $tag_close]);

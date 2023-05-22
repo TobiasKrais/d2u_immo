@@ -36,6 +36,7 @@ $d2u_module_manager->showManagerList();
 	<li>import Plugin hinzugefügt: es ist nun möglich OpenImmo ZIP Dateien zu importieren.</li>
 	<li>Bugfix: Wohnungstyp für Etagenwohnungen war inkorrekt in der Datenbank gespeichert.</li>
 	<li>Bugfix: Mehrsprachige Seiten enthielten einen Fehler bei der Anzeige der Übersetzungsaktion.</li>
+	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe": Fehler im Spamschutz / CSRF Schutz behoben.</li>
 </ul>
 <p>1.2.0:</p>
 <ul>
