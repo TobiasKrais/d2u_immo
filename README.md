@@ -1,6 +1,6 @@
 # Redaxo 5 Immobilienverwaltung
 
-Mehrsprachig Immobilienverwaltung für Redaxo. Demoseite: <https://test.design-to-use.de/de/addontests/d2u-immobilien/>
+Mehrsprachig Immobilienverwaltung für Redaxo. Es wird nicht der volle OpenImmo Funktionsumfang für Immobilien dargestellt. Erweiterungen können gerne in Auftrag gegeben werden. Demoseite: <https://test.design-to-use.de/de/addontests/d2u-immobilien/>
 
 ## Installation
 
@@ -34,6 +34,8 @@ deny from all
 ```
 
 Nachdem eine OpenImmo Datei im ZIP Format in den Import Ordner hochgeladen wurde, kann sie manuell auf der Importseite importiert werden. Nach dem Import wird sie in den Datenbereich des Addons verschoben. Auf der Logseite können die letzten 10 Importe und zugehörigen Logdateien angesehen, bzw. heruntergeladen werden. Ein Import per Cronjob ist möglich. Dieser kann in den Einstellungen installiert werden und wird standartmäßg alle 5 Minuten ausgeführt. Ein Importlog wird an die hinterlegte E-Mail-Adresse gesendet.
+
+Beim Import wird zu jeder Immobilie die OpenImmo Import Anbieter ID gespeichert. Anhand dieser Anbieter ID werden zu löschende Immobilien identifiziert. So werden bei einem Vollimport nicht mehr im Import enthaltene Immobilien des Anbieters gelöscht. Damit verbundene Medien und Kontakte werden ebenfalls gelöscht, sofern sie nicht andersweitig in Gebrauch sind. Dank dieser Funktion ist es möglich, Immobilien mehrerer Anbieter darzustellen, aktuell zu halten und somit ein eigenes Immobilienportal aufzubauen, das sich auch selbst aufräumt.
 
 ### Schaufenterwerbung Plugin (window_advertising)
 
