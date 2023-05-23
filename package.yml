@@ -21,11 +21,10 @@ page:
             title: 'translate:d2u_helper_settings'
             itemClass: pull-right
             subpages:
-                help: { title: 'translate:package_hhelp', icon: rex-icon rex-icon-help }
                 settings: { title: 'translate:d2u_helper_settings', icon: rex-icon rex-icon-system, itemClass: pull-right, perm: 'd2u_immo[settings]' }
                 setup: { title: 'translate:d2u_helper_setup', icon: rex-icon rex-icon-install, itemClass: pull-right, perm: 'd2u_immo[settings]' }
-        
-        
+                help: { title: 'translate:package_hhelp', icon: rex-icon rex-icon-help }
+                changelog: { title: 'translate:d2u_helper_help_chapter_changelog', icon: rex-icon fa-files-o }
 
 requires:
     redaxo: '>=5.10.0'
