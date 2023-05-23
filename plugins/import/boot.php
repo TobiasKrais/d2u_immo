@@ -3,7 +3,7 @@
 // download ZIP file if requested
 $download_filename = (string) rex_request('download_file', 'string');
 if ('' !== $download_filename) {
-    $download_filename = rex_path::addonCache('d2u_immo', $download_filename);
+    $download_filename = rex_path::addonData('d2u_immo', $download_filename);
 
     // check if file exists
     if (!file_exists($download_filename)) {

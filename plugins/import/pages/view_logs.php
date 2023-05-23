@@ -1,6 +1,10 @@
 <?php
 // show log viewer
-$dir = rex_path::addonCache('d2u_immo');
+$dir = rex_path::addonData('d2u_immo');
+if(!file_exists($dir)) {
+    rex_dir::create($dir);
+}
+
 $files = scandir($dir);
 if (is_array($files)) {
     $files = array_diff($files, ['..', '.']);
@@ -31,8 +35,8 @@ $show_file = (string) rex_request('file', 'string');
                                     echo '<li>';
                                     echo date('d.m.Y H:i:s', $timestamp) .': ';
                                     echo '<a href="'. rex_url::currentBackendPage(['file' => $file])  .'"'. ($show_file === $file ? ' style="color:white"' : '') .'>'. rex_i18n::msg('d2u_immo_import_log_view_log') .'</a>';
-                                    if (file_exists(rex_path::addonCache('d2u_immo', $zip_file))) {
-                                        $filesize = filesize(rex_path::addonCache('d2u_immo', $zip_file));
+                                    if (file_exists(rex_path::addonData('d2u_immo', $zip_file))) {
+                                        $filesize = filesize(rex_path::addonData('d2u_immo', $zip_file));
                                         $filesize_mb = round($filesize / (1024 * 1024), 2);
                                         echo ' - <a href="'. rex_url::currentBackendPage(['download_file' => $zip_file])  .'">'. rex_i18n::msg('d2u_immo_import_log_download_zip') .' ('. $filesize_mb .' MB)</a>';
                                     }
@@ -49,19 +53,21 @@ $show_file = (string) rex_request('file', 'string');
         </fieldset>
     </div>
     <?php
-        $content = file_get_contents(rex_path::addonCache('d2u_immo', $show_file));
-        if (false !== $content) {
-            ?>
-            <p>&nbsp;</p>
-            <div class="panel-body">
-                <fieldset>
-                    <legend><?= $show_file ?></legend>
-                    <div class="panel-body-wrapper slide">
-                        <?= '<pre>'. $content .'</pre>' ?>
-                    </div>
-                </fieldset>
-            </div>
-            <?php
+        if ('' !== $show_file) {
+            $content = file_get_contents(rex_path::addonData('d2u_immo', $show_file));
+            if (false !== $content) {
+                ?>
+                <p>&nbsp;</p>
+                <div class="panel-body">
+                    <fieldset>
+                        <legend><?= $show_file ?></legend>
+                        <div class="panel-body-wrapper slide">
+                            <?= '<pre>'. $content .'</pre>' ?>
+                        </div>
+                    </fieldset>
+                </div>
+                <?php
+            }
         }
     ?>
 </div>

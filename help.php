@@ -1,5 +1,6 @@
-<b>D2U Immobilienverwaltung</b>
-
-<br /><br />
-<p>Komfortable mehrsprachige Immobilienverwaltung mit Exportmöglichkeit zu
-	Portalen, die die ImmobilienScout und OpenImmo Schnittstelle unterstützen.</p>
+<?php
+$readmePath = rex_path::addon('d2u_guestbook', 'README.md');
+$readmeContent = rex_file::get($readmePath);
+if(null !== $readmeContent) {
+    echo rex_markdown::factory()->parse($readmeContent);
+}

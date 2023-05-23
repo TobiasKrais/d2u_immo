@@ -15,6 +15,6 @@ requires:
     php:
         extensions: [xml, zip]
     packages:
-        cronjob: '>=2.10.0'
-        mediapool: '>=2.13.0'
-        phpmailer: '>=2.12.0'
+        cronjob: '>=2.9.0'
+        mediapool: '>=2.12.0'
+        phpmailer: '>=2.11.0'

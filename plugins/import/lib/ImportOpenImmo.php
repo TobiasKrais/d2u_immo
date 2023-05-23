@@ -49,7 +49,7 @@ class ImportOpenImmo
             rex_dir::create(rex_path::base($this->import_folder));
         }
 
-        $this->log_file = rex_path::addonCache('d2u_immo', 'openimmo_import_'. date('Y-m-d_H-i-s', time()) .'.log');
+        $this->log_file = rex_path::addonData('d2u_immo', 'openimmo_import_'. date('Y-m-d_H-i-s', time()) .'.log');
     }
 
     /**
@@ -80,8 +80,8 @@ class ImportOpenImmo
     {
         $this->log('Cleaning up import cache and file.');
         $return = true;
-        // keep only the 10 latest log- and zipfiles in addon cache, delete older ones
-        $log_files = glob(rex_path::addonCache('d2u_immo') .'*.log');
+        // keep only the 10 latest log- and zipfiles in addon data folder, delete older ones
+        $log_files = glob(rex_path::addonData('d2u_immo') .'*.log');
         if (is_array($log_files) && count($log_files) > 10) {
             for ($i = 0; $i < count($log_files) - 10; ++$i) {
                 if (false === unlink($log_files[$i])) {
@@ -89,7 +89,7 @@ class ImportOpenImmo
                     $this->log('Could not delete old file "'. $log_files[$i] .'".');
                 }
                 $logfile_info = pathinfo($log_files[$i]);
-                if (false === unlink(rex_path::addonCache('d2u_immo', $logfile_info['filename'] .'.zip'))) {
+                if (false === unlink(rex_path::addonData('d2u_immo', $logfile_info['filename'] .'.zip'))) {
                     $return = false;
                     $this->log('Could not delete old file "'. $log_files[$i] .'".');
                 }
@@ -105,9 +105,9 @@ class ImportOpenImmo
                     $this->log('Could not delete file "'. $file .'".');
                 }
             }
-            // move imported ZIP file to cache
+            // move imported ZIP file to data folder
             $logfile_info = pathinfo($this->log_file);
-            if (false === rename($this->import_folder . $zip_filename, rex_path::addonCache('d2u_immo', $logfile_info['filename'] .'.zip'))) {
+            if (false === rename($this->import_folder . $zip_filename, rex_path::addonData('d2u_immo', $logfile_info['filename'] .'.zip'))) {
                 $this->log('Could not move import file "'. $zip_filename .'" to cache.');
                 $return = false;
             }
@@ -789,7 +789,7 @@ class ImportOpenImmo
                                                 // Import
                                                 $target_attachment = rex_path::media($anhang_pathInfo['basename']);
                                                 // Copy first
-                                                if (copy($anhang_url, $target_attachment)) {
+                                                if (file_exists($anhang_url) && copy($anhang_url, $target_attachment)) {
                                                     chmod($target_attachment, rex::getFilePerm());
 
                                                     $data = [];
