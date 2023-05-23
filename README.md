@@ -20,7 +20,7 @@ Es exisitieren 3 Plugins, die nachfolgend kurz beschrieben werden.
 
 Mit diesem Plugin können Immobilien aus der Redaxo Installation auf andere Portale übertragen werden. Zur Zeit steht der OpenImmo Export und der Export auf LinkedIn als Post zur Verfügung.
 
-Nach der Installation sollten zuerst die Einstellungen festgelegt und dann die Portale konfiguriert werden. Danach können unter "Export" Immobilien für den Export als "online" markiert werden. Diese werden dann beim nächsten Export übertragen. Ein Export kann entweder manuell oder per Cronjob im Cronjob Addon durchgeführt werden. Der Cronjob kann in den Einstellungen installiert werden.
+Nach der Installation sollten zuerst die Einstellungen festgelegt und dann die Portale konfiguriert werden. Danach können unter "Export" Immobilien für den Export als "online" markiert werden. Diese werden beim nächsten Export übertragen. Ein Export kann entweder manuell oder per Cronjob im Cronjob Addon durchgeführt werden. Der Cronjob kann in den Einstellungen installiert werden.
 
 ### Import Plugin (import)
 
