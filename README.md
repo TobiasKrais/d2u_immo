@@ -12,6 +12,8 @@ Nach der Installation in Redaxo sollten folgende Schritte ausgeführt werden:
 4. Nun kann mit der Eingabe von Immobilien begonnen werden.
 5. Wenn gewünscht, kann unter Setup eines der auf Bootstrap 4 basierenden Beispielmodule installiert werden.
 
+Das Beispielmodul für die Hauptausgabe der Immobilien bietet die Druckansicht für ein volles und ein gekürztes Exposé. Außerdem eine Kartenansicht mit dem Geolocation Addon, einen Finanzierungsrechner, einen Anfrage- und Empfehlungsformular.
+
 ## Plugins
 
 Es exisitieren 3 Plugins, die nachfolgend kurz beschrieben werden.
