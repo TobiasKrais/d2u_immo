@@ -5,8 +5,8 @@
 	<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 		<input type="hidden" name="cmd" value="_s-xclick" />
 		<input type="hidden" name="hosted_button_id" value="CB7B6QTLM76N6" />
-		<input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Spenden mit dem PayPal-Button" />
-		<img alt="" border="0" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
+		<input type="image" src="https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Spenden mit dem PayPal-Button" />
+		<img alt="" src="https://www.paypal.com/de_DE/i/scr/pixel.gif" width="1" height="1" />
 	</form>
 </fieldset>
 
@@ -19,6 +19,7 @@
 	<li>Bugfix: Wohnungstyp für Etagenwohnungen war inkorrekt in der Datenbank gespeichert.</li>
 	<li>Bugfix: Mehrsprachige Seiten enthielten einen Fehler bei der Anzeige der Übersetzungsaktion.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe": Fehler im Spamschutz / CSRF Schutz behoben.</li>
+	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe": Nun kompatibel mit Geolocation Addon Version 1 und auch 2.</li>
 </ul>
 <p>1.2.0:</p>
 <ul>

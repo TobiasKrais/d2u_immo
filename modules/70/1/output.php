@@ -708,7 +708,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				var myOptions = {
 					zoom: 15,
 					center: myLatlng,
-					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>
+					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>,
 				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
@@ -742,7 +742,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
 				var myOptions = {
 					zoom: 15,
-					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>
+					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>,
 				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 			<?php
@@ -783,7 +783,14 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         } elseif (rex_addon::get('geolocation')->isAvailable()) {
             try {
                 if (rex::isFrontend()) {
-                    \Geolocation\tools::echoAssetTags();
+                    if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+                        // Geolocation 2.x
+                        \FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
+                    }
+                    else {
+                        // Geolocation 1.x
+                        \Geolocation\tools::echoAssetTags();
+                    }
                 }
 ?>
 <script>
@@ -836,11 +843,22 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             } catch (Exception $e) {
             }
 
-            echo \Geolocation\mapset::take((int) $map_type)
-                ->attributes('id', $map_id)
-                ->dataset('position', [$property->latitude, $property->longitude])
-                ->dataset('center', [[$property->latitude, $property->longitude], 15])
-                ->parse();
+            if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
+                // Geolocation 2.x
+                echo \FriendsOfRedaxo\Geolocation\Mapset::take((int) $map_type)
+                    ->attributes('id', $map_id)
+                    ->dataset('position', [$property->latitude, $property->longitude])
+                    ->dataset('center', [[$property->latitude, $property->longitude], 15])
+                    ->parse();
+            }
+            else {
+                // Geolocation 1.x
+                echo \Geolocation\mapset::take((int) $map_type)
+                    ->attributes('id', $map_id)
+                    ->dataset('position', [$property->latitude, $property->longitude])
+                    ->dataset('center', [[$property->latitude, $property->longitude], 15])
+                    ->parse();
+            }
         }
 
         echo '</div>';
