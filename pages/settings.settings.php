@@ -185,6 +185,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 						<?php
                         d2u_addon_backend_helper::form_input('d2u_immo_import_settings_email', 'settings[import_email]', (string) rex_config::get('d2u_immo', 'import_email'), true, false, 'email');
                         d2u_addon_backend_helper::form_input('d2u_immo_import_settings_import_folder', 'settings[import_folder]', (string) rex_config::get('d2u_immo', 'import_folder'), false, false);
+                        d2u_addon_backend_helper::form_infotext('d2u_immo_import_settings_import_folder_hint', 'import_folder_hint');
                         d2u_addon_backend_helper::form_checkbox('d2u_immo_import_settings_autoimport', 'settings[import_autoimport]', 'active', 'active' === rex_config::get('d2u_immo', 'import_autoimport'));
                         ?>
                     </div>

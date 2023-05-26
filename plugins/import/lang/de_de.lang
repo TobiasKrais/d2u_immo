@@ -20,4 +20,5 @@ d2u_immo_import_settings_category = D2U Immo Kategorie
 d2u_immo_import_settings_default_lang = Sprache des Imports
 d2u_immo_import_settings_email = E-Mail-Adresse für Benachrichtigungen
 d2u_immo_import_settings_import_folder = Ordner der zu importierenden Dateien
+d2u_immo_import_settings_import_folder_hint =  Der Ordnername ist ein relativer Pfad zum Redaxo Web root. Beispiel: "/redaxo/import/" würde ein Unterverzeichnis von Redaxo als Importverzeichnis festlegen. "/import/" würde ein Verzeichnis neben dem "/redaxo/" Ordner festlegen.
 d2u_immo_import_settings_media_category = Medienpool Kategorie für importierte Medien
