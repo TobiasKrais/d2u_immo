@@ -316,25 +316,25 @@ class ImportOpenImmo
                                 $objektart = $objektkategorie->objektart[0];
                                 if (count($objektart->buero_praxen) > 0) {
                                     $property->object_type = 'BUERO_PRAXEN';
-                                    $property->office_type = $objektart->buero_praxen['buero_typ'];
+                                    $property->office_type = $objektart->buero_praxen->attributes()->buero_typ instanceof SimpleXMLElement ? $objektart->buero_praxen['buero_typ'] : '';
                                 } elseif (count($objektart->grundstueck) > 0) {
                                     $property->object_type = 'GRUNDSTUECK';
-                                    $property->land_type = $objektart->grundstueck['grundst_typ'];
+                                    $property->land_type = $objektart->grundstueck->attributes()->grundst_typ instanceof SimpleXMLElement ? $objektart->grundstueck['grundst_typ'] : '';
                                 } elseif (count($objektart->hallen_lager_prod) > 0) {
                                     $property->object_type = 'HALLEN_LAGER_PROD';
-                                    $property->hall_warehouse_type = $objektart->grundstueck['hallen_typ'];
+                                    $property->hall_warehouse_type = $objektart->hallen_lager_prod->attributes()->hallen_typ instanceof SimpleXMLElement ? $objektart->hallen_lager_prod['hallen_typ'] : '';
                                 } elseif (count($objektart->haus) > 0) {
                                     $property->object_type = 'HAUS';
-                                    $property->house_type = $objektart->haus['haustyp'];
+                                    $property->house_type = $objektart->haus->attributes()->haustyp instanceof SimpleXMLElement ? $objektart->haus['haustyp'] : 'KEINE_ANGABE';
                                 } elseif (count($objektart->parken) > 0) {
                                     $property->object_type = 'PARKEN';
-                                    $property->parking_type = $objektart->haus['parken_typ'];
+                                    $property->parking_type = $objektart->parken->attributes()->parken_typ instanceof SimpleXMLElement ? $objektart->parken['parken_typ'] : '';
                                 } elseif (count($objektart->wohnung) > 0) {
                                     $property->object_type = 'WOHNUNG';
-                                    $property->apartment_type = $objektart->wohnung['wohnungtyp'];
+                                    $property->apartment_type = $objektart->wohnung->attributes()->wohnungtyp instanceof SimpleXMLElement ? $objektart->wohnung['wohnungtyp'] : 'KEINE_ANGABE';
                                 } elseif (count($objektart->sonstige) > 0) {
                                     $property->object_type = 'SONSTIGE';
-                                    $property->other_type = $objektart->sonstige['sonstige_typ'];
+                                    $property->other_type = $objektart->sonstige->attributes()->sonstige_typ instanceof SimpleXMLElement ? $objektart->sonstige['sonstige_typ'] : 'SONSTIGE';
                                 }
                             }
 
@@ -399,11 +399,15 @@ class ImportOpenImmo
                             if (count($xml_immobilie->kontaktperson) > 0) {
                                 $kontaktperson = $xml_immobilie->kontaktperson[0];
                                 $contact = null;
+                                $update_contact = false;
                                 if (count($kontaktperson->email_direkt) > 0 || count($kontaktperson->email_zentrale) > 0) {
                                     $contact = Contact::getByMail('' !== $kontaktperson->email_direkt ? $kontaktperson->email_direkt : $kontaktperson->email_zentrale);
                                 }
                                 if (null === $contact) {
                                     $contact = Contact::factory();
+                                }
+                                else {
+                                    $update_contact = true;
                                 }
 
                                 if (count($kontaktperson->email_direkt) > 0 || count($kontaktperson->email_zentrale) > 0) {
@@ -493,9 +497,11 @@ class ImportOpenImmo
                                     }
                                 }
                                 if (false === $contact->save()) {
-                                    if (array_key_exists($contact->contact_id, $old_contacts)) {
+                                    if ($update_contact) {
                                         self::log('Contact '. $contact->firstname .' '. $contact->lastname .' updated.');
-                                        unset($old_contacts[$contact->contact_id]);
+                                        if(array_key_exists($contact->contact_id, $old_contacts)) {
+                                            unset($old_contacts[$contact->contact_id]);
+                                        }
                                     } else {
                                         self::log('Contact '. $contact->firstname .' '. $contact->lastname .' added.');
                                     }
