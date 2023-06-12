@@ -1,6 +1,6 @@
 # Redaxo 5 Immobilienverwaltung
 
-Mehrsprachig Immobilienverwaltung für Redaxo. Es wird nicht der volle OpenImmo Funktionsumfang für Immobilien dargestellt. Erweiterungen können gerne in Auftrag gegeben werden. Demoseite: <https://test.design-to-use.de/de/addontests/d2u-immobilien/>
+Mehrsprachige Immobilienverwaltung für Redaxo. Es wird nicht der volle OpenImmo Funktionsumfang für Immobilien dargestellt. Erweiterungen können gerne in Auftrag gegeben werden. Demoseite: <https://test.design-to-use.de/de/addontests/d2u-immobilien/>
 
 ## Installation
 
