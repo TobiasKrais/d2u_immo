@@ -50,6 +50,9 @@ class ImportOpenImmo
         }
 
         $this->log_file = rex_path::addonData('d2u_immo', 'openimmo_import_'. date('Y-m-d_H-i-s', time()) .'.log');
+        if (!file_exists(rex_path::addonData('d2u_immo'))) {
+            rex_dir::create(rex_path::addonData('d2u_immo'));
+        }
     }
 
     /**
@@ -73,8 +76,8 @@ class ImportOpenImmo
 
     /**
      * Deletes all extracted files and the zip file itself.
-     * @param string $zip_filename ZIP filesname without folder names
-     * @return bool true if deletion was successful, false if failur for at least one file occured
+     * @param string $zip_filename ZIP filename without folder names
+     * @return bool true if deletion was successful, false if failure for at least one file occured
      */
     private function cleanUp($zip_filename)
     {

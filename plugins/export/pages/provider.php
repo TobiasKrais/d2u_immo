@@ -26,10 +26,6 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $provider->ftp_password = $form['ftp_password'];
     $provider->ftp_filename = $form['ftp_filename'];
     $provider->ftp_supports_360_pictures = array_key_exists('ftp_supports_360_pictures', $form);
-    $provider->social_app_id = $form['social_app_id'];
-    $provider->social_app_secret = $form['social_app_secret'];
-    $provider->linkedin_email = $form['linkedin_email'];
-    $provider->linkedin_groupid = $form['linkedin_groupid'];
 
     if (!$provider->save()) {
         $message = 'form_save_error';
@@ -82,8 +78,7 @@ if ('edit' === $func || 'add' === $func) {
                             $readonly = false;
 
                             d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[name]', $provider->name, true, $readonly, 'text');
-                            $options = ['openimmo' => rex_i18n::msg('d2u_immo_export_openimmo'),
-                                'linkedin' => rex_i18n::msg('d2u_immo_export_linkedin')];
+                            $options = ['openimmo' => rex_i18n::msg('d2u_immo_export_openimmo')];
                             d2u_addon_backend_helper::form_select('d2u_immo_export_type', 'form[type]', $options, [$provider->type], 1, false, $readonly);
 
                             $options_lang = [];
@@ -118,24 +113,6 @@ if ('edit' === $func || 'add' === $func) {
                         ?>
 					</div>
 				</fieldset>
-				<fieldset>
-					<legend><?= rex_i18n::msg('d2u_immo_export_social_settings') ?></legend>
-					<div class="panel-body-wrapper slide">
-						<?php
-                            d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_id', 'form[social_app_id]', $provider->social_app_id, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_export_social_app_secret', 'form[social_app_secret]', $provider->social_app_secret, false, $readonly, 'text');
-                        ?>
-					</div>
-				</fieldset>
-				<fieldset>
-					<legend><?= rex_i18n::msg('d2u_immo_export_social_settings_linkedin') ?></legend>
-					<div class="panel-body-wrapper slide">
-						<?php
-                            d2u_addon_backend_helper::form_input('d2u_immo_export_login_email', 'form[linkedin_email]', $provider->linkedin_email, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_export_linkedin_groupid', 'form[linkedin_groupid]', $provider->linkedin_groupid, false, $readonly, 'text');
-                        ?>
-					</div>
-				</fieldset>
 			</div>
 			<footer class="panel-footer">
 				<div class="rex-form-panel-footer">
@@ -157,6 +134,7 @@ if ('edit' === $func || 'add' === $func) {
 	<?php
         echo d2u_addon_backend_helper::getCSS();
         echo d2u_addon_backend_helper::getJS();
+        echo d2u_addon_backend_helper::getJSOpenAll();
 }
 
 if ('' === $func) {

@@ -15,9 +15,11 @@
 <p>1.3.0-DEV:</p>
 <ul>
 	<li>Import Plugin hinzugefügt: es ist nun möglich OpenImmo ZIP Dateien zu importieren.</li>
+	<li>Export Plugin: Linkedin Export entfernt, da die Linkedin API V1 schon länger nicht mehr Unterstützt wurde.</li>
 	<li>README hinzugefügt.</li>
 	<li>Bugfix: Wohnungstyp für Etagenwohnungen war inkorrekt in der Datenbank gespeichert.</li>
 	<li>Bugfix: Mehrsprachige Seiten enthielten einen Fehler bei der Anzeige der Übersetzungsaktion.</li>
+	<li>Bugfix: aktive Checkboxen in den Einstellungen wurden nicht als aktiviert angezeigt.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe": Fehler im Spamschutz / CSRF Schutz behoben.</li>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe": Nun kompatibel mit Geolocation Addon Version 1 und auch 2.</li>
 </ul>

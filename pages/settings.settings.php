@@ -138,7 +138,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 					<legend><small><i class="rex-icon fa-cloud-upload"></i></small> <?= rex_i18n::msg('d2u_immo_export') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                        d2u_addon_backend_helper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', 'active' === rex_config::get('d2u_immo', 'export_autoexport'));
+                        d2u_addon_backend_helper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', (bool) rex_config::get('d2u_immo', 'export_autoexport', false));
                         d2u_addon_backend_helper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_immo', 'export_failure_email'), true, false, 'email');
                         ?>
 					</div>
@@ -186,7 +186,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
                         d2u_addon_backend_helper::form_input('d2u_immo_import_settings_email', 'settings[import_email]', (string) rex_config::get('d2u_immo', 'import_email'), true, false, 'email');
                         d2u_addon_backend_helper::form_input('d2u_immo_import_settings_import_folder', 'settings[import_folder]', (string) rex_config::get('d2u_immo', 'import_folder'), false, false);
                         d2u_addon_backend_helper::form_infotext('d2u_immo_import_settings_import_folder_hint', 'import_folder_hint');
-                        d2u_addon_backend_helper::form_checkbox('d2u_immo_import_settings_autoimport', 'settings[import_autoimport]', 'active', 'active' === rex_config::get('d2u_immo', 'import_autoimport'));
+                        d2u_addon_backend_helper::form_checkbox('d2u_immo_import_settings_autoimport', 'settings[import_autoimport]', 'active', (bool) rex_config::get('d2u_immo', 'import_autoimport', false));
                         ?>
                     </div>
                 </fieldset>

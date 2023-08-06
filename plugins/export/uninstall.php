@@ -15,3 +15,10 @@ $export_cronjob = d2u_immo_export_cronjob::factory();
 if ($export_cronjob->isInstalled()) {
     $export_cronjob->delete();
 }
+
+// Delete language replacements
+if (!class_exists('export_lang_helper')) {
+    // Load class in case addon is deactivated
+    require_once 'lib/export_lang_helper.php';
+}
+export_lang_helper::factory()->uninstall();
