@@ -694,11 +694,12 @@ class ImportOpenImmo
                                 // <baujahr>1230</baujahr>
                                 // <zustand zustand_art="ENTKERNT"/>
                                 // <energiepass>
-                                // <epart>VERBRAUCH</epart>
-                                // <gueltig_bis>01-2024</gueltig_bis>
-                                // <energieverbrauchkennwert>80</energieverbrauchkennwert>
-                                // <mitwarmwasser>false</mitwarmwasser>
-                                // <endenergiebedarf/>
+                                //   <epart>VERBRAUCH</epart>
+                                //   <gueltig_bis>01-2024</gueltig_bis>
+                                //   <energieverbrauchkennwert>80</energieverbrauchkennwert>
+                                //   <mitwarmwasser>false</mitwarmwasser>
+                                //   <endenergiebedarf/>
+                                //   <jahrgang>2014</jahrgang>
                                 // </energiepass>
                                 // </zustand_angaben>
                                 if (count($xml_immobilie->zustand_angaben) > 0) {
@@ -722,6 +723,9 @@ class ImportOpenImmo
                                         }
                                         if (count($energiepass->mitwarmwasser) > 0) {
                                             $property->including_warm_water = 'true' === (string) $energiepass->mitwarmwasser;
+                                        }
+                                        if (count($energiepass->jahrgang) > 0) {
+                                            $property->energy_pass_year = $energiepass->jahrgang;
                                         }
                                     }
                                 }

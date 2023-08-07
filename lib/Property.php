@@ -216,6 +216,11 @@ class Property implements \D2U_Helper\ITranslationHelper
     /** @var string Type of energy pass. Either "BEDARF" or "VERBRAUCH" */
     public string $energy_pass = '';
 
+    /** @var string Year of energy pass. Values are "2008" = before 1.5.2014, "2014"= starting from 1.5.2014,
+     *  "ohne" = no energy pass available, "nicht_noetig" = not necessary, e.g. because its a listed monument
+     */
+    public string $energy_pass_year = '';
+
     /** @var string energy pass is valid until date */
     public string $energy_pass_valid_until = '';
 
@@ -358,6 +363,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->energy_consumption = (string) $result->getValue('energy_consumption');
             $this->energy_pass = (string) $result->getValue('energy_pass');
             $this->energy_pass_valid_until = (string) $result->getValue('energy_pass_valid_until');
+            $this->energy_pass_year = (string) $result->getValue('energy_pass_year');
             $firing_type = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('firing_type')), PREG_GREP_INVERT);
             $this->firing_type = is_array($firing_type) ? $firing_type : [];
             $this->floor = (int) $result->getValue('floor');
@@ -670,69 +676,6 @@ class Property implements \D2U_Helper\ITranslationHelper
         }
         return null;
     }
-    
-    /**
-     * Creates a short description suiteable for social networks.
-     * @return string description
-     */
-    public function getSocialNetworkDescription()
-    {
-        $social_description = '';
-        if ('KAUF' === strtoupper($this->market_type)) {
-            if ($this->purchase_price > 0) {
-                $social_description .= \Sprog\Wildcard::get('d2u_immo_purchase_price', $this->clang_id) .':&nbsp;'. number_format($this->purchase_price, 0, ',', '.') .',-&nbsp;'. $this->currency_code .'; ';
-            }
-        } else {
-            if ($this->cold_rent > 0) {
-                $social_description .= \Sprog\Wildcard::get('d2u_immo_cold_rent', $this->clang_id) .':&nbsp;'. number_format($this->cold_rent, 2, ',', '.') .'&nbsp;'.$this->currency_code .'; ';
-            }
-            if ($this->additional_costs > 0) {
-                $social_description .= \Sprog\Wildcard::get('d2u_immo_additional_costs', $this->clang_id) . ':&nbsp;'. number_format($this->additional_costs, 2, ',', '.') .'&nbsp;'.$this->currency_code .'; ';
-            }
-            if ($this->price_plus_vat) {
-                $social_description .= '<p>'. \Sprog\Wildcard::get('d2u_immo_prices_plus_vat', $this->clang_id) .'</p>';
-            }
-        }
-
-        if ('HAUS' === strtoupper($this->object_type) || 'WOHNUNG' === strtoupper($this->object_type) || 'BUERO_PRAXEN' === strtoupper($this->object_type)) {
-            if ($this->living_area > 0) {
-                if ('HAUS' === strtoupper($this->object_type) || 'WOHNUNG' === strtoupper($this->object_type)) {
-                    $social_description .= \Sprog\Wildcard::get('d2u_immo_living_area', $this->clang_id) .':&nbsp;';
-                } elseif ('BUERO_PRAXEN' === strtoupper($this->object_type)) {
-                    $social_description .= \Sprog\Wildcard::get('d2u_immo_office_area', $this->clang_id) .':&nbsp;';
-                }
-                $social_description .= number_format($this->living_area, 2, ',', '.') .'m²; ';
-            }
-            if ($this->rooms > 0) {
-                $social_description .= \Sprog\Wildcard::get('d2u_immo_rooms', $this->clang_id) .':&nbsp;'. $this->rooms .'; ';
-            }
-            if ($this->floor > 0) {
-                $social_description .= \Sprog\Wildcard::get('d2u_immo_floor', $this->clang_id) .':&nbsp;'. $this->floor .'; ';
-            }
-        }
-
-        if ($this->total_area > 0) {
-            $social_description .= \Sprog\Wildcard::get('d2u_immo_total_area', $this->clang_id) .':&nbsp;'. number_format($this->total_area, 0, ',', '.') .'m²; ';
-        }
-        if ($this->land_area > 0) {
-            $social_description .= \Sprog\Wildcard::get('d2u_immo_land_area', $this->clang_id) .':&nbsp;'. number_format($this->land_area, 0, ',', '.') .'m²; ';
-        }
-
-        // Energieausweis
-        $social_description .= \Sprog\Wildcard::get('d2u_immo_energy_pass', $this->clang_id) .' ('. \Sprog\Wildcard::get('d2u_immo_energy_pass_'. $this->energy_pass, $this->clang_id) .'): ';
-        $social_description .= \Sprog\Wildcard::get('d2u_immo_energy_pass_valid_until', $this->clang_id) .' '. $this->energy_pass_valid_until .', ';
-        $social_description .= \Sprog\Wildcard::get('d2u_immo_energy_pass_value', $this->clang_id) .' '. $this->energy_consumption;
-        if ($this->including_warm_water) {
-            $social_description .= ' '. \Sprog\Wildcard::get('d2u_immo_energy_pass_incl_warm_water', $this->clang_id);
-        }
-        $social_description .= ', '. \Sprog\Wildcard::get('d2u_immo_construction_year', $this->clang_id) .' '. $this->construction_year .', ';
-        foreach ($this->firing_type as $firing_type) {
-            $social_description .= \Sprog\Wildcard::get('d2u_immo_firing_type_'. $firing_type, $this->clang_id) .', ';
-        }
-        $social_description .= '; '. \Sprog\Wildcard::get('d2u_immo_form_city', $this->clang_id) .': '. $this->zip_code .' '. $this->city;
-
-        return $social_description;
-    }
 
     /**
      * Get objects concerning translation updates.
@@ -836,6 +779,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                     ."energy_consumption = '". $this->energy_consumption ."', "
                     ."energy_pass = '". $this->energy_pass ."', "
                     ."energy_pass_valid_until = '". $this->energy_pass_valid_until ."', "
+                    ."energy_pass_year = '". $this->energy_pass_year ."', "
                     ."firing_type = '|". implode('|', $this->firing_type) ."|', "
                     .'floor = '. $this->floor .', '
                     ."floor_type = '|". implode('|', $this->floor_type) ."|', "

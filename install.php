@@ -95,6 +95,7 @@
     ->ensureColumn(new \rex_sql_column('energy_pass', 'VARCHAR(191)', true))
     ->ensureColumn(new \rex_sql_column('energy_pass_valid_until', 'VARCHAR(50)', true))
     ->ensureColumn(new \rex_sql_column('energy_consumption', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('energy_pass_year', 'VARCHAR(16)', true))
     ->ensureColumn(new \rex_sql_column('including_warm_water', 'TINYINT(1)', true))
     ->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('pictures_360', 'TEXT', true))

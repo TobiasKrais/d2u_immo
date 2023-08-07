@@ -856,6 +856,10 @@ class OpenImmo extends AFTPExport
                 $energiepass_primaerenergietraeger = $xml->createElement('primaerenergietraeger');
                 $energiepass_primaerenergietraeger->appendChild($xml->createTextNode(implode(' ', $property->firing_type)));
                 $energiepass->appendChild($energiepass_primaerenergietraeger);
+                // <jahrgang>2014</jahrgang>
+                $jahrgang = $xml->createElement('jahrgang');
+                $jahrgang->appendChild($xml->createTextNode($property->energy_pass_year));
+                $energiepass->appendChild($jahrgang);
                 // </energiepass>
                 $zustand_angaben->appendChild($energiepass);
             }

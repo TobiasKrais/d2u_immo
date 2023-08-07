@@ -53,6 +53,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $property->energy_consumption = $form['energy_consumption'];
             $property->energy_pass = $form['energy_pass'];
             $property->energy_pass_valid_until = $form['energy_pass_valid_until'];
+            $property->energy_pass_year = $form['energy_pass_year'];
             $property->firing_type = is_array($form['firing_type']) ? array_map('strval', $form['firing_type']) : [];
             $property->floor = (int) $form['floor'];
             $property->floor_type = is_array($form['floor_type']) ? array_map('strval', $form['floor_type']) : [];
@@ -500,6 +501,12 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_immo_property_energy_pass') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
+                            $options_energy_pass_year = ['2014' => rex_i18n::msg('d2u_immo_property_energy_pass_year_2014'),
+                                '2008' => rex_i18n::msg('d2u_immo_property_energy_pass_year_2008'),
+                                'ohne' => rex_i18n::msg('d2u_immo_property_energy_pass_year_without'),
+                                'nicht_noetig' => rex_i18n::msg('d2u_immo_property_energy_pass_year_not_necessary'),
+                                'bei_besichtigung' => rex_i18n::msg('d2u_immo_property_energy_pass_year_on_visit')];
+                            d2u_addon_backend_helper::form_select('d2u_immo_property_energy_pass', 'form[energy_pass_year]', $options_energy_pass_year, [$property->energy_pass_year], 1, false, $readonly);
                             $options_energy_pass = ['BEDARF' => rex_i18n::msg('d2u_immo_property_energy_pass_BEDARF'),
                                 'VERBRAUCH' => rex_i18n::msg('d2u_immo_property_energy_pass_VERBRAUCH')];
                             d2u_addon_backend_helper::form_select('d2u_immo_property_energy_pass_kind', 'form[energy_pass]', $options_energy_pass, [$property->energy_pass], 1, false, $readonly);
@@ -614,7 +621,33 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
         echo d2u_addon_backend_helper::getJS();
     ?>
 	<script>
-		function energy_pass_changer() {
+		function energy_pass_year_changer() {
+			// Engery pass is not necessary for object tpye "grundstueck" and "parken", also for condition type "projektiert"
+			if ($("select[name='form[energy_pass_year]']").val() === "ohne"
+					|| $("select[name='form[energy_pass_year]']").val() === "nicht_noetig"
+					|| $("select[name='form[energy_pass_year]").val() === "bei_besichtigung") {
+				$("select[name='form[energy_pass]']").removeAttr('required');
+				$("input[name='form[energy_consumption]']").removeAttr('required');
+				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
+				$("dl[id='form[energy_pass]']").hide();
+				$("dl[id='form[energy_pass_valid_until]']").hide();
+				$("dl[id='form[energy_consumption]']").hide();
+				$("dl[id='form[including_warm_water]']").hide();
+				$("dl[id='form[firing_type][]']").hide();
+			}
+			else {
+				$("select[name='form[energy_pass]']").prop('required', true);
+				$("input[name='form[energy_consumption]']").prop('required', true);
+				$("input[name='form[energy_pass_valid_until]']").prop('required', true);
+				$("dl[id='form[energy_pass]']").fadeIn();
+				$("dl[id='form[energy_pass_valid_until]']").fadeIn();
+				$("dl[id='form[energy_consumption]']").fadeIn();
+				$("dl[id='form[including_warm_water]']").fadeIn();
+				$("dl[id='form[firing_type][]']").fadeIn();
+			}
+		}
+
+        function energy_pass_changer() {
 			// Engery pass is not necessary for object tpye "grundstueck" and "parken", also for condition type "projektiert"
 			if ($("select[name='form[object_type]']").val() === "grundstueck"
 					|| $("select[name='form[object_type]']").val() === "parken"
@@ -769,6 +802,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 			object_type_changer($("select[name='form[object_type]']").val());
 			// Check if energy pass is necessary
 			energy_pass_changer();
+			energy_pass_year_changer();
 		});
 
 		// Hide on selection change
@@ -781,6 +815,9 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		});
 		$("select[name='form[condition_type]").on('change', function(e) {
 			energy_pass_changer();
+		});
+		$("select[name='form[energy_pass_year]").on('change', function(e) {
+			energy_pass_year_changer();
 		});
 	</script>
 	<?php

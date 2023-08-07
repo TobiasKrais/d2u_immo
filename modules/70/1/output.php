@@ -414,51 +414,62 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-12 print-border">'; // START energy pass
         echo '<div class="row">';
 
-        echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_type'. $tag_close .':</li></ul></div>';
-        echo '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_energy_pass_'. $property->energy_pass . $tag_close .'</div>';
+        if($property->energy_pass_year === 'bei_besichtigung') {
+            echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_energy_pass_year_on_visit') .'</div>';
+        }
+        else if($property->energy_pass_year === 'nicht_noetig') {
+            echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_energy_pass_year_not_necessary') .'</div>';
+        }
+        else if($property->energy_pass_year === 'ohne') {
+            echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_energy_pass_year_without') .'</div>';
+        }
+        else {
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_type'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_energy_pass_'. $property->energy_pass . $tag_close .'</div>';
 
-        if ('' !== $property->energy_pass_valid_until) {
-            $energy_pass_date = date_create_from_format('Y-m-d', $property->energy_pass_valid_until);
-            if (false !== $energy_pass_date) {
-                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_valid_until'. $tag_close .':</li></ul></div>';
-                echo '<div class="col-6 col-md-8 col-lg-9">'. date_format($energy_pass_date, 'd.m.Y') .'</div>';
+            if ('' !== $property->energy_pass_valid_until) {
+                $energy_pass_date = date_create_from_format('Y-m-d', $property->energy_pass_valid_until);
+                if (false !== $energy_pass_date) {
+                    echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_valid_until'. $tag_close .':</li></ul></div>';
+                    echo '<div class="col-6 col-md-8 col-lg-9">'. date_format($energy_pass_date, 'd.m.Y') .'</div>';
+                }
             }
-        }
 
-        echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_value'. $tag_close .':</li></ul></div>';
-        echo '<div class="col-6 col-md-8 col-lg-9">'. $property->energy_consumption .'&nbsp;kWh/(m²*a)</div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_value'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-8 col-lg-9">'. $property->energy_consumption .'&nbsp;kWh/(m²*a)</div>';
 
-        if ($property->including_warm_water) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_incl_warm_water'. $tag_close .':</li></ul></div>';
-            echo '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_yes'. $tag_close .'</div>';
-        }
-
-        if ($property->construction_year > 0) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_construction_year'. $tag_close .':</li></ul></div>';
-            echo '<div class="col-6 col-md-8 col-lg-9">'. $property->construction_year .'</div>';
-        }
-
-        if (count($property->firing_type) > 0) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_firing_type'. $tag_close .':</li></ul></div>';
-            echo '<div class="col-6 col-md-8 col-lg-9">';
-            $first_element = true;
-            foreach ($property->firing_type as $firing_type) {
-                echo($first_element ? '' : ', ') . $tag_open .'d2u_immo_firing_type_'. $firing_type . $tag_close;
-                $first_element = false;
+            if ($property->including_warm_water) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_incl_warm_water'. $tag_close .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_yes'. $tag_close .'</div>';
             }
+
+            if ($property->construction_year > 0) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_construction_year'. $tag_close .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. $property->construction_year .'</div>';
+            }
+
+            if (count($property->firing_type) > 0) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_firing_type'. $tag_close .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">';
+                $first_element = true;
+                foreach ($property->firing_type as $firing_type) {
+                    echo($first_element ? '' : ', ') . $tag_open .'d2u_immo_firing_type_'. $firing_type . $tag_close;
+                    $first_element = false;
+                }
+                echo '</div>';
+            }
+
+            echo '<div class="col-12">';
+            echo "<div class='energy-scale-container'>";
+            echo "<div style='position: absolute;'>";
+            echo "<img src='". $d2u_immo->getAssetsUrl('energieskala.png') ."' class='energy_scale'>";
+            echo '</div>';
+            echo "<div style='position: absolute; margin-left: ". round((int) $property->energy_consumption - 10, 0) ."px !important;'>";
+            echo "<img src='". $d2u_immo->getAssetsUrl('zeiger.png') ."'>";
+            echo '</div>';
+            echo '</div>';
             echo '</div>';
         }
-
-        echo '<div class="col-12">';
-        echo "<div class='energy-scale-container'>";
-        echo "<div style='position: absolute;'>";
-        echo "<img src='". $d2u_immo->getAssetsUrl('energieskala.png') ."' class='energy_scale'>";
-        echo '</div>';
-        echo "<div style='position: absolute; margin-left: ". round((int) $property->energy_consumption - 10, 0) ."px !important;'>";
-        echo "<img src='". $d2u_immo->getAssetsUrl('zeiger.png') ."'>";
-        echo '</div>';
-        echo '</div>';
-        echo '</div>';
         echo '</div>';
         echo '</div>';  // END energy pass
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
