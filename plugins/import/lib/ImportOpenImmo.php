@@ -22,12 +22,13 @@ use function in_array;
 use function is_array;
 
 /**
+ * @api
  * Imports an OpenImmo ZIP file.
  */
 class ImportOpenImmo
 {
     /** @var string complete folder name including parent folders for extracting OpenImmo import files */
-    public string $extract_cache_folder = '';
+    private string $extract_cache_folder = '';
 
     /** @var string complete folder name including parent folders containing OpenImmo import files */
     public string $import_folder = '';
@@ -131,7 +132,7 @@ class ImportOpenImmo
         foreach ($all_filenames as $file) {
             if ('xml' === pathinfo($file, PATHINFO_EXTENSION)) {
                 $xml = simplexml_load_file($this->extract_cache_folder . $file);
-                if ($xml instanceof SimpleXMLElement && false !== $xml->xpath('//openimmo')) {
+                if ($xml instanceof SimpleXMLElement) {
                     return $file;
                 }
             }
@@ -537,7 +538,7 @@ class ImportOpenImmo
                                     $preise = $xml_immobilie->preise[0];
                                     if (count($preise->kaufpreis) > 0) {
                                         $property->purchase_price = (int) $preise->kaufpreis;
-                                        $property->purchase_price_on_request = 'true' === (string) strtolower($preise->kaufpreis['auf_anfrage']);
+                                        $property->purchase_price_on_request = 'true' === strtolower($preise->kaufpreis['auf_anfrage']);
                                     }
                                     if (count($preise->nettokaltmiete) > 0) {
                                         $property->cold_rent = (int) $preise->nettokaltmiete;
@@ -546,14 +547,14 @@ class ImportOpenImmo
                                         $property->additional_costs = (int) $preise->nebenkosten;
                                     }
                                     if (count($preise->zzg_mehrwertsteuer) > 0) {
-                                        $property->price_plus_vat = 'true' === (string) strtolower($preise->zzg_mehrwertsteuer);
+                                        $property->price_plus_vat = 'true' === strtolower($preise->zzg_mehrwertsteuer);
                                     }
                                     if (count($preise->kaufpreis_pro_qm) > 0) {
                                         $property->purchase_price_m2 = (int) $preise->kaufpreis_pro_qm;
                                     }
                                     if (count($preise->aussen_courtage) > 0) {
                                         $property->courtage = $preise->aussen_courtage;
-                                        $property->courtage_incl_vat = 'true' === (string) strtolower($preise->aussen_courtage['mit_mwst']);
+                                        $property->courtage_incl_vat = 'true' === strtolower($preise->aussen_courtage['mit_mwst']);
                                     }
                                     if (count($preise->waehrung) > 0) {
                                         $property->currency_code = strtoupper($preise->waehrung['iso_waehrung']);

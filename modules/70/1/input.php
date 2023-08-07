@@ -14,7 +14,7 @@
                 }
                 else {
                     // Geolocation 1.x
-                    $mapsets = \Geolocation\mapset::query()
+                    $mapsets = \Geolocation\mapset::query() /** @phpstan-ignore-line */
                         ->orderBy('title')
                         ->findValues('title', 'id');
                 }

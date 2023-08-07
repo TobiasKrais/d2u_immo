@@ -802,7 +802,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                     }
                     else {
                         // Geolocation 1.x
-                        \Geolocation\tools::echoAssetTags();
+                        \Geolocation\tools::echoAssetTags(); /** @phpstan-ignore-line */
                     }
                 }
 ?>
@@ -866,7 +866,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             }
             else {
                 // Geolocation 1.x
-                echo \Geolocation\mapset::take((int) $map_type)
+                echo \Geolocation\mapset::take((int) $map_type) /** @phpstan-ignore-line */
                     ->attributes('id', $map_id)
                     ->dataset('position', [$property->latitude, $property->longitude])
                     ->dataset('center', [[$property->latitude, $property->longitude], 15])

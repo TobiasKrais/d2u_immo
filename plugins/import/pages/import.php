@@ -2,7 +2,7 @@
     use D2U_Immo\ImportOpenImmo;
 
     $openimmoimport = new ImportOpenImmo();
-    $import_file = (string) rex_request('import', 'string');
+    $import_file = rex_request('import', 'string');
 
     // import requested file
     if ('' !== $import_file) {
@@ -32,7 +32,7 @@
                         foreach ($zip_filenames as $zip_file) {
                             if ('zip' === pathinfo($zip_file, PATHINFO_EXTENSION)) {
                                 $filesize = filesize($openimmoimport->import_folder . $zip_file);
-                                $filesize_mb = round($filesize / (1024 * 1024), 2);
+                                $filesize_mb = false !== $filesize ? round($filesize / (1024 * 1024), 2) : 0;
                                 echo '<li><a href="'. rex_url::currentBackendPage(['import' => $zip_file])  .'"'. ($import_file === $zip_file ? ' style="color:white"' : '') .'>'. $zip_file .' ('. $filesize_mb .' MB)</a></li>';
                             }
                         }

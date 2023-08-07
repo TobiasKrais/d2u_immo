@@ -1,7 +1,7 @@
 <?php
 
 // download ZIP file if requested
-$download_filename = (string) rex_request('download_file', 'string');
+$download_filename = rex_request('download_file', 'string');
 if ('' !== $download_filename) {
     $download_filename = rex_path::addonData('d2u_immo', $download_filename);
 

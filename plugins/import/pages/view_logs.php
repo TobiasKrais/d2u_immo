@@ -9,7 +9,7 @@ $files = scandir($dir);
 if (is_array($files)) {
     $files = array_diff($files, ['..', '.']);
 }
-$show_file = (string) rex_request('file', 'string');
+$show_file = rex_request('file', 'string');
 ?>
 <div class="panel panel-edit">
     <header class="panel-heading">
@@ -37,7 +37,7 @@ $show_file = (string) rex_request('file', 'string');
                                     echo '<a href="'. rex_url::currentBackendPage(['file' => $file])  .'"'. ($show_file === $file ? ' style="color:white"' : '') .'>'. rex_i18n::msg('d2u_immo_import_log_view_log') .'</a>';
                                     if (file_exists(rex_path::addonData('d2u_immo', $zip_file))) {
                                         $filesize = filesize(rex_path::addonData('d2u_immo', $zip_file));
-                                        $filesize_mb = round($filesize / (1024 * 1024), 2);
+                                        $filesize_mb = false !== $filesize ? round($filesize / (1024 * 1024), 2) : 0;
                                         echo ' - <a href="'. rex_url::currentBackendPage(['download_file' => $zip_file])  .'">'. rex_i18n::msg('d2u_immo_import_log_download_zip') .' ('. $filesize_mb .' MB)</a>';
                                     }
                                     echo '</li>';

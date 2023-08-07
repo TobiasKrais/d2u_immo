@@ -29,7 +29,7 @@ class ExportedProperty
      * this value. But some so and it is needed for deleting the property later
      * on provider website.
      */
-    public string $provider_import_id = '';
+    private string $provider_import_id = '';
 
     /** @var string export timestamp */
     public string $export_timestamp = '';
@@ -137,30 +137,6 @@ class ExportedProperty
 
         return false;
 
-    }
-
-    /**
-     * Remove all properties to export for given provider.
-     */
-    public static function removeAllDeletedFromExport(): void
-    {
-        $query = 'SELECT exported_properties.property_id FROM '. rex::getTablePrefix() .'d2u_immo_export_properties AS exported_properties '
-            .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_used_properties AS used_properties '
-                .'ON exported_properties.property_id = properties.property_id '
-            .'WHERE properties.property_id IS NULL '
-            .'GROUP BY exported_properties.property_id';
-        $result = rex_sql::factory();
-        $result->setQuery($query);
-
-        for ($i = 0; $i < $result->getRows(); ++$i) {
-            $query_update = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_export_properties '
-                ."SET export_action = 'delete' "
-                .'WHERE property_id = '. $result->getValue('exported_properties.property_id');
-            $result_update = rex_sql::factory();
-            $result_update->setQuery($query_update);
-
-            $result->next();
-        }
     }
 
     /**
