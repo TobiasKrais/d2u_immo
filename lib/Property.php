@@ -120,6 +120,9 @@ class Property implements \D2U_Helper\ITranslationHelper
     /** @var int Floor */
     public int $floor = 0;
 
+    /** @var bool true is propterty a listed monument */
+    public bool $listed_monument = true;
+
     /** @var bool true if property addess may be published */
     public bool $publish_address = true;
 
@@ -373,6 +376,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->land_area = (float) $result->getValue('land_area');
             $this->land_type = (string) $result->getValue('land_type');
             $this->latitude = (float) $result->getValue('latitude');
+            $this->listed_monument = 1 === (int) $result->getValue('listed_monument') ? true : false;
             $this->living_area = (float) $result->getValue('living_area');
             $location_plans = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('location_plans')), PREG_GREP_INVERT);
             $this->location_plans = is_array($location_plans) ? $location_plans : [];
@@ -846,6 +850,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                     .'land_area = '. $this->land_area .', '
                     ."land_type = '". $this->land_type ."', "
                     .'latitude = '. $this->latitude .', '
+                    .'listed_monument = '. ($this->listed_monument ? 1 : 0) .', '
                     .'living_area = '. $this->living_area .', '
                     ."location_plans = '". implode(',', $this->location_plans) ."', "
                     .'longitude = '. $this->longitude .', '

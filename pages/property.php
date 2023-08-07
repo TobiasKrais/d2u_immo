@@ -68,6 +68,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $property->land_area = (float) $form['land_area'];
             $property->land_type = $form['land_type'];
             $property->latitude = (float) $form['latitude'];
+            $property->listed_monument = array_key_exists('listed_monument', $form);
             $property->living_area = (float) $form['living_area'];
             $location_plans = preg_grep('/^\s*$/s', explode(',', $input_media_list[3]), PREG_GREP_INVERT);
             $property->location_plans = is_array($location_plans) ? $location_plans : [];
@@ -370,6 +371,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'TEIL_VOLLRENOVIERUNGSBED' => rex_i18n::msg('d2u_immo_property_condition_type_TEIL_VOLLRENOVIERUNGSBED'),
                                 'VOLL_SANIERT' => rex_i18n::msg('d2u_immo_property_condition_type_VOLL_SANIERT')];
                             d2u_addon_backend_helper::form_select('d2u_immo_property_condition_type', 'form[condition_type]', $options_condition_type, [$property->condition_type], 1, false, $readonly);
+                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_listed_monument', 'form[listed_monument]', 'true', $property->listed_monument, $readonly);
                         ?>
 					</div>
 				</fieldset>

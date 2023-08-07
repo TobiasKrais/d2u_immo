@@ -319,6 +319,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-6">'. $tag_open .'d2u_immo_condition'. $tag_close .':</div>';
             echo '<div class="col-6">'. $tag_open .'d2u_immo_condition_'. $property->condition_type . $tag_close .'</div>';
         }
+        if ($property->listed_monument) {
+            echo '<div class="col-12">'. $tag_open .'d2u_immo_listed_monument'. $tag_close .'</div>';
+        }
 
         if ('' !== $property->available_from) {
             $date = date_create_from_format('Y-m-d', $property->available_from);

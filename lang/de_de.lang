@@ -199,6 +199,7 @@ d2u_immo_property_land_type_SEELIEGENSCHAFT = Seeligenschaft
 d2u_immo_property_land_type_SONDERNUTZUNG = Sondernutzung
 d2u_immo_property_land_type_WOHNEN = Wohnen
 d2u_immo_property_latitude = Breitengrad
+d2u_immo_property_listed_monument = Denkmalgeschützt?
 d2u_immo_property_living_area = Wohnfläche
 d2u_immo_property_location_plans = Bilder Lagepläne
 d2u_immo_property_longitude = Längengrad

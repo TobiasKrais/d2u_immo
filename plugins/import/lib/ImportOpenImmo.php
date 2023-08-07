@@ -847,6 +847,7 @@ class ImportOpenImmo
                                 // <verfuegbar_ab>2023-07-01</verfuegbar_ab>
                                 // <vermietet>true</vermietet>
                                 // <haustiere>true</haustiere>
+                                // <denkmalgeschuetzt>false</denkmalgeschuetzt>
                                 // </verwaltung_objekt>
                                 if (count($xml_immobilie->verwaltung_objekt) > 0) {
                                     $verwaltung_objekt = $xml_immobilie->verwaltung_objekt[0];
@@ -861,6 +862,9 @@ class ImportOpenImmo
                                     }
                                     if (count($verwaltung_objekt->haustiere) > 0) {
                                         $property->animals = 'true' === (string) $verwaltung_objekt->haustiere;
+                                    }
+                                    if (count($verwaltung_objekt->denkmalgeschuetzt) > 0) {
+                                        $property->listed_monument = 'true' === (string) $verwaltung_objekt->denkmalgeschuetzt;
                                     }
                                 }
                             }

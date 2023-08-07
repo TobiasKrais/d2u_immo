@@ -1078,7 +1078,12 @@ class OpenImmo extends AFTPExport
                 $verwaltung_objekt->appendChild($haustiere);
             }
             // TODO: <xsd:element ref="geschlecht" minOccurs="0"/>
-            // TODO: <xsd:element ref="denkmalgeschuetzt" minOccurs="0"/>
+            // <denkmalgeschuetzt>false</denkmalgeschuetzt>
+            if ($property->listed_monument) {
+                $denkmalgeschuetzt = $xml->createElement('denkmalgeschuetzt');
+                $denkmalgeschuetzt->appendChild($xml->createTextNode('true'));
+                $verwaltung_objekt->appendChild($denkmalgeschuetzt);
+            }
             // TODO: <xsd:element ref="als_ferien" minOccurs="0"/>
             // TODO: <xsd:element ref="gewerbliche_nutzung" minOccurs="0"/>
             // TODO: <xsd:element ref="branchen" minOccurs="0"/>

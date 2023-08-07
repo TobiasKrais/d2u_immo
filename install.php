@@ -105,6 +105,7 @@
     ->ensureColumn(new \rex_sql_column('animals', 'TINYINT(1)', true))
     ->ensureColumn(new \rex_sql_column('object_reserved', 'TINYINT(1)', true))
     ->ensureColumn(new \rex_sql_column('object_sold', 'TINYINT(1)', true))
+    ->ensureColumn(new \rex_sql_column('listed_monument', 'TINYINT(1)', true))
     ->ensureColumn(new \rex_sql_column('openimmo_object_id', 'VARCHAR(31)', true))
     ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
     ->ensure();
