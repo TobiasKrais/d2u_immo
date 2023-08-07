@@ -407,10 +407,21 @@ class OpenImmo extends AFTPExport
             // <preise>
             $preise = $xml->createElement('preise');
             // <kaufpreis>100000.00</kaufpreis>
-            if ($property->purchase_price > 0) {
+            if ($property->purchase_price > 0 || $property->purchase_price_on_request) {
                 $kaufpreis = $xml->createElement('kaufpreis');
-                $kaufpreis->appendChild($xml->createTextNode((string) $property->purchase_price));
+                if($property->purchase_price_on_request || $property->purchase_price === 0) {
+                    $kaufpreis_auf_anfrage = $xml->createAttribute('auf_anfrage');
+                    $kaufpreis_auf_anfrage->appendChild($xml->createTextNode('TRUE'));
+                    $kaufpreis->appendChild($kaufpreis_auf_anfrage);
+                }
+                $kaufpreis->appendChild($xml->createTextNode(($property->purchase_price_on_request ? '0' : (string) $property->purchase_price)));
                 $preise->appendChild($kaufpreis);
+            }
+            // <kaufpreis_pro_qm>100.99</kaufpreis_pro_qm>
+            if ($property->purchase_price_m2 > 0 && false === $property->purchase_price_on_request) {
+                $kaufpreis_pro_qm = $xml->createElement('kaufpreis_pro_qm');
+                $kaufpreis_pro_qm->appendChild($xml->createTextNode((string) $property->purchase_price_m2));
+                $preise->appendChild($kaufpreis_pro_qm);
             }
             // <nettokaltmiete>500.00</nettokaltmiete>
             if ($property->cold_rent > 0) {
@@ -453,12 +464,6 @@ class OpenImmo extends AFTPExport
             // TODO: <xsd:element ref="preis_zeitraum_bis" minOccurs="0"/>
             // TODO: <xsd:element ref="preis_zeiteinheit" minOccurs="0"/>
             // TODO: <xsd:element ref="mietpreis_pro_qm" minOccurs="0"/>
-            // <kaufpreis_pro_qm>100.99</kaufpreis_pro_qm>
-            if ($property->purchase_price_m2 > 0) {
-                $kaufpreis_pro_qm = $xml->createElement('kaufpreis_pro_qm');
-                $kaufpreis_pro_qm->appendChild($xml->createTextNode((string) $property->purchase_price_m2));
-                $preise->appendChild($kaufpreis_pro_qm);
-            }
             // TODO: <xsd:element ref="innen_courtage" minOccurs="0"/>
             // <aussen_courtage mit_mwst="true">provisionsfrei</aussen_courtage>
             if ('' !== $property->courtage) {
@@ -825,37 +830,39 @@ class OpenImmo extends AFTPExport
                     && 'projektiert' !== strtolower($property->condition_type)
                     && strlen($property->energy_pass) > 5) {
                 $energiepass = $xml->createElement('energiepass');
-                // <epart>BEDARF</epart>
-                $energiepass_art = $xml->createElement('epart');
-                $energiepass_art->appendChild($xml->createTextNode($property->energy_pass));
-                $energiepass->appendChild($energiepass_art);
-                // <gueltig_bis>2010-12-31</gueltig_bis>
-                $energiepass_gueltig_bis = $xml->createElement('gueltig_bis');
-                if ('' !== $property->energy_pass_valid_until) {
-                    $energiepass_gueltig_bis->appendChild($xml->createTextNode($property->energy_pass_valid_until));
-                } else {
-                    $energiepass_gueltig_bis->appendChild($xml->createTextNode('Wert fehlt.'));
+                if($property->energy_pass_year === '2008' || $property->energy_pass_year === '2014') {
+                    // <epart>BEDARF</epart>
+                    $energiepass_art = $xml->createElement('epart');
+                    $energiepass_art->appendChild($xml->createTextNode($property->energy_pass));
+                    $energiepass->appendChild($energiepass_art);
+                    // <gueltig_bis>2010-12-31</gueltig_bis>
+                    $energiepass_gueltig_bis = $xml->createElement('gueltig_bis');
+                    if ('' !== $property->energy_pass_valid_until) {
+                        $energiepass_gueltig_bis->appendChild($xml->createTextNode($property->energy_pass_valid_until));
+                    } else {
+                        $energiepass_gueltig_bis->appendChild($xml->createTextNode('Wert fehlt.'));
+                    }
+                    $energiepass->appendChild($energiepass_gueltig_bis);
+                    // <energieverbrauchkennwert>97</energieverbrauchkennwert>
+                    $energiepass_kennwert = $xml->createElement('energieverbrauchkennwert');
+                    if ('BEDARF' === $property->energy_pass) {
+                        $energiepass_kennwert = $xml->createElement('endenergiebedarf');
+                    }
+                    $energiepass_kennwert->appendChild($xml->createTextNode($property->energy_consumption));
+                    $energiepass->appendChild($energiepass_kennwert);
+                    // <mitwarmwasser>1</mitwarmwasser>
+                    $energiepass_mitwarmwasser = $xml->createElement('mitwarmwasser');
+                    if ($property->including_warm_water) {
+                        $energiepass_mitwarmwasser->appendChild($xml->createTextNode('true'));
+                    } else {
+                        $energiepass_mitwarmwasser->appendChild($xml->createTextNode('false'));
+                    }
+                    $energiepass->appendChild($energiepass_mitwarmwasser);
+                    // <primaerenergietraeger>GAS</primaerenergietraeger>
+                    $energiepass_primaerenergietraeger = $xml->createElement('primaerenergietraeger');
+                    $energiepass_primaerenergietraeger->appendChild($xml->createTextNode(implode(' ', $property->firing_type)));
+                    $energiepass->appendChild($energiepass_primaerenergietraeger);
                 }
-                $energiepass->appendChild($energiepass_gueltig_bis);
-                // <energieverbrauchkennwert>97</energieverbrauchkennwert>
-                $energiepass_kennwert = $xml->createElement('energieverbrauchkennwert');
-                if ('BEDARF' === $property->energy_pass) {
-                    $energiepass_kennwert = $xml->createElement('endenergiebedarf');
-                }
-                $energiepass_kennwert->appendChild($xml->createTextNode($property->energy_consumption));
-                $energiepass->appendChild($energiepass_kennwert);
-                // <mitwarmwasser>1</mitwarmwasser>
-                $energiepass_mitwarmwasser = $xml->createElement('mitwarmwasser');
-                if ($property->including_warm_water) {
-                    $energiepass_mitwarmwasser->appendChild($xml->createTextNode('true'));
-                } else {
-                    $energiepass_mitwarmwasser->appendChild($xml->createTextNode('false'));
-                }
-                $energiepass->appendChild($energiepass_mitwarmwasser);
-                // <primaerenergietraeger>GAS</primaerenergietraeger>
-                $energiepass_primaerenergietraeger = $xml->createElement('primaerenergietraeger');
-                $energiepass_primaerenergietraeger->appendChild($xml->createTextNode(implode(' ', $property->firing_type)));
-                $energiepass->appendChild($energiepass_primaerenergietraeger);
                 // <jahrgang>2014</jahrgang>
                 $jahrgang = $xml->createElement('jahrgang');
                 $jahrgang->appendChild($xml->createTextNode($property->energy_pass_year));

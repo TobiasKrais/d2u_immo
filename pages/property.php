@@ -94,6 +94,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $property->publish_address = array_key_exists('publish_address', $form);
             $property->purchase_price = (int) $form['purchase_price'];
             $property->purchase_price_m2 = (int) $form['purchase_price_m2'];
+            $property->purchase_price_on_request = array_key_exists('purchase_price_on_request', $form);
             $property->rented = array_key_exists('rented', $form);
             $property->flat_sharing_possible = array_key_exists('flat_sharing_possible', $form);
             $property->rooms = (float) $form['rooms'];
@@ -534,6 +535,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_immo_property_prices') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
+                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_purchase_price_on_request', 'form[purchase_price_on_request]', 'false', $property->purchase_price_on_request, $readonly);
                             $options_currency_code = ['EUR' => rex_i18n::msg('d2u_immo_property_currency_code_EUR'),
                                 'CHF' => rex_i18n::msg('d2u_immo_property_currency_code_CHF'),
                                 'USD' => rex_i18n::msg('d2u_immo_property_currency_code_USD')];
@@ -665,7 +667,33 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 			}
 		}
 
-		function object_type_changer(value) {
+        function market_type_changer(value) {
+			if (value === "KAUF") {
+				$("dl[id='form[purchase_price_on_request]']").fadeIn();
+				$("dl[id='form[cold_rent]']").hide();
+				$("input[name='form[cold_rent]']").removeAttr('required');
+				$("dl[id='form[additional_costs]']").hide();
+				$("input[name='form[additional_costs]']").removeAttr('required');
+				$("dl[id='form[deposit]']").hide();
+				$("input[name='form[deposit]']").removeAttr('required');
+                purchase_price_changer();
+			}
+			else {
+				$("dl[id='form[purchase_price]']").hide();
+				$("input[name='form[purchase_price]']").removeAttr('required');
+				$("dl[id='form[purchase_price_m2]']").hide();
+				$("input[name='form[purchase_price_m2]").removeAttr('required');
+				$("dl[id='form[cold_rent]']").fadeIn();
+				$("input[name='form[cold_rent]']").prop('required', true);
+				$("dl[id='form[additional_costs]']").fadeIn();
+				$("input[name='form[additional_costs]']").prop('required', true);
+				$("dl[id='form[deposit]']").fadeIn();
+				$("input[name='form[deposit]']").prop('required', true);
+				$("dl[id='form[price_plus_vat]']").fadeIn();
+			}
+		}
+
+        function object_type_changer(value) {
 			if (value === "wohnung") {
 				$("dl[id='form[apartment_type]']").fadeIn();
 				$("dl[id='form[hall_warehouse_type]']").hide();
@@ -769,30 +797,23 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 			}
 		}
 
-		function market_type_changer(value) {
-			if (value === "KAUF") {
+		function purchase_price_changer() {
+			// Engery pass is not necessary for object tpye "grundstueck" and "parken", also for condition type "projektiert"
+			if ($("input[name='form[purchase_price_on_request]']").is(":checked")) {
+                $("dl[id='form[currency_code]']").hide();
+                $("dl[id='form[purchase_price]']").hide();
+				$("input[name='form[purchase_price]']").removeAttr('required');
+				$("dl[id='form[purchase_price_m2]']").hide();
+				$("input[name='form[purchase_price_m2]").removeAttr('required');
+				$("dl[id='form[price_plus_vat]']").hide();
+			}
+			else {
+                $("dl[id='form[currency_code]']").fadeIn();
 				$("dl[id='form[purchase_price]']").fadeIn();
 				$("input[name='form[purchase_price]']").prop('required', true);
 				$("dl[id='form[purchase_price_m2]']").fadeIn();
 				$("input[name='form[purchase_price_m2]").prop('required', true);
-				$("dl[id='form[cold_rent]']").hide();
-				$("input[name='form[cold_rent]']").removeAttr('required');
-				$("dl[id='form[additional_costs]']").hide();
-				$("input[name='form[additional_costs]']").removeAttr('required');
-				$("dl[id='form[deposit]']").hide();
-				$("input[name='form[deposit]']").removeAttr('required');
-			}
-			else {
-				$("dl[id='form[purchase_price]']").hide();
-				$("input[name='form[purchase_price]']").removeAttr('required');
-				$("dl[id='form[purchase_price_m2]']").hide();
-				$("input[name='form[purchase_price_m2]").removeAttr('required');
-				$("dl[id='form[cold_rent]']").fadeIn();
-				$("input[name='form[cold_rent]']").prop('required', true);
-				$("dl[id='form[additional_costs]']").fadeIn();
-				$("input[name='form[additional_costs]']").prop('required', true);
-				$("dl[id='form[deposit]']").fadeIn();
-				$("input[name='form[deposit]']").prop('required', true);
+				$("dl[id='form[price_plus_vat]']").fadeIn();
 			}
 		}
 
@@ -800,6 +821,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		$(document).ready(function() {
 			market_type_changer($("select[name='form[market_type]']").val());
 			object_type_changer($("select[name='form[object_type]']").val());
+            purchase_price_changer();
 			// Check if energy pass is necessary
 			energy_pass_changer();
 			energy_pass_year_changer();
@@ -818,6 +840,9 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		});
 		$("select[name='form[energy_pass_year]").on('change', function(e) {
 			energy_pass_year_changer();
+		});
+		$("input[name='form[purchase_price_on_request]").on('change', function(e) {
+			purchase_price_changer();
 		});
 	</script>
 	<?php

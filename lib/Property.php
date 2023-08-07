@@ -132,11 +132,14 @@ class Property implements \D2U_Helper\ITranslationHelper
     /** @var int Price per square meter */
     public int $purchase_price_m2 = 0;
 
+    /** @var bool true if purchase price is on request */
+    public bool $purchase_price_on_request = false;
+
     /** @var int Monthly cold rent if object is for rent */
     public int $cold_rent = 0;
 
     /** @var bool true if rent has additional VAT */
-    public bool$price_plus_vat = false;
+    public bool $price_plus_vat = false;
 
     /** @var int Additional monthly costs for rent */
     public int $additional_costs = 0;
@@ -411,6 +414,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             $this->publish_address = 1 === (int) $result->getValue('publish_address') ? true : false;
             $this->purchase_price = (int) $result->getValue('purchase_price');
             $this->purchase_price_m2 = (int) $result->getValue('purchase_price_m2');
+            $this->purchase_price_on_request = 1 === (int) $result->getValue('purchase_price_on_request') ? true : false;
             $this->rented = 1 === (int) $result->getValue('rented') ? true : false;
             $this->flat_sharing_possible = 1 === (int) $result->getValue('flat_sharing_possible') ? true : false;
             $this->rooms = ((float) $result->getValue('rooms') === round((float) $result->getValue('rooms')) ? round((float) $result->getValue('rooms')) : (float) $result->getValue('rooms'));
@@ -816,6 +820,7 @@ class Property implements \D2U_Helper\ITranslationHelper
                     .'publish_address = '. ($this->publish_address ? 1 : 0) .', '
                     .'purchase_price = '. $this->purchase_price .', '
                     .'purchase_price_m2 = '. $this->purchase_price_m2 .', '
+                    .'purchase_price_on_request = '. ($this->purchase_price_on_request ? 1 : 0) .', '
                     .'rented = '. ($this->rented ? 1 : 0) .', '
                     .'flat_sharing_possible = '. ($this->flat_sharing_possible ? 1 : 0) .', '
                     .'rooms = '. $this->rooms .', '

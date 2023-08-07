@@ -74,7 +74,8 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="col-12"><strong>'. $property->name .'</strong></div>';
             echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_form_city'. $tag_close .':</b> '. $property->city .'</div>';
             if ('KAUF' === $property->market_type) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</b> '. number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code .'</div>';
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</b> '
+                . ($property->purchase_price_on_request || $property->purchase_price === 0 ? Sprog\Wildcard::get('d2u_immo_purchase_price_on_request') : number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code) .'</div>';
             } elseif ('MIETE_PACHT' === $property->market_type || 'ERBPACHT' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_cold_rent'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
             } elseif ('LEASING' === $property->market_type) {
@@ -250,18 +251,16 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="row page-break-avoid">';
 
     if ('KAUF' === strtoupper($property->market_type)) {
-        if ($property->purchase_price > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</div>';
-            echo '<div class="col-6"><b>'. number_format($property->purchase_price, 0, ',', '.') .',-&nbsp;'. $property->currency_code .'</b></div>';
-        }
-        if ($property->purchase_price_m2 > 0) {
+        echo '<div class="col-6">'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</div>';
+        echo '<div class="col-6"><b>'. ($property->purchase_price_on_request || $property->purchase_price === 0 ? Sprog\Wildcard::get('d2u_immo_purchase_price_on_request') : number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code) .'</b></div>';
+        if ($property->purchase_price_m2 > 0 && false === $property->purchase_price_on_request) {
             echo '<div class="col-6">'. $tag_open .'d2u_immo_purchase_price_m2'. $tag_close .':</div>';
             echo '<div class="col-6">'. number_format($property->purchase_price_m2, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</div>';
         }
-        if ($property->price_plus_vat) {
+        if ($property->price_plus_vat && false === $property->purchase_price_on_request) {
             echo '<div class="col-12">'. $tag_open .'d2u_immo_prices_plus_vat'. $tag_close .'</div>';
-            echo '<div class="col-12">&nbsp;</div>';
         }
+        echo '<div class="col-12">&nbsp;</div>';
     } else {
         if ($property->cold_rent > 0 && $property->additional_costs > 0) {
             echo '<div class="col-6">'. $tag_open .'d2u_immo_warm_rent'. $tag_close .':</div>';

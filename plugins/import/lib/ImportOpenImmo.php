@@ -537,6 +537,7 @@ class ImportOpenImmo
                                     $preise = $xml_immobilie->preise[0];
                                     if (count($preise->kaufpreis) > 0) {
                                         $property->purchase_price = (int) $preise->kaufpreis;
+                                        $property->purchase_price_on_request = 'true' === (string) strtolower($preise->kaufpreis['auf_anfrage']);
                                     }
                                     if (count($preise->nettokaltmiete) > 0) {
                                         $property->cold_rent = (int) $preise->nettokaltmiete;

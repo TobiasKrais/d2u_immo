@@ -65,6 +65,7 @@
     ->ensureColumn(new \rex_sql_column('publish_address', 'TINYINT(1)', true))
     ->ensureColumn(new \rex_sql_column('purchase_price', 'INT(15)', true))
     ->ensureColumn(new \rex_sql_column('purchase_price_m2', 'INT(15)', true))
+    ->ensureColumn(new \rex_sql_column('purchase_price_on_request', 'INT(1)', true))
     ->ensureColumn(new \rex_sql_column('cold_rent', 'INT(15)', true))
     ->ensureColumn(new \rex_sql_column('price_plus_vat', 'TINYINT(1)', true))
     ->ensureColumn(new \rex_sql_column('additional_costs', 'INT(15)', true))

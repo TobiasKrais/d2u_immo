@@ -16,7 +16,7 @@
 <ul>
 	<li>Import Plugin hinzugefügt: es ist nun möglich OpenImmo ZIP Dateien zu importieren.</li>
 	<li>Export Plugin: Linkedin Export entfernt, da die Linkedin API V1 schon länger nicht mehr Unterstützt wurde.</li>
-	<li>Neue Felder Denkmalgeschützt, Jahrgang des Energieausweises hinzugefügt.</li>
+	<li>Neue Felder Denkmalgeschützt, Jahrgang des Energieausweises und Kaufpreis auf Anfrage hinzugefügt.</li>
 	<li>README hinzugefügt.</li>
 	<li>Bugfix: Wohnungstyp für Etagenwohnungen war inkorrekt in der Datenbank gespeichert.</li>
 	<li>Bugfix: Mehrsprachige Seiten enthielten einen Fehler bei der Anzeige der Übersetzungsaktion.</li>
