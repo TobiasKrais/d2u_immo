@@ -398,11 +398,9 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 
                             $d2u_helper = rex_addon::get('d2u_helper');
                             $api_key = '';
-                            if ($d2u_helper->hasConfig('maps_key')) {
-                                $api_key = '?key='. $d2u_helper->getConfig('maps_key');
-
+                            if ($d2u_helper->getConfig('maps_key', '') !== '') {
                         ?>
-						<script src="https://maps.googleapis.com/maps/api/js<?= $api_key ?>"></script>
+						<script src="https://maps.googleapis.com/maps/api/js?key=<?= $d2u_helper->getConfig('maps_key') ?>"></script>
 						<script>
 							function geocode() {
 								if($("input[name='form[street]']").val() === "" || $("input[name='form[house_number]']").val() === "" || $("input[name='form[city]']").val() === "") {
@@ -438,8 +436,11 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 if (0.0 === $property->latitude && 0.0 === $property->longitude) {
                                     echo '<script>jQuery(document).ready(function($) { $("#check_geocode").parent().hide(); });</script>';
                                 }
+                                d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
                             }
-                            d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
+                            else {
+                                d2u_addon_backend_helper::form_infotext('d2u_immo_geocode_hint_manual', 'hint_geocoding');
+                            }
                             d2u_addon_backend_helper::form_input('d2u_immo_property_longitude', 'form[longitude]', (string) $property->longitude, false, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('d2u_immo_property_latitude', 'form[latitude]', (string) $property->latitude, false, $readonly, 'text');
                             d2u_addon_backend_helper::form_input('d2u_immo_property_floor', 'form[floor]', $property->floor, false, $readonly, 'number');

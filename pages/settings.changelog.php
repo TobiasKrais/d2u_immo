@@ -17,6 +17,7 @@
 	<li>Import Plugin hinzugefügt: es ist nun möglich OpenImmo ZIP Dateien zu importieren.</li>
 	<li>Export Plugin: Linkedin Export entfernt, da die Linkedin API V1 schon länger nicht mehr Unterstützt wurde.</li>
 	<li>Neue Felder Denkmalgeschützt, Jahrgang des Energieausweises und Kaufpreis auf Anfrage hinzugefügt.</li>
+	<li>Hinweistext zur Bestimmung der Längen- und Breitengrade eines Objekts verbessert, wenn Google Maps API Key nicht im D2U Helper Addon eingetragen ist.</li>
 	<li>README hinzugefügt.</li>
 	<li>Bugfix: Wohnungstyp für Etagenwohnungen war inkorrekt in der Datenbank gespeichert.</li>
 	<li>Bugfix: Mehrsprachige Seiten enthielten einen Fehler bei der Anzeige der Übersetzungsaktion.</li>
