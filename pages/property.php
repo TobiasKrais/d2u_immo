@@ -400,7 +400,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             $api_key = '';
                             if ($d2u_helper->getConfig('maps_key', '') !== '') {
                         ?>
-						<script src="https://maps.googleapis.com/maps/api/js?key=<?= $d2u_helper->getConfig('maps_key') ?>"></script>
+						<script src="https://maps.googleapis.com/maps/api/js?key=<?= (string) $d2u_helper->getConfig('maps_key') ?>"></script>
 						<script>
 							function geocode() {
 								if($("input[name='form[street]']").val() === "" || $("input[name='form[house_number]']").val() === "" || $("input[name='form[city]']").val() === "") {
@@ -593,10 +593,10 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 }
                             }
                             d2u_addon_backend_helper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, $property->contact instanceof Contact ? [$property->contact->contact_id] : [], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures', 1, $property->pictures, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);
-                            d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_location_plans', 3, $property->location_plans, $readonly);
+                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_pictures', 1, $property->pictures, $readonly);
+                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
+                            d2u_addon_backend_helper::form_imagelistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);
+                            d2u_addon_backend_helper::form_imagelistfield('d2u_immo_property_location_plans', 3, $property->location_plans, $readonly);
                             d2u_addon_backend_helper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, true, true, 'text');
                         ?>
 					</div>
