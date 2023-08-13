@@ -138,7 +138,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_
 	LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_properties AS properties ON lang.property_id = properties.property_id
 	LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS categories ON properties.category_id = categories.category_id AND lang.clang_id = categories.clang_id
 	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
-	WHERE clang.status = 1 AND properties.online_status = "online"');
+	WHERE clang.`status` = 1 AND properties.online_status = "online"');
 $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_categories AS
 	SELECT properties.category_id, categories_lang.clang_id, CONCAT_WS(" - ", parent_categories.name, categories_lang.name) AS name, CONCAT_WS(" - ", categories_lang.name, parent_categories.name) AS seo_title, categories_lang.teaser AS seo_description, categories.picture, categories_lang.updatedate
 	FROM '. \rex::getTablePrefix() .'d2u_immo_properties_lang AS lang
@@ -147,7 +147,7 @@ $sql->setQuery('CREATE OR REPLACE VIEW '. \rex::getTablePrefix() .'d2u_immo_url_
 	LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories AS categories ON categories_lang.category_id = categories.category_id
 	LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS parent_categories ON categories.parent_category_id = parent_categories.category_id AND lang.clang_id = parent_categories.clang_id
 	LEFT JOIN '. \rex::getTablePrefix() .'clang AS clang ON lang.clang_id = clang.id
-	WHERE clang.status = 1 AND properties.online_status = "online"');
+	WHERE clang.`status` = 1 AND properties.online_status = "online"');
 
 // Insert url schemes
 if (\rex_addon::get('url')->isAvailable()) {
