@@ -2,7 +2,6 @@
 
 namespace D2U_Immo;
 
-use d2u_addon_backend_helper;
 use Exception;
 use rex;
 use rex_api_exception;
@@ -454,7 +453,7 @@ class ImportOpenImmo
                                 if (count($kontaktperson->foto) > 0 && count($kontaktperson->foto->daten) > 0 && count($kontaktperson->foto->daten->pfad) > 0) {
                                     $contact_picture_url = 'EXTERN' === strtoupper($kontaktperson->foto['location']) ? $this->extract_cache_folder . trim($kontaktperson->foto->daten->pfad, DIRECTORY_SEPARATOR) : $kontaktperson->foto->daten->pfad;
                                     $contact_picture_pathInfo = pathinfo($contact_picture_url);
-                                    $contact_picture_filename = d2u_addon_backend_helper::getMediapoolFilename($contact_picture_pathInfo['basename']);
+                                    $contact_picture_filename = \TobiasKrais\D2UHelper\BackendHelper::getMediapoolFilename($contact_picture_pathInfo['basename']);
                                     $contact_picture = rex_media::get($contact_picture_filename);
                                     if ($contact_picture instanceof rex_media && $contact_picture->fileExists()) {
                                         // File already imported, unset in $old_medias, because remaining ones will be deleted
@@ -783,7 +782,7 @@ class ImportOpenImmo
                                             $pfad = (string) $anhang->daten->pfad;
                                             $anhang_url = 'EXTERN' === strtoupper((string) $anhang['location']) ? $this->extract_cache_folder . trim($pfad, DIRECTORY_SEPARATOR) : $pfad;
                                             $anhang_pathInfo = pathinfo($anhang_url);
-                                            $anhang_filename = d2u_addon_backend_helper::getMediapoolFilename($anhang_pathInfo['basename']);
+                                            $anhang_filename = \TobiasKrais\D2UHelper\BackendHelper::getMediapoolFilename($anhang_pathInfo['basename']);
                                             $anhang_rex_media = rex_media::get($anhang_filename);
                                             if ($anhang_rex_media instanceof rex_media && $anhang_rex_media->fileExists()) {
                                                 // File already imported, unset in $old_medias, because remaining ones will be deleted

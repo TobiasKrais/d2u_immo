@@ -174,12 +174,12 @@ if (\rex_addon::get('url')->isAvailable()) {
         . "'{\"column_id\":\"category_id\",\"column_clang_id\":\"clang_id\",\"restriction_1_column\":\"\",\"restriction_1_comparison_operator\":\"=\",\"restriction_1_value\":\"\",\"restriction_2_logical_operator\":\"\",\"restriction_2_column\":\"\",\"restriction_2_comparison_operator\":\"=\",\"restriction_2_value\":\"\",\"restriction_3_logical_operator\":\"\",\"restriction_3_column\":\"\",\"restriction_3_comparison_operator\":\"=\",\"restriction_3_value\":\"\",\"column_segment_part_1\":\"name\",\"column_segment_part_2_separator\":\"\\/\",\"column_segment_part_2\":\"\",\"column_segment_part_3_separator\":\"\\/\",\"column_segment_part_3\":\"\",\"relation_1_column\":\"\",\"relation_1_position\":\"BEFORE\",\"relation_2_column\":\"\",\"relation_2_position\":\"BEFORE\",\"relation_3_column\":\"\",\"relation_3_position\":\"BEFORE\",\"append_user_paths\":\"\",\"append_structure_categories\":\"0\",\"column_seo_title\":\"seo_title\",\"column_seo_description\":\"seo_description\",\"column_seo_image\":\"picture\",\"sitemap_add\":\"1\",\"sitemap_frequency\":\"always\",\"sitemap_priority\":\"0.7\",\"column_sitemap_lastmod\":\"updatedate\"}', "
         . "'', '[]', '', '[]', '', '[]', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."', CURRENT_TIMESTAMP, '". (rex::getUser() instanceof rex_user ? rex::getUser()->getValue('login') : '') ."');");
 
-    \d2u_addon_backend_helper::generateUrlCache();
+    \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache();
 }
 
 // Media Manager media types
 $sql->setQuery('SELECT * FROM '. \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_immo_contact'");
-if (0 === (int) $sql->getRows()) {
+if (0 === $sql->getRows()) {
     $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
 		(1, 'd2u_immo_contact', 'D2U Immobilien Kontaktbild');");
     $last_id = $sql->getLastId();
@@ -188,7 +188,7 @@ if (0 === (int) $sql->getRows()) {
 		(". $last_id .", 'workspace', '{\"rex_effect_convert2img\":{\"rex_effect_convert2img_convert_to\":\"jpg\",\"rex_effect_convert2img_density\":\"100\"},\"rex_effect_crop\":{\"rex_effect_crop_width\":\"\",\"rex_effect_crop_height\":\"\",\"rex_effect_crop_offset_width\":\"\",\"rex_effect_crop_offset_height\":\"\",\"rex_effect_crop_hpos\":\"left\",\"rex_effect_crop_vpos\":\"top\"},\"rex_effect_filter_blur\":{\"rex_effect_filter_blur_repeats\":\"\",\"rex_effect_filter_blur_type\":\"\",\"rex_effect_filter_blur_smoothit\":\"\"},\"rex_effect_filter_colorize\":{\"rex_effect_filter_colorize_filter_r\":\"\",\"rex_effect_filter_colorize_filter_g\":\"\",\"rex_effect_filter_colorize_filter_b\":\"\"},\"rex_effect_filter_sharpen\":{\"rex_effect_filter_sharpen_amount\":\"\",\"rex_effect_filter_sharpen_radius\":\"\",\"rex_effect_filter_sharpen_threshold\":\"\"},\"rex_effect_flip\":{\"rex_effect_flip_flip\":\"X\"},\"rex_effect_header\":{\"rex_effect_header_download\":\"open_media\",\"rex_effect_header_cache\":\"no_cache\"},\"rex_effect_insert_image\":{\"rex_effect_insert_image_brandimage\":\"\",\"rex_effect_insert_image_hpos\":\"left\",\"rex_effect_insert_image_vpos\":\"top\",\"rex_effect_insert_image_padding_x\":\"\",\"rex_effect_insert_image_padding_y\":\"\"},\"rex_effect_mediapath\":{\"rex_effect_mediapath_mediapath\":\"\"},\"rex_effect_mirror\":{\"rex_effect_mirror_height\":\"\",\"rex_effect_mirror_set_transparent\":\"colored\",\"rex_effect_mirror_bg_r\":\"\",\"rex_effect_mirror_bg_g\":\"\",\"rex_effect_mirror_bg_b\":\"\"},\"rex_effect_resize\":{\"rex_effect_resize_width\":\"\",\"rex_effect_resize_height\":\"\",\"rex_effect_resize_style\":\"maximum\",\"rex_effect_resize_allow_enlarge\":\"enlarge\"},\"rex_effect_rotate\":{\"rex_effect_rotate_rotate\":\"0\"},\"rex_effect_rounded_corners\":{\"rex_effect_rounded_corners_topleft\":\"\",\"rex_effect_rounded_corners_topright\":\"\",\"rex_effect_rounded_corners_bottomleft\":\"\",\"rex_effect_rounded_corners_bottomright\":\"\"},\"rex_effect_workspace\":{\"rex_effect_workspace_width\":\"400\",\"rex_effect_workspace_height\":\"400\",\"rex_effect_workspace_hpos\":\"center\",\"rex_effect_workspace_vpos\":\"middle\",\"rex_effect_workspace_set_transparent\":\"colored\",\"rex_effect_workspace_bg_r\":\"255\",\"rex_effect_workspace_bg_g\":\"255\",\"rex_effect_workspace_bg_b\":\"255\"}}', 2, CURRENT_TIMESTAMP, 'd2u_immo');");
 }
 $sql->setQuery('SELECT * FROM '. \rex::getTablePrefix() ."media_manager_type WHERE name = 'd2u_immo_list_tile'");
-if (0 === (int) $sql->getRows()) {
+if (0 === $sql->getRows()) {
     $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."media_manager_type (`status`, `name`, `description`) VALUES
 		(1, 'd2u_immo_list_tile', 'D2U Immobilien Liste Vorschaubild');");
     $last_id = $sql->getLastId();
@@ -198,7 +198,7 @@ if (0 === (int) $sql->getRows()) {
 
 // YForm e-mail template
 $sql->setQuery('SELECT * FROM '. \rex::getTablePrefix() ."yform_email_template WHERE name = 'd2u_immo_request'");
-if (0 === (int) $sql->getRows()) {
+if (0 === $sql->getRows()) {
     $sql->setQuery('INSERT INTO '. \rex::getTablePrefix() ."yform_email_template (`name`, `mail_from`, `mail_from_name`, `mail_reply_to`, `mail_reply_to_name`, `subject`, `body`, `body_html`, `attachments`) VALUES
 		('d2u_immo_request', '', '', 'REX_YFORM_DATA[field=\"email\"]', 'REX_YFORM_DATA[field=\"name\"]', 'Immobilienanfrage', 'Immobilienanfrage von Internetseite:\r\nImmobilie: REX_YFORM_DATA[field=\"immo_name\"]\r\n\r\nEs fragt an:\r\nName: REX_YFORM_DATA[field=\"name\"]\r\nAnschrift: REX_YFORM_DATA[field=\"address\"]\r\nPLZ/Ort: REX_YFORM_DATA[field=\"zip\"] REX_YFORM_DATA[field=\"city\"]\r\nTelefon: REX_YFORM_DATA[field=\"phone\"]\r\nTelefon Anrufe gestattet: <?php print REX_YFORM_DATA[field=\"phone_calls\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\nEmail: REX_YFORM_DATA[field=\"email\"]\r\nDatenschutzerklärung zugestimmt: <?php print REX_YFORM_DATA[field=\"privacy_policy_accepted\"] == 1 ? \"Ja\" : \"Nein\"; ?>\r\n\r\nNachricht: REX_YFORM_DATA[field=\"message\"]\r\n', '', '')");
 } elseif (rex_version::compare($this->getVersion(), '1.1.4', '<')) { /** @phpstan-ignore-line */
@@ -206,7 +206,7 @@ if (0 === (int) $sql->getRows()) {
 }
 
 // Insert frontend translations
-if (class_exists('d2u_immo_lang_helper')) {
+if (class_exists(d2u_immo_lang_helper::class)) {
     d2u_immo_lang_helper::factory()->install();
 }
 
@@ -216,25 +216,25 @@ if (!$this->hasConfig()) { /** @phpstan-ignore-line */
 }
 
 // Update language replacements
-if (!class_exists('d2u_immo_lang_helper')) {
+if (!class_exists(d2u_immo_lang_helper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_immo_lang_helper.php';
 }
 d2u_immo_lang_helper::factory()->install();
 
 // Update modules
-if (class_exists('D2UModuleManager')) {
+if (class_exists(TobiasKrais\D2UHelper\ModuleManager::class)) {
     $modules = [];
-    $modules[] = new D2UModule('70-1',
+    $modules[] = new \TobiasKrais\D2UHelper\Module('70-1',
         'D2U Immo Addon - Hauptausgabe',
         23);
-    $modules[] = new D2UModule('70-2',
+    $modules[] = new \TobiasKrais\D2UHelper\Module('70-2',
         'D2U Immo Addon - Infobox Ansprechpartner',
         5);
-    $modules[] = new D2UModule('70-3',
+    $modules[] = new \TobiasKrais\D2UHelper\Module('70-3',
         'D2U Immo Addon - Ausgabe Kategorie',
         5);
 
-    $d2u_module_manager = new D2UModuleManager($modules, '', 'd2u_immo');
+    $d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager($modules, '', 'd2u_immo');
     $d2u_module_manager->autoupdate();
 }

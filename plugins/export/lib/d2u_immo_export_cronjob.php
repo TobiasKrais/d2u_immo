@@ -2,7 +2,7 @@
 /**
  * Offers helper functions for export plugin.
  */
-class d2u_immo_export_cronjob extends D2U_Helper\ACronJob
+class d2u_immo_export_cronjob extends TobiasKrais\D2UHelper\ACronJob
 {
     /**
      * Create a new instance of object.

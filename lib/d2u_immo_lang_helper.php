@@ -3,7 +3,7 @@
  * @api
  * Offers helper functions for language issues.
  */
-class d2u_immo_lang_helper extends \D2U_Helper\ALangHelper
+class d2u_immo_lang_helper extends \TobiasKrais\D2UHelper\ALangHelper
 {
     /**
      * @var array<string,string> Array with english replacements. Key is the wildcard,

@@ -5,7 +5,7 @@
 ->alter();
 
 // Delete Autoexport if activated
-if (!class_exists('D2U_Immo::ImportCronjob')) {
+if (!class_exists(D2U_Immo\ImportCronjob::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/ImportCronjob.php';
 }

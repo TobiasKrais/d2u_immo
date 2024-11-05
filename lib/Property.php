@@ -2,7 +2,6 @@
 
 namespace D2U_Immo;
 
-use d2u_addon_backend_helper;
 use rex;
 use rex_addon;
 use rex_config;
@@ -19,7 +18,7 @@ use function is_array;
  * @api
  * Property objects.
  */
-class Property implements \D2U_Helper\ITranslationHelper
+class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
 {
     /** @var int probperty ID */
     public int $property_id = 0;
@@ -471,8 +470,8 @@ class Property implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / update search_it index
-        d2u_addon_backend_helper::generateUrlCache('property_id');
-        d2u_addon_backend_helper::generateUrlCache('category_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('property_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('category_id');
     }
 
     /**
@@ -536,7 +535,7 @@ class Property implements \D2U_Helper\ITranslationHelper
             .'WHERE property_id = '. $this->property_id;
         $result_main = rex_sql::factory();
         $result_main->setQuery($query_main);
-        if (0 === (int) $result_main->getRows()) {
+        if (0 === $result_main->getRows()) {
             $query = 'DELETE FROM '. rex::getTablePrefix() .'d2u_immo_properties '
                 .'WHERE property_id = '. $this->property_id;
             $result = rex_sql::factory();
@@ -547,8 +546,8 @@ class Property implements \D2U_Helper\ITranslationHelper
         }
 
         // Don't forget to regenerate URL cache / update search_it index
-        d2u_addon_backend_helper::generateUrlCache('property_id');
-        d2u_addon_backend_helper::generateUrlCache('category_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('property_id');
+        \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('category_id');
     }
 
     /**
@@ -884,8 +883,8 @@ class Property implements \D2U_Helper\ITranslationHelper
 
         // Update URLs
         if ($regenerate_urls) {
-            d2u_addon_backend_helper::generateUrlCache('property_id');
-            d2u_addon_backend_helper::generateUrlCache('category_id');
+            \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('property_id');
+            \TobiasKrais\D2UHelper\BackendHelper::generateUrlCache('category_id');
         }
 
         return $error;
@@ -910,7 +909,7 @@ class Property implements \D2U_Helper\ITranslationHelper
 
         // When prio is too high or was deleted, simply add at end
         if ($this->priority > $result->getRows() || $delete) {
-            $this->priority = (int) $result->getRows() + 1;
+            $this->priority = $result->getRows() + 1;
         }
 
         $properties = [];

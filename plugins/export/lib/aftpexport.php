@@ -150,7 +150,7 @@ abstract class AFTPExport extends AExport
     protected function upload()
     {
         // Establish connection and ...
-        $connection_id = ftp_connect($this->provider->ftp_server);
+        $connection_id = ftp_ssl_connect($this->provider->ftp_server);
         if (false !== $connection_id) {
             // ... login
             $login_result = ftp_login($connection_id, $this->provider->ftp_username, $this->provider->ftp_password);

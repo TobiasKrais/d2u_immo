@@ -5,7 +5,7 @@ namespace D2U_Immo;
 /**
  * Offers helper functions for import plugin.
  */
-class ImportCronjob extends \D2U_Helper\ACronJob
+class ImportCronjob extends \TobiasKrais\D2UHelper\ACronJob
 {
     /**
      * Create a new instance of object.

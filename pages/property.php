@@ -4,7 +4,7 @@ use D2U_Immo\Category;
 use D2U_Immo\Contact;
 
 $func = rex_request('func', 'string');
-$entry_id = (int) rex_request('entry_id', 'int');
+$entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
 
 // Print comments
@@ -193,7 +193,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    d2u_addon_backend_helper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$property->translation_needs_update], 1, false, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$property->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" name="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -211,13 +211,13 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    d2u_addon_backend_helper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $property->name, $required, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_input('d2u_immo_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $property->teaser, $required, $readonly_lang, 'text');
-                                    d2u_addon_backend_helper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $property->description, 10, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_location', 'form[lang]['. $rex_clang->getId() .'][description_location]', $property->description_location, 5, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_equipment', 'form[lang]['. $rex_clang->getId() .'][description_equipment]', $property->description_equipment, 5, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_textarea('d2u_immo_property_description_others', 'form[lang]['. $rex_clang->getId() .'][description_others]', $property->description_others, 5, false, $readonly_lang, true);
-                                    d2u_addon_backend_helper::form_medialistfield('d2u_immo_property_documents', 10 + $rex_clang->getId(), $property->documents, $readonly_lang);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $property->name, $required, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $property->teaser, $required, $readonly_lang, 'text');
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $property->description, 10, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_immo_property_description_location', 'form[lang]['. $rex_clang->getId() .'][description_location]', $property->description_location, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_immo_property_description_equipment', 'form[lang]['. $rex_clang->getId() .'][description_equipment]', $property->description_equipment, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_immo_property_description_others', 'form[lang]['. $rex_clang->getId() .'][description_others]', $property->description_others, 5, false, $readonly_lang, true);
+                                    \TobiasKrais\D2UHelper\BackendHelper::form_medialistfield('d2u_immo_property_documents', 10 + $rex_clang->getId(), $property->documents, $readonly_lang);
                                 ?>
 							</div>
 						</div>
@@ -243,17 +243,17 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                     $options_categories[$category->category_id] = $category->name;
                                 }
                             }
-                            d2u_addon_backend_helper::form_select('d2u_helper_category', 'form[category_id]', $options_categories, $property->category instanceof Category ? [$property->category->category_id] : [], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_category', 'form[category_id]', $options_categories, $property->category instanceof Category ? [$property->category->category_id] : [], 1, false, $readonly);
                             $options_type_of_use = ['WOHNEN' => rex_i18n::msg('d2u_immo_property_type_of_use_WOHNEN'),
                                 'GEWERBE' => rex_i18n::msg('d2u_immo_property_type_of_use_GEWERBE'),
                                 'ANLAGE' => rex_i18n::msg('d2u_immo_property_type_of_use_ANLAGE'),
                                 'WAZ' => rex_i18n::msg('d2u_immo_property_type_of_use_WAZ')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_type_of_use', 'form[type_of_use]', $options_type_of_use, [$property->type_of_use], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_type_of_use', 'form[type_of_use]', $options_type_of_use, [$property->type_of_use], 1, false, $readonly);
                             $options_market_type = ['KAUF' => rex_i18n::msg('d2u_immo_property_market_type_KAUF'),
                                 //								'ERBPACHT' => rex_i18n::msg('d2u_immo_property_market_type_ERBPACHT'),
                                 //								'LEASING' => rex_i18n::msg('d2u_immo_property_market_type_LEASING'),
                                 'MIETE_PACHT' => rex_i18n::msg('d2u_immo_property_market_type_MIETE_PACHT')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_market_type', 'form[market_type]', $options_market_type, [$property->market_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_market_type', 'form[market_type]', $options_market_type, [$property->market_type], 1, false, $readonly);
                             $options_object_type = ['wohnung' => rex_i18n::msg('d2u_immo_property_object_type_wohnung'),
                                 //								'zimmer' => rex_i18n::msg('d2u_immo_property_object_type_zimmer'),
                                 'haus' => rex_i18n::msg('d2u_immo_property_object_type_haus'),
@@ -267,7 +267,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 //								'freizeitimmobilie_gewerblich' => rex_i18n::msg('d2u_immo_property_object_type_freizeitimmobilie_gewerblich'),
                                 //								'zinshaus_renditeobjekt' => rex_i18n::msg('d2u_immo_property_object_type_zinshaus_renditeobjekt'),
                                 'sonstige' => rex_i18n::msg('d2u_immo_property_object_type_sonstige')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_type', 'form[object_type]', $options_object_type, [$property->object_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_type', 'form[object_type]', $options_object_type, [$property->object_type], 1, false, $readonly);
                             $options_apartment_type = ['KEINE_ANGABE' => rex_i18n::msg('d2u_immo_property_type_KEINE_ANGABE'),
                                 'DACHGESCHOSS' => rex_i18n::msg('d2u_immo_property_apartment_type_DACHGESCHOSS'),
                                 'MAISONETTE' => rex_i18n::msg('d2u_immo_property_apartment_type_MAISONETTE'),
@@ -277,7 +277,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'ETAGE' => rex_i18n::msg('d2u_immo_property_apartment_type_ETAGE'),
                                 'ERDGESCHOSS' => rex_i18n::msg('d2u_immo_property_apartment_type_ERDGESCHOSS'),
                                 'SOUTERRAIN' => rex_i18n::msg('d2u_immo_property_apartment_type_SOUTERRAIN')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[apartment_type]', $options_apartment_type, [$property->apartment_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_subtype', 'form[apartment_type]', $options_apartment_type, [$property->apartment_type], 1, false, $readonly);
                             $options_house_type = ['KEINE_ANGABE' => rex_i18n::msg('d2u_immo_property_type_KEINE_ANGABE'),
                                 'APARTMENTHAUS' => rex_i18n::msg('d2u_immo_property_house_type_APARTMENTHAUS'),
                                 'BAUERNHAUS' => rex_i18n::msg('d2u_immo_property_house_type_BAUERNHAUS'),
@@ -305,7 +305,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'STRANDHAUS' => rex_i18n::msg('d2u_immo_property_house_type_STRANDHAUS'),
                                 'VILLA' => rex_i18n::msg('d2u_immo_property_house_type_VILLA'),
                                 'ZWEIFAMILIENHAUS' => rex_i18n::msg('d2u_immo_property_house_type_ZWEIFAMILIENHAUS')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[house_type]', $options_house_type, [$property->house_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_subtype', 'form[house_type]', $options_house_type, [$property->house_type], 1, false, $readonly);
                             $options_land_type = ['WOHNEN' => rex_i18n::msg('d2u_immo_property_land_type_WOHNEN'),
                                 'GEWERBE' => rex_i18n::msg('d2u_immo_property_land_type_GEWERBE'),
                                 'INDUSTRIE' => rex_i18n::msg('d2u_immo_property_land_type_INDUSTRIE'),
@@ -315,7 +315,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'GEWERBEPARK' => rex_i18n::msg('d2u_immo_property_land_type_GEWERBEPARK'),
                                 'SEELIEGENSCHAFT' => rex_i18n::msg('d2u_immo_property_land_type_SEELIEGENSCHAFT'),
                                 'SONDERNUTZUNG' => rex_i18n::msg('d2u_immo_property_land_type_SONDERNUTZUNG')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[land_type]', $options_land_type, [$property->land_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_subtype', 'form[land_type]', $options_land_type, [$property->land_type], 1, false, $readonly);
                             $options_office_type = ['BUEROFLAECHE' => rex_i18n::msg('d2u_immo_property_office_type_BUEROFLAECHE'),
                                 'BUEROHAUS' => rex_i18n::msg('d2u_immo_property_office_type_BUEROHAUS'),
                                 'BUEROZENTRUM' => rex_i18n::msg('d2u_immo_property_office_type_BUEROZENTRUM'),
@@ -326,7 +326,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'PRAXISHAUS' => rex_i18n::msg('d2u_immo_property_office_type_PRAXISHAUS'),
                                 'SHARED_OFFICE' => rex_i18n::msg('d2u_immo_property_office_type_SHARED_OFFICE'),
                                 'AUSSTELLUNGSFLAECHE' => rex_i18n::msg('d2u_immo_property_office_type_AUSSTELLUNGSFLAECHE')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[office_type]', $options_office_type, [$property->office_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_subtype', 'form[office_type]', $options_office_type, [$property->office_type], 1, false, $readonly);
                             $options_hall_warehouse_type = ['HALLE' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_HALLE'),
                                 'INDUSTRIEHALLE' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_INDUSTRIEHALLE'),
                                 'LAGER' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_LAGER'),
@@ -339,7 +339,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'SERVICE' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_SERVICE'),
                                 'FREIFLAECHEN' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_FREIFLAECHEN'),
                                 'KUEHLHAUS' => rex_i18n::msg('d2u_immo_property_hall_warehouse_type_KUEHLHAUS')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[hall_warehouse_type]', $options_hall_warehouse_type, [$property->hall_warehouse_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_subtype', 'form[hall_warehouse_type]', $options_hall_warehouse_type, [$property->hall_warehouse_type], 1, false, $readonly);
                             $options_parking_type = ['BOOTSLIEGEPLATZ' => rex_i18n::msg('d2u_immo_property_parking_type_BOOTSLIEGEPLATZ'),
                                 'CARPORT' => rex_i18n::msg('d2u_immo_property_parking_type_CARPORT'),
                                 'DOPPELGARAGE' => rex_i18n::msg('d2u_immo_property_parking_type_DOPPELGARAGE'),
@@ -350,12 +350,12 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'STELLPLATZ' => rex_i18n::msg('d2u_immo_property_parking_type_STELLPLATZ'),
                                 'TIEFGARAGENSTELLPLATZ' => rex_i18n::msg('d2u_immo_property_parking_type_TIEFGARAGENSTELLPLATZ'),
                                 'TIEFGARAGE' => rex_i18n::msg('d2u_immo_property_parking_type_TIEFGARAGE')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[parking_type]', $options_parking_type, [$property->parking_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_subtype', 'form[parking_type]', $options_parking_type, [$property->parking_type], 1, false, $readonly);
                             $options_other_type = ['PARKHAUS' => rex_i18n::msg('d2u_immo_property_other_type_PARKHAUS'),
                                 'TANKSTELLE' => rex_i18n::msg('d2u_immo_property_other_type_TANKSTELLE'),
                                 'KRANKENHAUS' => rex_i18n::msg('d2u_immo_property_other_type_KRANKENHAUS'),
                                 'SONSTIGE' => rex_i18n::msg('d2u_immo_property_other_type_SONSTIGE')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_object_subtype', 'form[other_type]', $options_other_type, [$property->other_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_object_subtype', 'form[other_type]', $options_other_type, [$property->other_type], 1, false, $readonly);
                             $options_condition_type = ['' => rex_i18n::msg('d2u_immo_property_type_KEINE_ANGABE'),
                                 'ABRISSOBJEKT' => rex_i18n::msg('d2u_immo_property_condition_type_ABRISSOBJEKT'),
                                 'BAUFAELLIG' => rex_i18n::msg('d2u_immo_property_condition_type_BAUFAELLIG'),
@@ -372,8 +372,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'TEIL_VOLLRENOVIERT' => rex_i18n::msg('d2u_immo_property_condition_type_TEIL_VOLLRENOVIERT'),
                                 'TEIL_VOLLRENOVIERUNGSBED' => rex_i18n::msg('d2u_immo_property_condition_type_TEIL_VOLLRENOVIERUNGSBED'),
                                 'VOLL_SANIERT' => rex_i18n::msg('d2u_immo_property_condition_type_VOLL_SANIERT')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_condition_type', 'form[condition_type]', $options_condition_type, [$property->condition_type], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_listed_monument', 'form[listed_monument]', 'true', $property->listed_monument, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_condition_type', 'form[condition_type]', $options_condition_type, [$property->condition_type], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_listed_monument', 'form[listed_monument]', 'true', $property->listed_monument, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -381,10 +381,10 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_immo_property_address') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            d2u_addon_backend_helper::form_input('d2u_immo_contact_street', 'form[street]', $property->street, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_house_number', 'form[house_number]', $property->house_number, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_contact_zip_code', 'form[zip_code]', $property->zip_code, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_contact_city', 'form[city]', $property->city, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_street', 'form[street]', $property->street, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_house_number', 'form[house_number]', $property->house_number, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_zip_code', 'form[zip_code]', $property->zip_code, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_city', 'form[city]', $property->city, false, $readonly, 'text');
                             $options_country_code = ['DEU' => rex_i18n::msg('d2u_immo_property_country_code_DEU'),
                                 'FIN' => rex_i18n::msg('d2u_immo_property_country_code_FIN'),
                                 'FRA' => rex_i18n::msg('d2u_immo_property_country_code_FRA'),
@@ -394,7 +394,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'CHE' => rex_i18n::msg('d2u_immo_property_country_code_CHE'),
                                 'SWE' => rex_i18n::msg('d2u_immo_property_country_code_SWE'),
                                 'ESP' => rex_i18n::msg('d2u_immo_property_country_code_ESP')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_country_code', 'form[country_code]', $options_country_code, [$property->country_code], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_country_code', 'form[country_code]', $options_country_code, [$property->country_code], 1, false, $readonly);
 
                             $d2u_helper = rex_addon::get('d2u_helper');
                             $api_key = '';
@@ -436,15 +436,15 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 if (0.0 === $property->latitude && 0.0 === $property->longitude) {
                                     echo '<script>jQuery(document).ready(function($) { $("#check_geocode").parent().hide(); });</script>';
                                 }
-                                d2u_addon_backend_helper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
+                                \TobiasKrais\D2UHelper\BackendHelper::form_infotext('d2u_helper_geocode_hint', 'hint_geocoding');
                             }
                             else {
-                                d2u_addon_backend_helper::form_infotext('d2u_immo_geocode_hint_manual', 'hint_geocoding');
+                                \TobiasKrais\D2UHelper\BackendHelper::form_infotext('d2u_immo_geocode_hint_manual', 'hint_geocoding');
                             }
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_longitude', 'form[longitude]', (string) $property->longitude, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_latitude', 'form[latitude]', (string) $property->latitude, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_floor', 'form[floor]', $property->floor, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_publish_address', 'form[publish_address]', 'true', $property->publish_address, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_longitude', 'form[longitude]', (string) $property->longitude, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_latitude', 'form[latitude]', (string) $property->latitude, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_floor', 'form[floor]', $property->floor, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_publish_address', 'form[publish_address]', 'true', $property->publish_address, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -452,17 +452,17 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_immo_property_equipment') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_flat_sharing_possible', 'form[flat_sharing_possible]', 'true', $property->flat_sharing_possible, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_flat_sharing_possible', 'form[flat_sharing_possible]', 'true', $property->flat_sharing_possible, $readonly);
                             $options_bath = ['BIDET' => rex_i18n::msg('d2u_immo_property_bath_BIDET'),
                                 'DUSCHE' => rex_i18n::msg('d2u_immo_property_bath_DUSCHE'),
                                 'FENSTER' => rex_i18n::msg('d2u_immo_property_bath_FENSTER'),
                                 'PISSOIR' => rex_i18n::msg('d2u_immo_property_bath_PISSOIR'),
                                 'WANNE' => rex_i18n::msg('d2u_immo_property_bath_WANNE')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_bath', 'form[bath][]', $options_bath, $property->bath, 5, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_bath', 'form[bath][]', $options_bath, $property->bath, 5, true, $readonly);
                             $options_kitchen = ['EBK' => rex_i18n::msg('d2u_immo_property_kitchen_EBK'),
                                 'OFFEN' => rex_i18n::msg('d2u_immo_property_kitchen_OFFEN'),
                                 'PANTRY' => rex_i18n::msg('d2u_immo_property_kitchen_PANTRY')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_kitchen', 'form[kitchen][]', $options_kitchen, $property->kitchen, 3, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_kitchen', 'form[kitchen][]', $options_kitchen, $property->kitchen, 3, true, $readonly);
                             $options_floor_type = ['DIELEN' => rex_i18n::msg('d2u_immo_property_floor_type_DIELEN'),
                                 'DOPPELBODEN' => rex_i18n::msg('d2u_immo_property_floor_type_DOPPELBODEN'),
                                 'ESTRICH' => rex_i18n::msg('d2u_immo_property_floor_type_ESTRICH'),
@@ -477,25 +477,25 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'STEIN' => rex_i18n::msg('d2u_immo_property_floor_type_STEIN'),
                                 'TEPPICH' => rex_i18n::msg('d2u_immo_property_floor_type_TEPPICH'),
                                 'TERRAKOTTA' => rex_i18n::msg('d2u_immo_property_floor_type_TERRAKOTTA')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_floor_type', 'form[floor_type][]', $options_floor_type, $property->floor_type, 5, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_floor_type', 'form[floor_type][]', $options_floor_type, $property->floor_type, 5, true, $readonly);
                             $options_heating_type = ['ETAGE' => rex_i18n::msg('d2u_immo_property_heating_type_ETAGE'),
                                 'FERN' => rex_i18n::msg('d2u_immo_property_heating_type_FERN'),
                                 'FUSSBODEN' => rex_i18n::msg('d2u_immo_property_heating_type_FUSSBODEN'),
                                 'OFEN' => rex_i18n::msg('d2u_immo_property_heating_type_OFEN'),
                                 'ZENTRAL' => rex_i18n::msg('d2u_immo_property_heating_type_ZENTRAL')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_heating_type', 'form[heating_type][]', $options_heating_type, $property->heating_type, 5, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_heating_type', 'form[heating_type][]', $options_heating_type, $property->heating_type, 5, true, $readonly);
                             $options_elevator = ['LASTEN' => rex_i18n::msg('d2u_immo_property_elevator_LASTEN'),
                                 'PERSONEN' => rex_i18n::msg('d2u_immo_property_elevator_PERSONEN')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_elevator', 'form[elevator][]', $options_elevator, $property->elevator, 2, true, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_wheelchair_accessable', 'form[wheelchair_accessable]', 'true', $property->wheelchair_accessable, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_cable_sat_tv', 'form[cable_sat_tv]', 'true', $property->cable_sat_tv, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_elevator', 'form[elevator][]', $options_elevator, $property->elevator, 2, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_wheelchair_accessable', 'form[wheelchair_accessable]', 'true', $property->wheelchair_accessable, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_cable_sat_tv', 'form[cable_sat_tv]', 'true', $property->cable_sat_tv, $readonly);
                             $options_broadband_internet = ['ADSL' => rex_i18n::msg('d2u_immo_property_broadband_internet_ADSL'),
                                 'DSL' => rex_i18n::msg('d2u_immo_property_broadband_internet_DSL'),
                                 'IPTV' => rex_i18n::msg('d2u_immo_property_broadband_internet_IPTV'),
                                 'SDSL' => rex_i18n::msg('d2u_immo_property_broadband_internet_SDSL'),
                                 'SKYDSL' => rex_i18n::msg('d2u_immo_property_broadband_internet_SKYDSL'),
                                 'VDSL' => rex_i18n::msg('d2u_immo_property_broadband_internet_VDSL')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_broadband_internet', 'form[broadband_internet][]', $options_broadband_internet, $property->broadband_internet, 5, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_broadband_internet', 'form[broadband_internet][]', $options_broadband_internet, $property->broadband_internet, 5, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -508,13 +508,13 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'ohne' => rex_i18n::msg('d2u_immo_property_energy_pass_year_without'),
                                 'nicht_noetig' => rex_i18n::msg('d2u_immo_property_energy_pass_year_not_necessary'),
                                 'bei_besichtigung' => rex_i18n::msg('d2u_immo_property_energy_pass_year_on_visit')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_energy_pass', 'form[energy_pass_year]', $options_energy_pass_year, [$property->energy_pass_year], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_energy_pass', 'form[energy_pass_year]', $options_energy_pass_year, [$property->energy_pass_year], 1, false, $readonly);
                             $options_energy_pass = ['BEDARF' => rex_i18n::msg('d2u_immo_property_energy_pass_BEDARF'),
                                 'VERBRAUCH' => rex_i18n::msg('d2u_immo_property_energy_pass_VERBRAUCH')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_energy_pass_kind', 'form[energy_pass]', $options_energy_pass, [$property->energy_pass], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_energy_pass_valid_until', 'form[energy_pass_valid_until]', $property->energy_pass_valid_until, false, $readonly, 'date');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_energy_consumption', 'form[energy_consumption]', $property->energy_consumption, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_energy_including_warm_water', 'form[including_warm_water]', 'true', $property->including_warm_water, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_energy_pass_kind', 'form[energy_pass]', $options_energy_pass, [$property->energy_pass], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_energy_pass_valid_until', 'form[energy_pass_valid_until]', $property->energy_pass_valid_until, false, $readonly, 'date');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_energy_consumption', 'form[energy_consumption]', $property->energy_consumption, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_energy_including_warm_water', 'form[including_warm_water]', 'true', $property->including_warm_water, $readonly);
                             $options_firing_type = ['ALTERNATIV' => rex_i18n::msg('d2u_immo_property_firing_type_ALTERNATIV'),
                                 'BLOCK' => rex_i18n::msg('d2u_immo_property_firing_type_BLOCK'),
                                 'ELEKTRO' => rex_i18n::msg('d2u_immo_property_firing_type_ELEKTRO'),
@@ -528,7 +528,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'SOLAR' => rex_i18n::msg('d2u_immo_property_firing_type_SOLAR'),
                                 'LUFTWP' => rex_i18n::msg('d2u_immo_property_firing_type_LUFTWP'),
                                 'ERDWAERME' => rex_i18n::msg('d2u_immo_property_firing_type_ERDWAERME')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_firing_type', 'form[firing_type][]', $options_firing_type, $property->firing_type, 5, true, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_firing_type', 'form[firing_type][]', $options_firing_type, $property->firing_type, 5, true, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -536,19 +536,19 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_immo_property_prices') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_purchase_price_on_request', 'form[purchase_price_on_request]', 'false', $property->purchase_price_on_request, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_purchase_price_on_request', 'form[purchase_price_on_request]', 'false', $property->purchase_price_on_request, $readonly);
                             $options_currency_code = ['EUR' => rex_i18n::msg('d2u_immo_property_currency_code_EUR'),
                                 'CHF' => rex_i18n::msg('d2u_immo_property_currency_code_CHF'),
                                 'USD' => rex_i18n::msg('d2u_immo_property_currency_code_USD')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_property_currency_code', 'form[currency_code]', $options_currency_code, [$property->currency_code], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_purchase_price', 'form[purchase_price]', $property->purchase_price, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_purchase_price_m2', 'form[purchase_price_m2]', $property->purchase_price_m2, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_cold_rent', 'form[cold_rent]', $property->cold_rent, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_additional_costs', 'form[additional_costs]', $property->additional_costs, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_price_plus_vat', 'form[price_plus_vat]', 'true', $property->price_plus_vat, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_deposit', 'form[deposit]', $property->deposit, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_courtage', 'form[courtage]', $property->courtage, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_courtage_incl_vat', 'form[courtage_incl_vat]', 'true', $property->courtage_incl_vat, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_property_currency_code', 'form[currency_code]', $options_currency_code, [$property->currency_code], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_purchase_price', 'form[purchase_price]', $property->purchase_price, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_purchase_price_m2', 'form[purchase_price_m2]', $property->purchase_price_m2, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_cold_rent', 'form[cold_rent]', $property->cold_rent, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_additional_costs', 'form[additional_costs]', $property->additional_costs, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_price_plus_vat', 'form[price_plus_vat]', 'true', $property->price_plus_vat, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_deposit', 'form[deposit]', $property->deposit, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_courtage', 'form[courtage]', $property->courtage, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_courtage_incl_vat', 'form[courtage_incl_vat]', 'true', $property->courtage_incl_vat, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -556,15 +556,15 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_immo_property_data') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_construction_year', 'form[construction_year]', $property->construction_year, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_living_area', 'form[living_area]', (string) $property->living_area, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_total_area', 'form[total_area]', (string) $property->total_area, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_land_area', 'form[land_area]', (string) $property->land_area, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_rooms', 'form[rooms]', (string) $property->rooms, false, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_parking_space_duplex', 'form[parking_space_duplex]', $property->parking_space_duplex, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_parking_space_simple', 'form[parking_space_simple]', $property->parking_space_simple, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_parking_space_garage', 'form[parking_space_garage]', $property->parking_space_garage, false, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_parking_space_undergroundcarpark', 'form[parking_space_undergroundcarpark]', $property->parking_space_undergroundcarpark, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_construction_year', 'form[construction_year]', $property->construction_year, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_living_area', 'form[living_area]', (string) $property->living_area, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_total_area', 'form[total_area]', (string) $property->total_area, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_land_area', 'form[land_area]', (string) $property->land_area, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_rooms', 'form[rooms]', (string) $property->rooms, false, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_parking_space_duplex', 'form[parking_space_duplex]', $property->parking_space_duplex, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_parking_space_simple', 'form[parking_space_simple]', $property->parking_space_simple, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_parking_space_garage', 'form[parking_space_garage]', $property->parking_space_garage, false, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_parking_space_undergroundcarpark', 'form[parking_space_undergroundcarpark]', $property->parking_space_undergroundcarpark, false, $readonly, 'number');
                         ?>
 					</div>
 				</fieldset>
@@ -575,29 +575,29 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             $options_status = ['online' => rex_i18n::msg('clang_online'),
                                 'offline' => rex_i18n::msg('clang_offline'),
                                 'archived' => rex_i18n::msg('d2u_immo_status_archived')];
-                            d2u_addon_backend_helper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$property->online_status], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$property->online_status], 1, false, $readonly);
                             if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                                d2u_addon_backend_helper::form_checkbox('d2u_immo_window_advertising_show', 'form[window_advertising_status]', 'true', 'online' === $property->window_advertising_status, $readonly);
+                                \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_window_advertising_show', 'form[window_advertising_status]', 'true', 'online' === $property->window_advertising_status, $readonly);
                             }
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_internal_object_number', 'form[internal_object_number]', $property->internal_object_number, true, $readonly, 'text');
-                            d2u_addon_backend_helper::form_input('header_priority', 'form[priority]', $property->priority, true, $readonly, 'number');
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_available_from', 'form[available_from]', $property->available_from, false, $readonly, 'date');
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_rented', 'form[rented]', 'true', $property->rented, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_animals', 'form[animals]', 'true', $property->animals, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_reserved', 'form[object_reserved]', 'true', $property->object_reserved, $readonly);
-                            d2u_addon_backend_helper::form_checkbox('d2u_immo_property_object_sold', 'form[object_sold]', 'true', $property->object_sold, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_internal_object_number', 'form[internal_object_number]', $property->internal_object_number, true, $readonly, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', $property->priority, true, $readonly, 'number');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_available_from', 'form[available_from]', $property->available_from, false, $readonly, 'date');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_rented', 'form[rented]', 'true', $property->rented, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_animals', 'form[animals]', 'true', $property->animals, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_object_reserved', 'form[object_reserved]', 'true', $property->object_reserved, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_object_sold', 'form[object_sold]', 'true', $property->object_sold, $readonly);
                             $options_contacts = [];
                             foreach (D2U_Immo\Contact::getAll() as $contact) {
                                 if ('' !== $contact->lastname) {
                                     $options_contacts[$contact->contact_id] = $contact->lastname .', '. $contact->firstname;
                                 }
                             }
-                            d2u_addon_backend_helper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, $property->contact instanceof Contact ? [$property->contact->contact_id] : [], 1, false, $readonly);
-                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_pictures', 1, $property->pictures, $readonly);
-                            d2u_addon_backend_helper::form_imagelistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
-                            d2u_addon_backend_helper::form_imagelistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);
-                            d2u_addon_backend_helper::form_imagelistfield('d2u_immo_property_location_plans', 3, $property->location_plans, $readonly);
-                            d2u_addon_backend_helper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, true, true, 'text');
+                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, $property->contact instanceof Contact ? [$property->contact->contact_id] : [], 1, false, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_helper_pictures', 1, $property->pictures, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_imagelistfield('d2u_immo_property_location_plans', 3, $property->location_plans, $readonly);
+                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, true, true, 'text');
                         ?>
 					</div>
 				</fieldset>
@@ -620,8 +620,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo d2u_addon_backend_helper::getCSS();
-        echo d2u_addon_backend_helper::getJS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
+        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
     ?>
 	<script>
 		function energy_pass_year_changer() {

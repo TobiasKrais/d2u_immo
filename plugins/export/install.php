@@ -46,7 +46,7 @@ if (!is_bool(rex_config::get('d2u_immo', 'export_autoexport', false))) {
 }
 
 // Insert frontend translations
-if (!class_exists('export_lang_helper')) {
+if (!class_exists(export_lang_helper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/export_lang_helper.php';
 }

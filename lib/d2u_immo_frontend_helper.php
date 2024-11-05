@@ -18,8 +18,8 @@ class d2u_immo_frontend_helper
         $alternate_URLs = [];
 
         // Prepare objects first for sorting in correct order
-        $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-        $url_id = d2u_addon_frontend_helper::getUrlId();
+        $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+        $url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
         if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['default' => 0]]) > 0 || 'property_id' === $url_namespace) {
             $property_id = (int) filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT);
@@ -57,8 +57,8 @@ class d2u_immo_frontend_helper
         $breadcrumbs = [];
 
         // Prepare objects first for sorting in correct order
-        $url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-        $url_id = d2u_addon_frontend_helper::getUrlId();
+        $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+        $url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 
         $category = false;
         $property = false;

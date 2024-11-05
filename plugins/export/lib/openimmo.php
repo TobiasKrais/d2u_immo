@@ -2,7 +2,7 @@
 
 namespace D2U_Immo;
 
-use d2u_addon_frontend_helper;
+use TobiasKrais\D2UHelper\FrontendHelper;
 use DOMDocument;
 use DOMNode;
 use Exception;
@@ -927,18 +927,18 @@ class OpenImmo extends AFTPExport
             // <lage>Traumhafte Lage</lage>
             if ('' !== $property->description_location) {
                 $lage = $xml->createElement('lage');
-                $lage->appendChild($xml->createTextNode(strip_tags(d2u_addon_frontend_helper::prepareEditorField($property->description_location))));
+                $lage->appendChild($xml->createTextNode(strip_tags(FrontendHelper::prepareEditorField($property->description_location))));
                 $freitexte->appendChild($lage);
             }
             // <ausstatt_beschr>Beschreibung Austattung</ausstatt_beschr>
             if ('' !== $property->description_equipment) {
                 $ausstatt_beschr = $xml->createElement('ausstatt_beschr');
-                $ausstatt_beschr->appendChild($xml->createTextNode(strip_tags(d2u_addon_frontend_helper::prepareEditorField($property->description_equipment))));
+                $ausstatt_beschr->appendChild($xml->createTextNode(strip_tags(FrontendHelper::prepareEditorField($property->description_equipment))));
                 $freitexte->appendChild($ausstatt_beschr);
             }
             // <objektbeschreibung>Objektbeschreibung</objektbeschreibung>
             $objektbeschreibung = $xml->createElement('objektbeschreibung');
-            $description = d2u_addon_frontend_helper::prepareEditorField($property->description);
+            $description = FrontendHelper::prepareEditorField($property->description);
             if ($property->price_plus_vat) {
                 // Immmowelt does not import <zzg_mehrwertsteuer>true</zzg_mehrwertsteuer>, so it is added to description
                 $description .= ' '. \Sprog\Wildcard::get('d2u_immo_prices_plus_vat', $property->clang_id) .'';
@@ -948,7 +948,7 @@ class OpenImmo extends AFTPExport
             // <sonstige_angaben>Sonstige Angaben</sonstige_angaben>
             if ('' !== $property->description_others) {
                 $sonstige_angaben = $xml->createElement('sonstige_angaben');
-                $sonstige_angaben->appendChild($xml->createTextNode(strip_tags(d2u_addon_frontend_helper::prepareEditorField($property->description_others))));
+                $sonstige_angaben->appendChild($xml->createTextNode(strip_tags(FrontendHelper::prepareEditorField($property->description_others))));
                 $freitexte->appendChild($sonstige_angaben);
             }
             // TODO: <xsd:element ref="user_defined_simplefield" minOccurs="0" maxOccurs="unbounded"/>

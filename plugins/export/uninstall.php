@@ -7,7 +7,7 @@ $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_expor
 $sql->setQuery('DROP TABLE IF EXISTS ' . rex::getTablePrefix() . 'd2u_immo_export_properties');
 
 // Delete Autoexport if activated
-if (!class_exists('d2u_immo_export_cronjob')) {
+if (!class_exists(d2u_immo_export_cronjob::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/d2u_immo_export_cronjob.php';
 }
@@ -17,7 +17,7 @@ if ($export_cronjob->isInstalled()) {
 }
 
 // Delete language replacements
-if (!class_exists('export_lang_helper')) {
+if (!class_exists(export_lang_helper::class)) {
     // Load class in case addon is deactivated
     require_once 'lib/export_lang_helper.php';
 }

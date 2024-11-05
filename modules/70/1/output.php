@@ -146,8 +146,8 @@ $d2u_immo = rex_addon::get('d2u_immo');
 $map_type = 'REX_VALUE[1]' === '' ? 'google' : 'REX_VALUE[1]'; // Backward compatibility /** @phpstan-ignore-line */
 $map_id = 'd2u' . md5((string) time());
 
-$url_namespace = d2u_addon_frontend_helper::getUrlNamespace();
-$url_id = d2u_addon_frontend_helper::getUrlId();
+$url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
+$url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 ?>
 
 <div id="d2u_immo_module_70_1" class="col-12">
@@ -552,7 +552,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description'. $tag_close .'</h2></div>';
-        echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description) .'</div>';
+        echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
@@ -564,7 +564,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_location'. $tag_close .'</h2></div>';
-        echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_location) .'</div>';
+        echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description_location) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
@@ -576,7 +576,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_equipment'. $tag_close .'</h2></div>';
-        echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_equipment) .'</div>';
+        echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description_equipment) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
@@ -588,7 +588,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="row page-break-avoid">';
         }
         echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_others'. $tag_close .'</h2></div>';
-        echo '<div class="col-12 print-border">'. d2u_addon_frontend_helper::prepareEditorField($property->description_others) .'</div>';
+        echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description_others) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '</div>';
@@ -802,6 +802,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                     }
                     else {
                         // Geolocation 1.x
+                        // @deprecated remove in Version 2
                         \Geolocation\tools::echoAssetTags(); /** @phpstan-ignore-line */
                     }
                 }
@@ -866,6 +867,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             }
             else {
                 // Geolocation 1.x
+                // @deprecated remove in Version 2
                 echo \Geolocation\mapset::take((int) $map_type) /** @phpstan-ignore-line */
                     ->attributes('id', $map_id)
                     ->dataset('position', [$property->latitude, $property->longitude])
@@ -1164,7 +1166,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				validate|empty|email|'. $tag_open .'d2u_immo_form_validate_email'. $tag_close .'
 				validate|type|email|email|'. $tag_open .'d2u_immo_form_validate_email_false'. $tag_close .'
 				validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'
-				validate|customfunction|validate_timer|d2u_addon_frontend_helper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
+				validate|customfunction|validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
 				action|tpl2email|d2u_immo_request|'. ($property->contact instanceof Contact ? $property->contact->email : rex::getErrorEmail());
 
@@ -1215,7 +1217,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				validate|empty|receipient_mail|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
 				validate|type|receipient_mail|email|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
 				validate|empty|message|'. $tag_open .'d2u_immo_recommendation_validate_message'. $tag_close .'
-				validate|customfunction|immo_contact_validate_timer|d2u_addon_frontend_helper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
+				validate|customfunction|immo_contact_validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
 
 				action|callback|sendRecommendation';
 

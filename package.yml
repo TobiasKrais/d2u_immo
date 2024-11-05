@@ -29,13 +29,13 @@ page:
 requires:
     redaxo: '>=5.10.0'
     packages:
-        d2u_helper: '>=1.13.0'
+        d2u_helper: '>=1.14.0'
         media_manager: '>=2.2'
         sprog: '>=1.0.0'
         url: '>=2.0'
         yform: '>=3.0'
         yrewrite: '>=2.0.1'
-    php: '>=7.4'
+    php: '>=8.0'
 
 default_config:
     default_category_sort: 'name'
