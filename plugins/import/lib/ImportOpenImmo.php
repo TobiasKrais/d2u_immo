@@ -92,7 +92,7 @@ class ImportOpenImmo
                     $this->log('Could not delete old file "'. $log_files[$i] .'".');
                 }
                 $logfile_info = pathinfo($log_files[$i]);
-                if (false === unlink(rex_path::addonData('d2u_immo', $logfile_info['filename'] .'.zip'))) {
+                if (file_exists(rex_path::addonData('d2u_immo', $logfile_info['filename'] .'.zip')) && false === unlink(rex_path::addonData('d2u_immo', $logfile_info['filename'] .'.zip'))) {
                     $return = false;
                     $this->log('Could not delete old file "'. $log_files[$i] .'".');
                 }
@@ -537,7 +537,7 @@ class ImportOpenImmo
                                     $preise = $xml_immobilie->preise[0];
                                     if (count($preise->kaufpreis) > 0) {
                                         $property->purchase_price = (int) $preise->kaufpreis;
-                                        $property->purchase_price_on_request = 'true' === strtolower($preise->kaufpreis['auf_anfrage']);
+                                        $property->purchase_price_on_request = isset($preise->kaufpreis['auf_anfrage']) && 'true' === strtolower($preise->kaufpreis['auf_anfrage']);
                                     }
                                     if (count($preise->nettokaltmiete) > 0) {
                                         $property->cold_rent = (int) $preise->nettokaltmiete;
@@ -717,10 +717,19 @@ class ImportOpenImmo
                                             $property->energy_pass = $energiepass->epart;
                                         }
                                         if (count($energiepass->gueltig_bis) > 0) {
-                                            $property->energy_pass_valid_until = $energiepass->gueltig_bis;
+                                            $gueltig_bis = (string) $energiepass->gueltig_bis;
+                                            // check if date is in format DD.MM.YYYY
+                                            if (preg_match('/^(\d{2})\.(\d{2})\.(\d{4})$/', $gueltig_bis, $matches)) {
+                                                $property->energy_pass_valid_until = "{$matches[3]}-{$matches[2]}-{$matches[1]}";
+                                            } else {
+                                                $property->energy_pass_valid_until = $gueltig_bis;
+                                            }
                                         }
                                         if (count($energiepass->energieverbrauchkennwert) > 0) {
                                             $property->energy_consumption = $energiepass->energieverbrauchkennwert;
+                                        }
+                                        else if (count($energiepass->endenergiebedarf) > 0) {
+                                            $property->energy_consumption = $energiepass->endenergiebedarf;
                                         }
                                         if (count($energiepass->mitwarmwasser) > 0) {
                                             $property->including_warm_water = 'true' === (string) $energiepass->mitwarmwasser;
