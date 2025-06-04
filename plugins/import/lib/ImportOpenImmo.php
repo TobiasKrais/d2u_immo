@@ -295,7 +295,7 @@ class ImportOpenImmo
                             // <nutzungsart WOHNEN="true" GEWERBE="false" ANLAGE="false" WAZ="false"/>
                             if (count($objektkategorie->nutzungsart) > 0) {
                                 foreach ($objektkategorie->nutzungsart[0]->attributes() as $attribute => $value) {
-                                    if ('true' === (string) $value) {
+                                    if (in_array(strtolower((string) $value), ['1', 'true'], true)) {
                                         $property->type_of_use = (string) $attribute;
                                         break;
                                     }
@@ -305,7 +305,7 @@ class ImportOpenImmo
                             // <vermarktungsart KAUF="true" MIETE_PACHT="false" ERBPACHT="false" LEASING="false"/>
                             if (count($objektkategorie->vermarktungsart) > 0) {
                                 foreach ($objektkategorie->vermarktungsart[0]->attributes() as $attribute => $value) {
-                                    if ('true' === (string) $value) {
+                                    if (in_array(strtolower((string) $value), ['1', 'true'], true)) {
                                         $property->market_type = (string) $attribute;
                                         break;
                                     }
@@ -537,7 +537,7 @@ class ImportOpenImmo
                                     $preise = $xml_immobilie->preise[0];
                                     if (count($preise->kaufpreis) > 0) {
                                         $property->purchase_price = (int) $preise->kaufpreis;
-                                        $property->purchase_price_on_request = isset($preise->kaufpreis['auf_anfrage']) && 'true' === strtolower($preise->kaufpreis['auf_anfrage']);
+                                        $property->purchase_price_on_request = isset($preise->kaufpreis['auf_anfrage']) && in_array(strtolower($preise->kaufpreis['auf_anfrage']), ['1', 'true'], true);
                                     }
                                     if (count($preise->nettokaltmiete) > 0) {
                                         $property->cold_rent = (int) $preise->nettokaltmiete;
@@ -546,14 +546,14 @@ class ImportOpenImmo
                                         $property->additional_costs = (int) $preise->nebenkosten;
                                     }
                                     if (count($preise->zzg_mehrwertsteuer) > 0) {
-                                        $property->price_plus_vat = 'true' === strtolower($preise->zzg_mehrwertsteuer);
+                                        $property->price_plus_vat = in_array(strtolower($preise->zzg_mehrwertsteuer), ['1', 'true'], true);
                                     }
                                     if (count($preise->kaufpreis_pro_qm) > 0) {
                                         $property->purchase_price_m2 = (int) $preise->kaufpreis_pro_qm;
                                     }
                                     if (count($preise->aussen_courtage) > 0) {
                                         $property->courtage = $preise->aussen_courtage;
-                                        $property->courtage_incl_vat = 'true' === strtolower($preise->aussen_courtage['mit_mwst']);
+                                        $property->courtage_incl_vat = in_array(strtolower($preise->aussen_courtage['mit_mwst']), ['1', 'true'], true);
                                     }
                                     if (count($preise->waehrung) > 0) {
                                         $property->currency_code = strtoupper($preise->waehrung['iso_waehrung']);
@@ -664,22 +664,22 @@ class ImportOpenImmo
                                     }
                                     if (count($ausstattung->stellplatzart) > 0) {
                                         foreach ($ausstattung->stellplatzart->attributes() as $attribute => $value) {
-                                            if ('DUPLEX' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                            if ('DUPLEX' === strtoupper($attribute) && in_array(strtolower($value->__toString()), ['1', 'true'], true)) {
                                                 $property->parking_space_duplex = 1;
-                                            } elseif ('FREIPLATZ' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                            } elseif ('FREIPLATZ' === strtoupper($attribute) && in_array(strtolower($value->__toString()), ['1', 'true'], true)) {
                                                 $property->parking_space_simple = 1;
-                                            } elseif ('GARAGE' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                            } elseif ('GARAGE' === strtoupper($attribute) && in_array(strtolower($value->__toString()), ['1', 'true'], true)) {
                                                 $property->parking_space_garage = 1;
-                                            } elseif ('TIEFGARAGE' === strtoupper($attribute) && 'true' === strtolower($value->__toString())) {
+                                            } elseif ('TIEFGARAGE' === strtoupper($attribute) && in_array(strtolower($value->__toString()), ['1', 'true'], true)) {
                                                 $property->parking_space_undergroundcarpark = 1;
                                             }
                                         }
                                     }
                                     if (count($ausstattung->rollstuhlgerecht) > 0) {
-                                        $property->wheelchair_accessable = 'true' === $ausstattung->rollstuhlgerecht;
+                                        $property->wheelchair_accessable = in_array(strtolower((string) $ausstattung->rollstuhlgerecht), ['1', 'true'], true);
                                     }
                                     if (count($ausstattung->kabel_sat_tv) > 0) {
-                                        $property->cable_sat_tv = 'true' === $ausstattung->kabel_sat_tv;
+                                        $property->cable_sat_tv = in_array(strtolower((string) $ausstattung->kabel_sat_tv), ['1', 'true'], true);
                                     }
                                     if (count($ausstattung->breitband_zugang) > 0) {
                                         $property->broadband_internet = [];
@@ -732,7 +732,7 @@ class ImportOpenImmo
                                             $property->energy_consumption = $energiepass->endenergiebedarf;
                                         }
                                         if (count($energiepass->mitwarmwasser) > 0) {
-                                            $property->including_warm_water = 'true' === (string) $energiepass->mitwarmwasser;
+                                            $property->including_warm_water = in_array(strtolower((string) $energiepass->mitwarmwasser), ['1', 'true'], true);
                                         }
                                         if (count($energiepass->jahrgang) > 0) {
                                             $property->energy_pass_year = $energiepass->jahrgang;
@@ -866,20 +866,23 @@ class ImportOpenImmo
                                 if (count($xml_immobilie->verwaltung_objekt) > 0) {
                                     $verwaltung_objekt = $xml_immobilie->verwaltung_objekt[0];
                                     if (count($verwaltung_objekt->objektadresse_freigeben) > 0) {
-                                        $property->publish_address = 'true' === (string) $verwaltung_objekt->objektadresse_freigeben;
+                                        $property->publish_address = in_array(strtolower((string) $verwaltung_objekt->objektadresse_freigeben), ['1', 'true'], true);
                                     }
                                     if (count($verwaltung_objekt->verfuegbar_ab) > 0) {
                                         $property->available_from = $verwaltung_objekt->verfuegbar_ab;
                                     }
                                     if (count($verwaltung_objekt->vermietet) > 0) {
-                                        $property->rented = 'true' === (string) $verwaltung_objekt->vermietet;
+                                        $property->rented = in_array(strtolower((string) $verwaltung_objekt->vermietet), ['1', 'true'], true);
                                     }
                                     if (count($verwaltung_objekt->haustiere) > 0) {
-                                        $property->animals = 'true' === (string) $verwaltung_objekt->haustiere;
+                                        $property->animals = in_array(strtolower((string) $verwaltung_objekt->haustiere), ['1', 'true'], true);
                                     }
                                     if (count($verwaltung_objekt->denkmalgeschuetzt) > 0) {
-                                        $property->listed_monument = 'true' === (string) $verwaltung_objekt->denkmalgeschuetzt;
-                                        $property->energy_pass_year = 'nicht_noetig';
+                                        $property->listed_monument = in_array(strtolower((string) $verwaltung_objekt->denkmalgeschuetzt), ['1', 'true'], true);
+                                        // listed monument does not need an energy pass
+                                        if (in_array(strtolower((string) $verwaltung_objekt->denkmalgeschuetzt), ['1', 'true'], true)) {
+                                            $property->energy_pass_year = 'nicht_noetig';
+                                        }
                                     }
                                 }
                             }
