@@ -15,7 +15,7 @@
 <p>1.3.1-DEV:</p>
 <ul>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe": Fehler bei der Ausgabe der Courtage behoben.</li>
-	<li>Import Plugin: Bugfix beim deutscher Datumseingabe des Energiepasses und Endenergiebedarfs. Außerdem 2 PHP Wernungen entfernt.</li>
+	<li>Import Plugin: Bugfix bei deutscher Datumseingabe des Energiepasses und Endenergiebedarfs, denkmalgeschützten Immobilien und der Ausstattung. Außerdem 2 PHP Warnungen entfernt.</li>
 </ul>
 <p>1.3.0:</p>
 <ul>

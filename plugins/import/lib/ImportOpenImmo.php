@@ -617,7 +617,7 @@ class ImportOpenImmo
                                     if (count($ausstattung->bad) > 0) {
                                         $property->bath = [];
                                         foreach ($ausstattung->bad[0]->attributes() as $attribute => $value) {
-                                            if ('TRUE' === strtoupper($value)) {
+                                            if (in_array(strtolower((string) $value), ['true', '1'], true)) {
                                                 $property->bath[] = $attribute;
                                             }
                                         }
@@ -625,7 +625,7 @@ class ImportOpenImmo
                                     if (count($ausstattung->kueche) > 0) {
                                         $property->kitchen = [];
                                         foreach ($ausstattung->kueche[0]->attributes() as $attribute => $value) {
-                                            if ('TRUE' === strtoupper($value)) {
+                                            if (in_array(strtolower((string) $value), ['true', '1'], true)) {
                                                 $property->kitchen[] = $attribute;
                                             }
                                         }
@@ -633,7 +633,7 @@ class ImportOpenImmo
                                     if (count($ausstattung->boden) > 0) {
                                         $property->floor_type = [];
                                         foreach ($ausstattung->boden[0]->attributes() as $attribute => $value) {
-                                            if ('TRUE' === strtoupper($value)) {
+                                            if (in_array(strtolower((string) $value), ['true', '1'], true)) {
                                                 $property->floor_type[] = $attribute;
                                             }
                                         }
@@ -641,7 +641,7 @@ class ImportOpenImmo
                                     if (count($ausstattung->heizungsart) > 0) {
                                         $property->heating_type = [];
                                         foreach ($ausstattung->heizungsart[0]->attributes() as $attribute => $value) {
-                                            if ('TRUE' === strtoupper($value)) {
+                                            if (in_array(strtolower((string) $value), ['true', '1'], true)) {
                                                 $property->heating_type[] = $attribute;
                                             }
                                         }
@@ -649,7 +649,7 @@ class ImportOpenImmo
                                     if (count($ausstattung->befeuerung) > 0) {
                                         $property->firing_type = [];
                                         foreach ($ausstattung->befeuerung[0]->attributes() as $attribute => $value) {
-                                            if ('TRUE' === strtoupper($value)) {
+                                            if (in_array(strtolower((string) $value), ['true', '1'], true)) {
                                                 $property->firing_type[] = $attribute;
                                             }
                                         }
@@ -657,7 +657,7 @@ class ImportOpenImmo
                                     if (count($ausstattung->fahrstuhl) > 0) {
                                         $property->elevator = [];
                                         foreach ($ausstattung->fahrstuhl[0]->attributes() as $attribute => $value) {
-                                            if ('TRUE' === strtoupper($value)) {
+                                            if (in_array(strtolower((string) $value), ['true', '1'], true)) {
                                                 $property->elevator[] = $attribute;
                                             }
                                         }
@@ -684,7 +684,7 @@ class ImportOpenImmo
                                     if (count($ausstattung->breitband_zugang) > 0) {
                                         $property->broadband_internet = [];
                                         foreach ($ausstattung->breitband_zugang[0]->attributes() as $attribute => $value) {
-                                            if ('TRUE' === strtoupper($value)) {
+                                            if (in_array(strtolower((string) $value), ['true', '1'], true)) {
                                                 $property->broadband_internet[] = $attribute;
                                             }
                                         }
@@ -879,6 +879,7 @@ class ImportOpenImmo
                                     }
                                     if (count($verwaltung_objekt->denkmalgeschuetzt) > 0) {
                                         $property->listed_monument = 'true' === (string) $verwaltung_objekt->denkmalgeschuetzt;
+                                        $property->energy_pass_year = 'nicht_noetig';
                                     }
                                 }
                             }
