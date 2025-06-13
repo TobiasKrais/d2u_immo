@@ -766,7 +766,7 @@ class ImportOpenImmo
                                         $property->description = $freitexte->objektbeschreibung;
                                         if ('' === $property->teaser) {
                                             // set first 160 characters of description as teaser, but do not cut off words
-                                            $property->teaser = mb_substr($property->description, 0, mb_strrpos(mb_substr($property->description, 0, 160), ' '));
+                                            $property->teaser = mb_substr($property->description, 0, mb_strrpos(mb_substr($property->description, 0, 160), ' ')) . (mb_strlen($property->description) > 160 ? '...' : '');
                                         }
                                     }
                                     if (count($freitexte->sonstige_angaben) > 0) {
