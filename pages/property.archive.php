@@ -3,19 +3,20 @@
 require_once 'property.php';
 
 if ('' === $func) { /** @phpstan-ignore-line */
-    $query = 'SELECT properties.property_id, lang.name AS propertyname, categories.name AS categoryname, priority '
+    $query = 'SELECT properties.property_id, lang.name AS propertyname, CONCAT(street, " ", house_number) AS `address`, categories.name AS categoryname, priority '
         .'FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
         .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
             .'ON properties.property_id = lang.property_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
         .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_categories_lang AS categories '
             .'ON properties.category_id = categories.category_id AND categories.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
         .'WHERE online_status = "archived" ';
+    $default_sort = [];
     if ('priority' === rex_config::get('d2u_immo', 'default_property_sort')) {
-        $query .= 'ORDER BY online_status DESC, priority ASC';
+         $default_sort = ['online_status' => 'DESC', 'priority' => 'ASC'];
     } else {
-        $query .= 'ORDER BY online_status DESC, propertyname ASC';
+        $default_sort = ['online_status' => 'DESC', 'propertyname' => 'ASC'];
     }
-    $list = rex_list::factory($query, 1000);
+    $list = rex_list::factory(query:$query, rowsPerPage:1000, defaultSort:$default_sort);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -26,13 +27,20 @@ if ('' === $func) { /** @phpstan-ignore-line */
 
     $list->setColumnLabel('property_id', rex_i18n::msg('id'));
     $list->setColumnLayout('property_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('property_id');
 
     $list->setColumnLabel('propertyname', rex_i18n::msg('d2u_helper_name'));
     $list->setColumnParams('propertyname', ['func' => 'edit', 'entry_id' => '###property_id###']);
+    $list->setColumnSortable('propertyname');
+
+    $list->setColumnLabel('address', rex_i18n::msg('d2u_immo_property_address'));
+    $list->setColumnSortable('address');
 
     $list->setColumnLabel('categoryname', rex_i18n::msg('d2u_helper_category'));
+    $list->setColumnSortable('categoryname');
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);
