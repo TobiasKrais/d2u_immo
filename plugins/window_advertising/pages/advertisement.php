@@ -20,7 +20,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $ad_id = $form['ad_id'];
 
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (false === $advertisement) {
+        if (!$advertisement instanceof D2U_Immo\Advertisement) {
             $advertisement = new D2U_Immo\Advertisement($ad_id, $rex_clang->getId());
             $advertisement->ad_id = $ad_id; // Ensure correct ID in case first language has no object
             $advertisement->priority = $form['priority'];
@@ -180,9 +180,8 @@ if ('' === $func) {
     $query = 'SELECT advertisements.ad_id, title, priority, online_status '
         . 'FROM '. rex::getTablePrefix() .'d2u_immo_window_advertising AS advertisements '
         . 'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_window_advertising_lang AS lang '
-            . 'ON advertisements.ad_id = lang.ad_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
-        .'ORDER BY priority ASC';
-    $list = rex_list::factory($query, 1000);
+            . 'ON advertisements.ad_id = lang.ad_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang');
+    $list = rex_list::factory(query:$query, rowsPerPage:1000, defaultSort:['priority' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -196,11 +195,14 @@ if ('' === $func) {
 
     $list->setColumnLabel('ad_id', rex_i18n::msg('id'));
     $list->setColumnLayout('ad_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('ad_id');
 
     $list->setColumnLabel('title', rex_i18n::msg('d2u_immo_window_advertising_title'));
     $list->setColumnParams('title', ['func' => 'edit', 'entry_id' => '###ad_id###']);
+    $list->setColumnSortable('title');
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
+    $list->setColumnSortable('priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

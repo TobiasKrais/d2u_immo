@@ -140,9 +140,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 
 if ('' === $func) {
     $query = 'SELECT contact_id, firstname, lastname, company '
-        . 'FROM '. \rex::getTablePrefix() .'d2u_immo_contacts '
-        . 'ORDER BY lastname, firstname ASC';
-    $list = rex_list::factory($query, 1000);
+        . 'FROM '. \rex::getTablePrefix() .'d2u_immo_contacts ';
+    $list = rex_list::factory(query:$query, rowsPerPage:1000, defaultSort:['lastname' => 'ASC', 'firstname' => 'ASC']);
 
     $list->addTableAttribute('class', 'table-striped table-hover');
 
@@ -156,14 +155,18 @@ if ('' === $func) {
 
     $list->setColumnLabel('contact_id', rex_i18n::msg('id'));
     $list->setColumnLayout('contact_id', ['<th class="rex-table-id">###VALUE###</th>', '<td class="rex-table-id">###VALUE###</td>']);
+    $list->setColumnSortable('contact_id');
 
     $list->setColumnLabel('firstname', rex_i18n::msg('d2u_immo_contact_firstname'));
     $list->setColumnParams('firstname', ['func' => 'edit', 'entry_id' => '###contact_id###']);
+    $list->setColumnSortable('firstname');
 
     $list->setColumnLabel('lastname', rex_i18n::msg('d2u_immo_contact_lastname'));
     $list->setColumnParams('lastname', ['func' => 'edit', 'entry_id' => '###contact_id###']);
+    $list->setColumnSortable('lastname');
 
     $list->setColumnLabel('company', rex_i18n::msg('d2u_immo_contact_company'));
+    $list->setColumnSortable('company');
 
     if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]'))) {
         $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
