@@ -27,7 +27,7 @@ page:
                 changelog: { title: 'translate:d2u_helper_help_chapter_changelog', icon: rex-icon fa-files-o }
 
 requires:
-    redaxo: '>=5.10.0'
+    redaxo: '>=5.15.0'
     packages:
         d2u_helper: '>=1.14.0'
         media_manager: '>=2.2'
