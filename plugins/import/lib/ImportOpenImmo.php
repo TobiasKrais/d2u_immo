@@ -741,13 +741,13 @@ class ImportOpenImmo
                                 }
 
                                 // <verkaufstatus stand="VERKAUFT">
-                                if (count($xml_immobilie->verkaufstatus) > 0) {
-                                    $verkaufstatus = $xml_immobilie->verkaufstatus[0];
-                                    if (isset($verkaufstatus['stand']) && in_array(strtoupper((string) $verkaufstatus['stand']), ['VERKAUFT', 'VERMIETET'], true)) {
-                                        $property->object_sold = 'VERKAUFT' === strtoupper((string) $verkaufstatus['stand']);
-                                        $property->object_reserved = 'RESERVIERT' === strtoupper((string) $verkaufstatus['stand']);
+                                    if (count($zustand_angaben->verkaufstatus) > 0) {
+                                        $verkaufstatus = $zustand_angaben->verkaufstatus[0];
+                                        if (isset($verkaufstatus['stand']) && in_array(strtoupper((string) $verkaufstatus['stand']), ['VERKAUFT', 'VERMIETET'], true)) {
+                                            $property->object_sold = 'VERKAUFT' === strtoupper((string) $verkaufstatus['stand']);
+                                            $property->object_reserved = 'RESERVIERT' === strtoupper((string) $verkaufstatus['stand']);
+                                        }
                                     }
-                                }
 
                                 // <freitexte>
                                 // <objekttitel>Traumwohnung</objekttitel>
