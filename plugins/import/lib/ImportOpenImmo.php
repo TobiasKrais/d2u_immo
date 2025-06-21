@@ -901,7 +901,9 @@ class ImportOpenImmo
                             }
                         }
 
-                        $property->category = new Category((int) rex_config::get('d2u_immo', 'import_category_id', 0), $clang_id);
+                        if (!$property->category instanceof Category) {
+                            $property->category = new Category((int) rex_config::get('d2u_immo', 'import_category_id', 0), $clang_id);
+                        }
                         $property->online_status = 'online';
                         $property->translation_needs_update = 'no';
 
