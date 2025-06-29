@@ -6,7 +6,6 @@ use TobiasKrais\D2UHelper\FrontendHelper;
 use DOMDocument;
 use DOMNode;
 use Exception;
-use rex_addon;
 use rex_i18n;
 
 use rex_media;
@@ -1174,7 +1173,7 @@ class OpenImmo extends AFTPExport
             return '';
 
         } catch (Exception $e) {
-            return rex_i18n::msg('d2u_machinery_export_xml_cannot_create') . ' - '. $e->getMessage();
+            return rex_i18n::msg('d2u_immo_export_xml_cannot_create') . ' - '. $e->getMessage();
         }
     }
 }
