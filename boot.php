@@ -1,17 +1,42 @@
 <?php
 
+use D2U_Immo\Advertisement;
+use D2U_Immo\Category;
+use D2U_Immo\Property;
+
 if (\rex::isBackend() && is_object(\rex::getUser())) {
     rex_perm::register('d2u_immo[]', rex_i18n::msg('d2u_immo_rights_all'));
     rex_perm::register('d2u_immo[edit_lang]', rex_i18n::msg('d2u_immo_rights_edit_lang'), rex_perm::OPTIONS);
     rex_perm::register('d2u_immo[edit_data]', rex_i18n::msg('d2u_immo_rights_edit_data'), rex_perm::OPTIONS);
     rex_perm::register('d2u_immo[settings]', rex_i18n::msg('d2u_immo_rights_settings'), rex_perm::OPTIONS);
     rex_view::addCssFile($this->getAssetsUrl('backend.css'));
-}
 
-if (\rex::isBackend()) {
+    rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_immo_translation_list(...));
+    rex_extension::register('ART_PRE_DELETED', rex_d2u_immo_article_is_in_use(...));
     rex_extension::register('CLANG_DELETED', rex_d2u_immo_clang_deleted(...));
     rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_immo_media_is_in_use(...));
-    rex_extension::register('ART_PRE_DELETED', rex_d2u_immo_article_is_in_use(...));
+}
+else if (\rex::isFrontend()) {
+    rex_extension::register('D2U_HELPER_ALTERNATE_URLS', rex_d2u_immo_alternate_urls(...));
+    rex_extension::register('D2U_HELPER_BREADCRUMBS', rex_d2u_immo_breadcrumbs(...));
+}
+
+/**
+ * Get alternate URLs.
+ * @param rex_extension_point<array<string>> $ep Redaxo extension point
+ * @return array<int,string> Addon url list
+ */
+function rex_d2u_immo_alternate_urls(rex_extension_point $ep) {
+    $params = $ep->getParams();
+    $url_namespace = (string) $params['url_namespace'];
+    $url_id = (int) $params['url_id'];
+
+    $url_list = \D2U_Immo\FrontendHelper::getAlternateURLs($url_namespace, $url_id);
+    if (count($url_list) === 0) {
+        $url_list = $ep->getSubject();
+    }
+
+    return $url_list;
 }
 
 /**
@@ -40,6 +65,24 @@ function rex_d2u_immo_article_is_in_use(rex_extension_point $ep)
     }
 
     return [];
+}
+
+/**
+ * Get breadcrumb part.
+ * @param rex_extension_point<array<string>> $ep Redaxo extension point
+ * @return array<int,string> HTML formatted breadcrumb elements
+ */
+function rex_d2u_immo_breadcrumbs(rex_extension_point $ep) {
+    $params = $ep->getParams();
+    $url_namespace = (string) $params['url_namespace'];
+    $url_id = (int) $params['url_id'];
+
+    $breadcrumbs = \D2U_Immo\FrontendHelper::getBreadcrumbs($url_namespace, $url_id);
+    if (count($breadcrumbs) === 0) {
+        $breadcrumbs = $ep->getSubject();
+    }
+
+    return $breadcrumbs;
 }
 
 /**
@@ -142,4 +185,82 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep)
     }
 
     return $warning;
+}
+
+/**
+ * Addon translation list.
+ * @param rex_extension_point<array<string>> $ep Redaxo extension point
+ * @return array<array<string,array<int,array<string,string>>|string>|string> Addon translation list
+ */
+function rex_d2u_immo_translation_list(rex_extension_point $ep) {
+    $params = $ep->getParams();
+    $source_clang_id = (int) $params['source_clang_id'];
+    $target_clang_id = (int) $params['target_clang_id'];
+    $filter_type = (string) $params['filter_type'];
+
+    $list = $ep->getSubject();
+    $list_entry = [
+        'addon_name' => rex_i18n::msg('d2u_immo'),
+        'pages' => []
+    ];
+
+    $categories = Category::getTranslationHelperObjects($target_clang_id, $filter_type);
+    if (count($categories) > 0) {
+        $html_categories = '<ul>';
+        foreach ($categories as $category) {
+            if ('' === $category->name) {
+                $category = new Category($category->category_id, $source_clang_id);
+            }
+            $html_categories .= '<li><a href="'. rex_url::backendPage('d2u_immo/category', ['entry_id' => $category->category_id, 'func' => 'edit']) .'">'. $category->name .'</a></li>';
+        }
+        $html_categories .= '</ul>';
+        
+        $list_entry['pages'][] = [
+            'title' => rex_i18n::msg('d2u_helper_category'),
+            'icon' => 'rex-icon-open-category',
+            'html' => $html_categories
+        ];
+    }
+
+    $properties = Property::getTranslationHelperObjects($target_clang_id, $filter_type);
+    if (count($properties) > 0) {
+        $html_properties = '<ul>';
+        foreach ($properties as $property) {
+            if ('' === $property->name) {
+                $property = new Property($property->property_id, $source_clang_id);
+            }
+            $html_properties .= '<li><a href="'. rex_url::backendPage('d2u_immo/property', ['entry_id' => $property->property_id, 'func' => 'edit']) .'">'. $property->name .'</a></li>';
+        }
+        $html_properties .= '</ul>';
+        
+        $list_entry['pages'][] = [
+            'title' => rex_i18n::msg('d2u_immo_properties'),
+            'icon' => 'fa-home',
+            'html' => $html_properties
+        ];
+    }
+
+    if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
+        $ads = Advertisement::getTranslationHelperObjects($target_clang_id, $filter_type);
+        if (count($ads) > 0) {
+            $html_ads = '<ul>';
+            foreach ($ads as $ad) {
+                if ('' === $ad->title) {
+                    $ad = new Advertisement($ad->ad_id, $source_clang_id);
+                }
+                $html_ads .= '<li><a href="'. rex_url::backendPage('d2u_immo/window_advertising/property', ['entry_id' => $ad->ad_id, 'func' => 'edit']) .'">'. $ad->title .'</a></li>';
+            }
+            $html_ads .= '</ul>';
+            
+            $list_entry['pages'][] = [
+                'title' => rex_i18n::msg('d2u_immo_window_advertising_ads'),
+                'icon' => 'fa-home',
+                'html' => $html_ads
+            ];
+        }
+    }
+
+    $list[] = $list_entry;
+
+    return $list;
 }
