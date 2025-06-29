@@ -10,6 +10,9 @@ d2u_immo_country_code = Dreistelliger Ländercode
 d2u_immo_geocode_hint_manual = <a href="https://wiki.opennet-initiative.de/wiki/Koordinaten_Bestimmung" target="_blank" style="text-decoration: underline">Link</a> zur manuellen Bestimmung der Längen- und Breitengrade.
 d2u_immo_house_number = Hausnummer
 d2u_immo_no_selection = Keine Auswahl
+d2u_immo_priority_changed = Die Priorität wurde angepasst.
+d2u_immo_priority_down = Nach unten schieben
+d2u_immo_priority_up = Nach oben schieben
 d2u_immo_status = Online Status
 d2u_immo_status_archived = Archiviert
 d2u_immo_teaser = Kurzbeschreibung

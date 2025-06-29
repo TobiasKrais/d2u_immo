@@ -1,0 +1,32 @@
+.priority-container {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    line-height: 1;
+}
+.priority-value {
+    padding: 6px 8px;
+    min-width: 30px;
+    text-align: center;
+}
+.priority-controls {
+    display: flex;
+    flex-direction: column;
+}
+.priority-btn {
+    display: block;
+    width: 20px;
+    height: 14px;
+    border: none;
+    text-decoration: none;
+    text-align: center;
+    line-height: 14px;
+    font-size: 10px;
+    transition: background-color 0.2s;
+}
+.priority-btn:hover {
+    text-decoration: none;
+}
+.priority-btn i {
+    font-size: 8px;
+}
