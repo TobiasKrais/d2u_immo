@@ -12,6 +12,10 @@
 
 <h2>Changelog</h2>
 
+<p>1.3.2-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.3.1:</p>
 <ul>
 	<li>Modul 70-1 "D2U Immo Addon - Hauptausgabe": Fehler bei der Ausgabe der Courtage behoben.</li>
