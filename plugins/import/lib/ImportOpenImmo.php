@@ -743,7 +743,7 @@ class ImportOpenImmo
                                 // <verkaufstatus stand="VERKAUFT">
                                     if (count($zustand_angaben->verkaufstatus) > 0) {
                                         $verkaufstatus = $zustand_angaben->verkaufstatus[0];
-                                        if (isset($verkaufstatus['stand']) && in_array(strtoupper((string) $verkaufstatus['stand']), ['VERKAUFT', 'VERMIETET'], true)) {
+                                        if (isset($verkaufstatus['stand']) && in_array(strtoupper((string) $verkaufstatus['stand']), ['VERKAUFT', 'VERMIETET', 'RESERVIERT'], true)) {
                                             $property->object_sold = 'VERKAUFT' === strtoupper((string) $verkaufstatus['stand']);
                                             $property->object_reserved = 'RESERVIERT' === strtoupper((string) $verkaufstatus['stand']);
                                         }

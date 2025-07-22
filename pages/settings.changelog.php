@@ -14,7 +14,7 @@
 
 <p>1.3.2-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix Import Plugin: Reserviert wurde nicht korrekt importiert.</li>
 </ul>
 <p>1.3.1:</p>
 <ul>
