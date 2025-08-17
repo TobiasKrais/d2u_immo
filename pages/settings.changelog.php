@@ -15,6 +15,7 @@
 <p>1.3.2-DEV:</p>
 <ul>
 	<li>Bugfix Import Plugin: Reserviert wurde nicht korrekt importiert.</li>
+	<li>Bugfix: Module wurden beim Update nicht korrekt aktualisiert.</li>
 </ul>
 <p>1.3.1:</p>
 <ul>

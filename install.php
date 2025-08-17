@@ -223,18 +223,6 @@ if (!class_exists(d2u_immo_lang_helper::class)) {
 d2u_immo_lang_helper::factory()->install();
 
 // Update modules
-if (class_exists(TobiasKrais\D2UHelper\ModuleManager::class)) {
-    $modules = [];
-    $modules[] = new \TobiasKrais\D2UHelper\Module('70-1',
-        'D2U Immo Addon - Hauptausgabe',
-        23);
-    $modules[] = new \TobiasKrais\D2UHelper\Module('70-2',
-        'D2U Immo Addon - Infobox Ansprechpartner',
-        5);
-    $modules[] = new \TobiasKrais\D2UHelper\Module('70-3',
-        'D2U Immo Addon - Ausgabe Kategorie',
-        5);
-
-    $d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager($modules, '', 'd2u_immo');
-    $d2u_module_manager->autoupdate();
-}
+include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'D2UImmoModules.php';
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\D2UImmoModules::getModules(), '', 'd2u_immo');
+$d2u_module_manager->autoupdate();
