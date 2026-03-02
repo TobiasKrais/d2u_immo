@@ -625,10 +625,13 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
     ?>
 	<script>
 		function energy_pass_year_changer() {
-			// Engery pass is not necessary for object tpye "grundstueck" and "parken", also for condition type "projektiert"
-			if ($("select[name='form[energy_pass_year]']").val() === "ohne"
-					|| $("select[name='form[energy_pass_year]']").val() === "nicht_noetig"
-					|| $("select[name='form[energy_pass_year]").val() === "bei_besichtigung") {
+            // Energy pass is not necessary for object type "grundstueck" and "parken", also for condition type "projektiert"
+            if ($("select[name='form[object_type]']").val() === "grundstueck"
+                    || $("select[name='form[object_type]']").val() === "parken"
+                    || $("select[name='form[condition_type]']").val() === "PROJEKTIERT"
+                    || $("select[name='form[energy_pass_year]']").val() === "ohne"
+                    || $("select[name='form[energy_pass_year]']").val() === "nicht_noetig"
+                    || $("select[name='form[energy_pass_year]']").val() === "bei_besichtigung") {
 				$("select[name='form[energy_pass]']").removeAttr('required');
 				$("input[name='form[energy_consumption]']").removeAttr('required');
 				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
@@ -651,10 +654,10 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		}
 
         function energy_pass_changer() {
-			// Engery pass is not necessary for object tpye "grundstueck" and "parken", also for condition type "projektiert"
+            // Energy pass is not necessary for object type "grundstueck" and "parken", also for condition type "projektiert"
 			if ($("select[name='form[object_type]']").val() === "grundstueck"
 					|| $("select[name='form[object_type]']").val() === "parken"
-					|| $("select[name='form[condition_type]").val() === "PROJEKTIERT") {
+                    || $("select[name='form[condition_type]']").val() === "PROJEKTIERT") {
 				$("select[name='form[energy_pass]']").removeAttr('required');
 				$("input[name='form[energy_consumption]']").removeAttr('required');
 				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
@@ -683,7 +686,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 				$("dl[id='form[purchase_price]']").hide();
 				$("input[name='form[purchase_price]']").removeAttr('required');
 				$("dl[id='form[purchase_price_m2]']").hide();
-				$("input[name='form[purchase_price_m2]").removeAttr('required');
+                $("input[name='form[purchase_price_m2]']").removeAttr('required');
 				$("dl[id='form[cold_rent]']").fadeIn();
 				$("input[name='form[cold_rent]']").prop('required', true);
 				$("dl[id='form[additional_costs]']").fadeIn();
@@ -805,7 +808,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                 $("dl[id='form[purchase_price]']").hide();
 				$("input[name='form[purchase_price]']").removeAttr('required');
 				$("dl[id='form[purchase_price_m2]']").hide();
-				$("input[name='form[purchase_price_m2]").removeAttr('required');
+                $("input[name='form[purchase_price_m2]']").removeAttr('required');
 				$("dl[id='form[price_plus_vat]']").hide();
 			}
 			else {
@@ -813,7 +816,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 				$("dl[id='form[purchase_price]']").fadeIn();
 				$("input[name='form[purchase_price]']").prop('required', true);
 				$("dl[id='form[purchase_price_m2]']").fadeIn();
-				$("input[name='form[purchase_price_m2]").prop('required', true);
+                $("input[name='form[purchase_price_m2]']").prop('required', true);
 				$("dl[id='form[price_plus_vat]']").fadeIn();
 			}
 		}
@@ -835,14 +838,16 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		$("select[name='form[object_type]']").on('change', function(e) {
 			object_type_changer($(this).val());
 			energy_pass_changer();
+            energy_pass_year_changer();
 		});
-		$("select[name='form[condition_type]").on('change', function(e) {
+        $("select[name='form[condition_type]']").on('change', function(e) {
 			energy_pass_changer();
+            energy_pass_year_changer();
 		});
-		$("select[name='form[energy_pass_year]").on('change', function(e) {
+        $("select[name='form[energy_pass_year]']").on('change', function(e) {
 			energy_pass_year_changer();
 		});
-		$("input[name='form[purchase_price_on_request]").on('change', function(e) {
+        $("input[name='form[purchase_price_on_request]']").on('change', function(e) {
 			purchase_price_changer();
 		});
 	</script>

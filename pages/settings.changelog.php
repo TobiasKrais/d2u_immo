@@ -17,6 +17,7 @@
 	<li>Bugfix Import Plugin: Reserviert wurde nicht korrekt importiert.</li>
 	<li>Bugfix: Module wurden beim Update nicht korrekt aktualisiert.</li>
 	<li>Bugfix Export Plugin: SSH Upload als Fallback wenn FTP Upload fehlschlägt.</li>
+	<li>Bugfix: Grundstücke und Parkplätze konnten nicht gespeichert werden.</li>
 </ul>
 <p>1.3.1:</p>
 <ul>
