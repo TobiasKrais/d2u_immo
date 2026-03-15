@@ -19,7 +19,7 @@ use function strlen;
 class OpenImmo extends AFTPExport
 {
     /** @var int Maximum number of attachments per property. Don't know how many are allowed. */
-    private $max_pics = 15;
+    private $max_pics = 50;
 
     /**
      * @var string Filename of the XML file for this export. EuropeMachinery

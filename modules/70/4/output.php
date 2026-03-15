@@ -118,11 +118,11 @@ if (!function_exists('printImages')) {
         echo '<div class="row">';
         foreach ($pics as $pic) {
             $media = rex_media::get($pic);
-            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-toggle="lightbox'. $lightbox_id .'" data-gallery="example-gallery'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
+            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-d2u-gallery="gallery-'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
             if ($media instanceof rex_media) {
                 echo ' data-title="'. $media->getValue('title') .'"';
             }
-            echo '>';
+            echo ' onclick="event.preventDefault(); d2uLightboxOpen(\'gallery-'. $lightbox_id .'\', this);">';
             echo '<img src="index.php?rex_media_type='. $type_thumb .'&rex_media_file='. $pic .'" class="img-fluid gallery-pic-box"';
             if ($media instanceof rex_media) {
                 echo ' alt="'. $media->getValue('title') .'" title="'. $media->getValue('title') .'"';
@@ -132,12 +132,6 @@ if (!function_exists('printImages')) {
         }
         echo '</div>';
         echo '</div>';
-        echo '<script>';
-        echo "$(document).on('click', '[data-toggle=\"lightbox". $lightbox_id ."\"]', function(event) {";
-        echo 'event.preventDefault();';
-        echo '$(this).ekkoLightbox({ alwaysShowClose: true	});';
-        echo '});';
-        echo '</script>';
     }
 }
 
@@ -261,17 +255,17 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
 
     if (null === $print) {
-        $print_modal_id = 'd2u-immo-print-modal-bs4-'. $property_id;
+        $print_modal_id = 'd2u-immo-print-modal-bs5-'. $property_id;
         echo '<div class="col-12 expose-navi d-print-none">';
         echo '<ul>';
         echo '<li><small><a href="'. rex_getUrl((int) $d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
         //	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
-        printRevocationNoticeLinks($property->getUrl(true), $widerrufsbelehrung, $print_modal_id, $tag_open, $tag_close, 4);
+        printRevocationNoticeLinks($property->getUrl(true), $widerrufsbelehrung, $print_modal_id, $tag_open, $tag_close, 5);
         if ('MIETE_PACHT' === $property->market_type && 'GEWERBE' !== $property->type_of_use && '' !== $d2u_immo->getConfig('even_informative_pdf', '')) {
             echo '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
         }
         echo '</ul>';
-        printRevocationNoticeModal($property->getUrl(true), $widerrufsbelehrung, $print_modal_id, $tag_open, $tag_close, 4);
+        printRevocationNoticeModal($property->getUrl(true), $widerrufsbelehrung, $print_modal_id, $tag_open, $tag_close, 5);
         echo '</div>';
 
         if ($property->contact instanceof Contact) {
@@ -286,19 +280,19 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     // Tabs
     if (null === $print) {
         echo '<div class="col-12 d-print-none">';
-        echo '<ul class="nav nav-pills" id="expose_tabs">';
-        echo '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></a></li>';
+        echo '<ul class="nav nav-pills" id="expose_tabs" role="tablist">';
+        echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" data-bs-target="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></button></li>';
         if (count($property->pictures) > 0 || count($property->pictures_360) > 0) {
-            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</span></a></li>';
+            echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link" data-bs-target="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</span></button></li>';
         }
         if ($property->publish_address) {
-            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></a></li>';
+            echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link" data-bs-target="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></button></li>';
         }
         if ('KAUF' === $property->market_type) {
-            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></a></li>';
+            echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link" data-bs-target="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></button></li>';
         }
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_request" id="tab_request_pill"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></a></li>';
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_recommendation"><span class="icon forward d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_recommendation'. $tag_close .'<span></a></li>';
+        echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link" data-bs-target="#tab_request" id="tab_request_pill"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></button></li>';
+        echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link" data-bs-target="#tab_recommendation"><span class="icon forward d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_recommendation'. $tag_close .'</span></button></li>';
         echo '</ul>';
         echo '</div>';
     }
@@ -1368,22 +1362,22 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
     // Tabs
     echo '<div class="col-12">';
-    echo '<ul class="nav nav-pills d-print-none">';
+    echo '<ul class="nav nav-pills d-print-none" role="tablist">';
     $tab_active = true;
     if (count($properties_sale) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
+        echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link active" data-bs-target="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</button></li>';
         $tab_active = false;
     }
     if (count($properties_rent) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_rent">'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
+        echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" data-bs-target="#tab_rent">'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</button></li>';
         $tab_active = false;
     }
     if (count($properties_leasing) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasing">'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
+        echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" data-bs-target="#tab_leasing">'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</button></li>';
         $tab_active = false;
     }
     if (count($properties_leasehold) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasehold">'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
+        echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" data-bs-target="#tab_leasehold">'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</button></li>';
         $tab_active = false;
     }
     echo '</ul>';
@@ -1423,17 +1417,20 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     </div>
 </div>
 <script>
-	// Allow activation of bootstrap tab via URL
-	$(function() {
-		var hash = window.location.hash;
-		hash && $('ul.nav a[href="' + hash + '"]').tab('show');
-	});
+    const tabTriggers = document.querySelectorAll('#d2u_immo_module_70_1 [data-bs-toggle="tab"]');
+    const hash = window.location.hash;
+    if (hash) {
+        tabTriggers.forEach(function (trigger) {
+            if (trigger.getAttribute('data-bs-target') === hash) {
+                bootstrap.Tab.getOrCreateInstance(trigger).show();
+            }
+        });
+    }
 
-	// Activate map on hidden tab
-	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-		var target_url = e.target.toString();
-		var target_anchor = target_url.substr(target_url.indexOf("#")).toString();
-		if(target_anchor === "#tab_map") {
+    tabTriggers.forEach(function (trigger) {
+        trigger.addEventListener('shown.bs.tab', function (event) {
+            const targetAnchor = event.target.getAttribute('data-bs-target');
+            if(targetAnchor === '#tab_map') {
 			<?php
                 if ('google' === $map_type) { /** @phpstan-ignore-line */
                     echo "google.maps.event.trigger(map, 'resize');";
@@ -1445,8 +1442,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                     echo 'if( container ) container.__rmMap.map.invalidateSize();'. PHP_EOL;
                 }
             ?>
-		}
-	});
+            }
+        });
+    });
 	<?php
         if (null !== $print) {
             echo 'window.print();';

@@ -714,6 +714,50 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * Returns the calculated energy efficiency class based on the energy value.
+     * @return string Energy efficiency class from A+ to H or empty string if unavailable
+     */
+    public function getEnergyEfficiencyClass(): string
+    {
+        $normalized_energy_consumption = preg_replace('/[^0-9.,]+/', '', trim($this->energy_consumption));
+        if (null === $normalized_energy_consumption || '' === $normalized_energy_consumption) {
+            return '';
+        }
+
+        $energy_consumption = (float) str_replace(',', '.', $normalized_energy_consumption);
+        if ($energy_consumption <= 0) {
+            return '';
+        }
+
+        if ($energy_consumption < 30) {
+            return 'A+';
+        }
+        if ($energy_consumption < 50) {
+            return 'A';
+        }
+        if ($energy_consumption < 75) {
+            return 'B';
+        }
+        if ($energy_consumption < 100) {
+            return 'C';
+        }
+        if ($energy_consumption < 130) {
+            return 'D';
+        }
+        if ($energy_consumption < 160) {
+            return 'E';
+        }
+        if ($energy_consumption < 200) {
+            return 'F';
+        }
+        if ($energy_consumption < 250) {
+            return 'G';
+        }
+
+        return 'H';
+    }
+
+    /**
      * Returns the URL of this object.
      * @param bool $including_domain true if Domain name should be included
      * @return string URL
@@ -730,10 +774,31 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         if ($including_domain) {
             if (rex_addon::get('yrewrite')->isAvailable()) {
-                return str_replace(rex_yrewrite::getCurrentDomain()->getUrl() .'/', rex_yrewrite::getCurrentDomain()->getUrl(), rex_yrewrite::getCurrentDomain()->getUrl() . $this->url);
+                $current_domain_url = rex_yrewrite::getCurrentDomain()->getUrl();
+                $origin = (string) parse_url($current_domain_url, PHP_URL_SCHEME) .'://'. (string) parse_url($current_domain_url, PHP_URL_HOST);
+                $port = parse_url($current_domain_url, PHP_URL_PORT);
+                if (false !== $port && null !== $port) {
+                    $origin .= ':'. $port;
+                }
+
+                if (str_starts_with($this->url, 'http://') || str_starts_with($this->url, 'https://')) {
+                    return $this->url;
+                }
+                if (str_starts_with($this->url, '/')) {
+                    return $origin . $this->url;
+                }
+
+                return rtrim($current_domain_url, '/') .'/'. ltrim($this->url, '/');
             }
 
-            return str_replace(rex::getServer(). '/', rex::getServer(), rex::getServer() . $this->url);
+            if (str_starts_with($this->url, 'http://') || str_starts_with($this->url, 'https://')) {
+                return $this->url;
+            }
+            if (str_starts_with($this->url, '/')) {
+                return rtrim(rex::getServer(), '/') . $this->url;
+            }
+
+            return rtrim(rex::getServer(), '/') .'/'. ltrim($this->url, '/');
 
         }
 

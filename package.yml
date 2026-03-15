@@ -1,5 +1,5 @@
 package: d2u_immo
-version: '1.3.2'
+version: '1.4.0'
 author: Tobias Krais
 supportpage: http://github.com/tobiaskrais/d2u_immo
 
@@ -34,7 +34,7 @@ page:
 requires:
     redaxo: '>=5.15.0'
     packages:
-        d2u_helper: '>=1.14.0'
+        d2u_helper: '>=2.1.0'
         media_manager: '>=2.2'
         sprog: '>=1.0.0'
         url: '>=2.0'

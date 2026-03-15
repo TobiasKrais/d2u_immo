@@ -11,7 +11,8 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
     }
 
     $input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
-    $settings['even_informative_pdf'] = $input_media['even_informative_pdf'];
+    $settings['even_informative_pdf'] = isset($input_media['even_informative_pdf']) ? $input_media['even_informative_pdf'] : '';
+    $settings['widerrufsbelehrung'] = isset($input_media['widerrufsbelehrung']) ? $input_media['widerrufsbelehrung'] : '';
 
     // Checkbox also need special treatment if empty
     $settings['lang_wildcard_overwrite'] = array_key_exists('lang_wildcard_overwrite', $settings) ? 'true' : 'false';
@@ -115,7 +116,8 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 					<?php
                         $options = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
                         \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_sort', 'settings[default_property_sort]', $options, [(string) rex_config::get('d2u_immo', 'default_property_sort')]);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', '' !== rex_config::get('d2u_immo', 'even_informative_pdf') ? (string) rex_config::get('d2u_immo', 'even_informative_pdf') : '')
+                        \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', '' !== rex_config::get('d2u_immo', 'even_informative_pdf') ? (string) rex_config::get('d2u_immo', 'even_informative_pdf') : '');
+                        \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_immo_settings_widerrufsbelehrung', 'widerrufsbelehrung', '' !== rex_config::get('d2u_immo', 'widerrufsbelehrung') ? (string) rex_config::get('d2u_immo', 'widerrufsbelehrung') : '');
                     ?>
 				</div>
 			</fieldset>

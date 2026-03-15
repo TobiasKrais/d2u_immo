@@ -3,8 +3,14 @@
 
 <h2>Changelog</h2>
 
-<p>1.3.2-DEV:</p>
+<p>1.4.0-DEV:</p>
 <ul>
+	<li>Neue Einstellung für eine Widerrufsbelehrung ergänzt und vor dem Exposé-Druck in den Modulen 70-1 und 70-4 als Hinweisdialog verlinkt.</li>
+	<li>Immobilienausgabe ergänzt um die berechnete Energieeffizienzklasse in Listen- und Detailansicht der Module 70-1 und 70-4.</li>
+	<li>Neue Module 70-4 bis 70-6 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefügt.</li>
+	<li>Module 70-1 bis 70-3 als "(BS4, deprecated)" markiert. Die BS4-Varianten werden im nächsten Major Release entfernt.</li>
+	<li>BS5-Module auf Bootstrap-5-Tabs und die d2u_helper Lightbox umgestellt.</li>
+	<li>Benötigt d2u_helper &gt;= 2.1.0.</li>
 	<li>Bugfix Import Plugin: Reserviert wurde nicht korrekt importiert.</li>
 	<li>Bugfix: Module wurden beim Update nicht korrekt aktualisiert.</li>
 	<li>Bugfix Export Plugin: SSH Upload als Fallback wenn FTP Upload fehlschlägt.</li>

@@ -10,9 +10,18 @@ Nach der Installation in Redaxo sollten folgende Schritte ausgeführt werden:
 2. Eingabe mindestens eines Kontaktes.
 3. Eingabe mindestens einer Kategorie. Diese werden für die Generierung der URLs benötigt.
 4. Nun kann mit der Eingabe von Immobilien begonnen werden.
-5. Wenn gewünscht, kann unter Setup eines der auf Bootstrap 4 basierenden Beispielmodule installiert werden.
+5. Wenn gewünscht, kann unter Setup eines der Beispielmodule in Bootstrap 4 oder Bootstrap 5 installiert werden.
 
 Das Beispielmodul für die Hauptausgabe der Immobilien bietet die Druckansicht für ein volles und ein gekürztes Exposé. Außerdem eine Kartenansicht mit dem Geolocation Addon, einen Finanzierungsrechner, einen Anfrage- und Empfehlungsformular.
+
+## Beispielmodule
+
+- 70-1 D2U Immo Addon - Hauptausgabe (BS4, deprecated)
+- 70-2 D2U Immo Addon - Infobox Ansprechpartner (BS4, deprecated)
+- 70-3 D2U Immo Addon - Ausgabe Kategorie (BS4, deprecated)
+- 70-4 D2U Immo Addon - Hauptausgabe (BS5)
+- 70-5 D2U Immo Addon - Infobox Ansprechpartner (BS5)
+- 70-6 D2U Immo Addon - Ausgabe Kategorie (BS5)
 
 ## Plugins
 
