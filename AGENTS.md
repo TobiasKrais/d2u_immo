@@ -1,13 +1,14 @@
 # D2U Immo - Redaxo Addon
 
-A Redaxo 5 CMS addon for managing real estate properties with OpenImmo compatibility. Includes property listings, categories, contacts, energy certificates, financial calculators, and plugins for OpenImmo import/export and window advertising.
+A Redaxo 5 CMS addon for managing real estate properties with OpenImmo compatibility. Includes property listings, categories, contacts, energy certificates, financial calculators, OpenImmo import/export, and window advertising.
 
 ## Tech Stack
 
 - **Language:** PHP >= 8.0
 - **CMS:** Redaxo >= 5.15.0
 - **Frontend Framework:** Bootstrap 4/5 (via d2u_helper templates)
-- **Namespace:** `D2U_Immo`
+- **Namespace:** `TobiasKrais\D2UImmo`
+- **Deprecated Namespace:** `D2U_Immo` (backward compatibility until 2.0.0)
 
 ## Project Structure
 
@@ -26,9 +27,19 @@ d2u_immo/
 │   ├── Category.php        # Category model (hierarchical)
 │   ├── Contact.php         # Contact person model
 │   ├── FrontendHelper.php  # Frontend utilities (alternate URLs, breadcrumbs)
-│   ├── d2u_immo_lang_helper.php  # Sprog wildcard provider (~140 keys, DE/EN)
-│   ├── D2UImmoModules.php  # Module definitions and revisions
-│   └── deprecated_helper_classes.php
+│   ├── LangHelper.php      # Sprog wildcard provider (~140 keys, DE/EN)
+│   ├── Module.php          # Module definitions and revisions
+│   ├── export/             # Export-related classes
+│   │   ├── AExport.php         # Abstract export base
+│   │   ├── AFTPExport.php      # FTP/ZIP export base
+│   │   ├── ExportCronjob.php   # Auto-export cronjob
+│   │   ├── ExportedProperty.php # Export queue entries
+│   │   ├── OpenImmo.php        # OpenImmo export implementation
+│   │   └── Provider.php        # Export provider configuration
+│   ├── import/             # Import-related classes
+│   │   ├── ImportCronjob.php   # Auto-import cronjob
+│   │   └── ImportOpenImmo.php  # OpenImmo ZIP/XML import
+│   └── deprecated_classes.php
 ├── modules/                # 3 module variants in group 70
 │   └── 70/
 │       ├── 1/              # Hauptausgabe (main output)
@@ -41,19 +52,22 @@ d2u_immo/
 │   ├── property.archive.php # Archived properties
 │   ├── category.php        # Category management
 │   ├── contact.php         # Contact management
+│   ├── export.php          # Export overview
+│   ├── export_provider.php # Export provider management
+│   ├── import.php          # OpenImmo import UI
+│   ├── import_logs.php     # Import logs + ZIP downloads
+│   ├── window_advertising_property.php      # Property selection for window advertising
+│   ├── window_advertising_advertisement.php # Window advertising content management
 │   ├── settings.settings.php  # Addon settings
 │   ├── settings.setup.php     # Module manager
 │   ├── help.readme.php        # Help/README page
 │   └── help.changelog.php     # Changelog
-└── plugins/                # 3 plugins
-    ├── export/             # OpenImmo XML export to FTP providers (cronjob)
-    ├── import/             # OpenImmo XML/ZIP import (cronjob)
-    └── window_advertising/ # Window/display advertising management
 ```
 
 ## Coding Conventions
 
-- **Namespace:** `D2U_Immo` for all classes
+- **Namespace:** `TobiasKrais\D2UImmo` for all classes
+- **Deprecated Namespace:** `D2U_Immo` (backward compatibility, removal planned for 2.0.0)
 - **Naming:** camelCase for variables, PascalCase for classes
 - **Indentation:** 4 spaces in PHP classes, tabs in module files
 - **Comments:** English comments only
@@ -72,8 +86,8 @@ d2u_immo/
 | `Category` | Category model: hierarchical with parent category, picture, teaser. Implements `ITranslationHelper` |
 | `Contact` | Contact person model: name, address, phone, fax, mobile, email, picture |
 | `FrontendHelper` | Frontend utilities: alternate URLs and breadcrumbs for properties and categories |
-| `d2u_immo_lang_helper` | Sprog wildcard provider with ~140 translation keys (DE, EN) for real estate terms |
-| `D2UImmoModules` | Module definitions and revision numbers |
+| `LangHelper` | Sprog wildcard provider with ~140 translation keys (DE, EN) for real estate terms |
+| `Module` | Module definitions and revision numbers |
 
 ## Database Tables
 
@@ -115,20 +129,26 @@ d2u_immo/
 
 #### Module Versioning
 
-Each module has a revision number defined in `lib/D2UImmoModules.php` inside the `getModules()` method. When a module is changed:
+Each module has a revision number defined in `lib/Module.php` inside the `getModules()` method. When a module is changed:
 
 1. Add a changelog entry in `pages/help.changelog.php` describing the change.
-2. Increment the module's revision number in `D2UImmoModules::getModules()` by one.
+2. Increment the module's revision number in `Module::getModules()` by one.
 
 **Important:** The revision only needs to be incremented **once per release**, not per commit. Check the changelog: if the version number is followed by `-DEV`, the release is still in development and no additional revision bump is needed.
 
-### Plugins
+### Integrated Features
 
-| Plugin | Description | Extra Dependencies |
-| ------ | ----------- | ------------------ |
+| Feature | Description | Extra Dependencies |
+| ------- | ----------- | ------------------ |
 | `export` | OpenImmo XML export to FTP-based providers with cronjob automation | `cronjob`, `media_manager`, `phpmailer`, PHP ext: `xml`, `zip` |
 | `import` | OpenImmo XML/ZIP import with cronjob automation | `cronjob`, `mediapool`, `phpmailer`, PHP ext: `xml`, `zip` |
 | `window_advertising` | Window/display advertising management for properties | `sprog` |
+
+## Redaxo 6 Migration Note
+
+- `export`, `import`, and `window_advertising` are integrated into the main addon so the addon no longer depends on a `plugins/` directory.
+- Existing database tables remain stable. The old `D2U_Immo` namespace and legacy global class names remain available via `lib/deprecated_classes.php` until 2.0.0.
+- Export-specific wildcards are maintained directly in `LangHelper`; there is no separate `ExportLangHelper` class anymore.
 
 ### Media Manager Types
 

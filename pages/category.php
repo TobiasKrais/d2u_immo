@@ -1,6 +1,6 @@
 <?php
 
-use D2U_Immo\Category;
+use TobiasKrais\D2UImmo\Category;
 
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
@@ -22,11 +22,11 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $category = false;
     $category_id = (int) $form['category_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
-        if (!$category instanceof D2U_Immo\Category) {
-            $category = new D2U_Immo\Category($category_id, $rex_clang->getId());
+        if (!$category instanceof TobiasKrais\D2UImmo\Category) {
+            $category = new TobiasKrais\D2UImmo\Category($category_id, $rex_clang->getId());
             $category->category_id = $category_id; // Ensure correct ID in case first language has no object
             if (isset($form['parent_category_id']) && (int) $form['parent_category_id'] > 0) {
-                $category->parent_category = new D2U_Immo\Category((int) $form['parent_category_id'], $rex_clang->getId());
+                $category->parent_category = new TobiasKrais\D2UImmo\Category((int) $form['parent_category_id'], $rex_clang->getId());
             } else {
                 $category->parent_category = false;
             }
@@ -70,7 +70,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $category_id = $form['category_id'];
     }
-    $category = new D2U_Immo\Category($category_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $category = new TobiasKrais\D2UImmo\Category($category_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $category->category_id = $category_id; // Ensure correct ID in case language has no object
 
     // Check if category is used
@@ -109,7 +109,7 @@ if ('edit' === $func || 'add' === $func) {
 				<input type="hidden" name="form[category_id]" value="<?= $entry_id ?>">
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $category = new D2U_Immo\Category($entry_id, $rex_clang->getId());
+                        $category = new TobiasKrais\D2UImmo\Category($entry_id, $rex_clang->getId());
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
@@ -158,7 +158,7 @@ if ('edit' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             // Do not use last object from translations, because you don't know if it exists in DB
-                            $category = new D2U_Immo\Category($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                            $category = new TobiasKrais\D2UImmo\Category($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_immo[edit_data]'))) {
                                 $readonly = false;
@@ -166,7 +166,7 @@ if ('edit' === $func || 'add' === $func) {
 
                             $options = ['-1' => rex_i18n::msg('d2u_immo_category_parent_none')];
                             $selected_values = [];
-                            foreach (D2U_Immo\Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $parent_category) {
+                            foreach (TobiasKrais\D2UImmo\Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $parent_category) {
                                 if (!$parent_category->isChild() && $parent_category->category_id !== $category->category_id) {
                                     $options[$parent_category->category_id] = $parent_category->name;
                                 }

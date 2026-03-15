@@ -14,6 +14,26 @@ Nach der Installation in Redaxo sollten folgende Schritte ausgeführt werden:
 
 Das Beispielmodul für die Hauptausgabe der Immobilien bietet die Druckansicht für ein volles und ein gekürztes Exposé. Außerdem eine Kartenansicht mit dem Geolocation Addon, einen Finanzierungsrechner, einen Anfrage- und Empfehlungsformular.
 
+## Struktur
+
+Die PHP-Klassen des Addons liegen im Verzeichnis lib. Allgemeine Klassen wie Immobilien, Kategorien, Kontakte, Frontend-Helfer, Sprachhelfer und Moduldefinitionen liegen direkt in lib.
+
+Exportbezogene Klassen sind in lib/export zusammengefasst:
+
+- AExport
+- AFTPExport
+- ExportCronjob
+- ExportedProperty
+- OpenImmo
+- Provider
+
+Importbezogene Klassen sind in lib/import zusammengefasst:
+
+- ImportCronjob
+- ImportOpenImmo
+
+Veraltete Klassennamen und der bisherige Namespace werden über lib/deprecated_classes.php für die Übergangszeit bis Version 2.0.0 bereitgestellt.
+
 ## Beispielmodule
 
 - 70-1 D2U Immo Addon - Hauptausgabe (BS4, deprecated)
@@ -23,19 +43,19 @@ Das Beispielmodul für die Hauptausgabe der Immobilien bietet die Druckansicht f
 - 70-5 D2U Immo Addon - Infobox Ansprechpartner (BS5)
 - 70-6 D2U Immo Addon - Ausgabe Kategorie (BS5)
 
-## Plugins
+## Integrierte Funktionen
 
-Es exisitieren 3 Plugins, die nachfolgend kurz beschrieben werden.
+Die bisherigen Bereiche Export, Import und Schaufensterwerbung sind direkt in das Hauptaddon integriert.
 
-### Export Plugin (export)
+### Export
 
-Mit diesem Plugin können Immobilien aus der Redaxo Installation auf andere Portale übertragen werden. Zur Zeit steht der OpenImmo Export und der Export auf LinkedIn als Post zur Verfügung.
+Mit dieser Funktion können Immobilien aus der Redaxo Installation auf andere Portale übertragen werden. Zur Zeit steht der OpenImmo Export und der Export auf LinkedIn als Post zur Verfügung.
 
 Nach der Installation sollten zuerst die Einstellungen festgelegt und dann die Portale konfiguriert werden. Danach können unter "Export" Immobilien für den Export als "online" markiert werden. Diese werden beim nächsten Export übertragen. Ein Export kann entweder manuell oder per Cronjob im Cronjob Addon durchgeführt werden. Der Cronjob kann in den Einstellungen installiert werden.
 
-### Import Plugin (import)
+### Import
 
-Mit diesem Plugin können Immobilien in eine Redaxo Installation importiert werden.
+Mit dieser Funktion können Immobilien in eine Redaxo Installation importiert werden.
 
 Nach der Installation sollten zuerst die Einstellungen festgelegt werden. Der Pfad des Import Verzeichnisses liegt dabei im Redaxo Wurzelverzeichnis. Es empfiehlt sich in dieses Verzeichnis zu schützen um den Download der zu importierenden Dateien durch Dritte zu verhindern. Hier eine für diesen Zweck geeignete .htaccess Datei:
 
@@ -48,8 +68,8 @@ Nachdem eine OpenImmo Datei im ZIP Format in den Import Ordner hochgeladen wurde
 
 Beim Import wird zu jeder Immobilie die OpenImmo Import Anbieter ID gespeichert. Anhand dieser Anbieter ID werden zu löschende Immobilien identifiziert. So werden bei einem Vollimport nicht mehr im Import enthaltene Immobilien des Anbieters gelöscht. Damit verbundene Medien und Kontakte werden ebenfalls gelöscht, sofern sie nicht andersweitig in Gebrauch sind. Dank dieser Funktion ist es möglich, Immobilien mehrerer Anbieter darzustellen, aktuell zu halten und somit ein eigenes Immobilienportal aufzubauen, das sich auch selbst aufräumt.
 
-### Schaufenterwerbung Plugin (window_advertising)
+### Schaufenterwerbung
 
-Mit diesem Plugin können Immobilien und kurze Werbetexte im Kioskmodus eines Browsers in Dauerschleife dargestellt werden. Ein Wort zur Vorsicht: der Bildschirm sollte nicht zu nah hinter einer Schaufensterscheibe mit Sonneneinstrahlung positioniert werden, da die Scheibe sonst reißen kann.
+Mit dieser Funktion können Immobilien und kurze Werbetexte im Kioskmodus eines Browsers in Dauerschleife dargestellt werden. Ein Wort zur Vorsicht: der Bildschirm sollte nicht zu nah hinter einer Schaufensterscheibe mit Sonneneinstrahlung positioniert werden, da die Scheibe sonst reißen kann.
 
-Um dieses Plugin nutzen zu können, sollten Sie zuerst die Einstellungen festlegen. Ein Redaxo Template für Schaufensterwerbung steht im D2U Helper Addon unter Templates zur Verfügung. Dieses Template sollte dem Artikel, der in den Einstellungen festgelegt wird zugewiesen sein. In dem Artikel braucht es kein Modul. Die komplette Ausgabe wird über das Template gesteuert.
+Um diese Funktion nutzen zu können, sollten Sie zuerst die Einstellungen festlegen. Ein Redaxo Template für Schaufensterwerbung steht im D2U Helper Addon unter Templates zur Verfügung. Dieses Template sollte dem Artikel, der in den Einstellungen festgelegt wird zugewiesen sein. In dem Artikel braucht es kein Modul. Die komplette Ausgabe wird über das Template gesteuert.

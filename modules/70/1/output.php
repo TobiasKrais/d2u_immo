@@ -1,6 +1,6 @@
 <?php
 
-use D2U_Immo\Contact;
+use TobiasKrais\D2UImmo\Contact;
 
 if (!function_exists('sendRecommendation')) {
     /**
@@ -41,13 +41,10 @@ if (!function_exists('sendRecommendation')) {
 if (!function_exists('printPropertylist')) {
     /**
      * Prints property list.
-     * @param array<D2U_Immo\Property> $properties Array with properties
+     * @param array<TobiasKrais\D2UImmo\Property> $properties Array with properties
      */
     function printPropertylist($properties):void
     {
-        $sprog = rex_addon::get('sprog');
-        $tag_open = $sprog->getConfig('wildcard_open_tag');
-        $tag_close = $sprog->getConfig('wildcard_close_tag');
         foreach ($properties as $property) {
             $energy_efficiency_class = $property->getEnergyEfficiencyClass();
             echo '<div class="row">';
@@ -64,7 +61,7 @@ if (!function_exists('printPropertylist')) {
                 echo '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
                         $property->pictures[0] .'" alt='. $property->name .' class="listpic">';
                 if ($property->object_reserved) {
-                    echo '<span>'. $tag_open .'d2u_immo_object_reserved'. $tag_close .'</span>';
+                    echo '<span>'. \Sprog\Wildcard::get('d2u_immo_object_reserved') .'</span>';
                     echo '</div>';
                 }
             }
@@ -73,22 +70,22 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="col-12 col-sm-8 col-lg-9">';
             echo '<div class="row">';
             echo '<div class="col-12"><strong>'. $property->name .'</strong></div>';
-            echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_form_city'. $tag_close .':</b> '. $property->city .'</div>';
+            echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_form_city') .':</b> '. $property->city .'</div>';
             if ('KAUF' === $property->market_type) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</b> '
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_purchase_price') .':</b> '
                 . ($property->purchase_price_on_request || $property->purchase_price === 0 ? Sprog\Wildcard::get('d2u_immo_purchase_price_on_request') : number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code) .'</div>';
             } elseif ('MIETE_PACHT' === $property->market_type || 'ERBPACHT' === $property->market_type) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_cold_rent'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_cold_rent') .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
             } elseif ('LEASING' === $property->market_type) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_leasehold'. $tag_close .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_leasehold') .':</b> '. number_format($property->cold_rent, 2, ',', '.') .' '. $property->currency_code .'</div>';
             }
             if ($property->living_area > 0) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_living_area'. $tag_close .':</b> '. round($property->living_area) .' m²</div>';
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_living_area') .':</b> '. round($property->living_area) .' m²</div>';
             } elseif ($property->land_area > 0) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_land_area'. $tag_close .':</b> '. round($property->land_area) .' m²</div>';
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_land_area') .':</b> '. round($property->land_area) .' m²</div>';
             }
             if ('' !== $energy_efficiency_class) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. $tag_open .'d2u_immo_energy_efficiency_class'. $tag_close .':</b> '. $energy_efficiency_class .'</div>';
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_energy_efficiency_class') .':</b> '. $energy_efficiency_class .'</div>';
             }
             echo '<div class="col-12 nolink">'. $property->teaser .'</div>';
             echo '</div>';
@@ -118,7 +115,7 @@ if (!function_exists('printImages')) {
         echo '<div class="row">';
         foreach ($pics as $pic) {
             $media = rex_media::get($pic);
-            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-toggle="lightbox'. $lightbox_id .'" data-gallery="example-gallery'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
+            echo '<a href="index.php?rex_media_type='. $type_detail .'&rex_media_file='. $pic .'" data-d2u-immo-ekko-lightbox="lightbox'. $lightbox_id .'" data-gallery="example-gallery'. $lightbox_id .'" class="col-6 col-sm-4 col-lg-3"';
             if ($media instanceof rex_media) {
                 echo ' data-title="'. $media->getValue('title') .'"';
             }
@@ -132,12 +129,6 @@ if (!function_exists('printImages')) {
         }
         echo '</div>';
         echo '</div>';
-        echo '<script>';
-        echo "$(document).on('click', '[data-toggle=\"lightbox". $lightbox_id ."\"]', function(event) {";
-        echo 'event.preventDefault();';
-        echo '$(this).ekkoLightbox({ alwaysShowClose: true	});';
-        echo '});';
-        echo '</script>';
     }
 }
 
@@ -145,20 +136,16 @@ if (!function_exists('printRevocationNoticeLinks')) {
     /**
      * Prints print links with optional revocation notice modal trigger.
      */
-    function printRevocationNoticeLinks(string $property_url, string $notice_file, string $modal_id, string $tag_open, string $tag_close, int $bootstrap_version): void
+    function printRevocationNoticeLinks(string $property_url, string $notice_file, string $modal_id): void
     {
         if ('' === $notice_file) {
-            echo '<li><small><a href="'. $property_url .'?print=small" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
-            echo '<li><small><a href="'. $property_url .'?print=full" target="blank"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
+            echo '<li><small><a href="'. $property_url .'?print=small" target="blank"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_short_expose') .'</a></small></li>';
+            echo '<li><small><a href="'. $property_url .'?print=full" target="blank"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_expose') .'</a></small></li>';
             return;
         }
 
-        $toggle_attributes = 4 === $bootstrap_version
-            ? 'data-toggle="modal" data-target="#'. $modal_id .'"'
-            : 'data-bs-toggle="modal" data-bs-target="#'. $modal_id .'"';
-
-        echo '<li><small><a href="#'. $modal_id .'" '. $toggle_attributes .' data-d2u-print-modal="'. $modal_id .'" data-d2u-print-target="'. $property_url .'?print=small"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_short_expose'. $tag_close .'</a></small></li>';
-        echo '<li><small><a href="#'. $modal_id .'" '. $toggle_attributes .' data-d2u-print-modal="'. $modal_id .'" data-d2u-print-target="'. $property_url .'?print=full"><span class="icon print"></span> '. $tag_open .'d2u_immo_print_expose'. $tag_close .'</a></small></li>';
+        echo '<li><small><a href="#'. $modal_id .'" data-toggle="modal" data-target="#'. $modal_id .'" data-d2u-print-modal="'. $modal_id .'" data-d2u-print-target="'. $property_url .'?print=small"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_short_expose') .'</a></small></li>';
+        echo '<li><small><a href="#'. $modal_id .'" data-toggle="modal" data-target="#'. $modal_id .'" data-d2u-print-modal="'. $modal_id .'" data-d2u-print-target="'. $property_url .'?print=full"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_expose') .'</a></small></li>';
     }
 }
 
@@ -166,7 +153,7 @@ if (!function_exists('printRevocationNoticeModal')) {
     /**
      * Prints optional revocation notice modal.
      */
-    function printRevocationNoticeModal(string $property_url, string $notice_file, string $modal_id, string $tag_open, string $tag_close, int $bootstrap_version): void
+    function printRevocationNoticeModal(string $property_url, string $notice_file, string $modal_id): void
     {
         if ('' === $notice_file) {
             return;
@@ -174,67 +161,28 @@ if (!function_exists('printRevocationNoticeModal')) {
 
         $notice_url = rex_url::media($notice_file);
         $continue_id = $modal_id .'-continue';
-        if (4 === $bootstrap_version) {
-            echo '<div class="modal fade" id="'. $modal_id .'" tabindex="-1" role="dialog" aria-labelledby="'. $modal_id .'-label" aria-hidden="true">';
-            echo '<div class="modal-dialog modal-dialog-centered" role="document">';
-            echo '<div class="modal-content">';
-            echo '<div class="modal-header">';
-            echo '<h5 class="modal-title" id="'. $modal_id .'-label">'. $tag_open .'d2u_immo_revocation_notice_title'. $tag_close .'</h5>';
-            echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-            echo '</div>';
-            echo '<div class="modal-body">';
-            echo '<p>'. $tag_open .'d2u_immo_revocation_notice_text'. $tag_close .'</p>';
-            echo '<p><a href="'. $notice_url .'" target="blank" class="btn btn-outline-secondary"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_revocation_notice_open_pdf'. $tag_close .'</a></p>';
-            echo '</div>';
-            echo '<div class="modal-footer">';
-            echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">'. $tag_open .'d2u_immo_revocation_notice_cancel'. $tag_close .'</button>';
-            echo '<a href="'. $property_url .'?print=full" target="blank" class="btn btn-primary" id="'. $continue_id .'" data-dismiss="modal">'. $tag_open .'d2u_immo_revocation_notice_continue'. $tag_close .'</a>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-        } else {
-            echo '<div class="modal fade" id="'. $modal_id .'" tabindex="-1" aria-labelledby="'. $modal_id .'-label" aria-hidden="true">';
-            echo '<div class="modal-dialog modal-dialog-centered">';
-            echo '<div class="modal-content">';
-            echo '<div class="modal-header">';
-            echo '<h5 class="modal-title" id="'. $modal_id .'-label">'. $tag_open .'d2u_immo_revocation_notice_title'. $tag_close .'</h5>';
-            echo '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
-            echo '</div>';
-            echo '<div class="modal-body">';
-            echo '<p>'. $tag_open .'d2u_immo_revocation_notice_text'. $tag_close .'</p>';
-            echo '<p><a href="'. $notice_url .'" target="blank" class="btn btn-outline-secondary"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_revocation_notice_open_pdf'. $tag_close .'</a></p>';
-            echo '</div>';
-            echo '<div class="modal-footer">';
-            echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'. $tag_open .'d2u_immo_revocation_notice_cancel'. $tag_close .'</button>';
-            echo '<a href="'. $property_url .'?print=full" target="blank" class="btn btn-primary" id="'. $continue_id .'" data-bs-dismiss="modal">'. $tag_open .'d2u_immo_revocation_notice_continue'. $tag_close .'</a>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-            echo '</div>';
-        }
-
-        echo '<script>';
-        echo '(function() {';
-        echo 'var continueLink = document.getElementById("'. $continue_id .'");';
-        echo 'var triggerLinks = document.querySelectorAll("[data-d2u-print-modal=\"'. $modal_id .'\"]");';
-        echo 'for (var i = 0; i < triggerLinks.length; i++) {';
-        echo 'triggerLinks[i].addEventListener("click", function() {';
-        echo 'if (continueLink) {';
-        echo 'continueLink.setAttribute("href", this.getAttribute("data-d2u-print-target"));';
-        echo '}';
-        echo '});';
-        echo '}';
-        echo '})();';
-        echo '</script>';
+        echo '<div class="modal fade" id="'. $modal_id .'" tabindex="-1" role="dialog" aria-labelledby="'. $modal_id .'-label" aria-hidden="true">';
+        echo '<div class="modal-dialog modal-dialog-centered" role="document">';
+        echo '<div class="modal-content">';
+        echo '<div class="modal-header">';
+        echo '<h5 class="modal-title" id="'. $modal_id .'-label">'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_title') .'</h5>';
+        echo '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+        echo '</div>';
+        echo '<div class="modal-body">';
+        echo '<p>'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_text') .'</p>';
+        echo '<p><a href="'. $notice_url .'" target="blank" class="btn btn-outline-secondary"><span class="icon pdf"></span> '. \Sprog\Wildcard::get('d2u_immo_revocation_notice_open_pdf') .'</a></p>';
+        echo '</div>';
+        echo '<div class="modal-footer">';
+        echo '<button type="button" class="btn btn-secondary" data-dismiss="modal">'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_cancel') .'</button>';
+        echo '<a href="'. $property_url .'?print=full" target="blank" class="btn btn-primary" id="'. $continue_id .'" data-dismiss="modal" data-d2u-print-continue="1">'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_continue') .'</a>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
     }
 }
 
-// Get placeholder wildcard tags and other presets
 $print = filter_input(INPUT_GET, 'print', FILTER_SANITIZE_SPECIAL_CHARS);
-$sprog = rex_addon::get('sprog');
-$tag_open = $sprog->getConfig('wildcard_open_tag');
-$tag_close = $sprog->getConfig('wildcard_close_tag');
 $d2u_immo = rex_addon::get('d2u_immo');
 $map_type = 'REX_VALUE[1]' === '' ? 'google' : 'REX_VALUE[1]'; // Backward compatibility /** @phpstan-ignore-line */
 $map_id = 'd2u' . md5((string) time());
@@ -243,7 +191,7 @@ $url_namespace = TobiasKrais\D2UHelper\FrontendHelper::getUrlNamespace();
 $url_id = TobiasKrais\D2UHelper\FrontendHelper::getUrlId();
 ?>
 
-<div id="d2u_immo_module_70_1" class="col-12">
+<div id="d2u_immo_module_70_1" class="col-12 d2u-immo-detail-bs4<?= null !== $print ? ' d2u-immo-auto-print' : '' ?>">
     <div class="row">
 
 <?php
@@ -253,7 +201,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     if (\rex_addon::get('url')->isAvailable() && $url_id > 0) {
         $property_id = $url_id;
     }
-    $property = new D2U_Immo\Property($property_id, rex_clang::getCurrentId());
+    $property = new TobiasKrais\D2UImmo\Property($property_id, rex_clang::getCurrentId());
     $widerrufsbelehrung = (string) $d2u_immo->getConfig('widerrufsbelehrung', '');
     // Redirect if object is not online
     if ('online' !== $property->online_status) {
@@ -264,21 +212,21 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $print_modal_id = 'd2u-immo-print-modal-bs4-'. $property_id;
         echo '<div class="col-12 expose-navi d-print-none">';
         echo '<ul>';
-        echo '<li><small><a href="'. rex_getUrl((int) $d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. $tag_open .'d2u_immo_back_to_list'. $tag_close .'</a></small></li>';
+        echo '<li><small><a href="'. rex_getUrl((int) $d2u_immo->getConfig('article_id')) .'"><span class="icon back"></span> '. \Sprog\Wildcard::get('d2u_immo_back_to_list') .'</a></small></li>';
         //	Following links see Chrome print bug: https://github.com/twbs/bootstrap/issues/22753
-        printRevocationNoticeLinks($property->getUrl(true), $widerrufsbelehrung, $print_modal_id, $tag_open, $tag_close, 4);
+        printRevocationNoticeLinks($property->getUrl(true), $widerrufsbelehrung, $print_modal_id);
         if ('MIETE_PACHT' === $property->market_type && 'GEWERBE' !== $property->type_of_use && '' !== $d2u_immo->getConfig('even_informative_pdf', '')) {
-            echo '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></small></li>';
+            echo '<li><small><a href="'. rex_url::media('mieterselbstauskunft.pdf') .'"><span class="icon pdf"></span> '. \Sprog\Wildcard::get('d2u_immo_tentant_information') .'</a></small></li>';
         }
         echo '</ul>';
-        printRevocationNoticeModal($property->getUrl(true), $widerrufsbelehrung, $print_modal_id, $tag_open, $tag_close, 4);
+        printRevocationNoticeModal($property->getUrl(true), $widerrufsbelehrung, $print_modal_id);
         echo '</div>';
 
         if ($property->contact instanceof Contact) {
             echo '<div class="col-12 d-none d-print-inline">';
             echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
-            echo $tag_open .'d2u_immo_form_phone'. $tag_close .': '. $property->contact->phone .'<br>';
-            echo $tag_open .'d2u_immo_form_email'. $tag_close .': '. $property->contact->email .'<p>';
+            echo \Sprog\Wildcard::get('d2u_immo_form_phone') .': '. $property->contact->phone .'<br>';
+            echo \Sprog\Wildcard::get('d2u_immo_form_email') .': '. $property->contact->email .'<p>';
             echo '</div>';
         }
     }
@@ -287,18 +235,18 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     if (null === $print) {
         echo '<div class="col-12 d-print-none">';
         echo '<ul class="nav nav-pills" id="expose_tabs">';
-        echo '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_overview'. $tag_close .'</span></a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_overview') .'</span></a></li>';
         if (count($property->pictures) > 0 || count($property->pictures_360) > 0) {
-            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</span></a></li>';
+            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_pictures') .'</span></a></li>';
         }
         if ($property->publish_address) {
-            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</span></a></li>';
+            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_map') .'</span></a></li>';
         }
         if ('KAUF' === $property->market_type) {
-            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_calculator'. $tag_close .'</span></a></li>';
+            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_calculator"><span class="icon money d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_calculator') .'</span></a></li>';
         }
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_request" id="tab_request_pill"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_request'. $tag_close .'</span></a></li>';
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_recommendation"><span class="icon forward d-md-none"></span><span class="d-none d-md-block">'. $tag_open .'d2u_immo_tab_recommendation'. $tag_close .'<span></a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_request" id="tab_request_pill"><span class="icon request d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_request') .'</span></a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_recommendation"><span class="icon forward d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_recommendation') .'<span></a></li>';
         echo '</ul>';
         echo '</div>';
     }
@@ -331,9 +279,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
                 $property->pictures[0] .'" alt="'. $property->name .'" class="overviewpic">';
         if ($property->object_reserved) {
-            echo '<span class="d-print-none">'. $tag_open .'d2u_immo_object_reserved'. $tag_close .'</span>';
+            echo '<span class="d-print-none">'. \Sprog\Wildcard::get('d2u_immo_object_reserved') .'</span>';
         } elseif ($property->object_sold) {
-            echo '<span class="d-print-none">'. $tag_open .'d2u_immo_object_sold'. $tag_close .'</span>';
+            echo '<span class="d-print-none">'. \Sprog\Wildcard::get('d2u_immo_object_sold') .'</span>';
         }
         if ($property->object_reserved || $property->object_sold) {
             echo '</div>'; // <div class="reserved">
@@ -346,35 +294,35 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="row page-break-avoid">';
 
     if ('KAUF' === strtoupper($property->market_type)) {
-        echo '<div class="col-6">'. $tag_open .'d2u_immo_purchase_price'. $tag_close .':</div>';
+        echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_purchase_price') .':</div>';
         echo '<div class="col-6"><b>'. ($property->purchase_price_on_request || $property->purchase_price === 0 ? Sprog\Wildcard::get('d2u_immo_purchase_price_on_request') : number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code) .'</b></div>';
         if ($property->purchase_price_m2 > 0 && false === $property->purchase_price_on_request) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_purchase_price_m2'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_purchase_price_m2') .':</div>';
             echo '<div class="col-6">'. number_format($property->purchase_price_m2, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</div>';
         }
         if ($property->price_plus_vat && false === $property->purchase_price_on_request) {
-            echo '<div class="col-12">'. $tag_open .'d2u_immo_prices_plus_vat'. $tag_close .'</div>';
+            echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_prices_plus_vat') .'</div>';
         }
         echo '<div class="col-12">&nbsp;</div>';
     } else {
         if ($property->cold_rent > 0 && $property->additional_costs > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_warm_rent'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_warm_rent') .':</div>';
             echo '<div class="col-6"><b>'. number_format($property->cold_rent + $property->additional_costs, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</b></div>';
         }
         if ($property->cold_rent > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_cold_rent'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_cold_rent') .':</div>';
             echo '<div class="col-6">'. number_format($property->cold_rent, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</div>';
         }
         if ($property->additional_costs > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_additional_costs'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_additional_costs') .':</div>';
             echo '<div class="col-6">'. number_format($property->additional_costs, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</div>';
         }
         if ($property->price_plus_vat) {
-            echo '<div class="col-12">'. $tag_open .'d2u_immo_prices_plus_vat'. $tag_close .'</div>';
+            echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_prices_plus_vat') .'</div>';
             echo '<div class="col-12">&nbsp;</div>';
         }
         if ($property->deposit > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_deposit'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_deposit') .':</div>';
             echo '<div class="col-6">'. number_format($property->deposit, 2, ',', '.') .'&nbsp;'. $property->currency_code .'</div>';
         }
     }
@@ -382,86 +330,86 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     if ('HAUS' === strtoupper($property->object_type) || 'WOHNUNG' === strtoupper($property->object_type) || 'BUERO_PRAXEN' === strtoupper($property->object_type)) {
         if ($property->living_area > 0) {
             if ('HAUS' === strtoupper($property->object_type) || 'WOHNUNG' === strtoupper($property->object_type)) {
-                echo '<div class="col-6">'. $tag_open .'d2u_immo_living_area'. $tag_close .':</div>';
+                echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_living_area') .':</div>';
             } elseif ('BUERO_PRAXEN' === strtoupper($property->object_type)) {
-                echo '<div class="col-6">'. $tag_open .'d2u_immo_office_area'. $tag_close .':</div>';
+                echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_office_area') .':</div>';
             }
             echo '<div class="col-6">'. number_format($property->living_area, 2, ',', '.') .'&nbsp;m²</div>';
         }
 
         if ($property->rooms > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_rooms'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_rooms') .':</div>';
             echo '<div class="col-6">'. $property->rooms .'</div>';
         }
 
         if ($property->construction_year > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_construction_year'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_construction_year') .':</div>';
             echo '<div class="col-6">'. $property->construction_year .'</div>';
         }
 
         if ($property->floor > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_floor'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_floor') .':</div>';
             echo '<div class="col-6">'. $property->floor .'</div>';
         }
 
         if ($property->flat_sharing_possible) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_flat_sharing'. $tag_close .':</div>';
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_yes'. $tag_close .'</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_flat_sharing') .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_yes') .'</div>';
         }
 
         if ('' !== $property->condition_type) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_condition'. $tag_close .':</div>';
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_condition_'. $property->condition_type . $tag_close .'</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_condition') .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_condition_'. $property->condition_type) .'</div>';
         }
         if ($property->listed_monument) {
-            echo '<div class="col-12">'. $tag_open .'d2u_immo_listed_monument'. $tag_close .'</div>';
+            echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_listed_monument') .'</div>';
         }
 
         if ('' !== $property->available_from) {
             $date = date_create_from_format('Y-m-d', $property->available_from);
             if (false !== $date) {
-                echo '<div class="col-6">'. $tag_open .'d2u_immo_available_from'. $tag_close .':</div>';
+                echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_available_from') .':</div>';
                 echo '<div class="col-6">'. date_format($date, 'd.m.Y') .'</div>';
             }
         }
 
         if ($property->animals) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_animals'. $tag_close .':</div>';
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_yes'. $tag_close .'</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_animals') .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_yes') .'</div>';
         }
 
         if ($property->rented) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_rented'. $tag_close .':</div>';
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_yes'. $tag_close .'</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_rented') .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_yes') .'</div>';
         }
 
         if ($property->parking_space_duplex > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_parking_space_duplex'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_parking_space_duplex') .':</div>';
             echo '<div class="col-6">'. $property->parking_space_duplex .'</div>';
         }
 
         if ($property->parking_space_simple > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_parking_space_simple'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_parking_space_simple') .':</div>';
             echo '<div class="col-6">'. $property->parking_space_simple .'</div>';
         }
 
         if ($property->parking_space_garage > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_parking_space_garage'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_parking_space_garage') .':</div>';
             echo '<div class="col-6">'. $property->parking_space_garage .'</div>';
         }
 
         if ($property->parking_space_undergroundcarpark > 0) {
-            echo '<div class="col-6">'. $tag_open .'d2u_immo_parking_space_undergroundcarpark'. $tag_close .':</div>';
+            echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_parking_space_undergroundcarpark') .':</div>';
             echo '<div class="col-6">'. $property->parking_space_undergroundcarpark .'</div>';
         }
     }
 
     if ($property->total_area > 0) {
-        echo '<div class="col-6">'. $tag_open .'d2u_immo_total_area'. $tag_close .':</div>';
+        echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_total_area') .':</div>';
         echo '<div class="col-6">'. $property->total_area .'&nbsp;m²</div>';
     }
     if ($property->land_area > 0) {
-        echo '<div class="col-6">'. $tag_open .'d2u_immo_land_area'. $tag_close .':</div>';
+        echo '<div class="col-6">'. \Sprog\Wildcard::get('d2u_immo_land_area') .':</div>';
         echo '<div class="col-6">'. round($property->land_area) .'&nbsp;m²</div>';
     }
 
@@ -481,7 +429,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             }
         }
         if ('MIETE_PACHT' === $property->market_type && 'GEWERBE' !== $property->type_of_use && '' !== $d2u_immo->getConfig('even_informative_pdf', '')) {
-            echo '<li class="d-print-none"><span class="icon pdf"></span> <a href="'. rex_url::media('mieterselbstauskunft.pdf') .'">'. $tag_open .'d2u_immo_tentant_information'. $tag_close .'</a></li>';
+            echo '<li class="d-print-none"><span class="icon pdf"></span> <a href="'. rex_url::media('mieterselbstauskunft.pdf') .'">'. \Sprog\Wildcard::get('d2u_immo_tentant_information') .'</a></li>';
         }
         echo '</ul></div>';
     }
@@ -503,7 +451,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
-        echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_energy_pass'. $tag_close .'</h2></div>';
+        echo '<div class="col-12 print-border-h"><h2>'. \Sprog\Wildcard::get('d2u_immo_energy_pass') .'</h2></div>';
 
         echo '<div class="col-12 print-border">'; // START energy pass
         echo '<div class="row">';
@@ -518,41 +466,41 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_energy_pass_year_without') .'</div>';
         }
         else {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_type'. $tag_close .':</li></ul></div>';
-            echo '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_energy_pass_'. $property->energy_pass . $tag_close .'</div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_type') .':</li></ul></div>';
+            echo '<div class="col-6 col-md-8 col-lg-9">'. \Sprog\Wildcard::get('d2u_immo_energy_pass_'. $property->energy_pass) .'</div>';
 
             if ('' !== $property->energy_pass_valid_until) {
                 $energy_pass_date = date_create_from_format('Y-m-d', $property->energy_pass_valid_until);
                 if (false !== $energy_pass_date) {
-                    echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_valid_until'. $tag_close .':</li></ul></div>';
+                    echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_valid_until') .':</li></ul></div>';
                     echo '<div class="col-6 col-md-8 col-lg-9">'. date_format($energy_pass_date, 'd.m.Y') .'</div>';
                 }
             }
 
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_value'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_value') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">'. $property->energy_consumption .'&nbsp;kWh/(m²*a)</div>';
 
             if ('' !== $property->getEnergyEfficiencyClass()) {
-                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_efficiency_class'. $tag_close .':</li></ul></div>';
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_efficiency_class') .':</li></ul></div>';
                 echo '<div class="col-6 col-md-8 col-lg-9">'. $property->getEnergyEfficiencyClass() .'</div>';
             }
 
             if ($property->including_warm_water) {
-                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_energy_pass_incl_warm_water'. $tag_close .':</li></ul></div>';
-                echo '<div class="col-6 col-md-8 col-lg-9">'. $tag_open .'d2u_immo_yes'. $tag_close .'</div>';
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_incl_warm_water') .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. \Sprog\Wildcard::get('d2u_immo_yes') .'</div>';
             }
 
             if ($property->construction_year > 0) {
-                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_construction_year'. $tag_close .':</li></ul></div>';
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_construction_year') .':</li></ul></div>';
                 echo '<div class="col-6 col-md-8 col-lg-9">'. $property->construction_year .'</div>';
             }
 
             if (count($property->firing_type) > 0) {
-                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_firing_type'. $tag_close .':</li></ul></div>';
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_firing_type') .':</li></ul></div>';
                 echo '<div class="col-6 col-md-8 col-lg-9">';
                 $first_element = true;
                 foreach ($property->firing_type as $firing_type) {
-                    echo($first_element ? '' : ', ') . $tag_open .'d2u_immo_firing_type_'. $firing_type . $tag_close;
+                    echo($first_element ? '' : ', ') . \Sprog\Wildcard::get('d2u_immo_firing_type_'. $firing_type);
                     $first_element = false;
                 }
                 echo '</div>';
@@ -582,60 +530,60 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
-        echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_equipment'. $tag_close .'</h2></div>';
+        echo '<div class="col-12 print-border-h"><h2>'. \Sprog\Wildcard::get('d2u_immo_equipment') .'</h2></div>';
 
         echo '<div class="col-12 print-border">'; // START detail facts
         echo '<div class="row page-break-avoid">';
         if (count($property->bath) > 0) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_bath'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_bath') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">';
             $first_element = true;
             foreach ($property->bath as $bath) {
-                echo($first_element ? '' : ', ') . $tag_open .'d2u_immo_bath_'. $bath . $tag_close;
+                echo($first_element ? '' : ', ') . \Sprog\Wildcard::get('d2u_immo_bath_'. $bath);
                 $first_element = false;
             }
             echo '</div>';
         }
 
         if (count($property->kitchen) > 0) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_kitchen'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_kitchen') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">';
             $first_element = true;
             foreach ($property->kitchen as $kitchen) {
-                echo($first_element ? '' : ', ') . $tag_open .'d2u_immo_kitchen_'. $kitchen . $tag_close;
+                echo($first_element ? '' : ', ') . \Sprog\Wildcard::get('d2u_immo_kitchen_'. $kitchen);
                 $first_element = false;
             }
             echo '</div>';
         }
 
         if (count($property->floor_type) > 0) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_floor_type'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_floor_type') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">';
             $first_element = true;
             foreach ($property->floor_type as $floor_type) {
-                echo($first_element ? '' : ', ') . $tag_open .'d2u_immo_floor_type_'. $floor_type . $tag_close;
+                echo($first_element ? '' : ', ') . \Sprog\Wildcard::get('d2u_immo_floor_type_'. $floor_type);
                 $first_element = false;
             }
             echo '</div>';
         }
 
         if (count($property->elevator) > 0) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_elevator'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_elevator') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">';
             $first_element = true;
             foreach ($property->elevator as $elevator) {
-                echo($first_element ? '' : ', ') . $tag_open .'d2u_immo_elevator_'. $elevator . $tag_close;
+                echo($first_element ? '' : ', ') . \Sprog\Wildcard::get('d2u_immo_elevator_'. $elevator);
                 $first_element = false;
             }
             echo '</div>';
         }
 
         if ($property->cable_sat_tv) {
-            echo '<div class="col-12">'. $tag_open .'d2u_immo_cable_sat_tv'. $tag_close .'</div>';
+            echo '<div class="col-12">'. \Sprog\Wildcard::get('d2u_immo_cable_sat_tv') .'</div>';
         }
 
         if (count($property->broadband_internet) > 0) {
-            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. $tag_open .'d2u_immo_broadband_internet'. $tag_close .':</li></ul></div>';
+            echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_broadband_internet') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">'. implode(', ', $property->broadband_internet) .'</div>';
         }
         echo '</div>';
@@ -651,7 +599,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
-        echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description'. $tag_close .'</h2></div>';
+        echo '<div class="col-12 print-border-h"><h2>'. \Sprog\Wildcard::get('d2u_immo_description') .'</h2></div>';
         echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
@@ -663,7 +611,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
-        echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_location'. $tag_close .'</h2></div>';
+        echo '<div class="col-12 print-border-h"><h2>'. \Sprog\Wildcard::get('d2u_immo_description_location') .'</h2></div>';
         echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description_location) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
@@ -675,7 +623,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
-        echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_equipment'. $tag_close .'</h2></div>';
+        echo '<div class="col-12 print-border-h"><h2>'. \Sprog\Wildcard::get('d2u_immo_description_equipment') .'</h2></div>';
         echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description_equipment) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
@@ -687,7 +635,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
             echo '<div class="row page-break-avoid">';
         }
-        echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_description_others'. $tag_close .'</h2></div>';
+        echo '<div class="col-12 print-border-h"><h2>'. \Sprog\Wildcard::get('d2u_immo_description_others') .'</h2></div>';
         echo '<div class="col-12 print-border">'. TobiasKrais\D2UHelper\FrontendHelper::prepareEditorField($property->description_others) .'</div>';
         echo '<div class="col-12">&nbsp;</div>';
         if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
@@ -698,11 +646,11 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     if (null !== $print) { // Remove when https://github.com/twbs/bootstrap/issues/22753 is solved
         echo '<div class="row page-break-avoid">';
     }
-    echo '<div class="col-12 print-border-h"><h2>'. $tag_open .'d2u_immo_courtage'. $tag_close .'</h2></div>';
+    echo '<div class="col-12 print-border-h"><h2>'. \Sprog\Wildcard::get('d2u_immo_courtage') .'</h2></div>';
     if ('' === $property->courtage) {
-        echo '<div class="col-12 print-border">'. $tag_open .'d2u_immo_courtage_no'. $tag_close .'</div>';
+        echo '<div class="col-12 print-border">'. \Sprog\Wildcard::get('d2u_immo_courtage_no') .'</div>';
     } else {
-        echo '<div class="col-12 print-border">'. $property->courtage .' '. $tag_open .'d2u_immo_courtage_incl_vat'. $tag_close .'</div>';
+        echo '<div class="col-12 print-border">'. $property->courtage .' '. \Sprog\Wildcard::get('d2u_immo_courtage_incl_vat') .'</div>';
     }
     echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
 
@@ -718,7 +666,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
         echo '<div class="row">'; // START pictures
         echo '<div class="col-12 d-none d-print-inline print-border-h">';
-        echo '<h2>'. $tag_open .'d2u_immo_tab_pictures'. $tag_close .'</h2>';
+        echo '<h2>'. \Sprog\Wildcard::get('d2u_immo_tab_pictures') .'</h2>';
         echo '</div>';
         echo '<div class="col-12 d-none d-print-none">';
         echo '<h2>'. $property->name .'</h2>';
@@ -767,7 +715,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (count($property->ground_plans) > 0) {
             echo '<div class="row">';
             echo '<div class="col-12 print-border-h">';
-            echo '<h2>'. $tag_open .'d2u_immo_ground_plans'. $tag_close .'</h2>';
+            echo '<h2>'. \Sprog\Wildcard::get('d2u_immo_ground_plans') .'</h2>';
             echo '</div>';
             printImages($property->ground_plans);
             echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
@@ -777,7 +725,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (count($property->location_plans) > 0) {
             echo '<div class="row">';
             echo '<div class="col-12 print-border-h">';
-            echo '<h2>'. $tag_open .'d2u_immo_location_plans'. $tag_close .'</h2>';
+            echo '<h2>'. \Sprog\Wildcard::get('d2u_immo_location_plans') .'</h2>';
             echo '</div>';
             printImages($property->location_plans);
             echo '<div class="col-12 d-none d-print-inline">&nbsp;</div>';
@@ -800,7 +748,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
         echo '<div class="row page-break-avoid">';
         echo '<div class="col-12 d-none d-print-inline print-border-h">';
-        echo '<h2>'. $tag_open .'d2u_immo_tab_map'. $tag_close .'</h2>';
+        echo '<h2>'. \Sprog\Wildcard::get('d2u_immo_tab_map') .'</h2>';
         echo '</div>';
         echo '<div class="col-12 print-border">';
         echo '<h2 class="d-print-none">'. $property->name .'</h2>';
@@ -998,112 +946,14 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
         echo '<h2>'. $property->name .'</h2>';
 ?>
-		<script>
-			// Removes thousand separator, substutiutes decimal separator
-			function substractNumber(number_string) {
-				number_string = number_string.trim();
-				number_string = number_string.replace(".", ""); // Thousand separator
-				number_string = number_string.replace(".", ""); // Million separator
-				number_string = number_string.replace(",", ".");
-				number_string = number_string.replace(/[^\d\.,]/g, "");
-				return number_string;
-			}
-
-			// Format numbers for output
-			function formatZahl(zahl) {
-				var k = 2;
-				var neu = '';
-				var dec_point = ',';
-				var thousands_sep = '.';
-
-				// Round
-				var f = Math.pow(10, k);
-				zahl = '' + parseInt(zahl * f + (.5 * (zahl > 0 ? 1 : -1)) ) / f ;
-
-				// where is comma
-				var idx = zahl.indexOf('.');
-
-				// fill missing zero
-				zahl += (idx === -1 ? '.' : '' ) + f.toString().substring(1);
-
-				var sign = zahl < 0;
-				if(sign) zahl = zahl.substring(1);
-				idx = zahl.indexOf('.');
-
-				// decimal place
-				if( idx === -1) {
-					idx = zahl.length;
-				}
-				else {
-					neu = dec_point + zahl.substr(idx + 1, k);
-				}
-				while(idx > 0)    {
-					if(idx - 3 > 0) {
-						neu = thousands_sep + zahl.substring( idx - 3, idx) + neu;
-					}
-					else {
-						neu = zahl.substring(0, idx) + neu;
-					}
-					idx -= 3;
-				}
-				return (sign ? '-' : '') + neu;
-			}
-
-			// Recalculate values
-			function recalc() {
-				// Input Felder auslesen
-				var kaufpreis = substractNumber(document.getElementById("kaufpreis").value);
-				var provision = substractNumber(document.getElementById("maklerprovision").value) / 100;
-				var sonstiges = substractNumber(document.getElementById("sonstiges").value);
-				var eigenkapital = substractNumber(document.getElementById("eigenkapital").value);
-				var zins = substractNumber(document.getElementById("zinssatz").value) / 100;
-				var tilgung = substractNumber(document.getElementById("tilgung").value) / 100;
-				var grundsteuer = <?= (string) $real_estate_tax ?>;
-				var notarkosten = <?= (string) $notary_costs ?>;
-
-				// Neue Werte berechnen
-				var gesamtkosten = (kaufpreis * (provision + notarkosten + grundsteuer + 1));
-
-				gesamtkosten += (sonstiges * 1);
-
-				var darlehen = gesamtkosten - eigenkapital;
-
-				if(darlehen < 0)
-					darlehen = 0;
-				if(isNaN(darlehen)) {
-					alert("Bitte geben Sie nur Zahlen, Punkt oder Komma ein.");
-				}
-				document.getElementById("kaufpreis").value = formatZahl(kaufpreis);
-				document.getElementById("preis_grunderwerbsteuer").firstChild.nodeValue =
-						formatZahl(kaufpreis * grundsteuer);
-				document.getElementById("preis_notar").firstChild.nodeValue =
-						formatZahl(kaufpreis * notarkosten);
-				document.getElementById("maklerprovision").value = formatZahl(provision * 100);
-				document.getElementById("preis_maklerprovision").firstChild.nodeValue =
-						formatZahl(kaufpreis * provision);
-				document.getElementById("sonstiges").value = formatZahl(sonstiges);
-				document.getElementById("gesamtkosten").firstChild.nodeValue =
-						formatZahl(gesamtkosten);
-
-				document.getElementById("eigenkapital").value = formatZahl(eigenkapital);
-				document.getElementById("darlehen").firstChild.nodeValue =
-						formatZahl(darlehen);
-				document.getElementById("zinssatz").value = formatZahl(zins * 100);
-				document.getElementById("tilgung").value = formatZahl(tilgung * 100);
-				document.getElementById("rate").firstChild.nodeValue =
-						formatZahl(darlehen * (zins + tilgung) / 12);
-
-				return false;
-			}
-		</script>
 		<form id="finanzierungsrechner" method="post" target="blank">
 			<input name="option" value="finanzierungsrechner" type="hidden">
 			<fieldset>
-				<legend><?= $tag_open .'d2u_immo_finance_calc_investement'. $tag_close ?></legend>
+				<legend><?= \Sprog\Wildcard::get('d2u_immo_finance_calc_investement') ?></legend>
 				<table style="width: 100%;">
 					<tr>
 						<td style="width: 45%; height: 30px; text-align: left">
-							<strong><label for="kaufpreis"><?= $tag_open .'d2u_immo_purchase_price'. $tag_close ?></label></strong>
+							<strong><label for="kaufpreis"><?= \Sprog\Wildcard::get('d2u_immo_purchase_price') ?></label></strong>
 						</td>
 						<td style="width: 20%"></td>
 						<td style="width: 5%"></td>
@@ -1116,7 +966,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="height: 30px; text-align: left">
-							<label>+ <?= $tag_open .'d2u_immo_finance_calc_real_estate_tax'. $tag_close ?></label></td>
+							<label>+ <?= \Sprog\Wildcard::get('d2u_immo_finance_calc_real_estate_tax') ?></label></td>
 						<td style="text-align: right"><div id="grunderwerbsteuer">
 							<input type="hidden" name="grunderwerbsteuer" value="<?= number_format($real_estate_tax * 100, 2, ',', '.') ?>">
 							<?= number_format($real_estate_tax * 100, 2, ',', '.') ?></div></td>
@@ -1127,7 +977,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="height: 30px; text-align: left;">
-							<label>+ <?= $tag_open .'d2u_immo_finance_calc_notary_costs'. $tag_close ?></label></td>
+							<label>+ <?= \Sprog\Wildcard::get('d2u_immo_finance_calc_notary_costs') ?></label></td>
 						<td style="text-align: right"><div id="notar"><input type="hidden" name="notarkosten" value="<?= number_format($notary_costs * 100, 2, ',', '.') ?>">ca.
 							<?= number_format($notary_costs * 100, 2, ',', '.') ?></div></td>
 						<td style="text-align: right">%</td>
@@ -1137,7 +987,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="height: 30px; text-align: left;">
-							<label for="maklerprovision">+ <?= $tag_open .'d2u_immo_courtage'. $tag_close ?></label></td>
+							<label for="maklerprovision">+ <?= \Sprog\Wildcard::get('d2u_immo_courtage') ?></label></td>
 						<td style="text-align: right"><input name="maklerprovision" id="maklerprovision"
 								value="<?= number_format($courtage * 100, 2, ',', '.') ?>"
 								size="5" maxlength="5" type="text" style="text-align: right;"
@@ -1149,7 +999,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="height: 30px; text-align: left;">
-							<label for="sonstiges">+ <?= $tag_open .'d2u_immo_finance_calc_other_costs'. $tag_close ?></label></td>
+							<label for="sonstiges">+ <?= \Sprog\Wildcard::get('d2u_immo_finance_calc_other_costs') ?></label></td>
 						<td></td>
 						<td></td>
 						<td style="text-align: right"><input name="sonstiges" id="sonstiges"
@@ -1159,7 +1009,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="border-top: 1px solid #333; height: 30px; text-align: left;">
-							<label><strong><?= $tag_open .'d2u_immo_finance_calc_total_costs'. $tag_close ?></strong></label></td>
+							<label><strong><?= \Sprog\Wildcard::get('d2u_immo_finance_calc_total_costs') ?></strong></label></td>
 						<td style="border-top: 1px solid #333;"></td>
 						<td style="border-top: 1px solid #333;"></td>
 						<td style="border-top: 1px solid #333; text-align: right">
@@ -1177,7 +1027,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 45%; text-align: left; height: 30px">
-							<label for="eigenkapital"><?= $tag_open .'d2u_immo_finance_calc_equity'. $tag_close ?></label>
+							<label for="eigenkapital"><?= \Sprog\Wildcard::get('d2u_immo_finance_calc_equity') ?></label>
 						</td>
 						<td style="width: 20%"></td>
 						<td style="width: 5%"></td>
@@ -1189,7 +1039,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="height: 30px; text-align: left;">
-							<label><?= $tag_open .'d2u_immo_finance_calc_required_loan'. $tag_close ?></label>
+							<label><?= \Sprog\Wildcard::get('d2u_immo_finance_calc_required_loan') ?></label>
 						</td>
 						<td></td>
 						<td></td>
@@ -1198,7 +1048,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="height: 30px; text-align: left;">
-							<label for="zinssatz"><?= $tag_open .'d2u_immo_finance_calc_interest_rate'. $tag_close ?></label></td>
+							<label for="zinssatz"><?= \Sprog\Wildcard::get('d2u_immo_finance_calc_interest_rate') ?></label></td>
 						<td style="text-align: right"><input name="zinssatz" id="zinssatz"
 								value="<?= number_format($interest_rate * 100, 2, ',', '.') ?>"
 								size="5" maxlength="5" type="text" style="text-align: right;"
@@ -1209,7 +1059,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="height: 30px; text-align: left;">
-							<label for="tilgung"><?= $tag_open .'d2u_immo_finance_calc_repayment'. $tag_close ?></label></td>
+							<label for="tilgung"><?= \Sprog\Wildcard::get('d2u_immo_finance_calc_repayment') ?></label></td>
 						<td style="text-align: right"><input name="tilgung" id="tilgung"
 								value="<?= number_format($repayment * 100, 2, ',', '.') ?>"
 								size="5" maxlength="5" type="text" style="text-align: right;"
@@ -1220,7 +1070,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 					</tr>
 					<tr>
 						<td style="border-top: 1px solid #333; height: 30px; text-align: left;">
-							<label><strong><?= $tag_open .'d2u_immo_finance_calc_monthly_rate'. $tag_close ?></strong></label></td>
+							<label><strong><?= \Sprog\Wildcard::get('d2u_immo_finance_calc_monthly_rate') ?></strong></label></td>
 						<td style="border-top: 1px solid #333;"></td>
 						<td style="border-top: 1px solid #333;"></td>
 						<td style="border-top: 1px solid #333; text-align: right;">
@@ -1230,8 +1080,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				</table>
 			</fieldset>
 			<br />
-			<input name="berechnen" id="berechnen" value="<?= $tag_open .'d2u_immo_finance_calc_calculate'. $tag_close ?>" type="submit" onClick="javascript:recalc(); return false;" class="mb-2 btn btn-primary d-print-none">
-			<input name="drucken" id="drucken" value="<?= $tag_open .'d2u_immo_print'. $tag_close ?>" onClick="javascript:window.print(); return false;" type="submit" class="mb-2 btn btn-primary d-print-none">
+			<input name="berechnen" id="berechnen" value="<?= \Sprog\Wildcard::get('d2u_immo_finance_calc_calculate') ?>" type="submit" onClick="javascript:recalc(); return false;" class="mb-2 btn btn-primary d-print-none">
+			<input name="drucken" id="drucken" value="<?= \Sprog\Wildcard::get('d2u_immo_print') ?>" onClick="javascript:window.print(); return false;" type="submit" class="mb-2 btn btn-primary d-print-none">
 		</form>
 
 <?php
@@ -1243,30 +1093,30 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div id="tab_request" class="tab-pane immo-tab fade">'; // START tab request
         echo '<div class="row">';
         echo '<div class="col-12">';
-        echo '<fieldset><legend>'. $tag_open .'d2u_immo_form_title'. $tag_close .'</legend>';
+        echo '<fieldset><legend>'. \Sprog\Wildcard::get('d2u_immo_form_title') .'</legend>';
         $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
 
-				text|name|'. $tag_open .'d2u_immo_form_name'. $tag_close .' *
-				text|address|'. $tag_open .'d2u_immo_form_address'. $tag_close .'
-				text|zip|'. $tag_open .'d2u_immo_form_zip'. $tag_close .'
-				text|city|'. $tag_open .'d2u_immo_form_city'. $tag_close .'
-				text|phone|'. $tag_open .'d2u_immo_form_phone'. $tag_close .' *
-				text|email|'. $tag_open .'d2u_immo_form_email'. $tag_close .' *
-				textarea|message|'. $tag_open .'d2u_immo_form_message'. $tag_close .'
-				checkbox|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_privacy_policy'. $tag_close .' *|0,1|0
-				checkbox|phone_calls|'. $tag_open .'d2u_immo_form_phone_calls'. $tag_close .'|0,1|0
+				text|name|'. \Sprog\Wildcard::get('d2u_immo_form_name') .' *
+				text|address|'. \Sprog\Wildcard::get('d2u_immo_form_address') .'
+				text|zip|'. \Sprog\Wildcard::get('d2u_immo_form_zip') .'
+				text|city|'. \Sprog\Wildcard::get('d2u_immo_form_city') .'
+				text|phone|'. \Sprog\Wildcard::get('d2u_immo_form_phone') .' *
+				text|email|'. \Sprog\Wildcard::get('d2u_immo_form_email') .' *
+				textarea|message|'. \Sprog\Wildcard::get('d2u_immo_form_message') .'
+				checkbox|privacy_policy_accepted|'. \Sprog\Wildcard::get('d2u_immo_form_privacy_policy') .' *|0,1|0
+				checkbox|phone_calls|'. \Sprog\Wildcard::get('d2u_immo_form_phone_calls') .'|0,1|0
 				php|validate_timer|Spamprotection|<input name="validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
-				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
+				html||<br>* '. \Sprog\Wildcard::get('d2u_immo_form_required') .'<br><br>
 
-				submit|submit|'. $tag_open .'d2u_immo_form_send'. $tag_close .'|no_db
+				submit|submit|'. \Sprog\Wildcard::get('d2u_immo_form_send') .'|no_db
 
-				validate|empty|name|'. $tag_open .'d2u_immo_form_validate_name'. $tag_close .'
-				validate|empty|phone|'. $tag_open .'d2u_immo_form_validate_phone'. $tag_close .'
-				validate|empty|email|'. $tag_open .'d2u_immo_form_validate_email'. $tag_close .'
-				validate|type|email|email|'. $tag_open .'d2u_immo_form_validate_email_false'. $tag_close .'
-				validate|empty|privacy_policy_accepted|'. $tag_open .'d2u_immo_form_validate_privacy_policy'. $tag_close .'
-				validate|customfunction|validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
+				validate|empty|name|'. \Sprog\Wildcard::get('d2u_immo_form_validate_name') .'
+				validate|empty|phone|'. \Sprog\Wildcard::get('d2u_immo_form_validate_phone') .'
+				validate|empty|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email') .'
+				validate|type|email|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email_false') .'
+				validate|empty|privacy_policy_accepted|'. \Sprog\Wildcard::get('d2u_immo_form_validate_privacy_policy') .'
+				validate|customfunction|validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. \Sprog\Wildcard::get('d2u_immo_form_validate_spambots') .'|
 
 				action|tpl2email|d2u_immo_request|'. ($property->contact instanceof Contact ? $property->contact->email : rex::getErrorEmail());
 
@@ -1274,12 +1124,12 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $yform->setFormData(trim($form_data));
         $yform->setObjectparams('form_action', $property->getUrl());
         $yform->setObjectparams('form_anchor', 'tab_request');
-        $yform->setObjectparams('Error-occured', $tag_open .'d2u_immo_form_validate_title'. $tag_close);
+        $yform->setObjectparams('Error-occured', \Sprog\Wildcard::get('d2u_immo_form_validate_title'));
         $yform->setObjectparams('real_field_names', true);
         $yform->setObjectparams('form_name', 'd2u_immo_module_70_1_request_'. $this->getCurrentSlice()->getId()); /** @phpstan-ignore-line */
 
         // action - showtext
-        $yform->setActionField('showtext', [$tag_open .'d2u_immo_form_thanks'. $tag_close]);
+        $yform->setActionField('showtext', [\Sprog\Wildcard::get('d2u_immo_form_thanks')]);
 
         echo $yform->getForm();
         echo '</fieldset>';
@@ -1292,32 +1142,32 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div id="tab_recommendation" class="tab-pane immo-tab fade">'; // START tab recommendation
         echo '<div class="row">';
         echo '<div class="col-12">';
-        echo '<fieldset><legend>'. $tag_open .'d2u_immo_recommendation_title'. $tag_close .'</legend>';
+        echo '<fieldset><legend>'. \Sprog\Wildcard::get('d2u_immo_recommendation_title') .'</legend>';
         $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
 				hidden|immo_url|'. $property->getUrl(true) .'|REQUEST
 				hidden|immo_contact_mail|'. ($property->contact instanceof Contact ? $property->contact->email : '') .'|REQUEST
 				hidden|immo_contact_name|'. ($property->contact instanceof Contact ? $property->contact->firstname .' '. $property->contact->lastname : '') .'|REQUEST
 
-				text|sender_name|'. $tag_open .'d2u_immo_recommendation_sender_name'. $tag_close .' *
-				text|sender_mail|'. $tag_open .'d2u_immo_recommendation_sender_mail'. $tag_close .' *
-				text|receipient_name|'. $tag_open .'d2u_immo_recommendation_receipient_name'. $tag_close .' *
-				text|receipient_mail|'. $tag_open .'d2u_immo_recommendation_receipient_mail'. $tag_close .' *
-				textarea|message|'. $tag_open .'d2u_immo_recommendation_message'. $tag_close .'
+				text|sender_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_sender_name') .' *
+				text|sender_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_sender_mail') .' *
+				text|receipient_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_receipient_name') .' *
+				text|receipient_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_receipient_mail') .' *
+				textarea|message|'. \Sprog\Wildcard::get('d2u_immo_recommendation_message') .'
 				php|immo_contact_validate_timer|Spamprotection|<input name="immo_contact_validate_timer" type="hidden" value="'. microtime(true) .'" />|
 
-				html||<br>* '. $tag_open .'d2u_immo_form_required'. $tag_close .'<br><br>
-				html||<br>'. $tag_open .'d2u_immo_recommendation_privacy_policy'. $tag_close .'<br><br>
+				html||<br>* '. \Sprog\Wildcard::get('d2u_immo_form_required') .'<br><br>
+				html||<br>'. \Sprog\Wildcard::get('d2u_immo_recommendation_privacy_policy') .'<br><br>
 
-				submit|submit|'. $tag_open .'d2u_immo_form_send'. $tag_close .'|no_db
+				submit|submit|'. \Sprog\Wildcard::get('d2u_immo_form_send') .'|no_db
 
-				validate|empty|sender_name|'. $tag_open .'d2u_immo_recommendation_validate_sender_name'. $tag_close .'
-				validate|empty|sender_mail|'. $tag_open .'d2u_immo_recommendation_validate_sender_mail'. $tag_close .'
-				validate|type|sender_mail|email|'. $tag_open .'d2u_immo_recommendation_validate_sender_mail'. $tag_close .'
-				validate|empty|receipient_name|'. $tag_open .'d2u_immo_recommendation_validate_receipient_name'. $tag_close .'
-				validate|empty|receipient_mail|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
-				validate|type|receipient_mail|email|'. $tag_open .'d2u_immo_recommendation_validate_receipient_mail'. $tag_close .'
-				validate|empty|message|'. $tag_open .'d2u_immo_recommendation_validate_message'. $tag_close .'
-				validate|customfunction|immo_contact_validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. $tag_open .'d2u_immo_form_validate_spambots'. $tag_close .'|
+				validate|empty|sender_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_name') .'
+				validate|empty|sender_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'
+				validate|type|sender_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'
+				validate|empty|receipient_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_name') .'
+				validate|empty|receipient_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'
+				validate|type|receipient_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'
+				validate|empty|message|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_message') .'
+				validate|customfunction|immo_contact_validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. \Sprog\Wildcard::get('d2u_immo_form_validate_spambots') .'|
 
 				action|callback|sendRecommendation';
 
@@ -1325,12 +1175,12 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $yform_recommend->setFormData(trim($form_data));
         $yform_recommend->setObjectparams('form_action', $property->getUrl());
         $yform_recommend->setObjectparams('form_anchor', 'tab_recommendation');
-        $yform_recommend->setObjectparams('Error-occured', $tag_open .'d2u_immo_form_validate_title'. $tag_close);
+        $yform_recommend->setObjectparams('Error-occured', \Sprog\Wildcard::get('d2u_immo_form_validate_title'));
         $yform_recommend->setObjectparams('real_field_names', true);
         $yform_recommend->setObjectparams('form_name', 'd2u_immo_module_70_1_recommend_'. $this->getCurrentSlice()->getId()); /** @phpstan-ignore-line */
 
         // action - showtext
-        $yform_recommend->setActionField('showtext', [$tag_open .'d2u_immo_recommendation_thanks'. $tag_close]);
+        $yform_recommend->setActionField('showtext', [\Sprog\Wildcard::get('d2u_immo_recommendation_thanks')]);
 
         echo $yform_recommend->getForm();
         echo '</fieldset>';
@@ -1346,8 +1196,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
     if ($property->contact instanceof Contact) {
         echo '<div class="col-12 d-none d-print-inline">';
-        echo '<p>'. $tag_open .'d2u_immo_print_foot'. $tag_close .'</p>';
-        echo '<p>'. $tag_open .'d2u_immo_print_foot_greetings'. $tag_close .'</p>';
+        echo '<p>'. \Sprog\Wildcard::get('d2u_immo_print_foot') .'</p>';
+        echo '<p>'. \Sprog\Wildcard::get('d2u_immo_print_foot_greetings') .'</p>';
         echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname;
         if ('' !== $property->contact->phone) {
             echo '<br>'. $property->contact->phone;
@@ -1361,29 +1211,29 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
 } else {
     // Output property list
-    $properties_leasehold = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'ERBPACHT', true);
-    $properties_leasing = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'LEASING', true);
-    $properties_rent = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'MIETE_PACHT', true);
-    $properties_sale = D2U_Immo\Property::getAll(rex_clang::getCurrentId(), 'KAUF', true);
+    $properties_leasehold = TobiasKrais\D2UImmo\Property::getAll(rex_clang::getCurrentId(), 'ERBPACHT', true);
+    $properties_leasing = TobiasKrais\D2UImmo\Property::getAll(rex_clang::getCurrentId(), 'LEASING', true);
+    $properties_rent = TobiasKrais\D2UImmo\Property::getAll(rex_clang::getCurrentId(), 'MIETE_PACHT', true);
+    $properties_sale = TobiasKrais\D2UImmo\Property::getAll(rex_clang::getCurrentId(), 'KAUF', true);
 
     // Tabs
     echo '<div class="col-12">';
     echo '<ul class="nav nav-pills d-print-none">';
     $tab_active = true;
     if (count($properties_sale) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#tab_sale">'. $tag_open .'d2u_immo_tab_sale'. $tag_close .'</a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link active" href="#tab_sale">'. \Sprog\Wildcard::get('d2u_immo_tab_sale') .'</a></li>';
         $tab_active = false;
     }
     if (count($properties_rent) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_rent">'. $tag_open .'d2u_immo_tab_rent'. $tag_close .'</a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_rent">'. \Sprog\Wildcard::get('d2u_immo_tab_rent') .'</a></li>';
         $tab_active = false;
     }
     if (count($properties_leasing) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasing">'. $tag_open .'d2u_immo_tab_leasing'. $tag_close .'</a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasing">'. \Sprog\Wildcard::get('d2u_immo_tab_leasing') .'</a></li>';
         $tab_active = false;
     }
     if (count($properties_leasehold) > 0) {
-        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasehold">'. $tag_open .'d2u_immo_tab_leasehold'. $tag_close .'</a></li>';
+        echo '<li class="nav-item"><a data-toggle="tab" class="nav-link'. ($tab_active ? ' active' : '') .'" href="#tab_leasehold">'. \Sprog\Wildcard::get('d2u_immo_tab_leasehold') .'</a></li>';
         $tab_active = false;
     }
     echo '</ul>';
@@ -1452,4 +1302,3 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo 'window.print();';
         }
     ?>
-</script>

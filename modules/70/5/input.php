@@ -1,5 +1,5 @@
 <?php
-$contacts = D2U_Immo\Contact::getAll();
+$contacts = TobiasKrais\D2UImmo\Contact::getAll();
 $selected_contact_id = (int) 'REX_VALUE[2]';
 ?>
 

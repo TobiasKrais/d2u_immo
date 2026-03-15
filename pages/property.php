@@ -1,7 +1,7 @@
 <?php
 
-use D2U_Immo\Category;
-use D2U_Immo\Contact;
+use TobiasKrais\D2UImmo\Category;
+use TobiasKrais\D2UImmo\Contact;
 
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
@@ -24,7 +24,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     $property_id = $form['property_id'];
     foreach (rex_clang::getAll() as $rex_clang) {
         if (false === $property) {
-            $property = new D2U_Immo\Property($property_id, $rex_clang->getId());
+            $property = new TobiasKrais\D2UImmo\Property($property_id, $rex_clang->getId());
             $property->property_id = $property_id; // Ensure correct ID in case first language has no object
             $property->additional_costs = (int) $form['additional_costs'];
             $property->animals = array_key_exists('animals', $form);
@@ -34,7 +34,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $property->broadband_internet = is_array($form['broadband_internet']) ? array_map('strval', $form['broadband_internet']) : [];
             $property->cable_sat_tv = array_key_exists('cable_sat_tv', $form);
             if (isset($form['category_id']) && (int) $form['category_id'] > 0) {
-                $property->category = new D2U_Immo\Category((int) $form['category_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
+                $property->category = new TobiasKrais\D2UImmo\Category((int) $form['category_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
             }
             $property->city = $form['city'];
             $property->cold_rent = (int) $form['cold_rent'];
@@ -42,7 +42,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $property->condition_type = $form['condition_type'];
             $property->construction_year = (int) $form['construction_year'];
             if (isset($form['contact_id']) && (int) $form['contact_id'] > 0) {
-                $property->contact = new D2U_Immo\Contact((int) $form['contact_id']);
+                $property->contact = new TobiasKrais\D2UImmo\Contact((int) $form['contact_id']);
             }
             $property->country_code = $form['country_code'];
             $property->courtage = $form['courtage'];
@@ -150,7 +150,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $property_id = $form['property_id'];
     }
-    $property = new D2U_Immo\Property($property_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $property = new TobiasKrais\D2UImmo\Property($property_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $property->property_id = $property_id; // Ensure correct ID in case language has no object
     $property->delete();
 
@@ -158,7 +158,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 }
 // Change online status of machine
 elseif ('changestatus' === $func) {
-    $property = new D2U_Immo\Property($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $property = new TobiasKrais\D2UImmo\Property($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
     $property->property_id = $entry_id; // Ensure correct ID in case language has no object
     $property->changeStatus();
 
@@ -176,7 +176,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 				<input type="hidden" name="form[property_id]" value="<?= 'edit' === $func ? $entry_id : 0 ?>">
 				<?php
                     foreach (rex_clang::getAll() as $rex_clang) {
-                        $property = new D2U_Immo\Property($entry_id, $rex_clang->getId());
+                        $property = new TobiasKrais\D2UImmo\Property($entry_id, $rex_clang->getId());
                         $required = $rex_clang->getId() === (int) (rex_config::get('d2u_helper', 'default_lang')) ? true : false;
 
                         $readonly_lang = true;
@@ -226,7 +226,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                     }
 
                     // Do not use last object from translations, because you don't know if it exists in DB
-                    $property = new D2U_Immo\Property($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                    $property = new TobiasKrais\D2UImmo\Property($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
                     $readonly = true;
                     if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]'))) {
                         $readonly = false;
@@ -238,7 +238,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<div class="panel-body-wrapper slide">
 						<?php
                             $options_categories = [];
-                            foreach (D2U_Immo\Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
+                            foreach (TobiasKrais\D2UImmo\Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
                                 if ('' !== $category->name) {
                                     $options_categories[$category->category_id] = $category->name;
                                 }
@@ -587,7 +587,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_object_reserved', 'form[object_reserved]', 'true', $property->object_reserved, $readonly);
                             \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_property_object_sold', 'form[object_sold]', 'true', $property->object_sold, $readonly);
                             $options_contacts = [];
-                            foreach (D2U_Immo\Contact::getAll() as $contact) {
+                            foreach (TobiasKrais\D2UImmo\Contact::getAll() as $contact) {
                                 if ('' !== $contact->lastname) {
                                     $options_contacts[$contact->contact_id] = $contact->lastname .', '. $contact->firstname;
                                 }

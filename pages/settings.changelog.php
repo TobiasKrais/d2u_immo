@@ -5,6 +5,36 @@
 
 <p>1.4.0-DEV:</p>
 <ul>
+	<li>Wichtige Hinweise
+		<ul>
+			<li>Die Klassen stehen jetzt im Namespace <code>TobiasKrais\D2UImmo</code> zur Verfügung.</li>
+			<li>Der bisherige Namespace <code>D2U_Immo</code> und die alten globalen Klassennamen sind nur noch als deprecated Übergangsschicht vorhanden und werden mit Version 2.0.0 entfernt.</li>
+			<li>Folgende Klassen wurden umbenannt und stehen künftig unter diesen neuen Namen zur Verfügung:
+				<ul>
+					<li><code>D2U_Immo\AExport</code> wird zu <code>TobiasKrais\D2UImmo\AExport</code>.</li>
+					<li><code>D2U_Immo\AFTPExport</code> wird zu <code>TobiasKrais\D2UImmo\AFTPExport</code>.</li>
+					<li><code>D2U_Immo\Advertisement</code> wird zu <code>TobiasKrais\D2UImmo\Advertisement</code>.</li>
+					<li><code>D2U_Immo\Category</code> wird zu <code>TobiasKrais\D2UImmo\Category</code>.</li>
+					<li><code>D2U_Immo\Contact</code> wird zu <code>TobiasKrais\D2UImmo\Contact</code>.</li>
+					<li><code>D2U_Immo\ExportedProperty</code> wird zu <code>TobiasKrais\D2UImmo\ExportedProperty</code>.</li>
+					<li><code>D2U_Immo\FrontendHelper</code> wird zu <code>TobiasKrais\D2UImmo\FrontendHelper</code>.</li>
+					<li><code>D2U_Immo\ImportCronjob</code> wird zu <code>TobiasKrais\D2UImmo\ImportCronjob</code>.</li>
+					<li><code>D2U_Immo\ImportOpenImmo</code> wird zu <code>TobiasKrais\D2UImmo\ImportOpenImmo</code>.</li>
+					<li><code>D2U_Immo\OpenImmo</code> wird zu <code>TobiasKrais\D2UImmo\OpenImmo</code>.</li>
+					<li><code>D2U_Immo\Property</code> wird zu <code>TobiasKrais\D2UImmo\Property</code>.</li>
+					<li><code>D2U_Immo\Provider</code> wird zu <code>TobiasKrais\D2UImmo\Provider</code>.</li>
+					<li><code>d2u_immo_export_cronjob</code> wird zu <code>TobiasKrais\D2UImmo\ExportCronjob</code>.</li>
+					<li><code>d2u_immo_frontend_helper</code> wird zu <code>TobiasKrais\D2UImmo\FrontendHelper</code>.</li>
+					<li><code>d2u_immo_lang_helper</code> wird zu <code>TobiasKrais\D2UImmo\LangHelper</code>.</li>
+					<li><code>D2UImmoModules</code> wird zu <code>TobiasKrais\D2UImmo\Module</code>.</li>
+					<li><code>export_lang_helper</code> wird zu <code>TobiasKrais\D2UImmo\LangHelper</code>.</li>
+				</ul>
+			</li>
+			<li>Die Klassen-Dateien im lib-Verzeichnis wurden auf CamelCase-Dateinamen umgestellt. Export- und Import-Klassen liegen jetzt zusätzlich in den Unterverzeichnissen <code>lib/export</code> und <code>lib/import</code>.</li>
+			<li>Die Rückwärtskompatibilität für alte Klassennamen wird vorübergehend über <code>lib/deprecated_classes.php</code> bereitgestellt.</li>
+		</ul>
+	</li>
+	<li>Vorbereitung auf Redaxo 6: Plugins in Hauptverzeichnis verschoben.</li>
 	<li>Neue Einstellung für eine Widerrufsbelehrung ergänzt und vor dem Exposé-Druck in den Modulen 70-1 und 70-4 als Hinweisdialog verlinkt.</li>
 	<li>Immobilienausgabe ergänzt um die berechnete Energieeffizienzklasse in Listen- und Detailansicht der Module 70-1 und 70-4.</li>
 	<li>Neue Module 70-4 bis 70-6 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefügt.</li>

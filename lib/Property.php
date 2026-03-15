@@ -1,6 +1,6 @@
 <?php
 
-namespace D2U_Immo;
+namespace TobiasKrais\D2UImmo;
 
 use rex;
 use rex_addon;
@@ -428,14 +428,8 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->updateuser = (string) $result->getValue('updateuser');
             $this->wheelchair_accessable = 1 === (int) $result->getValue('wheelchair_accessable') ? true : false;
             $this->zip_code = (string) $result->getValue('zip_code');
-            // Import plugin
-            if (rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
-                $this->openimmo_anid = (string) $result->getValue('openimmo_anid');
-            }
-            // Window advertising plugin fields
-            if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                $this->window_advertising_status = (string) $result->getValue('window_advertising_status');
-            }
+            $this->openimmo_anid = (string) $result->getValue('openimmo_anid');
+            $this->window_advertising_status = (string) $result->getValue('window_advertising_status');
         }
     }
 
@@ -455,9 +449,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->online_status = 'offline';
 
             // Remove from export
-            if (rex_plugin::get('d2u_immo', 'export')->isAvailable()) {
-                ExportedProperty::removePropertyFromAllExports($this->property_id);
-            }
+            ExportedProperty::removePropertyFromAllExports($this->property_id);
         } else {
             if ($this->property_id > 0) {
                 $query = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_properties '
@@ -479,26 +471,24 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
      */
     public function changeWindowAdvertisingStatus(): void
     {
-        if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-            if ('online' === $this->window_advertising_status) {
-                if ($this->property_id > 0) {
-                    $query = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_properties '
-                        ."SET window_advertising_status = 'offline' "
-                        .'WHERE property_id = '. $this->property_id;
-                    $result = rex_sql::factory();
-                    $result->setQuery($query);
-                }
-                $this->window_advertising_status = 'offline';
-            } else {
-                if ($this->property_id > 0) {
-                    $query = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_properties '
-                        ."SET window_advertising_status = 'online' "
-                        .'WHERE property_id = '. $this->property_id;
-                    $result = rex_sql::factory();
-                    $result->setQuery($query);
-                }
-                $this->window_advertising_status = 'online';
+        if ('online' === $this->window_advertising_status) {
+            if ($this->property_id > 0) {
+                $query = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_properties '
+                    ."SET window_advertising_status = 'offline' "
+                    .'WHERE property_id = '. $this->property_id;
+                $result = rex_sql::factory();
+                $result->setQuery($query);
             }
+            $this->window_advertising_status = 'offline';
+        } else {
+            if ($this->property_id > 0) {
+                $query = 'UPDATE '. rex::getTablePrefix() .'d2u_immo_properties '
+                    ."SET window_advertising_status = 'online' "
+                    .'WHERE property_id = '. $this->property_id;
+                $result = rex_sql::factory();
+                $result->setQuery($query);
+            }
+            $this->window_advertising_status = 'online';
         }
     }
 
@@ -608,26 +598,24 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
     public static function getAllForOpenImmoAnID($openimmo_anid, $clang_id, $only_online = false)
     {
         $properties = [];
-        if(rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
-            $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
-                .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
-                    .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
-                .'WHERE openimmo_anid = "'. $openimmo_anid .'"';
-            if ($only_online) {
-                $query .= ' AND online_status = "online"';
-            }
-            if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
-                $query .= ' ORDER BY priority ASC';
-            } else {
-                $query .= ' ORDER BY name ASC';
-            }
-            $result = rex_sql::factory();
-            $result->setQuery($query);
+        $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
+            .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
+                .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
+            .'WHERE openimmo_anid = "'. $openimmo_anid .'"';
+        if ($only_online) {
+            $query .= ' AND online_status = "online"';
+        }
+        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
+            $query .= ' ORDER BY priority ASC';
+        } else {
+            $query .= ' ORDER BY name ASC';
+        }
+        $result = rex_sql::factory();
+        $result->setQuery($query);
 
-            for ($i = 0; $i < $result->getRows(); ++$i) {
-                $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
-                $result->next();
-            }
+        for ($i = 0; $i < $result->getRows(); ++$i) {
+            $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
+            $result->next();
         }
         return $properties;
     }
@@ -640,23 +628,21 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
     public static function getAllWindowAdvertisingProperties($clang_id)
     {
         $properties = [];
-        if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-            $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
-                .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
-                    .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
-                ."WHERE window_advertising_status = 'online' ";
-            if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
-                $query .= 'ORDER BY priority ASC';
-            } else {
-                $query .= 'ORDER BY name ASC';
-            }
-            $result = rex_sql::factory();
-            $result->setQuery($query);
+        $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
+            .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
+                .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
+            ."WHERE window_advertising_status = 'online' ";
+        if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
+            $query .= 'ORDER BY priority ASC';
+        } else {
+            $query .= 'ORDER BY name ASC';
+        }
+        $result = rex_sql::factory();
+        $result->setQuery($query);
 
-            for ($i = 0; $i < $result->getRows(); ++$i) {
-                $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
-                $result->next();
-            }
+        for ($i = 0; $i < $result->getRows(); ++$i) {
+            $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
+            $result->next();
         }
         return $properties;
     }
@@ -893,12 +879,8 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
                     ."type_of_use = '". $this->type_of_use ."', "
                     .'wheelchair_accessable = '. ($this->wheelchair_accessable ? 1 : 0) .', '
                     ."zip_code = '". $this->zip_code ."' ";
-            if (rex_plugin::get('d2u_immo', 'import')->isAvailable()) {
-                $query .= ", openimmo_anid = '". $this->openimmo_anid ."' ";
-            }
-            if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-                $query .= ", window_advertising_status = '". ('online' === $this->window_advertising_status ? 'online' : 'offline') ."' ";
-            }
+            $query .= ", openimmo_anid = '". $this->openimmo_anid ."' ";
+            $query .= ", window_advertising_status = '". ('online' === $this->window_advertising_status ? 'online' : 'offline') ."' ";
 
             if (0 === $this->property_id) {
                 $query = 'INSERT INTO '. $query;
@@ -913,7 +895,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
             }
 
             // Remove from export
-            if (rex_plugin::get('d2u_immo', 'export')->isAvailable() && 'online' === $pre_save_object->online_status && 'online' !== $this->online_status) {
+            if ('online' === $pre_save_object->online_status && 'online' !== $this->online_status) {
                 ExportedProperty::removePropertyFromAllExports($this->property_id);
             }
         }

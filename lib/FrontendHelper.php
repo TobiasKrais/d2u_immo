@@ -1,5 +1,5 @@
 <?php
-namespace D2U_Immo;
+namespace TobiasKrais\D2UImmo;
 
 use rex_clang;
 

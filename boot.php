@@ -1,14 +1,19 @@
 <?php
 
-use D2U_Immo\Advertisement;
-use D2U_Immo\Category;
-use D2U_Immo\Property;
+use TobiasKrais\D2UImmo\Advertisement;
+use TobiasKrais\D2UImmo\Category;
+use TobiasKrais\D2UImmo\LangHelper;
+use TobiasKrais\D2UImmo\Property;
 
 if (\rex::isBackend() && is_object(\rex::getUser())) {
     rex_perm::register('d2u_immo[]', rex_i18n::msg('d2u_immo_rights_all'));
     rex_perm::register('d2u_immo[edit_lang]', rex_i18n::msg('d2u_immo_rights_edit_lang'), rex_perm::OPTIONS);
     rex_perm::register('d2u_immo[edit_data]', rex_i18n::msg('d2u_immo_rights_edit_data'), rex_perm::OPTIONS);
+    rex_perm::register('d2u_immo[export]', rex_i18n::msg('d2u_immo_export_rights_export'), rex_perm::OPTIONS);
+    rex_perm::register('d2u_immo[export_provider]', rex_i18n::msg('d2u_immo_export_rights_export_provider'));
+    rex_perm::register('d2u_immo[import]', rex_i18n::msg('d2u_immo_rights_all') .': '. rex_i18n::msg('d2u_immo_import'), rex_perm::OPTIONS);
     rex_perm::register('d2u_immo[settings]', rex_i18n::msg('d2u_immo_rights_settings'), rex_perm::OPTIONS);
+    rex_perm::register('d2u_immo[window_advertising]', rex_i18n::msg('d2u_immo_window_advertising_rights_all'), rex_perm::OPTIONS);
     rex_view::addCssFile($this->getAssetsUrl('backend.css'));
 
     rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_immo_translation_list(...));
@@ -31,7 +36,7 @@ function rex_d2u_immo_alternate_urls(rex_extension_point $ep) {
     $url_namespace = (string) $params['url_namespace'];
     $url_id = (int) $params['url_id'];
 
-    $url_list = \D2U_Immo\FrontendHelper::getAlternateURLs($url_namespace, $url_id);
+    $url_list = \TobiasKrais\D2UImmo\FrontendHelper::getAlternateURLs($url_namespace, $url_id);
     if (count($url_list) === 0 && is_array($ep->getSubject())) {
         $url_list = $ep->getSubject();
     }
@@ -77,7 +82,7 @@ function rex_d2u_immo_breadcrumbs(rex_extension_point $ep) {
     $url_namespace = (string) $params['url_namespace'];
     $url_id = (int) $params['url_id'];
 
-    $breadcrumbs = \D2U_Immo\FrontendHelper::getBreadcrumbs($url_namespace, $url_id);
+    $breadcrumbs = \TobiasKrais\D2UImmo\FrontendHelper::getBreadcrumbs($url_namespace, $url_id);
     if (count($breadcrumbs) === 0) {
         $breadcrumbs = $ep->getSubject();
     }
@@ -97,13 +102,26 @@ function rex_d2u_immo_clang_deleted(rex_extension_point $ep)
     $clang_id = $params['id'];
 
     // Delete
-    $categories = D2U_Immo\Category::getAll($clang_id);
+    $categories = TobiasKrais\D2UImmo\Category::getAll($clang_id);
     foreach ($categories as $category) {
         $category->delete(false);
     }
-    $properties = D2U_Immo\Property::getAll($clang_id, '', false);
+    $properties = TobiasKrais\D2UImmo\Property::getAll($clang_id, '', false);
     foreach ($properties as $property) {
         $property->delete(false);
+    }
+
+    $providers = TobiasKrais\D2UImmo\Provider::getAll(false);
+    foreach ($providers as $provider) {
+        if ($provider->clang_id === $clang_id) {
+            $provider->clang_id = rex_clang::getStartId();
+            $provider->save();
+        }
+    }
+
+    $ads = Advertisement::getAll($clang_id, false);
+    foreach ($ads as $ad) {
+        $ad->delete(false);
     }
 
     // Delete language settings
@@ -111,7 +129,7 @@ function rex_d2u_immo_clang_deleted(rex_extension_point $ep)
         rex_config::remove('d2u_immo', 'lang_replacement_'. $clang_id);
     }
     // Delete language replacements
-    d2u_immo_lang_helper::factory()->uninstall($clang_id);
+    LangHelper::factory()->uninstall($clang_id);
 
     return $warning;
 }
@@ -240,24 +258,22 @@ function rex_d2u_immo_translation_list(rex_extension_point $ep) {
         ];
     }
 
-    if (rex_plugin::get('d2u_immo', 'window_advertising')->isAvailable()) {
-        $ads = Advertisement::getTranslationHelperObjects($target_clang_id, $filter_type);
-        if (count($ads) > 0) {
-            $html_ads = '<ul>';
-            foreach ($ads as $ad) {
-                if ('' === $ad->title) {
-                    $ad = new Advertisement($ad->ad_id, $source_clang_id);
-                }
-                $html_ads .= '<li><a href="'. rex_url::backendPage('d2u_immo/window_advertising/property', ['entry_id' => $ad->ad_id, 'func' => 'edit']) .'">'. $ad->title .'</a></li>';
+    $ads = Advertisement::getTranslationHelperObjects($target_clang_id, $filter_type);
+    if (count($ads) > 0) {
+        $html_ads = '<ul>';
+        foreach ($ads as $ad) {
+            if ('' === $ad->title) {
+                $ad = new Advertisement($ad->ad_id, $source_clang_id);
             }
-            $html_ads .= '</ul>';
-            
-            $list_entry['pages'][] = [
-                'title' => rex_i18n::msg('d2u_immo_window_advertising_ads'),
-                'icon' => 'fa-home',
-                'html' => $html_ads
-            ];
+            $html_ads .= '<li><a href="'. rex_url::backendPage('d2u_immo/window_advertising_advertisement', ['entry_id' => $ad->ad_id, 'func' => 'edit']) .'">'. $ad->title .'</a></li>';
         }
+        $html_ads .= '</ul>';
+        
+        $list_entry['pages'][] = [
+            'title' => rex_i18n::msg('d2u_immo_window_advertising_ads'),
+            'icon' => 'fa-home',
+            'html' => $html_ads
+        ];
     }
 
     $list[] = $list_entry;

@@ -1,0 +1,31 @@
+<?php
+
+namespace TobiasKrais\D2UImmo;
+
+/**
+ * Offers helper functions for import plugin.
+ */
+class ImportCronjob extends \TobiasKrais\D2UHelper\ACronJob
+{
+    /**
+     * Create a new instance of object.
+     * @return ImportCronjob CronJob object
+     */
+    public static function factory()
+    {
+        $cronjob = new self();
+        $cronjob->name = 'D2U Immo Autoimport';
+        return $cronjob;
+    }
+
+    /**
+     * Install CronJob. Its also activated.
+     */
+    public function install(): void
+    {
+        $description = 'Imports OpenImmo files';
+        $php_code = '<?php namespace TobiasKrais\D2UImmo; ImportOpenImmo::autoimport(); ?>';
+        $interval = '{\"minutes\":\"all\",\"hours\":\"all\",\"days\":\"all\",\"weekdays\":\"all\",\"months\":\"all\"}';
+        self::save($description, $php_code, $interval);
+    }
+}

@@ -206,8 +206,82 @@ if (0 === $sql->getRows()) {
 }
 
 // Insert frontend translations
-if (class_exists(d2u_immo_lang_helper::class)) {
-    d2u_immo_lang_helper::factory()->install();
+if (class_exists(\TobiasKrais\D2UImmo\LangHelper::class)) {
+    \TobiasKrais\D2UImmo\LangHelper::factory()->install();
+}
+
+// Export tables
+\rex_sql_table::get(\rex::getTable('d2u_immo_export_provider'))
+    ->ensureColumn(new rex_sql_column('provider_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('provider_id')
+    ->ensureColumn(new \rex_sql_column('name', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('type', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('company_name', 'VARCHAR(100)', true))
+    ->ensureColumn(new \rex_sql_column('company_email', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('customer_number', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('media_manager_type', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_server', 'VARCHAR(100)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_username', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_password', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_filename', 'VARCHAR(50)', true))
+    ->ensureColumn(new \rex_sql_column('ftp_supports_360_pictures', 'TINYINT(1)', true, '0'))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_immo_export_provider'))
+    ->removeColumn('linkedin_email')
+    ->removeColumn('linkedin_id')
+    ->removeColumn('linkedin_groupid')
+    ->removeColumn('social_access_token')
+    ->removeColumn('social_access_token_valid_until')
+    ->removeColumn('social_app_id')
+    ->removeColumn('social_app_secret')
+    ->removeColumn('social_oauth_token')
+    ->removeColumn('social_oauth_token_secret')
+    ->removeColumn('social_oauth_token_valid_until')
+    ->removeColumn('facebook_email')
+    ->removeColumn('facebook_pageid')
+    ->removeColumn('twitter_id')
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_immo_export_properties'))
+    ->ensureColumn(new rex_sql_column('property_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('provider_id', 'INT(11)', false))
+    ->setPrimaryKey(['property_id', 'provider_id'])
+    ->ensureColumn(new \rex_sql_column('export_action', 'VARCHAR(10)'))
+    ->ensureColumn(new \rex_sql_column('provider_import_id', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('export_timestamp', 'DATETIME', true))
+    ->ensure();
+
+// Import column
+\rex_sql_table::get(\rex::getTable('d2u_immo_properties'))
+    ->ensureColumn(new \rex_sql_column('openimmo_anid', 'VARCHAR(32)', true))
+    ->alter();
+
+// Window advertising tables and property column
+\rex_sql_table::get(\rex::getTable('d2u_immo_window_advertising'))
+    ->ensureColumn(new rex_sql_column('ad_id', 'INT(11) unsigned', false, null, 'auto_increment'))
+    ->setPrimaryKey('ad_id')
+    ->ensureColumn(new \rex_sql_column('priority', 'INT(11)', true))
+    ->ensureColumn(new \rex_sql_column('picture', 'VARCHAR(191)', true))
+    ->ensureColumn(new \rex_sql_column('online_status', 'VARCHAR(10)', true))
+    ->ensure();
+\rex_sql_table::get(\rex::getTable('d2u_immo_window_advertising_lang'))
+    ->ensureColumn(new rex_sql_column('ad_id', 'INT(11)', false))
+    ->ensureColumn(new \rex_sql_column('clang_id', 'INT(11)', false))
+    ->setPrimaryKey(['ad_id', 'clang_id'])
+    ->ensureColumn(new \rex_sql_column('title', 'VARCHAR(191)'))
+    ->ensureColumn(new \rex_sql_column('description', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('translation_needs_update', 'VARCHAR(7)', true))
+    ->ensureColumn(new \rex_sql_column('updatedate', 'DATETIME', true))
+    ->ensureColumn(new \rex_sql_column('updateuser', 'VARCHAR(191)', true))
+    ->ensure();
+\rex_sql_table::get(rex::getTable('d2u_immo_properties'))
+    ->ensureColumn(new \rex_sql_column('window_advertising_status', 'VARCHAR(10)', true, 'offline'))
+    ->alter();
+
+// Update legacy export config
+if (!is_bool(rex_config::get('d2u_immo', 'export_autoexport', false))) {
+    rex_config::set('d2u_immo', 'export_autoexport', 'active' === rex_config::get('d2u_immo', 'export_autoexport'));
 }
 
 // Standard settings
@@ -216,13 +290,13 @@ if (!$this->hasConfig()) { /** @phpstan-ignore-line */
 }
 
 // Update language replacements
-if (!class_exists(d2u_immo_lang_helper::class)) {
+if (!class_exists(\TobiasKrais\D2UImmo\LangHelper::class)) {
     // Load class in case addon is deactivated
-    require_once 'lib/d2u_immo_lang_helper.php';
+    require_once 'lib/LangHelper.php';
 }
-d2u_immo_lang_helper::factory()->install();
+\TobiasKrais\D2UImmo\LangHelper::factory()->install();
 
 // Update modules
-include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'D2UImmoModules.php';
-$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\D2UImmoModules::getModules(), '', 'd2u_immo');
+include __DIR__ . DIRECTORY_SEPARATOR .'lib'. DIRECTORY_SEPARATOR .'Module.php';
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\TobiasKrais\D2UImmo\Module::getModules(), '', 'd2u_immo');
 $d2u_module_manager->autoupdate();

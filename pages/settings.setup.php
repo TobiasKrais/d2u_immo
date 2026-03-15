@@ -2,7 +2,7 @@
 /*
  * Modules
  */
-$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(D2UImmoModules::getModules(), 'modules/', 'd2u_immo');
+$d2u_module_manager = new \TobiasKrais\D2UHelper\ModuleManager(\TobiasKrais\D2UImmo\Module::getModules(), 'modules/', 'd2u_immo');
 
 // \TobiasKrais\D2UHelper\ModuleManager actions
 $d2u_module_id = rex_request('d2u_module_id', 'string');

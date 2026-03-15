@@ -16,7 +16,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
     // Media fields and links need special treatment
     $input_media = rex_post('REX_INPUT_MEDIA', 'array', []);
 
-    $contact = new D2U_Immo\Contact($form['contact_id']);
+    $contact = new TobiasKrais\D2UImmo\Contact($form['contact_id']);
     $contact->city = $form['city'];
     $contact->company = $form['company'];
     $contact->country_code = $form['country_code'];
@@ -52,7 +52,7 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
         $form = rex_post('form', 'array', []);
         $contact_id = $form['contact_id'];
     }
-    $contact = new D2U_Immo\Contact($contact_id);
+    $contact = new TobiasKrais\D2UImmo\Contact($contact_id);
 
     // If contact is not used by at least one property, delete it
     if (!$contact->hasProperties()) {
@@ -85,7 +85,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 					<legend><?= rex_i18n::msg('d2u_immo_contact') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                            $contact = new D2U_Immo\Contact($entry_id);
+                            $contact = new TobiasKrais\D2UImmo\Contact($entry_id);
                             $readonly = true;
                             if (\rex::getUser() instanceof rex_user && (\rex::getUser()->isAdmin() || \rex::getUser()->hasPerm('d2u_immo[edit_data]'))) {
                                 $readonly = false;

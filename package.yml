@@ -16,6 +16,27 @@ page:
                 archive: { title: 'translate:d2u_immo_properties_archive' }
         category: { title: 'translate:d2u_helper_categories', icon: rex-icon rex-icon-open-category }
         contact: { title: 'translate:d2u_immo_contacts', icon: rex-icon rex-icon-user }
+        export:
+            title: 'translate:d2u_immo_export'
+            icon: rex-icon fa-cloud-upload
+            perm: 'd2u_immo[export]'
+            subpages:
+                export: { title: 'translate:d2u_immo_export', icon: rex-icon fa-cloud-upload, perm: 'd2u_immo[export]' }
+                export_provider: { title: 'translate:d2u_immo_export_provider', icon: rex-icon fa-cloud, perm: 'd2u_immo[export_provider]' }
+        import:
+            title: 'translate:d2u_immo_import'
+            icon: rex-icon fa-cloud-download
+            perm: 'd2u_immo[import]'
+            subpages:
+                import: { title: 'translate:d2u_immo_import', icon: rex-icon fa-cloud-download, perm: 'd2u_immo[import]' }
+                import_logs: { title: 'translate:d2u_immo_import_log', icon: rex-icon fa-files-o, perm: 'd2u_immo[import]' }
+        window_advertising:
+            title: 'translate:d2u_immo_window_advertising'
+            icon: rex-icon fa-desktop
+            perm: 'd2u_immo[window_advertising]'
+            subpages:
+                property: { title: 'translate:d2u_immo_window_advertising_property_selection', icon: rex-icon fa-home, perm: 'd2u_immo[window_advertising]' }
+                advertisement: { title: 'translate:d2u_immo_window_advertising_ad', icon: rex-icon fa-desktop, perm: 'd2u_immo[window_advertising]' }
         settings:
             icon: rex-icon fa-navicon
             title: ''
@@ -34,20 +55,27 @@ page:
 requires:
     redaxo: '>=5.15.0'
     packages:
+        cronjob: '>=2.9.0'
         d2u_helper: '>=2.1.0'
         media_manager: '>=2.2'
+        mediapool: '>=2.12.0'
+        phpmailer: '>=2.11.0'
         sprog: '>=1.0.0'
         url: '>=2.0'
         yform: '>=3.0'
         yrewrite: '>=2.0.1'
-    php: '>=8.0'
+    php:
+        version: '>=8.0'
+        extensions: [xml, zip]
 
 default_config:
     default_category_sort: 'name'
     default_property_sort: 'name'
+    export_autoexport: false
     finance_calculator_interest_rate: '0.018'
     finance_calculator_notary_costs: '0.015'  
     finance_calculator_real_estate_tax: '0.05'  
+    import_autoimport: false
     finance_calculator_repayment: '0.04'
 
 installer_ignore:

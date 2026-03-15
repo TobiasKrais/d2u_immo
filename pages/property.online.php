@@ -1,6 +1,6 @@
 <?php
 
-use D2U_Immo\Property;
+use TobiasKrais\D2UImmo\Property;
 
 require_once 'property.php';
 if ('priority_down' === $func) {
