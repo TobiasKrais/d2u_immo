@@ -139,8 +139,8 @@ if (!function_exists('printRevocationNoticeLinks')) {
     function printRevocationNoticeLinks(string $property_url, string $notice_file, string $modal_id): void
     {
         if ('' === $notice_file) {
-            echo '<li><small><a href="'. $property_url .'?print=small" target="blank"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_short_expose') .'</a></small></li>';
-            echo '<li><small><a href="'. $property_url .'?print=full" target="blank"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_expose') .'</a></small></li>';
+            echo '<li><small><a href="'. $property_url .'?print=small" target="_blank"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_short_expose') .'</a></small></li>';
+            echo '<li><small><a href="'. $property_url .'?print=full" target="_blank"><span class="icon print"></span> '. \Sprog\Wildcard::get('d2u_immo_print_expose') .'</a></small></li>';
             return;
         }
 
@@ -170,11 +170,11 @@ if (!function_exists('printRevocationNoticeModal')) {
         echo '</div>';
         echo '<div class="modal-body">';
         echo '<p>'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_text') .'</p>';
-        echo '<p><a href="'. $notice_url .'" target="blank" class="btn btn-outline-secondary"><span class="icon pdf"></span> '. \Sprog\Wildcard::get('d2u_immo_revocation_notice_open_pdf') .'</a></p>';
+        echo '<p><a href="'. $notice_url .'" target="_blank" class="btn btn-outline-secondary"><span class="icon pdf"></span> '. \Sprog\Wildcard::get('d2u_immo_revocation_notice_open_pdf') .'</a></p>';
         echo '</div>';
         echo '<div class="modal-footer">';
         echo '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_cancel') .'</button>';
-        echo '<a href="'. $property_url .'?print=full" target="blank" class="btn btn-primary" id="'. $continue_id .'" data-bs-dismiss="modal" data-d2u-print-continue="1">'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_continue') .'</a>';
+        echo '<a href="'. $property_url .'?print=full" target="_blank" class="btn btn-primary" id="'. $continue_id .'" data-d2u-print-continue="1">'. \Sprog\Wildcard::get('d2u_immo_revocation_notice_continue') .'</a>';
         echo '</div>';
         echo '</div>';
         echo '</div>';
@@ -203,6 +203,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     $property = new TobiasKrais\D2UImmo\Property($property_id, rex_clang::getCurrentId());
     $widerrufsbelehrung = (string) $d2u_immo->getConfig('widerrufsbelehrung', '');
+    $show_map = $property->publish_address
+        && 0.0 !== (float) $property->latitude
+        && 0.0 !== (float) $property->longitude;
     // Redirect if object is not online
     if ('online' !== $property->online_status) {
         rex_redirect(rex_article::getNotfoundArticleId(), rex_clang::getCurrentId());
@@ -239,7 +242,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if (count($property->pictures) > 0 || count($property->pictures_360) > 0) {
             echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link" data-bs-target="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_pictures') .'</span></button></li>';
         }
-        if ($property->publish_address) {
+        if ($show_map) {
             echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link" data-bs-target="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_map') .'</span></button></li>';
         }
         if ('KAUF' === $property->market_type) {
@@ -737,7 +740,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     }
     // End Pictures
     // Map
-    if ($property->publish_address && 'small' !== $print) {
+    if ($show_map && 'small' !== $print) {
         $d2u_helper = rex_addon::get('d2u_helper');
         $api_key = '';
         if ($d2u_helper->hasConfig('maps_key')) {
@@ -844,15 +847,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         } elseif (rex_addon::get('geolocation')->isAvailable()) {
             try {
                 if (rex::isFrontend()) {
-                    if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
-                        // Geolocation 2.x
-                        \FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
-                    }
-                    else {
-                        // Geolocation 1.x
-                        // @deprecated remove in Version 2
-                        \Geolocation\tools::echoAssetTags(); /** @phpstan-ignore-line */
-                    }
+                    // Geolocation 2.x
+                    \FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
                 }
 ?>
 <script>
@@ -905,23 +901,11 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             } catch (Exception $e) {
             }
 
-            if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
-                // Geolocation 2.x
-                echo \FriendsOfRedaxo\Geolocation\Mapset::take((int) $map_type)
-                    ->attributes('id', $map_id)
-                    ->dataset('position', [$property->latitude, $property->longitude])
-                    ->dataset('center', [[$property->latitude, $property->longitude], 15])
-                    ->parse();
-            }
-            else {
-                // Geolocation 1.x
-                // @deprecated remove in Version 2
-                echo \Geolocation\mapset::take((int) $map_type) /** @phpstan-ignore-line */
-                    ->attributes('id', $map_id)
-                    ->dataset('position', [$property->latitude, $property->longitude])
-                    ->dataset('center', [[$property->latitude, $property->longitude], 15])
-                    ->parse();
-            }
+            echo \FriendsOfRedaxo\Geolocation\Mapset::take((int) $map_type)
+                ->attributes('id', $map_id)
+                ->dataset('position', [$property->latitude, $property->longitude])
+                ->dataset('center', [[$property->latitude, $property->longitude], 15])
+                ->parse();
         }
 
         echo '</div>';
@@ -1218,7 +1202,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
     // Tabs
     echo '<div class="col-12">';
-    echo '<ul class="nav nav-pills d-print-none" role="tablist">';
+    echo '<ul class="nav nav-pills immo-list-tabs d-print-none" role="tablist">';
     $tab_active = true;
     if (count($properties_sale) > 0) {
         echo '<li class="nav-item" role="presentation"><button type="button" data-bs-toggle="tab" class="nav-link active" data-bs-target="#tab_sale">'. \Sprog\Wildcard::get('d2u_immo_tab_sale') .'</button></li>';

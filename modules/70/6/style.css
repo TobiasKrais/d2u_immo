@@ -1,0 +1,100 @@
+.immo-tab {
+	padding-bottom: 1em;
+}
+
+.tab-content {
+	border: 1px solid var(--article-color-h);
+	border-top: none;
+	padding: 1em;
+}
+
+.expose {
+	border-left: 1px solid var(--navi-color-bg);
+	border-bottom: 1px solid var(--navi-color-bg);
+	margin-bottom: 2em;
+	padding-left: 1em;
+}
+
+.expose a,
+.expose a:hover {
+	text-decoration: none;
+}
+
+.expose img {
+	margin-bottom: 1em;
+}
+
+.nolink {
+	color: var(--bs-body-color);
+}
+
+.d2u-immo-tabs-bs5 .nav {
+	--bs-nav-pills-border-radius: 0;
+	--bs-nav-pills-link-active-bg: var(--article-color-h);
+	--bs-nav-pills-link-active-color: var(--article-color-bg);
+	border-bottom: 1px solid var(--article-color-h);
+	width: 100%;
+}
+
+.d2u-immo-tabs-bs5 .nav-item {
+	margin-right: 1px;
+}
+
+.d2u-immo-tabs-bs5 .nav-item:last-child {
+	margin-right: 0;
+}
+
+.d2u-immo-tabs-bs5 .nav-link,
+.d2u-immo-tabs-bs5 .nav-link:focus {
+	background-color: var(--article-color-bg);
+	border-left: 1px solid var(--article-color-h);
+	border-right: 1px solid var(--article-color-h);
+	border-top: 1px solid var(--article-color-h);
+	border-bottom: none;
+	box-shadow: none;
+	color: var(--article-color-h);
+	font-size: 0.9em;
+	font-weight: bold;
+	padding: 0.3em 0.75em;
+	border-radius: 0 !important;
+}
+
+.d2u-immo-tabs-bs5 .nav-link.active,
+.d2u-immo-tabs-bs5 .nav-link.active:hover,
+.d2u-immo-tabs-bs5 .nav-link.active:focus {
+	background-color: var(--article-color-h);
+	border-color: var(--article-color-h);
+	color: var(--article-color-bg);
+	margin-bottom: -1px;
+	padding-bottom: calc(0.3em + 1px);
+	text-decoration: none;
+}
+
+.d2u-immo-tabs-bs5 .nav-link:hover {
+	background-color: var(--article-color-h10);
+	color: var(--article-color-h);
+	text-decoration: none;
+}
+
+.reserved {
+	position: relative;
+}
+
+.reserved span {
+	background-color: color-mix(in srgb, var(--article-color-bg) 88%, transparent);
+	border-top: 1px solid color-mix(in srgb, var(--article-color-h) 30%, transparent);
+	border-bottom: 1px solid color-mix(in srgb, var(--article-color-h) 30%, transparent);
+	bottom: 0;
+	color: var(--bs-danger);
+	font-weight: bold;
+	left: 0;
+	opacity: 0.75;
+	padding: 0.5em 0;
+	position: absolute;
+	text-align: center;
+	width: 100%;
+}
+
+.expose .reserved span {
+	padding-bottom: 1.5em;
+}

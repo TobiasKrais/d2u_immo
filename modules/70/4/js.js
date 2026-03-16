@@ -93,6 +93,8 @@
 	};
 
 	function invalidateMap() {
+		var mapTab = document.getElementById("tab_map");
+		var geoContainer = mapTab ? mapTab.querySelector("rex-map") : null;
 		if (typeof google !== "undefined" && typeof map !== "undefined") {
 			google.maps.event.trigger(map, "resize");
 			if (typeof myLatlng !== "undefined") {
@@ -104,35 +106,54 @@
 			L.Util.requestAnimFrame(map.invalidateSize, map, false, map._container);
 			return;
 		}
-		var geoContainer = document.querySelector("[id^='d2u']");
 		if (geoContainer && geoContainer.__rmMap && geoContainer.__rmMap.map) {
 			geoContainer.__rmMap.map.invalidateSize();
 		}
+	}
+
+	function bindMapTabRefresh() {
+		if (typeof bootstrap === "undefined" || !bootstrap.Tab) {
+			return;
+		}
+
+		document.querySelectorAll("#expose_tabs [data-bs-toggle='tab']").forEach(function(trigger) {
+			trigger.addEventListener("shown.bs.tab", function(event) {
+				if (event.target.getAttribute("data-bs-target") === "#tab_map") {
+					window.setTimeout(invalidateMap, 50);
+				}
+			});
+		});
 	}
 
 	document.addEventListener("click", function(event) {
 		var printTrigger = event.target.closest("[data-d2u-print-modal]");
 		if (printTrigger) {
 			updatePrintModalTarget(printTrigger);
+			return;
+		}
+
+		var continueTrigger = event.target.closest("[data-d2u-print-continue]");
+		if (continueTrigger) {
+			event.preventDefault();
+			var modalElement = continueTrigger.closest(".modal");
+			if (modalElement && typeof bootstrap !== "undefined" && bootstrap.Modal) {
+				var modalInstance = bootstrap.Modal.getInstance(modalElement) || bootstrap.Modal.getOrCreateInstance(modalElement);
+				modalInstance.hide();
+			}
+			window.open(continueTrigger.getAttribute("href"), continueTrigger.getAttribute("target") || "_blank");
 		}
 	});
 
 	var hash = window.location.hash;
 	if (hash && typeof bootstrap !== "undefined" && bootstrap.Tab) {
-		document.querySelectorAll(".d2u-immo-detail-bs5 [data-bs-toggle='tab']").forEach(function(trigger) {
+		document.querySelectorAll("#expose_tabs [data-bs-toggle='tab']").forEach(function(trigger) {
 			if (trigger.getAttribute("data-bs-target") === hash) {
 				bootstrap.Tab.getOrCreateInstance(trigger).show();
 			}
 		});
 	}
 
-	document.querySelectorAll(".d2u-immo-detail-bs5 [data-bs-toggle='tab']").forEach(function(trigger) {
-		trigger.addEventListener("shown.bs.tab", function(event) {
-			if (event.target.getAttribute("data-bs-target") === "#tab_map") {
-				invalidateMap();
-			}
-		});
-	});
+	bindMapTabRefresh();
 
 	if (document.querySelector(".d2u-immo-auto-print")) {
 		window.print();

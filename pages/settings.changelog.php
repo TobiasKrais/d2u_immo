@@ -3,12 +3,12 @@
 
 <h2>Changelog</h2>
 
-<p>1.4.0-DEV:</p>
+<p>1.4.0:</p>
 <ul>
 	<li>Wichtige Hinweise
 		<ul>
-			<li>Die Klassen stehen jetzt im Namespace <code>TobiasKrais\D2UImmo</code> zur Verfügung.</li>
-			<li>Der bisherige Namespace <code>D2U_Immo</code> und die alten globalen Klassennamen sind nur noch als deprecated Übergangsschicht vorhanden und werden mit Version 2.0.0 entfernt.</li>
+			<li>Die Klassen stehen jetzt im Namespace <code>TobiasKrais\D2UImmo</code> zur Verfügung. Der bisherige Namespace <code>D2U_Immo</code>
+				und die alten globalen Klassennamen sind nur noch als deprecated Übergangsschicht vorhanden und werden mit Version 2.0.0 entfernt.</li>
 			<li>Folgende Klassen wurden umbenannt und stehen künftig unter diesen neuen Namen zur Verfügung:
 				<ul>
 					<li><code>D2U_Immo\AExport</code> wird zu <code>TobiasKrais\D2UImmo\AExport</code>.</li>
@@ -30,20 +30,18 @@
 					<li><code>export_lang_helper</code> wird zu <code>TobiasKrais\D2UImmo\LangHelper</code>.</li>
 				</ul>
 			</li>
-			<li>Die Klassen-Dateien im lib-Verzeichnis wurden auf CamelCase-Dateinamen umgestellt. Export- und Import-Klassen liegen jetzt zusätzlich in den Unterverzeichnissen <code>lib/export</code> und <code>lib/import</code>.</li>
-			<li>Die Rückwärtskompatibilität für alte Klassennamen wird vorübergehend über <code>lib/deprecated_classes.php</code> bereitgestellt.</li>
 		</ul>
 	</li>
 	<li>Vorbereitung auf Redaxo 6: Plugins in Hauptverzeichnis verschoben.</li>
 	<li>Neue Einstellung für eine Widerrufsbelehrung ergänzt und vor dem Exposé-Druck in den Modulen 70-1 und 70-4 als Hinweisdialog verlinkt.</li>
 	<li>Immobilienausgabe ergänzt um die berechnete Energieeffizienzklasse in Listen- und Detailansicht der Module 70-1 und 70-4.</li>
 	<li>Neue Module 70-4 bis 70-6 als Bootstrap-5-Varianten der bestehenden Beispielmodule hinzugefügt.</li>
-	<li>Module 70-1 bis 70-3 als "(BS4, deprecated)" markiert. Die BS4-Varianten werden im nächsten Major Release entfernt.</li>
-	<li>BS5-Module auf Bootstrap-5-Tabs und die d2u_helper Lightbox umgestellt.</li>
+	<li>BS5-Module 70-4 bis 70-6 von template-spezifischem Immo-CSS entkoppelt und feste Farben in den BS5-Ausgaben stärker auf Bootstrap- bzw. d2u_helper-Variablen umgestellt.</li>
+	<li>Module 70-1 bis 70-3 als "(BS4, deprecated)" markiert. Die BS4-Varianten werden in Version 2.0 entfernt.</li>
 	<li>Benötigt d2u_helper &gt;= 2.1.0.</li>
-	<li>Bugfix Import Plugin: Reserviert wurde nicht korrekt importiert.</li>
+	<li>Bugfix Import: Reserviert wurde nicht korrekt importiert.</li>
 	<li>Bugfix: Module wurden beim Update nicht korrekt aktualisiert.</li>
-	<li>Bugfix Export Plugin: SSH Upload als Fallback wenn FTP Upload fehlschlägt.</li>
+	<li>Bugfix Export: SSH Upload als Fallback wenn FTP Upload fehlschlägt.</li>
 	<li>Bugfix: Grundstücke und Parkplätze konnten nicht gespeichert werden.</li>
 </ul>
 <p>1.3.1:</p>
