@@ -26,7 +26,7 @@ class Module
             5);
         $modules[] = new \TobiasKrais\D2UHelper\Module('70-4',
             'D2U Immo Addon - Hauptausgabe (BS5)',
-            2);
+            3);
         $modules[] = new \TobiasKrais\D2UHelper\Module('70-5',
             'D2U Immo Addon - Infobox Ansprechpartner (BS5)',
             1);

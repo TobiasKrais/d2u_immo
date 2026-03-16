@@ -483,11 +483,6 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_value') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">'. $property->energy_consumption .'&nbsp;kWh/(m²*a)</div>';
 
-            if ('' !== $property->getEnergyEfficiencyClass()) {
-                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_efficiency_class') .':</li></ul></div>';
-                echo '<div class="col-6 col-md-8 col-lg-9">'. $property->getEnergyEfficiencyClass() .'</div>';
-            }
-
             if ($property->including_warm_water) {
                 echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_incl_warm_water') .':</li></ul></div>';
                 echo '<div class="col-6 col-md-8 col-lg-9">'. \Sprog\Wildcard::get('d2u_immo_yes') .'</div>';
@@ -496,6 +491,17 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             if ($property->construction_year > 0) {
                 echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_construction_year') .':</li></ul></div>';
                 echo '<div class="col-6 col-md-8 col-lg-9">'. $property->construction_year .'</div>';
+            }
+
+            if (count($property->heating_type) > 0) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_heating_type') .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">';
+                $first_element = true;
+                foreach ($property->heating_type as $heating_type) {
+                    echo($first_element ? '' : ', ') . \Sprog\Wildcard::get('d2u_immo_heating_type_'. $heating_type);
+                    $first_element = false;
+                }
+                echo '</div>';
             }
 
             if (count($property->firing_type) > 0) {
@@ -507,6 +513,11 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                     $first_element = false;
                 }
                 echo '</div>';
+            }
+
+            if ('' !== $property->getEnergyEfficiencyClass()) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_efficiency_class') .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. $property->getEnergyEfficiencyClass() .'</div>';
             }
 
             echo '<div class="col-12">';
