@@ -166,7 +166,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep)
     // Categories
     for ($i = 0; $i < $sql_categories->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/category&func=edit&entry_id='. $sql_categories->getValue('category_id') .'\')">'.
-             rex_i18n::msg('d2u_immo_rights_all') .' - '. rex_i18n::msg('d2u_helper_categories') .': '. $sql_categories->getValue('name') . '</a>';
+             rex_i18n::msg('d2u_immo_rights_all') .' - '. rex_i18n::msg('d2u_helper_categories') .': '. $sql_categories->getValue('name') . '</a><br>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -176,7 +176,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep)
     // Contacts
     for ($i = 0; $i < $sql_contacts->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/contact&func=edit&entry_id='.
-            $sql_contacts->getValue('contact_id') .'\')">'. rex_i18n::msg('d2u_immo_rights_all') .' - '. rex_i18n::msg('d2u_immo_contacts') .': '. $sql_contacts->getValue('firstname') .' '. $sql_contacts->getValue('lastname') .'</a>';
+            $sql_contacts->getValue('contact_id') .'\')">'. rex_i18n::msg('d2u_immo_rights_all') .' - '. rex_i18n::msg('d2u_immo_contacts') .': '. $sql_contacts->getValue('firstname') .' '. $sql_contacts->getValue('lastname') .'</a><br>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -186,7 +186,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep)
     // Properties
     for ($i = 0; $i < $sql_properties->getRows(); ++$i) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/property&func=edit&entry_id='.
-            $sql_properties->getValue('property_id') .'\')">'. rex_i18n::msg('d2u_immo_rights_all') .' - '. rex_i18n::msg('d2u_immo_properties') .': '. $sql_properties->getValue('name') .'</a>';
+            $sql_properties->getValue('property_id') .'\')">'. rex_i18n::msg('d2u_immo_rights_all') .' - '. rex_i18n::msg('d2u_immo_properties') .': '. $sql_properties->getValue('name') .'</a><br>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }
@@ -196,7 +196,7 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep)
     $addon = rex_addon::get('d2u_immo');
     if ($addon->hasConfig('even_informative_pdf') && (string) $addon->getConfig('even_informative_pdf') === $filename) {
         $message = '<a href="javascript:openPage(\'index.php?page=d2u_immo/settings\')">'.
-             rex_i18n::msg('d2u_immo') .' - '. rex_i18n::msg('d2u_helper_settings') . '</a>';
+             rex_i18n::msg('d2u_immo') .' - '. rex_i18n::msg('d2u_helper_settings') . '</a><br>';
         if (!in_array($message, $warning, true)) {
             $warning[] = $message;
         }

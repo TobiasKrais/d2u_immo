@@ -3,9 +3,10 @@
 
 <h2>Changelog</h2>
 
-<p>1.4.1-DEV:</p>
+<p>1.4.1:</p>
 <ul>
 	<li>Modul 70-4 &quot;D2U Immo Addon - Hauptausgabe (BS5)&quot; gibt im Bereich Energieausweis jetzt auch die Heizungsart aus.</li>
+	<li>Bugfix: beim Export wurden PDF Dokumente nicht korrekt in die ZIP Datei aufgenommen.</li>
 </ul>
 
 <p>1.4.0:</p>

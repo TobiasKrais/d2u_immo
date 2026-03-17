@@ -4,7 +4,6 @@ namespace TobiasKrais\D2UImmo;
 
 use rex_i18n;
 use rex_path;
-use rex_url;
 use ZipArchive;
 
 use function count;
@@ -77,7 +76,10 @@ abstract class AFTPExport extends AExport
             if ('add' === $exported_property->export_action || 'update' === $exported_property->export_action) {
                 $property = new Property($exported_property->property_id, $this->provider->clang_id);
                 $number_free_docs = $max_attachments - count($property->pictures) - count($property->ground_plans) - count($property->location_plans);
-                if ($max_attachments > $number_free_docs) {
+                if ($this->provider->ftp_supports_360_pictures) {
+                    $number_free_docs -= count($property->pictures_360);
+                }
+                if ($number_free_docs > 0) {
                     foreach ($property->documents as $document) {
                         if (strlen($document) > 3 && $number_free_docs > 0 && !in_array($document, $this->documents_for_zip, true)) {
                             $this->documents_for_zip[] = $document;
@@ -212,7 +214,10 @@ abstract class AFTPExport extends AExport
             $zip->addFile($cachefilename, $original_filename);
         }
         foreach ($this->documents_for_zip as $document_filename) {
-            $zip->addFile(rex_url::media($document_filename), $document_filename);
+            $document_path = rex_path::media($document_filename);
+            if (file_exists($document_path)) {
+                $zip->addFile($document_path, $document_filename);
+            }
         }
         $zip->close();
         return '';
