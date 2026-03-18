@@ -631,7 +631,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
         $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
                 .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
-            ."WHERE window_advertising_status = 'online' ";
+            ."WHERE window_advertising_status = 'online' AND online_status = 'online' ";
         if (rex_addon::get('d2u_immo')->hasConfig('default_property_sort') && 'priority' === rex_addon::get('d2u_immo')->getConfig('default_property_sort')) {
             $query .= 'ORDER BY priority ASC';
         } else {
