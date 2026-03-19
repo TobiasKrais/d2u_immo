@@ -284,6 +284,31 @@ if (!is_bool(rex_config::get('d2u_immo', 'export_autoexport', false))) {
     rex_config::set('d2u_immo', 'export_autoexport', 'active' === rex_config::get('d2u_immo', 'export_autoexport'));
 }
 
+// Update installed cronjobs to current namespaces
+if (\rex_addon::get('cronjob')->isAvailable() && rex_version::compare($this->getVersion(), '1.4.2', '<')) { /** @phpstan-ignore-line */
+    $cronjobs = [
+        \TobiasKrais\D2UImmo\ExportCronjob::factory(),
+        \TobiasKrais\D2UImmo\ImportCronjob::factory(),
+    ];
+
+    foreach ($cronjobs as $cronjob) {
+        if ($cronjob->isInstalled()) {
+            $sql->setQuery(
+                'SELECT `status` FROM '. \rex::getTable('cronjob') .' WHERE `name` = :name LIMIT 1',
+                [':name' => $cronjob::NAME]
+            );
+            $was_active = $sql->getRows() > 0 ? 1 === (int) $sql->getValue('status') : true;
+
+            $cronjob->delete();
+            $cronjob->install();
+
+            if (!$was_active) {
+                $cronjob->deactivate();
+            }
+        }
+    }
+}
+
 // Standard settings
 if (!$this->hasConfig()) { /** @phpstan-ignore-line */
     $this->setConfig('article_id', rex_article::getSiteStartArticleId()); /** @phpstan-ignore-line */

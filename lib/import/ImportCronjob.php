@@ -7,6 +7,10 @@ namespace TobiasKrais\D2UImmo;
  */
 class ImportCronjob extends \TobiasKrais\D2UHelper\ACronJob
 {
+    public const DESCRIPTION = 'Imports OpenImmo files';
+    public const NAME = 'D2U Immo Autoimport';
+    public const PHP_CODE = '<?php namespace TobiasKrais\\\\\\\\D2UImmo; ImportOpenImmo::autoimport(); ?>';
+
     /**
      * Create a new instance of object.
      * @return ImportCronjob CronJob object
@@ -14,7 +18,7 @@ class ImportCronjob extends \TobiasKrais\D2UHelper\ACronJob
     public static function factory()
     {
         $cronjob = new self();
-        $cronjob->name = 'D2U Immo Autoimport';
+        $cronjob->name = self::NAME;
         return $cronjob;
     }
 
@@ -23,9 +27,7 @@ class ImportCronjob extends \TobiasKrais\D2UHelper\ACronJob
      */
     public function install(): void
     {
-        $description = 'Imports OpenImmo files';
-        $php_code = '<?php namespace TobiasKrais\D2UImmo; ImportOpenImmo::autoimport(); ?>';
         $interval = '{\"minutes\":\"all\",\"hours\":\"all\",\"days\":\"all\",\"weekdays\":\"all\",\"months\":\"all\"}';
-        self::save($description, $php_code, $interval);
+        self::save(self::DESCRIPTION, self::PHP_CODE, $interval);
     }
 }

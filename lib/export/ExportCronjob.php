@@ -7,6 +7,10 @@ namespace TobiasKrais\D2UImmo;
  */
 class ExportCronjob extends \TobiasKrais\D2UHelper\ACronJob
 {
+    public const DESCRIPTION = 'Exports property automatically to FTP based export providers';
+    public const NAME = 'D2U Immo Autoexport';
+    public const PHP_CODE = '<?php namespace TobiasKrais\\\\\\\\D2UImmo; Provider::autoexport(); ?>';
+
     /**
      * Create a new instance of object.
      * @return ExportCronjob CronJob object
@@ -14,7 +18,7 @@ class ExportCronjob extends \TobiasKrais\D2UHelper\ACronJob
     public static function factory()
     {
         $cronjob = new self();
-        $cronjob->name = 'D2U Immo Autoexport';
+        $cronjob->name = self::NAME;
         return $cronjob;
     }
 
@@ -23,9 +27,7 @@ class ExportCronjob extends \TobiasKrais\D2UHelper\ACronJob
      */
     public function install(): void
     {
-        $description = 'Exports property automatically to FTP based export providers';
-        $php_code = '<?php namespace TobiasKrais\\D2UImmo; Provider::autoexport(); ?>';
         $interval = '{\"minutes\":[0],\"hours\":[21],\"days\":\"all\",\"weekdays\":\"all\",\"months\":\"all\"}';
-        self::save($description, $php_code, $interval);
+        self::save(self::DESCRIPTION, self::PHP_CODE, $interval);
     }
 }

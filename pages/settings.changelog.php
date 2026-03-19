@@ -5,7 +5,7 @@
 
 <p>1.4.2-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Update reinstalls installed Cronjobs, updating namespace.</li>
 </ul>
 
 <p>1.4.1:</p>
