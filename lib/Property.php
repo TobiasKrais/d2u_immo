@@ -744,6 +744,39 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
     }
 
     /**
+     * Returns the available energy efficiency classes in display order.
+     * @return array<string> Energy efficiency classes from A+ to H
+     */
+    public static function getEnergyEfficiencyScaleLabels(): array
+    {
+        return ['A+', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    }
+
+    /**
+     * Returns the CSS class suffix for an energy efficiency class.
+     * @param string $energy_efficiency_class Energy efficiency class label
+     * @return string CSS class suffix
+     */
+    public static function getEnergyEfficiencyClassCssName(string $energy_efficiency_class): string
+    {
+        return strtolower(str_replace('+', '-plus', $energy_efficiency_class));
+    }
+
+    /**
+     * Returns the CSS class suffix for the current energy efficiency class.
+     * @return string CSS class suffix or empty string if unavailable
+     */
+    public function getEnergyEfficiencyClassCss(): string
+    {
+        $energy_efficiency_class = $this->getEnergyEfficiencyClass();
+        if ('' === $energy_efficiency_class) {
+            return '';
+        }
+
+        return self::getEnergyEfficiencyClassCssName($energy_efficiency_class);
+    }
+
+    /**
      * Returns the URL of this object.
      * @param bool $including_domain true if Domain name should be included
      * @return string URL

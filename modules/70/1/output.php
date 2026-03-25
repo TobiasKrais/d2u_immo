@@ -47,6 +47,8 @@ if (!function_exists('printPropertylist')) {
     {
         foreach ($properties as $property) {
             $energy_efficiency_class = $property->getEnergyEfficiencyClass();
+            $energy_efficiency_class_css = $property->getEnergyEfficiencyClassCss();
+            $has_picture = count($property->pictures) > 0;
             echo '<div class="row">';
             echo '<div class="col-12">';
 
@@ -54,16 +56,21 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="row">';
 
             echo '<div class="col-12 col-sm-4 col-lg-3">';
-            if (count($property->pictures) > 0) {
+            if ($has_picture) {
+                echo '<div class="expose-image'. ($property->object_reserved ? ' has-reserved' : '') .'">';
                 if ($property->object_reserved) {
                     echo '<div class="reserved">';
                 }
                 echo '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
-                        $property->pictures[0] .'" alt='. $property->name .' class="listpic">';
+                        $property->pictures[0] .'" alt="'. rex_escape($property->name) .'" class="listpic">';
                 if ($property->object_reserved) {
                     echo '<span>'. \Sprog\Wildcard::get('d2u_immo_object_reserved') .'</span>';
                     echo '</div>';
                 }
+                if ('' !== $energy_efficiency_class) {
+                    echo '<span class="energy-efficiency-badge energy-efficiency-badge-'. rex_escape($energy_efficiency_class_css) .'">'. rex_escape($energy_efficiency_class) .'</span>';
+                }
+                echo '</div>';
             }
             echo '</div>';
 
@@ -84,8 +91,8 @@ if (!function_exists('printPropertylist')) {
             } elseif ($property->land_area > 0) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_land_area') .':</b> '. round($property->land_area) .' m²</div>';
             }
-            if ('' !== $energy_efficiency_class) {
-                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_energy_efficiency_class') .':</b> '. $energy_efficiency_class .'</div>';
+            if (!$has_picture && '' !== $energy_efficiency_class) {
+                echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_energy_efficiency_class') .':</b> '. rex_escape($energy_efficiency_class) .'</div>';
             }
             echo '<div class="col-12 nolink">'. $property->teaser .'</div>';
             echo '</div>';
@@ -97,6 +104,30 @@ if (!function_exists('printPropertylist')) {
             echo '</div>';
             echo '</div>';
         }
+    }
+}
+
+if (!function_exists('renderEnergyScale')) {
+    /**
+     * Prints the CSS-based energy efficiency scale.
+     */
+    function renderEnergyScale(string $energy_efficiency_class): void
+    {
+        if ('' === $energy_efficiency_class) {
+            return;
+        }
+
+        echo '<div class="energy-scale-container">';
+        echo '<div class="energy-scale" aria-label="'. rex_escape(\Sprog\Wildcard::get('d2u_immo_energy_efficiency_class')) .'">';
+        foreach (TobiasKrais\D2UImmo\Property::getEnergyEfficiencyScaleLabels() as $scale_label) {
+            $css_class = TobiasKrais\D2UImmo\Property::getEnergyEfficiencyClassCssName($scale_label);
+            $is_active = $scale_label === $energy_efficiency_class;
+            echo '<div class="energy-scale-step energy-scale-step-'. rex_escape($css_class) . ($is_active ? ' is-active' : '') .'">';
+            echo $is_active ? rex_escape($scale_label) : '&nbsp;';
+            echo '</div>';
+        }
+        echo '</div>';
+        echo '</div>';
     }
 }
 
@@ -271,13 +302,17 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="col-12 print-border">'; // START overview picture and short info
     echo '<div class="row">';
 
+    $overview_energy_efficiency_class = $property->getEnergyEfficiencyClass();
+    $overview_energy_efficiency_class_css = $property->getEnergyEfficiencyClassCss();
+
     if (count($property->pictures) > 0) {
         echo '<div class="col-12 col-md-6">'; // START overview picture
+        echo '<div class="overview-image'. ($property->object_reserved || $property->object_sold ? ' has-status' : '') .'">';
         if ($property->object_reserved || $property->object_sold) {
             echo '<div class="reserved">';
         }
         echo '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
-                $property->pictures[0] .'" alt="'. $property->name .'" class="overviewpic">';
+                $property->pictures[0] .'" alt="'. rex_escape($property->name) .'" class="overviewpic">';
         if ($property->object_reserved) {
             echo '<span class="d-print-none">'. \Sprog\Wildcard::get('d2u_immo_object_reserved') .'</span>';
         } elseif ($property->object_sold) {
@@ -286,6 +321,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         if ($property->object_reserved || $property->object_sold) {
             echo '</div>'; // <div class="reserved">
         }
+        if ('' !== $overview_energy_efficiency_class) {
+            echo '<span class="energy-efficiency-badge overview-energy-badge energy-efficiency-badge-'. rex_escape($overview_energy_efficiency_class_css) .'">'. rex_escape($overview_energy_efficiency_class) .'</span>';
+        }
+        echo '</div>';
         echo '</div>'; // END overview picture
         echo '<div class="col-12 col-md-6">'; // START short info
     } else {
@@ -480,11 +519,6 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_value') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">'. $property->energy_consumption .'&nbsp;kWh/(m²*a)</div>';
 
-            if ('' !== $property->getEnergyEfficiencyClass()) {
-                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_efficiency_class') .':</li></ul></div>';
-                echo '<div class="col-6 col-md-8 col-lg-9">'. $property->getEnergyEfficiencyClass() .'</div>';
-            }
-
             if ($property->including_warm_water) {
                 echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_incl_warm_water') .':</li></ul></div>';
                 echo '<div class="col-6 col-md-8 col-lg-9">'. \Sprog\Wildcard::get('d2u_immo_yes') .'</div>';
@@ -507,14 +541,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             }
 
             echo '<div class="col-12">';
-            echo "<div class='energy-scale-container'>";
-            echo "<div style='position: absolute;'>";
-            echo "<img src='". $d2u_immo->getAssetsUrl('energieskala.png') ."' class='energy_scale'>";
-            echo '</div>';
-            echo "<div style='position: absolute; margin-left: ". round((int) $property->energy_consumption - 10, 0) ."px !important;'>";
-            echo "<img src='". $d2u_immo->getAssetsUrl('zeiger.png') ."'>";
-            echo '</div>';
-            echo '</div>';
+            renderEnergyScale($property->getEnergyEfficiencyClass());
             echo '</div>';
         }
         echo '</div>';

@@ -33,6 +33,85 @@
 .expose img {
 	margin-bottom: 1em;
 }
+.expose-image {
+	position: relative;
+}
+.expose-image .listpic {
+	display: block;
+	width: 100%;
+}
+.overview-image {
+	position: relative;
+}
+.overview-image .overviewpic {
+	display: block;
+	width: 100%;
+}
+.energy-efficiency-badge {
+	border-radius: 0.35em 0 0 0.35em;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+	font-size: 0.9em;
+	font-weight: bold;
+	left: 0.75em;
+	line-height: 1;
+	padding: 0.45em 0.9em 0.45em 0.8em;
+	print-color-adjust: exact;
+	position: absolute;
+	bottom: 0.75em;
+	white-space: nowrap;
+	-webkit-print-color-adjust: exact;
+	z-index: 2;
+}
+.energy-efficiency-badge::after {
+	background-color: inherit;
+	border-radius: 0 0.25em 0.25em 0;
+	box-shadow: 3px 2px 8px rgba(0, 0, 0, 0.15);
+	clip-path: polygon(0 0, 100% 50%, 0 100%);
+	content: "";
+	height: 100%;
+	print-color-adjust: exact;
+	position: absolute;
+	right: -0.8em;
+	top: 0;
+	-webkit-print-color-adjust: exact;
+	width: 0.8em;
+}
+.energy-efficiency-badge-a-plus {
+	background-color: #60ad2e;
+	color: #323232;
+}
+.energy-efficiency-badge-a {
+	background-color: #8ec120;
+	color: #323232;
+}
+.energy-efficiency-badge-b {
+	background-color: #8cc63f;
+	color: #323232;
+}
+.energy-efficiency-badge-c {
+	background-color: #d9e021;
+	color: #323232;
+}
+.energy-efficiency-badge-d {
+	background-color: #fcee21;
+	color: #323232;
+}
+.energy-efficiency-badge-e {
+	background-color: #fbb03b;
+	color: #323232;
+}
+.energy-efficiency-badge-f {
+	background-color: #f7931e;
+	color: #fff;
+}
+.energy-efficiency-badge-g {
+	background-color: #f15a24;
+	color: #fff;
+}
+.energy-efficiency-badge-h {
+	background-color: #c1272d;
+	color: #fff;
+}
 
 .expose-navi {
 	padding-top: 2px;
@@ -80,7 +159,7 @@
 	border-top: 1px solid var(--article-color-h);
 	border-bottom: none;
 	box-shadow: none;
-	color: var(--article-color-h);
+	color: var(--bs-body-color);
 	font-size: 0.9em;
 	font-weight: bold;
 	padding: 0.3em 0.75em;
@@ -97,7 +176,7 @@
 #d2u_immo_module_70_4 #expose_tabs .nav-link:hover,
 #d2u_immo_module_70_4 .immo-list-tabs .nav-link:hover {
     background-color: var(--article-color-h10);
-	color: var(--article-color-h);
+	color: var(--bs-body-color);
 	text-decoration: none;
 }
 #d2u_immo_module_70_4 #expose_tabs .nav-link,
@@ -115,12 +194,97 @@
 }
 
 .energy-scale-container {
-	height: 35px;
 	margin-top: 10px;
-	position: relative;
+	max-width: 32rem;
+	width: 100%;
 }
 .energy-scale {
-	min-width: 400px;
+	align-items: center;
+	display: flex;
+	gap: 2px;
+	min-height: 1.5rem;
+	print-color-adjust: exact;
+	-webkit-print-color-adjust: exact;
+	width: 100%;
+}
+.energy-scale-step {
+	align-items: center;
+	color: #323232;
+	display: flex;
+	flex: 1 1 0;
+	font-size: 0.875rem;
+	font-weight: 700;
+	height: 0.5rem;
+	justify-content: center;
+	line-height: 1.25rem;
+	min-width: 0;
+	print-color-adjust: exact;
+	text-align: center;
+	text-decoration: none;
+	user-select: none;
+	-webkit-print-color-adjust: exact;
+}
+.energy-scale-step:first-child {
+	border-bottom-left-radius: 0.25rem;
+	border-top-left-radius: 0.25rem;
+}
+.energy-scale-step:last-child {
+	border-bottom-right-radius: 0.25rem;
+	border-top-right-radius: 0.25rem;
+}
+.energy-scale-step.is-active {
+	border-radius: 0.25rem;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	height: 1.5rem;
+	position: relative;
+	z-index: 1;
+}
+.energy-scale-step:not(.is-active) {
+	color: transparent;
+	font-size: 0;
+}
+.energy-scale-step-a-plus {
+	background-color: #60ad2e;
+	color: #323232;
+}
+.energy-scale-step-a {
+	background-color: #8ec120;
+	color: #323232;
+}
+.energy-scale-step-b {
+	background-color: #8cc63f;
+	color: #323232;
+}
+.energy-scale-step-c {
+	background-color: #d9e021;
+	color: #323232;
+}
+.energy-scale-step-d {
+	background-color: #fcee21;
+	color: #323232;
+}
+.energy-scale-step-e {
+	background-color: #fbb03b;
+	color: #323232;
+}
+.energy-scale-step-f {
+	background-color: #f7931e;
+	color: #fff;
+}
+.energy-scale-step-g {
+	background-color: #f15a24;
+	color: #fff;
+}
+.energy-scale-step-h {
+	background-color: #c1272d;
+	color: #fff;
+}
+.overview-energy-badge {
+	left: 0.75em;
+	right: auto;
+}
+.overview-image.has-status .overview-energy-badge {
+	bottom: 3.25em;
 }
 
 #d2u_immo_module_70_4 .col-6 ul {
@@ -189,6 +353,9 @@
 }
 .expose .reserved span {
 	padding-bottom: 1.5em;
+}
+.expose-image.has-reserved .energy-efficiency-badge {
+	bottom: 3.25em;
 }
 	
 @media print {

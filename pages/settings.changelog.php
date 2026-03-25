@@ -3,9 +3,10 @@
 
 <h2>Changelog</h2>
 
-<p>1.4.2-DEV:</p>
+<p>1.4.2:</p>
 <ul>
 	<li>Update reinstalls installed Cronjobs, updating namespace.</li>
+	<li>Module 70-1 und 70-4 zeigen die Energieeffizienzklasse in der Übersichtsliste jetzt als farbige Box links unten direkt auf dem Immobilienbild an.</li>
 </ul>
 
 <p>1.4.1:</p>
