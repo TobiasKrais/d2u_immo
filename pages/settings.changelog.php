@@ -3,6 +3,10 @@
 
 <h2>Changelog</h2>
 
+<p>1.4.3-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.4.2:</p>
 <ul>
 	<li>Update reinstalliert Cronjobs, um den Namespace im Cronjob zu aktualisieren.</li>
