@@ -1,5 +1,7 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -91,19 +93,19 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_firstname', 'form[firstname]', $contact->firstname, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_lastname', 'form[lastname]', $contact->lastname, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_company', 'form[company]', $contact->company, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_street', 'form[street]', $contact->street, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_house_number', 'form[house_number]', $contact->house_number, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_zip_code', 'form[zip_code]', $contact->zip_code, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_city', 'form[city]', $contact->city, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_country_code', 'form[country_code]', $contact->country_code, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_email', 'form[email]', $contact->email, true, $readonly, 'email');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_phone', 'form[phone]', $contact->phone, true, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_mobile', 'form[mobile]', $contact->mobile, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_contact_fax', 'form[fax]', $contact->fax, false, $readonly);
-                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $contact->picture, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_firstname', 'form[firstname]', $contact->firstname, true, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_lastname', 'form[lastname]', $contact->lastname, true, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_company', 'form[company]', $contact->company, false, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_street', 'form[street]', $contact->street, true, $readonly);
+                            BackendHelper::form_input('d2u_immo_house_number', 'form[house_number]', $contact->house_number, true, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_zip_code', 'form[zip_code]', $contact->zip_code, true, $readonly);
+                            BackendHelper::form_input('d2u_immo_city', 'form[city]', $contact->city, true, $readonly);
+                            BackendHelper::form_input('d2u_immo_country_code', 'form[country_code]', $contact->country_code, false, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_email', 'form[email]', $contact->email, true, $readonly, 'email');
+                            BackendHelper::form_input('d2u_immo_contact_phone', 'form[phone]', $contact->phone, true, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_mobile', 'form[mobile]', $contact->mobile, false, $readonly);
+                            BackendHelper::form_input('d2u_immo_contact_fax', 'form[fax]', $contact->fax, false, $readonly);
+                            BackendHelper::form_mediafield('d2u_helper_picture', '1', $contact->picture, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -134,8 +136,8 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 		});
 	</script>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-//		print \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+    //		print BackendHelper::getJS();
 }
 
 if ('' === $func) {

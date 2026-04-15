@@ -1,6 +1,7 @@
 <?php
 use TobiasKrais\D2UImmo\ExportCronjob;
 use TobiasKrais\D2UImmo\LangHelper;
+use TobiasKrais\D2UHelper\BackendHelper;
 
 // save settings
 if ('save' === filter_input(INPUT_POST, 'btn_save')) {
@@ -26,8 +27,8 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 
         // Update url schemes
         if (\rex_addon::get('url')->isAvailable() && $settings['article_id'] > 0) {
-            \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(rex::getTablePrefix() .'d2u_immo_url_categories', $settings['article_id']);
-            \TobiasKrais\D2UHelper\BackendHelper::update_url_scheme(rex::getTablePrefix() .'d2u_immo_url_properties', $settings['article_id']);
+            BackendHelper::update_url_scheme(rex::getTablePrefix() .'d2u_immo_url_categories', $settings['article_id']);
+            BackendHelper::update_url_scheme(rex::getTablePrefix() .'d2u_immo_url_properties', $settings['article_id']);
         }
 
         // Install / update language replacements
@@ -63,7 +64,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<legend><small><i class="rex-icon rex-icon-database"></i></small> <?= rex_i18n::msg('d2u_helper_settings') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_immo_settings_article', '1', (int) rex_config::get('d2u_immo', 'article_id'), (int) rex_config::get('d2u_helper', 'default_lang'));
+                        BackendHelper::form_linkfield('d2u_immo_settings_article', '1', (int) rex_config::get('d2u_immo', 'article_id'), (int) rex_config::get('d2u_helper', 'default_lang'));
                     ?>
 				</div>
 			</fieldset>
@@ -71,7 +72,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<legend><small><i class="rex-icon rex-icon-language"></i></small> <?= rex_i18n::msg('d2u_helper_lang_replacements') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' === rex_config::get('d2u_immo', 'lang_wildcard_overwrite'));
+                        BackendHelper::form_checkbox('d2u_helper_lang_wildcard_overwrite', 'settings[lang_wildcard_overwrite]', 'true', 'true' === rex_config::get('d2u_immo', 'lang_wildcard_overwrite'));
                         foreach (rex_clang::getAll() as $rex_clang) {
                             echo '<dl class="rex-form-group form-group">';
                             echo '<dt><label>'. $rex_clang->getName() .'</label></dt>';
@@ -96,7 +97,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         $options_category_sort = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_sort', 'settings[default_category_sort]', $options_category_sort, [(string) rex_config::get('d2u_immo', 'default_category_sort')]);
+                        BackendHelper::form_select('d2u_helper_sort', 'settings[default_category_sort]', $options_category_sort, [(string) rex_config::get('d2u_immo', 'default_category_sort')]);
                     ?>
 				</div>
 			</fieldset>
@@ -105,9 +106,9 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         $options = ['name' => rex_i18n::msg('d2u_helper_name'), 'priority' => rex_i18n::msg('header_priority')];
-                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_sort', 'settings[default_property_sort]', $options, [(string) rex_config::get('d2u_immo', 'default_property_sort')]);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', '' !== rex_config::get('d2u_immo', 'even_informative_pdf') ? (string) rex_config::get('d2u_immo', 'even_informative_pdf') : '');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_immo_settings_widerrufsbelehrung', 'widerrufsbelehrung', '' !== rex_config::get('d2u_immo', 'widerrufsbelehrung') ? (string) rex_config::get('d2u_immo', 'widerrufsbelehrung') : '');
+                        BackendHelper::form_select('d2u_helper_sort', 'settings[default_property_sort]', $options, [(string) rex_config::get('d2u_immo', 'default_property_sort')]);
+                        BackendHelper::form_mediafield('d2u_immo_settings_even_informative_pdf', 'even_informative_pdf', '' !== rex_config::get('d2u_immo', 'even_informative_pdf') ? (string) rex_config::get('d2u_immo', 'even_informative_pdf') : '');
+                        BackendHelper::form_mediafield('d2u_immo_settings_widerrufsbelehrung', 'widerrufsbelehrung', '' !== rex_config::get('d2u_immo', 'widerrufsbelehrung') ? (string) rex_config::get('d2u_immo', 'widerrufsbelehrung') : '');
                     ?>
 				</div>
 			</fieldset>
@@ -116,10 +117,10 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<div class="panel-body-wrapper slide">
 					<?php
                         echo '<p>'. rex_i18n::msg('d2u_immo_settings_finance_calculator_hint') .'</p>';
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_settings_finance_calculator_real_estate_tax', 'settings[finance_calculator_real_estate_tax]', (string) rex_config::get('d2u_immo', 'finance_calculator_real_estate_tax'), true, false, 'text');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_settings_finance_calculator_notary_costs', 'settings[finance_calculator_notary_costs]', (string) rex_config::get('d2u_immo', 'finance_calculator_notary_costs'), true, false, 'text');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_settings_finance_calculator_interest_rate', 'settings[finance_calculator_interest_rate]', (string) rex_config::get('d2u_immo', 'finance_calculator_interest_rate'), true, false, 'text');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_settings_finance_calculator_repayment', 'settings[finance_calculator_repayment]', (string) rex_config::get('d2u_immo', 'finance_calculator_repayment'), true, false, 'text');
+                        BackendHelper::form_input('d2u_immo_settings_finance_calculator_real_estate_tax', 'settings[finance_calculator_real_estate_tax]', (string) rex_config::get('d2u_immo', 'finance_calculator_real_estate_tax'), true, false, 'text');
+                        BackendHelper::form_input('d2u_immo_settings_finance_calculator_notary_costs', 'settings[finance_calculator_notary_costs]', (string) rex_config::get('d2u_immo', 'finance_calculator_notary_costs'), true, false, 'text');
+                        BackendHelper::form_input('d2u_immo_settings_finance_calculator_interest_rate', 'settings[finance_calculator_interest_rate]', (string) rex_config::get('d2u_immo', 'finance_calculator_interest_rate'), true, false, 'text');
+                        BackendHelper::form_input('d2u_immo_settings_finance_calculator_repayment', 'settings[finance_calculator_repayment]', (string) rex_config::get('d2u_immo', 'finance_calculator_repayment'), true, false, 'text');
                     ?>
 				</div>
 			</fieldset>
@@ -127,8 +128,8 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 				<legend><small><i class="rex-icon fa-cloud-upload"></i></small> <?= rex_i18n::msg('d2u_immo_export') ?></legend>
 				<div class="panel-body-wrapper slide">
 					<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', (bool) rex_config::get('d2u_immo', 'export_autoexport', false));
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_immo', 'export_failure_email'), true, false, 'email');
+                        BackendHelper::form_checkbox('d2u_immo_export_settings_autoexport', 'settings[export_autoexport]', 'active', (bool) rex_config::get('d2u_immo', 'export_autoexport', false));
+                        BackendHelper::form_input('d2u_immo_export_settings_email', 'settings[export_failure_email]', (string) rex_config::get('d2u_immo', 'export_failure_email'), true, false, 'email');
                     ?>
 				</div>
 			</fieldset>
@@ -141,7 +142,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
                             foreach (rex_clang::getAll() as $rex_clang) {
                                 $lang_options[$rex_clang->getId()] = $rex_clang->getName();
                             }
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_import_settings_default_lang', 'settings[import_default_lang]', $lang_options, [(int) rex_config::get('d2u_immo', 'import_default_lang')]);
+                            BackendHelper::form_select('d2u_immo_import_settings_default_lang', 'settings[import_default_lang]', $lang_options, [(int) rex_config::get('d2u_immo', 'import_default_lang')]);
                         }
                         $options_categories = [];
                         foreach (TobiasKrais\D2UImmo\Category::getAll((int) rex_config::get('d2u_helper', 'default_lang')) as $category) {
@@ -150,7 +151,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
                             }
                         }
                         asort($options_categories);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_import_settings_category', 'settings[import_category_id]', $options_categories, [(int) rex_config::get('d2u_immo', 'import_category_id', 0)]);
+                        BackendHelper::form_select('d2u_immo_import_settings_category', 'settings[import_category_id]', $options_categories, [(int) rex_config::get('d2u_immo', 'import_category_id', 0)]);
                         ?>
 						<dl class="rex-form-group form-group" id="settings[import_media_category]">
 							<dt><label><?= rex_i18n::msg('d2u_immo_import_settings_media_category') ?></label></dt>
@@ -167,10 +168,10 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 							</dd>
 						</dl>
 						<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_import_settings_email', 'settings[import_email]', (string) rex_config::get('d2u_immo', 'import_email'), true, false, 'email');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_import_settings_import_folder', 'settings[import_folder]', (string) rex_config::get('d2u_immo', 'import_folder'), false, false);
-                        \TobiasKrais\D2UHelper\BackendHelper::form_infotext('d2u_immo_import_settings_import_folder_hint', 'import_folder_hint');
-                        \TobiasKrais\D2UHelper\BackendHelper::form_checkbox('d2u_immo_import_settings_autoimport', 'settings[import_autoimport]', 'active', (bool) rex_config::get('d2u_immo', 'import_autoimport', false));
+                        BackendHelper::form_input('d2u_immo_import_settings_email', 'settings[import_email]', (string) rex_config::get('d2u_immo', 'import_email'), true, false, 'email');
+                        BackendHelper::form_input('d2u_immo_import_settings_import_folder', 'settings[import_folder]', (string) rex_config::get('d2u_immo', 'import_folder'), false, false);
+                        BackendHelper::form_infotext('d2u_immo_import_settings_import_folder_hint', 'import_folder_hint');
+                        BackendHelper::form_checkbox('d2u_immo_import_settings_autoimport', 'settings[import_autoimport]', 'active', (bool) rex_config::get('d2u_immo', 'import_autoimport', false));
                         ?>
 					</div>
 				</fieldset>
@@ -178,7 +179,7 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 					<legend><small><i class="rex-icon fa-desktop"></i></small> <?= rex_i18n::msg('d2u_immo_window_advertising') ?></legend>
 					<div class="panel-body-wrapper slide">
 						<?php
-                        \TobiasKrais\D2UHelper\BackendHelper::form_linkfield('d2u_immo_window_advertising_settings_article', '2', (int) rex_config::get('d2u_immo', 'window_advertising_settings_article'), (int) rex_config::get('d2u_helper', 'default_lang'))
+                        BackendHelper::form_linkfield('d2u_immo_window_advertising_settings_article', '2', (int) rex_config::get('d2u_immo', 'window_advertising_settings_article'), (int) rex_config::get('d2u_helper', 'default_lang'))
                         ?>
 					</div>
 				</fieldset>
@@ -193,6 +194,6 @@ if ('save' === filter_input(INPUT_POST, 'btn_save')) {
 	</div>
 </form>
 <?php
-    echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-    echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
-    echo \TobiasKrais\D2UHelper\BackendHelper::getJSOpenAll();
+    echo BackendHelper::getCSS();
+    echo BackendHelper::getJS();
+    echo BackendHelper::getJSOpenAll();

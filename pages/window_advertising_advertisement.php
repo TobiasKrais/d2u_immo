@@ -1,4 +1,6 @@
 <?php
+
+use TobiasKrais\D2UHelper\BackendHelper;
 $func = rex_request('func', 'string');
 $entry_id = rex_request('entry_id', 'int');
 $message = rex_get('message', 'string');
@@ -107,7 +109,7 @@ if ('edit' === $func || 'add' === $func) {
                                     $options_translations['yes'] = rex_i18n::msg('d2u_helper_translation_needs_update');
                                     $options_translations['no'] = rex_i18n::msg('d2u_helper_translation_is_uptodate');
                                     $options_translations['delete'] = rex_i18n::msg('d2u_helper_translation_delete');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$advertisement->translation_needs_update], 1, false, $readonly_lang);
+                                    BackendHelper::form_select('d2u_helper_translation', 'form[lang]['. $rex_clang->getId() .'][translation_needs_update]', $options_translations, [$advertisement->translation_needs_update], 1, false, $readonly_lang);
                                 } else {
                                     echo '<input type="hidden" title="form[lang]['. $rex_clang->getId() .'][translation_needs_update]" value="">';
                                 }
@@ -125,8 +127,8 @@ if ('edit' === $func || 'add' === $func) {
 							</script>
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_input('d2u_immo_window_advertising_title', 'form[lang]['. $rex_clang->getId() .'][title]', $advertisement->title, $required, $readonly_lang, 'text');
-                                    \TobiasKrais\D2UHelper\BackendHelper::form_textarea('d2u_immo_window_advertising_description', 'form[lang]['. $rex_clang->getId() .'][description]', $advertisement->description, 10, false, $readonly_lang, true);
+                                    BackendHelper::form_input('d2u_immo_window_advertising_title', 'form[lang]['. $rex_clang->getId() .'][title]', $advertisement->title, $required, $readonly_lang, 'text');
+                                    BackendHelper::form_textarea('d2u_immo_window_advertising_description', 'form[lang]['. $rex_clang->getId() .'][description]', $advertisement->description, 10, false, $readonly_lang, true);
                                 ?>
 							</div>
 						</div>
@@ -145,11 +147,11 @@ if ('edit' === $func || 'add' === $func) {
                                 $readonly = false;
                             }
 
-                            \TobiasKrais\D2UHelper\BackendHelper::form_input('header_priority', 'form[priority]', $advertisement->priority, true, $readonly, 'number');
-                            \TobiasKrais\D2UHelper\BackendHelper::form_mediafield('d2u_helper_picture', '1', $advertisement->picture, $readonly);
+                            BackendHelper::form_input('header_priority', 'form[priority]', $advertisement->priority, true, $readonly, 'number');
+                            BackendHelper::form_mediafield('d2u_helper_picture', '1', $advertisement->picture, $readonly);
                             $options_status = ['online' => rex_i18n::msg('clang_online'),
                                 'offline' => rex_i18n::msg('clang_offline')];
-                            \TobiasKrais\D2UHelper\BackendHelper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$advertisement->online_status], 1, false, $readonly);
+                            BackendHelper::form_select('d2u_immo_status', 'form[online_status]', $options_status, [$advertisement->online_status], 1, false, $readonly);
                         ?>
 					</div>
 				</fieldset>
@@ -172,8 +174,8 @@ if ('edit' === $func || 'add' === $func) {
 	</form>
 	<br>
 	<?php
-        echo \TobiasKrais\D2UHelper\BackendHelper::getCSS();
-        echo \TobiasKrais\D2UHelper\BackendHelper::getJS();
+        echo BackendHelper::getCSS();
+        echo BackendHelper::getJS();
 }
 
 if ('' === $func) {
