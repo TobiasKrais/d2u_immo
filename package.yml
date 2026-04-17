@@ -38,7 +38,7 @@ page:
                 property: { title: 'translate:d2u_immo_window_advertising_property_selection', icon: rex-icon fa-home, perm: 'd2u_immo[window_advertising]' }
                 advertisement: { title: 'translate:d2u_immo_window_advertising_ad', icon: rex-icon fa-desktop, perm: 'd2u_immo[window_advertising]' }
         settings:
-            icon: rex-icon fa-navicon
+            icon: rex-icon rex-icon-system
             title: ''
             itemClass: pull-right
             subpages:
