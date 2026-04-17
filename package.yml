@@ -56,7 +56,7 @@ requires:
     redaxo: '>=5.15.0'
     packages:
         cronjob: '>=2.9.0'
-        d2u_helper: '>=2.1.4'
+        d2u_helper: '>=2.2.1'
         media_manager: '>=2.2'
         mediapool: '>=2.12.0'
         phpmailer: '>=2.11.0'
