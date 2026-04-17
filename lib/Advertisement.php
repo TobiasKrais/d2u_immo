@@ -291,8 +291,8 @@ class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull prios from database
-        $query = 'SELECT ad_id, priority FROM '. rex::getTablePrefix() .'d2u_immo_window_advertising '
-            .'WHERE ad_id <> '. $this->ad_id .' ORDER BY priority';
+        $query = 'SELECT ad_id FROM '. rex::getTablePrefix() .'d2u_immo_window_advertising '
+            .'WHERE ad_id <> '. $this->ad_id .' ORDER BY priority, ad_id';
         $result = rex_sql::factory();
         $result->setQuery($query);
 
@@ -308,7 +308,7 @@ class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $advertisements = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $advertisements[$result->getValue('priority')] = $result->getValue('ad_id');
+            $advertisements[] = (int) $result->getValue('ad_id');
             $result->next();
         }
         array_splice($advertisements, $this->priority - 1, 0, [$this->ad_id]);

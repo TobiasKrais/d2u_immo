@@ -1,9 +1,30 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 require_once 'property.php';
 
+if ('priority_down' === $func) {
+    $property = new \TobiasKrais\D2UImmo\Property((int) rex_request('entry_id', 'int'), rex_config::get('d2u_helper', 'default_lang'));
+    ++$property->priority;
+    $property->save();
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
+    exit;
+} elseif ('priority_up' === $func) {
+    $property = new \TobiasKrais\D2UImmo\Property((int) rex_request('entry_id', 'int'), rex_config::get('d2u_helper', 'default_lang'));
+    if ($property->priority > 1) {
+        --$property->priority;
+        $property->save();
+    }
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
+    exit;
+}
+
 if ('' === $func) { /** @phpstan-ignore-line */
-    $query = 'SELECT properties.property_id, lang.name AS propertyname, CONCAT(street, " ", house_number) AS `address`, categories.name AS categoryname, priority '
+    $query = 'SELECT properties.property_id, lang.name AS propertyname, CONCAT(street, " ", house_number) AS `address`, categories.name AS categoryname, priority, '
+        .'(SELECT MAX(priority) FROM '. rex::getTablePrefix() .'d2u_immo_properties WHERE online_status = "archived") AS max_priority '
         .'FROM '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
         .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
             .'ON properties.property_id = lang.property_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
@@ -41,6 +62,17 @@ if ('' === $func) { /** @phpstan-ignore-line */
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
     $list->setColumnSortable('priority');
+    $list->setColumnFormat('priority', 'custom', static function ($params) {
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('property_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority')
+        );
+    });
+
+    $list->removeColumn('max_priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

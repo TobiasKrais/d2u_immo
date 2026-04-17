@@ -977,8 +977,8 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
     private function setPriority($delete = false): void
     {
         // Pull prios from database
-        $query = 'SELECT property_id, priority FROM '. rex::getTablePrefix() .'d2u_immo_properties '
-            .'WHERE property_id <> '. $this->property_id .' ORDER BY priority';
+        $query = 'SELECT property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties '
+            .'WHERE property_id <> '. $this->property_id .' ORDER BY priority, property_id';
         $result = rex_sql::factory();
         $result->setQuery($query);
 
@@ -994,7 +994,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         $properties = [];
         for ($i = 0; $i < $result->getRows(); ++$i) {
-            $properties[$result->getValue('priority')] = $result->getValue('property_id');
+            $properties[] = (int) $result->getValue('property_id');
             $result->next();
         }
         array_splice($properties, $this->priority - 1, 0, [$this->property_id]);

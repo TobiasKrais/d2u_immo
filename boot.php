@@ -14,7 +14,6 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
     rex_perm::register('d2u_immo[import]', rex_i18n::msg('d2u_immo_rights_all') .': '. rex_i18n::msg('d2u_immo_import'), rex_perm::OPTIONS);
     rex_perm::register('d2u_immo[settings]', rex_i18n::msg('d2u_immo_rights_settings'), rex_perm::OPTIONS);
     rex_perm::register('d2u_immo[window_advertising]', rex_i18n::msg('d2u_immo_window_advertising_rights_all'), rex_perm::OPTIONS);
-    rex_view::addCssFile($this->getAssetsUrl('backend.css'));
 
     rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_immo_translation_list(...));
     rex_extension::register('ART_PRE_DELETED', rex_d2u_immo_article_is_in_use(...));

@@ -1,5 +1,6 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
 use TobiasKrais\D2UImmo\Property;
 
 require_once 'property.php';
@@ -8,7 +9,7 @@ if ('priority_down' === $func) {
     $property->priority++;
     $property->save();
 
-    header('Location: '. rex_url::currentBackendPage(['message' => 'd2u_immo_priority_changed'], false));
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
     exit;
 } elseif ('priority_up' === $func) {
     $property = new Property((int) rex_request('entry_id', 'int'), rex_config::get('d2u_helper', 'default_lang'));
@@ -17,7 +18,7 @@ if ('priority_down' === $func) {
         $property->save();
     }
 
-    header('Location: '. rex_url::currentBackendPage(['message' => 'd2u_immo_priority_changed'], false));
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
     exit;
 }
 
@@ -65,28 +66,13 @@ if ('' === $func) { /** @phpstan-ignore-line */
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
     $list->setColumnSortable('priority');
     $list->setColumnFormat('priority', 'custom', static function ($params) {
-        $list_params = $params['list'];
-        $property_id = $list_params->getValue('property_id');
-        $priority = $list_params->getValue('priority');
-        $max_priority = $list_params->getValue('max_priority');
-        $buttons = '<div class="priority-container">';
-            $buttons .= '<span class="priority-value">'. $priority .'</span>';
-            $buttons .= '<div class="priority-controls">';
-                if ($priority > 1) {
-                    $buttons .= '<a href="index.php?page='. rex_be_controller::getCurrentPage() .'&amp;func=priority_up&amp;entry_id='. $property_id .'" '
-                        .'class="priority-btn priority-up" title="'. rex_i18n::msg('d2u_immo_priority_up') .'">'
-                        .'<i class="rex-icon rex-icon-up"></i>'
-                        .'</a>';
-                }
-                if ($priority < $max_priority) {
-                    $buttons .= '<a href="index.php?page='. rex_be_controller::getCurrentPage() .'&amp;func=priority_down&amp;entry_id='. $property_id .'" '
-                        .'class="priority-btn priority-down" title="'. rex_i18n::msg('d2u_immo_priority_down') .'">'
-                        .'<i class="rex-icon rex-icon-down"></i>'
-                        .'</a>';
-                }
-            $buttons .= '</div>';
-        $buttons .= '</div>';
-        return $buttons;
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('property_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority')
+        );
     });
 
     $list->removeColumn('max_priority');

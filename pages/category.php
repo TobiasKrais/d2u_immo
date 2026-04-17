@@ -99,6 +99,21 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_delete', FILTER_VALIDATE_INT) || '
 
     $func = '';
 }
+elseif ('priority_down' === $func || 'priority_up' === $func) {
+    $category = new TobiasKrais\D2UImmo\Category($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+    $category->category_id = $entry_id; // Ensure correct ID in case language has no object
+
+    if ('priority_down' === $func) {
+        ++$category->priority;
+        $category->save();
+    } elseif ($category->priority > 1) {
+        --$category->priority;
+        $category->save();
+    }
+
+    header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
+    exit;
+}
 
 // Eingabeformular
 if ('edit' === $func || 'add' === $func) {
@@ -203,7 +218,8 @@ if ('edit' === $func || 'add' === $func) {
 }
 
 if ('' === $func) {
-    $query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname, priority '
+    $query = 'SELECT categories.category_id, lang.name AS categoryname, parents_lang.name AS parentname, priority, '
+        . '(SELECT MAX(priority) FROM '. \rex::getTablePrefix() .'d2u_immo_categories) AS max_priority '
         . 'FROM '. \rex::getTablePrefix() .'d2u_immo_categories AS categories '
         . 'LEFT JOIN '. \rex::getTablePrefix() .'d2u_immo_categories_lang AS lang '
             . 'ON categories.category_id = lang.category_id AND lang.clang_id = '. (int) rex_config::get('d2u_helper', 'default_lang') .' '
@@ -240,6 +256,17 @@ if ('' === $func) {
 
     $list->setColumnLabel('priority', rex_i18n::msg('header_priority'));
     $list->setColumnSortable('priority');
+    $list->setColumnFormat('priority', 'custom', static function ($params) {
+        $listParams = $params['list'];
+
+        return BackendHelper::getPriorityButtons(
+            (int) $listParams->getValue('category_id'),
+            (int) $listParams->getValue('priority'),
+            (int) $listParams->getValue('max_priority')
+        );
+    });
+
+    $list->removeColumn('max_priority');
 
     $list->addColumn(rex_i18n::msg('module_functions'), '<i class="rex-icon rex-icon-edit"></i> ' . rex_i18n::msg('edit'));
     $list->setColumnLayout(rex_i18n::msg('module_functions'), ['<th class="rex-table-action" colspan="2">###VALUE###</th>', '<td class="rex-table-action">###VALUE###</td>']);

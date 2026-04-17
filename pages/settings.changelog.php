@@ -3,9 +3,10 @@
 
 <h2>Changelog</h2>
 
-<p>1.4.3-DEV:</p>
+<p>1.4.3:</p>
 <ul>
-	<li>...</li>
+	<li>Bugfix: Prioritäten werden bei Kategorien, Immobilien und Schaufenster-Anzeigen nach dem Speichern wieder stabil neu durchnummeriert, auch wenn in der Datenbank bereits doppelte Werte vorhanden sind.</li>
+	<li>Die Priorität von Kategorien, aktiven und archivierten Immobilien sowie Schaufenster-Anzeigen kann in den Backend-Listen jetzt direkt per Hoch-/Runter-Buttons geändert werden.</li>
 </ul>
 <p>1.4.2:</p>
 <ul>
