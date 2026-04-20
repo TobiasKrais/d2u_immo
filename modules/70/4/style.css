@@ -9,7 +9,6 @@
 }
 .tab-content {
 	border: 1px solid var(--article-color-h);
-	border-top: none;
 	padding: 1em;
 }
 .tab-content ul {
@@ -139,7 +138,6 @@
 	--bs-nav-pills-link-active-bg: var(--article-color-h);
 	--bs-nav-pills-link-active-color: var(--article-color-bg);
 	width: 100%;
-	border-bottom: 1px solid var(--article-color-h);
 }
 #d2u_immo_module_70_4 #expose_tabs .nav-item,
 #d2u_immo_module_70_4 .immo-list-tabs .nav-item {

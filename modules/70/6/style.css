@@ -4,7 +4,6 @@
 
 .tab-content {
 	border: 1px solid var(--article-color-h);
-	border-top: none;
 	padding: 1em;
 }
 
