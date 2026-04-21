@@ -19,6 +19,11 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
 
     // Media fields and links need special treatment
     $input_media_list = rex_post('REX_INPUT_MEDIALIST', 'array', []);
+    $getPostedList = static function (array $form, string $key): array {
+        $value = $form[$key] ?? [];
+
+        return is_array($value) ? array_map('strval', $value) : [];
+    };
 
     $success = true;
     $property = false;
@@ -31,8 +36,8 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $property->animals = array_key_exists('animals', $form);
             $property->apartment_type = $form['apartment_type'];
             $property->available_from = $form['available_from'];
-            $property->bath = is_array($form['bath']) ? array_map('strval', $form['bath']) : [];
-            $property->broadband_internet = is_array($form['broadband_internet']) ? array_map('strval', $form['broadband_internet']) : [];
+            $property->bath = $getPostedList($form, 'bath');
+            $property->broadband_internet = $getPostedList($form, 'broadband_internet');
             $property->cable_sat_tv = array_key_exists('cable_sat_tv', $form);
             if (isset($form['category_id']) && (int) $form['category_id'] > 0) {
                 $property->category = new TobiasKrais\D2UImmo\Category((int) $form['category_id'], (int) rex_config::get('d2u_helper', 'default_lang'));
@@ -50,23 +55,23 @@ if (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === (int) filter_input
             $property->courtage_incl_vat = array_key_exists('courtage_incl_vat', $form);
             $property->currency_code = $form['currency_code'];
             $property->deposit = (int) $form['deposit'];
-            $property->elevator = is_array($form['elevator']) ? array_map('strval', $form['elevator']) : [];
+            $property->elevator = $getPostedList($form, 'elevator');
             $property->energy_consumption = $form['energy_consumption'];
             $property->energy_pass = $form['energy_pass'];
             $property->energy_pass_valid_until = $form['energy_pass_valid_until'];
             $property->energy_pass_year = $form['energy_pass_year'];
-            $property->firing_type = is_array($form['firing_type']) ? array_map('strval', $form['firing_type']) : [];
+            $property->firing_type = $getPostedList($form, 'firing_type');
             $property->floor = (int) $form['floor'];
-            $property->floor_type = is_array($form['floor_type']) ? array_map('strval', $form['floor_type']) : [];
+            $property->floor_type = $getPostedList($form, 'floor_type');
             $ground_plans = preg_grep('/^\s*$/s', explode(',', $input_media_list[2]), PREG_GREP_INVERT);
             $property->ground_plans = is_array($ground_plans) ? $ground_plans : [];
             $property->hall_warehouse_type = $form['hall_warehouse_type'];
-            $property->heating_type = is_array($form['heating_type']) ? array_map('strval', $form['heating_type']) : [];
+            $property->heating_type = $getPostedList($form, 'heating_type');
             $property->house_number = $form['house_number'];
             $property->house_type = $form['house_type'];
             $property->including_warm_water = array_key_exists('including_warm_water', $form);
             $property->internal_object_number = $form['internal_object_number'];
-            $property->kitchen = is_array($form['kitchen']) ? array_map('strval', $form['kitchen']) : [];
+            $property->kitchen = $getPostedList($form, 'kitchen');
             $property->land_area = (float) $form['land_area'];
             $property->land_type = $form['land_type'];
             $property->latitude = (float) $form['latitude'];

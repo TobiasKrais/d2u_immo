@@ -1136,7 +1136,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				validate|empty|name|'. \Sprog\Wildcard::get('d2u_immo_form_validate_name') .'
 				validate|empty|phone|'. \Sprog\Wildcard::get('d2u_immo_form_validate_phone') .'
 				validate|empty|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email') .'
-				validate|type|email|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email_false') .'
+                validate|type|email|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email_false') .'|1
 				validate|empty|privacy_policy_accepted|'. \Sprog\Wildcard::get('d2u_immo_form_validate_privacy_policy') .'
 				validate|customfunction|validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. \Sprog\Wildcard::get('d2u_immo_form_validate_spambots') .'|
 
@@ -1184,10 +1184,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
 				validate|empty|sender_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_name') .'
 				validate|empty|sender_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'
-				validate|type|sender_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'
+                validate|type|sender_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'|1
 				validate|empty|receipient_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_name') .'
 				validate|empty|receipient_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'
-				validate|type|receipient_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'
+                validate|type|receipient_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'|1
 				validate|empty|message|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_message') .'
 				validate|customfunction|immo_contact_validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. \Sprog\Wildcard::get('d2u_immo_form_validate_spambots') .'|
 

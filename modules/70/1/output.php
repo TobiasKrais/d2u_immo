@@ -871,15 +871,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         } elseif (rex_addon::get('geolocation')->isAvailable()) {
             try {
                 if (rex::isFrontend()) {
-                    if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
-                        // Geolocation 2.x
-                        \FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
-                    }
-                    else {
-                        // Geolocation 1.x
-                        // @deprecated remove in Version 2
-                        \Geolocation\tools::echoAssetTags(); /** @phpstan-ignore-line */
-                    }
+                    \FriendsOfRedaxo\Geolocation\Tools::echoAssetTags();
                 }
 ?>
 <script>
@@ -932,23 +924,11 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             } catch (Exception $e) {
             }
 
-            if(rex_version::compare('2.0.0', rex_addon::get('geolocation')->getVersion(), '<=')) {
-                // Geolocation 2.x
-                echo \FriendsOfRedaxo\Geolocation\Mapset::take((int) $map_type)
-                    ->attributes('id', $map_id)
-                    ->dataset('position', [$property->latitude, $property->longitude])
-                    ->dataset('center', [[$property->latitude, $property->longitude], 15])
-                    ->parse();
-            }
-            else {
-                // Geolocation 1.x
-                // @deprecated remove in Version 2
-                echo \Geolocation\mapset::take((int) $map_type) /** @phpstan-ignore-line */
-                    ->attributes('id', $map_id)
-                    ->dataset('position', [$property->latitude, $property->longitude])
-                    ->dataset('center', [[$property->latitude, $property->longitude], 15])
-                    ->parse();
-            }
+            echo \FriendsOfRedaxo\Geolocation\Mapset::take((int) $map_type)
+                ->attributes('id', $map_id)
+                ->dataset('position', [$property->latitude, $property->longitude])
+                ->dataset('center', [[$property->latitude, $property->longitude], 15])
+                ->parse();
         }
 
         echo '</div>';
@@ -1141,7 +1121,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				validate|empty|name|'. \Sprog\Wildcard::get('d2u_immo_form_validate_name') .'
 				validate|empty|phone|'. \Sprog\Wildcard::get('d2u_immo_form_validate_phone') .'
 				validate|empty|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email') .'
-				validate|type|email|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email_false') .'
+                validate|type|email|email|'. \Sprog\Wildcard::get('d2u_immo_form_validate_email_false') .'|1
 				validate|empty|privacy_policy_accepted|'. \Sprog\Wildcard::get('d2u_immo_form_validate_privacy_policy') .'
 				validate|customfunction|validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. \Sprog\Wildcard::get('d2u_immo_form_validate_spambots') .'|
 
@@ -1189,10 +1169,10 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
 				validate|empty|sender_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_name') .'
 				validate|empty|sender_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'
-				validate|type|sender_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'
+                validate|type|sender_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_sender_mail') .'|1
 				validate|empty|receipient_name|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_name') .'
 				validate|empty|receipient_mail|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'
-				validate|type|receipient_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'
+                validate|type|receipient_mail|email|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_receipient_mail') .'|1
 				validate|empty|message|'. \Sprog\Wildcard::get('d2u_immo_recommendation_validate_message') .'
 				validate|customfunction|immo_contact_validate_timer|TobiasKrais\D2UHelper\FrontendHelper::yform_validate_timer|3|'. \Sprog\Wildcard::get('d2u_immo_form_validate_spambots') .'|
 

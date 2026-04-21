@@ -17,7 +17,7 @@ class Module
         $modules = [];
         $modules[] = new \TobiasKrais\D2UHelper\Module('70-1',
             'D2U Immo Addon - Hauptausgabe (BS4, deprecated)',
-            24);
+            25);
         $modules[] = new \TobiasKrais\D2UHelper\Module('70-2',
             'D2U Immo Addon - Infobox Ansprechpartner (BS4, deprecated)',
             5);
@@ -26,7 +26,7 @@ class Module
             5);
         $modules[] = new \TobiasKrais\D2UHelper\Module('70-4',
             'D2U Immo Addon - Hauptausgabe (BS5)',
-            3);
+            4);
         $modules[] = new \TobiasKrais\D2UHelper\Module('70-5',
             'D2U Immo Addon - Infobox Ansprechpartner (BS5)',
             1);

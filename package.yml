@@ -68,6 +68,10 @@ requires:
         version: '>=8.0'
         extensions: [xml, zip]
 
+conflicts:
+    packages:
+        geolocation: '<2.0.0'
+
 default_config:
     default_category_sort: 'name'
     default_property_sort: 'name'

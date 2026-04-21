@@ -5,7 +5,8 @@
 
 <p>1.4.4-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Module 70-1 und 70-4: YForm E-Mail-Validierung in Anfrage- und Empfehlungsformularen robuster gemacht, damit bei parallelen Formularinstanzen keine PHP 8.4 Deprecated-Warnung durch null-Werte mehr entsteht.</li>
+	<li>Geolocation-1.x-Supprt entfernt. Bitte auf Version 2 aktualisieren.</li>
 </ul>
 <p>1.4.3:</p>
 <ul>
