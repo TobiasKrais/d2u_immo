@@ -4,14 +4,23 @@ use TobiasKrais\D2UHelper\BackendHelper;
 use TobiasKrais\D2UImmo\Property;
 
 require_once 'property.php';
-if ('priority_down' === $func) {
+$func = rex_request('func', 'string');
+$csrfToken = BackendHelper::getPageCsrfToken();
+$invalidCsrf = false;
+if (in_array($func, ['changestatus', 'delete', 'priority_up', 'priority_down'], true) && !$csrfToken->isValid()) {
+    echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+	$invalidCsrf = true;
+	$func = '';
+}
+
+if (!$invalidCsrf && 'priority_down' === $func) {
     $property = new Property((int) rex_request('entry_id', 'int'), rex_config::get('d2u_helper', 'default_lang'));
     $property->priority++;
     $property->save();
 
     header('Location: '. BackendHelper::getCurrentBackendPage(['message' => 'd2u_helper_priority_changed'], ['func', 'entry_id']));
     exit;
-} elseif ('priority_up' === $func) {
+} elseif (!$invalidCsrf && 'priority_up' === $func) {
     $property = new Property((int) rex_request('entry_id', 'int'), rex_config::get('d2u_helper', 'default_lang'));
     if ($property->priority > 1) {
         $property->priority--;
@@ -83,7 +92,7 @@ if ('' === $func) { /** @phpstan-ignore-line */
 
     $list->removeColumn('online_status');
     if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]'))) {
-        $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . rex_url::currentBackendPage(['func' => 'changestatus']) . '&entry_id=###property_id###"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
+        $list->addColumn(rex_i18n::msg('status_online'), '<a class="rex-###online_status###" href="' . BackendHelper::getCurrentBackendPage(['func' => 'changestatus', 'entry_id' => '###property_id###'], [], true) . '"><i class="rex-icon rex-icon-###online_status###"></i> ###online_status###</a>');
         $list->setColumnLayout(rex_i18n::msg('status_online'), ['', '<td class="rex-table-action">###VALUE###</td>']);
 
         $list->addColumn(rex_i18n::msg('d2u_helper_clone'), '<i class="rex-icon fa-copy"></i> ' . rex_i18n::msg('d2u_helper_clone'));
@@ -92,7 +101,7 @@ if ('' === $func) { /** @phpstan-ignore-line */
 
         $list->addColumn(rex_i18n::msg('delete_module'), '<i class="rex-icon rex-icon-delete"></i> ' . rex_i18n::msg('delete'));
         $list->setColumnLayout(rex_i18n::msg('delete_module'), ['', '<td class="rex-table-action">###VALUE###</td>']);
-        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###property_id###']);
+        $list->setColumnParams(rex_i18n::msg('delete_module'), ['func' => 'delete', 'entry_id' => '###property_id###'] + $csrfToken->getUrlParams());
         $list->addLinkAttribute(rex_i18n::msg('delete_module'), 'data-confirm', rex_i18n::msg('d2u_helper_confirm_delete'));
     }
 

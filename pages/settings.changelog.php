@@ -5,6 +5,7 @@
 
 <p>1.4.4-DEV:</p>
 <ul>
+	<li>Backend: CSRF-Schutz fuer Exportprovider, aktive Immobilien und Schaufenster-Anzeigen bei Speichern-, Loesch-, Status- und Prioritaetsaktionen ergaenzt.</li>
 	<li>Module 70-1 und 70-4: YForm E-Mail-Validierung in Anfrage- und Empfehlungsformularen robuster gemacht, damit bei parallelen Formularinstanzen keine PHP 8.4 Deprecated-Warnung durch null-Werte mehr entsteht.</li>
 	<li>Geolocation-1.x-Supprt entfernt. Bitte auf Version 2 aktualisieren.</li>
 </ul>
