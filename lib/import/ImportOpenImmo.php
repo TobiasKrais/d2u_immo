@@ -731,6 +731,29 @@ class ImportOpenImmo
                                         else if (count($energiepass->endenergiebedarf) > 0) {
                                             $property->energy_consumption = $energiepass->endenergiebedarf;
                                         }
+                                        if (count($energiepass->ausstelldatum) > 0) {
+                                            $ausstelldatum = (string) $energiepass->ausstelldatum;
+                                            if (preg_match('/^(\d{2})\.(\d{2})\.(\d{4})$/', $ausstelldatum, $matches)) {
+                                                $property->energy_pass_issue_date = "{$matches[3]}-{$matches[2]}-{$matches[1]}";
+                                            } else {
+                                                $property->energy_pass_issue_date = $ausstelldatum;
+                                            }
+                                        }
+                                        if (count($energiepass->gebaeudeart) > 0) {
+                                            $property->energy_pass_building_type = (string) $energiepass->gebaeudeart;
+                                        }
+                                        if (count($energiepass->stromwert) > 0) {
+                                            $property->energy_pass_electricity_value = (string) $energiepass->stromwert;
+                                        }
+                                        if (count($energiepass->waermewert) > 0) {
+                                            $property->energy_pass_heat_value = (string) $energiepass->waermewert;
+                                        }
+                                        if (count($energiepass->wertklasse) > 0) {
+                                            $wertklasse = trim((string) $energiepass->wertklasse);
+                                            if (in_array($wertklasse, Property::getEnergyEfficiencyScaleLabels(), true)) {
+                                                $property->energy_efficiency_class_manual = $wertklasse;
+                                            }
+                                        }
                                         if (count($energiepass->mitwarmwasser) > 0) {
                                             $property->including_warm_water = in_array(strtolower((string) $energiepass->mitwarmwasser), ['1', 'true'], true);
                                         }

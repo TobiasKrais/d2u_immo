@@ -3,9 +3,11 @@
 
 <h2>Changelog</h2>
 
-<p>1.4.5-DEV:</p>
+<p>1.4.5:</p>
 <ul>
-	<li>...</li>
+	<li>Energieeffizienzklassen im Addon im Rahmen der EU-Gebäuderichtlinie Energy Performance of Buildings Directive (EPBD) von der alten A+-bis-H-Skala auf A bis G umgestellt, damit Frontend-Ausgabe und OpenImmo-Export keine veralteten Klassen mehr verwenden.</li>
+	<li>Energiepass um die Felder Ausstellungsdatum, Gebäudeart, Stromwert und Wärmewert erweitert und im OpenImmo-Import sowie -Export angebunden.</li>
+	<li>Energieeffizienzklasse kann jetzt im Backend manuell vorgegeben werden. Frontend und OpenImmo-Export verwenden diesen Wert vorrangig und fallen sonst auf die automatische Berechnung aus dem Kennwert zurück.</li>
 </ul>
 <p>1.4.4:</p>
 <ul>

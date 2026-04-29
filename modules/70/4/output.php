@@ -511,6 +511,14 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_type') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">'. \Sprog\Wildcard::get('d2u_immo_energy_pass_'. $property->energy_pass) .'</div>';
 
+            if ('' !== $property->energy_pass_issue_date) {
+                $energy_pass_issue_date = date_create_from_format('Y-m-d', $property->energy_pass_issue_date);
+                if (false !== $energy_pass_issue_date) {
+                    echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_issue_date') .':</li></ul></div>';
+                    echo '<div class="col-6 col-md-8 col-lg-9">'. date_format($energy_pass_issue_date, 'd.m.Y') .'</div>';
+                }
+            }
+
             if ('' !== $property->energy_pass_valid_until) {
                 $energy_pass_date = date_create_from_format('Y-m-d', $property->energy_pass_valid_until);
                 if (false !== $energy_pass_date) {
@@ -519,8 +527,23 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                 }
             }
 
+            if ('' !== $property->energy_pass_building_type) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_building_type') .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. \Sprog\Wildcard::get('d2u_immo_energy_pass_building_type_'. $property->energy_pass_building_type) .'</div>';
+            }
+
             echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_value') .':</li></ul></div>';
             echo '<div class="col-6 col-md-8 col-lg-9">'. $property->energy_consumption .'&nbsp;kWh/(m²*a)</div>';
+
+            if ('' !== $property->energy_pass_electricity_value) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_electricity_value') .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. rex_escape($property->energy_pass_electricity_value) .'</div>';
+            }
+
+            if ('' !== $property->energy_pass_heat_value) {
+                echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_heat_value') .':</li></ul></div>';
+                echo '<div class="col-6 col-md-8 col-lg-9">'. rex_escape($property->energy_pass_heat_value) .'</div>';
+            }
 
             if ($property->including_warm_water) {
                 echo '<div class="col-6 col-md-4 col-lg-3"><ul><li>'. \Sprog\Wildcard::get('d2u_immo_energy_pass_incl_warm_water') .':</li></ul></div>';

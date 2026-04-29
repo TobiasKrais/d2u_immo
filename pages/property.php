@@ -74,6 +74,11 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
             $property->deposit = (int) $form['deposit'];
             $property->elevator = $getPostedList($form, 'elevator');
             $property->energy_consumption = $form['energy_consumption'];
+            $property->energy_efficiency_class_manual = $form['energy_efficiency_class_manual'] ?? '';
+            $property->energy_pass_building_type = $form['energy_pass_building_type'] ?? '';
+            $property->energy_pass_electricity_value = $form['energy_pass_electricity_value'] ?? '';
+            $property->energy_pass_heat_value = $form['energy_pass_heat_value'] ?? '';
+            $property->energy_pass_issue_date = $form['energy_pass_issue_date'] ?? '';
             $property->energy_pass = $form['energy_pass'];
             $property->energy_pass_valid_until = $form['energy_pass_valid_until'];
             $property->energy_pass_year = $form['energy_pass_year'];
@@ -251,6 +256,9 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 
                     // Do not use last object from translations, because you don't know if it exists in DB
                     $property = new TobiasKrais\D2UImmo\Property($entry_id, (int) rex_config::get('d2u_helper', 'default_lang'));
+                    if ('' === $property->energy_efficiency_class_manual) {
+                        $property->energy_efficiency_class_manual = $property->getCalculatedEnergyEfficiencyClass();
+                    }
                     $readonly = true;
                     if (rex::getUser() instanceof rex_user && (rex::getUser()->isAdmin() || rex::getUser()->hasPerm('d2u_immo[edit_data]'))) {
                         $readonly = false;
@@ -537,7 +545,18 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                                 'VERBRAUCH' => rex_i18n::msg('d2u_immo_property_energy_pass_VERBRAUCH')];
                             BackendHelper::form_select('d2u_immo_property_energy_pass_kind', 'form[energy_pass]', $options_energy_pass, [$property->energy_pass], 1, false, $readonly);
                             BackendHelper::form_input('d2u_immo_property_energy_pass_valid_until', 'form[energy_pass_valid_until]', $property->energy_pass_valid_until, false, $readonly, 'date');
+                            BackendHelper::form_input('d2u_immo_property_energy_pass_issue_date', 'form[energy_pass_issue_date]', $property->energy_pass_issue_date, false, $readonly, 'date');
                             BackendHelper::form_input('d2u_immo_property_energy_consumption', 'form[energy_consumption]', $property->energy_consumption, false, $readonly, 'text');
+                            $options_energy_efficiency_class = ['' => ''];
+                            foreach (TobiasKrais\D2UImmo\Property::getEnergyEfficiencyScaleLabels() as $energy_efficiency_class) {
+                                $options_energy_efficiency_class[$energy_efficiency_class] = $energy_efficiency_class;
+                            }
+                            BackendHelper::form_select('d2u_immo_property_energy_efficiency_class', 'form[energy_efficiency_class_manual]', $options_energy_efficiency_class, [$property->energy_efficiency_class_manual], 1, false, $readonly);
+                            BackendHelper::form_input('d2u_immo_property_energy_pass_electricity_value', 'form[energy_pass_electricity_value]', $property->energy_pass_electricity_value, false, $readonly, 'text');
+                            BackendHelper::form_input('d2u_immo_property_energy_pass_heat_value', 'form[energy_pass_heat_value]', $property->energy_pass_heat_value, false, $readonly, 'text');
+                            $options_energy_pass_building_type = ['wohn' => rex_i18n::msg('d2u_immo_property_energy_pass_building_type_wohn'),
+                                'nichtwohn' => rex_i18n::msg('d2u_immo_property_energy_pass_building_type_nichtwohn')];
+                            BackendHelper::form_select('d2u_immo_property_energy_pass_building_type', 'form[energy_pass_building_type]', $options_energy_pass_building_type, [$property->energy_pass_building_type], 1, false, $readonly);
                             BackendHelper::form_checkbox('d2u_immo_property_energy_including_warm_water', 'form[including_warm_water]', 'true', $property->including_warm_water, $readonly);
                             $options_firing_type = ['ALTERNATIV' => rex_i18n::msg('d2u_immo_property_firing_type_ALTERNATIV'),
                                 'BLOCK' => rex_i18n::msg('d2u_immo_property_firing_type_BLOCK'),
@@ -661,7 +680,11 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 				$("input[name='form[energy_pass_valid_until]']").removeAttr('required');
 				$("dl[id='form[energy_pass]']").hide();
 				$("dl[id='form[energy_pass_valid_until]']").hide();
+                $("dl[id='form[energy_pass_issue_date]']").hide();
 				$("dl[id='form[energy_consumption]']").hide();
+                $("dl[id='form[energy_pass_electricity_value]']").hide();
+                $("dl[id='form[energy_pass_heat_value]']").hide();
+                $("dl[id='form[energy_pass_building_type]']").hide();
 				$("dl[id='form[including_warm_water]']").hide();
 				$("dl[id='form[firing_type][]']").hide();
 			}
@@ -671,7 +694,11 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 				$("input[name='form[energy_pass_valid_until]']").prop('required', true);
 				$("dl[id='form[energy_pass]']").fadeIn();
 				$("dl[id='form[energy_pass_valid_until]']").fadeIn();
+                $("dl[id='form[energy_pass_issue_date]']").fadeIn();
 				$("dl[id='form[energy_consumption]']").fadeIn();
+                $("dl[id='form[energy_pass_electricity_value]']").fadeIn();
+                $("dl[id='form[energy_pass_heat_value]']").fadeIn();
+                $("dl[id='form[energy_pass_building_type]']").fadeIn();
 				$("dl[id='form[including_warm_water]']").fadeIn();
 				$("dl[id='form[firing_type][]']").fadeIn();
 			}

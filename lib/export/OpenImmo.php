@@ -145,6 +145,7 @@ class OpenImmo extends AFTPExport
                 continue;
             }
 
+            /** @var Property $property */
             $property = new Property($export_property->property_id, $this->provider->clang_id);
             // <immobilie>
             $immobilie = $xml->createElement('immobilie');
@@ -882,6 +883,26 @@ class OpenImmo extends AFTPExport
                         $wertklasse = $xml->createElement('wertklasse');
                         $wertklasse->appendChild($xml->createTextNode($energyEfficiencyClass));
                         $energiepass->appendChild($wertklasse);
+                    }
+                    if ('' !== $property->energy_pass_issue_date) {
+                        $ausstelldatum = $xml->createElement('ausstelldatum');
+                        $ausstelldatum->appendChild($xml->createTextNode($property->energy_pass_issue_date));
+                        $energiepass->appendChild($ausstelldatum);
+                    }
+                    if ('' !== $property->energy_pass_building_type) {
+                        $gebaeudeart = $xml->createElement('gebaeudeart');
+                        $gebaeudeart->appendChild($xml->createTextNode($property->energy_pass_building_type));
+                        $energiepass->appendChild($gebaeudeart);
+                    }
+                    if ('' !== $property->energy_pass_electricity_value) {
+                        $stromwert = $xml->createElement('stromwert');
+                        $stromwert->appendChild($xml->createTextNode($property->energy_pass_electricity_value));
+                        $energiepass->appendChild($stromwert);
+                    }
+                    if ('' !== $property->energy_pass_heat_value) {
+                        $waermewert = $xml->createElement('waermewert');
+                        $waermewert->appendChild($xml->createTextNode($property->energy_pass_heat_value));
+                        $energiepass->appendChild($waermewert);
                     }
                 }
                 // <jahrgang>2014</jahrgang>

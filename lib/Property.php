@@ -229,6 +229,21 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var string energy pass consumption value */
     public string $energy_consumption = '';
 
+    /** @var string manual override for the displayed/exported energy efficiency class */
+    public string $energy_efficiency_class_manual = '';
+
+    /** @var string energy pass issue date */
+    public string $energy_pass_issue_date = '';
+
+    /** @var string energy pass building type, e.g. wohn or nichtwohn */
+    public string $energy_pass_building_type = '';
+
+    /** @var string electricity value from energy pass */
+    public string $energy_pass_electricity_value = '';
+
+    /** @var string heat value from energy pass */
+    public string $energy_pass_heat_value = '';
+
     /** @var bool Energy pass including warm water */
     public bool $including_warm_water = true;
 
@@ -363,6 +378,11 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
             $elevator = preg_grep('/^\s*$/s', explode('|', (string) $result->getValue('elevator')), PREG_GREP_INVERT);
             $this->elevator = is_array($elevator) ? $elevator : [];
             $this->energy_consumption = (string) $result->getValue('energy_consumption');
+            $this->energy_efficiency_class_manual = (string) $result->getValue('energy_efficiency_class_manual');
+            $this->energy_pass_building_type = (string) $result->getValue('energy_pass_building_type');
+            $this->energy_pass_electricity_value = (string) $result->getValue('energy_pass_electricity_value');
+            $this->energy_pass_heat_value = (string) $result->getValue('energy_pass_heat_value');
+            $this->energy_pass_issue_date = (string) $result->getValue('energy_pass_issue_date');
             $this->energy_pass = (string) $result->getValue('energy_pass');
             $this->energy_pass_valid_until = (string) $result->getValue('energy_pass_valid_until');
             $this->energy_pass_year = (string) $result->getValue('energy_pass_year');
@@ -701,9 +721,9 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
 
     /**
      * Returns the calculated energy efficiency class based on the energy value.
-     * @return string Energy efficiency class from A+ to H or empty string if unavailable
+     * @return string Energy efficiency class from A to G or empty string if unavailable
      */
-    public function getEnergyEfficiencyClass(): string
+    public function getCalculatedEnergyEfficiencyClass(): string
     {
         $normalized_energy_consumption = preg_replace('/[^0-9.,]+/', '', trim($this->energy_consumption));
         if (null === $normalized_energy_consumption || '' === $normalized_energy_consumption) {
@@ -715,41 +735,38 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
             return '';
         }
 
-        if ($energy_consumption < 30) {
-            return 'A+';
-        }
-        if ($energy_consumption < 50) {
-            return 'A';
-        }
-        if ($energy_consumption < 75) {
-            return 'B';
-        }
-        if ($energy_consumption < 100) {
-            return 'C';
-        }
-        if ($energy_consumption < 130) {
-            return 'D';
-        }
-        if ($energy_consumption < 160) {
-            return 'E';
-        }
-        if ($energy_consumption < 200) {
-            return 'F';
-        }
-        if ($energy_consumption < 250) {
-            return 'G';
+        return match (true) {
+            $energy_consumption < 30 => 'A',
+            $energy_consumption < 50 => 'B',
+            $energy_consumption < 75 => 'C',
+            $energy_consumption < 100 => 'D',
+            $energy_consumption < 130 => 'E',
+            $energy_consumption < 160 => 'F',
+            default => 'G',
+        };
+    }
+
+    /**
+     * Returns the effective energy efficiency class.
+     * A manually maintained class takes precedence over the calculated fallback.
+     * @return string Energy efficiency class from A to G or empty string if unavailable
+     */
+    public function getEnergyEfficiencyClass(): string
+    {
+        if (in_array($this->energy_efficiency_class_manual, self::getEnergyEfficiencyScaleLabels(), true)) {
+            return $this->energy_efficiency_class_manual;
         }
 
-        return 'H';
+        return $this->getCalculatedEnergyEfficiencyClass();
     }
 
     /**
      * Returns the available energy efficiency classes in display order.
-     * @return array<string> Energy efficiency classes from A+ to H
+     * @return array<string> Energy efficiency classes from A to G
      */
     public static function getEnergyEfficiencyScaleLabels(): array
     {
-        return ['A+', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        return ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
     }
 
     /**
@@ -864,6 +881,11 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .'deposit = '. $this->deposit .', '
                     ."elevator = '|". implode('|', $this->elevator) ."|', "
                     ."energy_consumption = '". $this->energy_consumption ."', "
+                    ."energy_efficiency_class_manual = '". $this->energy_efficiency_class_manual ."', "
+                    ."energy_pass_building_type = '". $this->energy_pass_building_type ."', "
+                    ."energy_pass_electricity_value = '". $this->energy_pass_electricity_value ."', "
+                    ."energy_pass_heat_value = '". $this->energy_pass_heat_value ."', "
+                    ."energy_pass_issue_date = '". $this->energy_pass_issue_date ."', "
                     ."energy_pass = '". $this->energy_pass ."', "
                     ."energy_pass_valid_until = '". $this->energy_pass_valid_until ."', "
                     ."energy_pass_year = '". $this->energy_pass_year ."', "
