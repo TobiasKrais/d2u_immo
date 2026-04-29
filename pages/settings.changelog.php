@@ -3,6 +3,10 @@
 
 <h2>Changelog</h2>
 
+<p>1.4.5-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.4.4:</p>
 <ul>
 	<li>Backend: CSRF-Schutz fuer Exportprovider, aktive Immobilien und Schaufenster-Anzeigen bei Speichern-, Lösch-, Status- und Prioritätsaktionen ergänzt.</li>
