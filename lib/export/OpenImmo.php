@@ -876,6 +876,13 @@ class OpenImmo extends AFTPExport
                     $energiepass_primaerenergietraeger = $xml->createElement('primaerenergietraeger');
                     $energiepass_primaerenergietraeger->appendChild($xml->createTextNode(implode(' ', $property->firing_type)));
                     $energiepass->appendChild($energiepass_primaerenergietraeger);
+                    // <wertklasse>C</wertklasse>
+                    $energyEfficiencyClass = $property->getEnergyEfficiencyClass();
+                    if ('' !== $energyEfficiencyClass) {
+                        $wertklasse = $xml->createElement('wertklasse');
+                        $wertklasse->appendChild($xml->createTextNode($energyEfficiencyClass));
+                        $energiepass->appendChild($wertklasse);
+                    }
                 }
                 // <jahrgang>2014</jahrgang>
                 $jahrgang = $xml->createElement('jahrgang');

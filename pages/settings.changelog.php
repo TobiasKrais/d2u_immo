@@ -3,11 +3,12 @@
 
 <h2>Changelog</h2>
 
-<p>1.4.4-DEV:</p>
+<p>1.4.4:</p>
 <ul>
-	<li>Backend: CSRF-Schutz fuer Exportprovider, aktive Immobilien und Schaufenster-Anzeigen bei Speichern-, Loesch-, Status- und Prioritaetsaktionen ergaenzt.</li>
+	<li>Backend: CSRF-Schutz fuer Exportprovider, aktive Immobilien und Schaufenster-Anzeigen bei Speichern-, Lösch-, Status- und Prioritätsaktionen ergänzt.</li>
 	<li>Module 70-1 und 70-4: YForm E-Mail-Validierung in Anfrage- und Empfehlungsformularen robuster gemacht, damit bei parallelen Formularinstanzen keine PHP 8.4 Deprecated-Warnung durch null-Werte mehr entsteht.</li>
-	<li>Geolocation-1.x-Supprt entfernt. Bitte auf Version 2 aktualisieren.</li>
+	<li>OpenImmo-Export: Im Energiepass wird die Energieeffizienzklasse jetzt zusaetzlich als wertklasse ausgegeben.</li>
+	<li>Geolocation-1.x-Supprt entfernt. Falls noch nicht geschehen bitte auf Version 2 aktualisieren.</li>
 </ul>
 <p>1.4.3:</p>
 <ul>
