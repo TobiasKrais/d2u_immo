@@ -1,27 +1,36 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 $func = rex_request('func', 'string');
 $provider_id = (int) rex_request('provider_id', 'int');
 $property_id = (int) rex_request('property_id', 'int');
 
+$csrfToken = BackendHelper::getPageCsrfToken();
+$invalidCsrf = false;
+if ('' !== $func && !$csrfToken->isValid()) {
+    echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    $invalidCsrf = true;
+}
+
 /*
  * Do actions
  */
-if ('online' === $func) {
+if (!$invalidCsrf && 'online' === $func) {
     // Add to next export
     $export_property = new TobiasKrais\D2UImmo\ExportedProperty($property_id, $provider_id);
     $export_property->addToExport();
-} elseif ('offline' === $func) {
+} elseif (!$invalidCsrf && 'offline' === $func) {
     // Remove to next export
     $export_property = new TobiasKrais\D2UImmo\ExportedProperty($property_id, $provider_id);
     $export_property->removeFromExport();
-} elseif ('all_online' === $func) {
+} elseif (!$invalidCsrf && 'all_online' === $func) {
     // Add all to next export
     TobiasKrais\D2UImmo\ExportedProperty::addAllToExport($provider_id);
-} elseif ('all_offline' === $func) {
+} elseif (!$invalidCsrf && 'all_offline' === $func) {
     // Remove all from next export
     TobiasKrais\D2UImmo\ExportedProperty::removeAllFromExport($provider_id);
-} elseif ('export' === $func) {
+} elseif (!$invalidCsrf && 'export' === $func) {
     // Export
     $provider = new TobiasKrais\D2UImmo\Provider($provider_id);
     $error = $provider->export();
@@ -51,7 +60,7 @@ if (count($providers) > 0) {
     foreach ($providers as $provider) {
         echo '<td>';
         if ($provider->isExportPossible()) {
-            echo "<a href='". rex_url::currentBackendPage(['func' => 'export', 'provider_id' => $provider->provider_id]) ."'>"
+            echo "<a href='". rex_url::currentBackendPage(array_merge(['func' => 'export', 'provider_id' => $provider->provider_id], $csrfToken->getUrlParams())) ."'>"
                 . "<button class='btn btn-apply'>". rex_i18n::msg('d2u_immo_export_start') .'</button></a>';
         }
         echo '</td>';
@@ -76,7 +85,7 @@ if (count($providers) > 0) {
         echo '<tr>';
         echo '<td><i>'. rex_i18n::msg('d2u_immo_export_all_online') .'</i></td>';
         foreach ($providers as $provider) {
-            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'all_online', 'provider_id' => $provider->provider_id])
+            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge(['func' => 'all_online', 'provider_id' => $provider->provider_id], $csrfToken->getUrlParams()))
                     .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
         }
         echo '</tr>';
@@ -84,7 +93,7 @@ if (count($providers) > 0) {
         echo '<tr>';
         echo '<td><i>'. rex_i18n::msg('d2u_immo_export_all_offline') .'</i></td>';
         foreach ($providers as $provider) {
-            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'all_offline', 'provider_id' => $provider->provider_id])
+            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge(['func' => 'all_offline', 'provider_id' => $provider->provider_id], $csrfToken->getUrlParams()))
                     .'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
         }
         echo '</tr>';
@@ -102,10 +111,10 @@ if (count($providers) > 0) {
             foreach ($providers as $provider) {
                 $exported_property = new TobiasKrais\D2UImmo\ExportedProperty($property->property_id, $provider->provider_id);
                 if ($exported_property->isSetForExport()) {
-                    echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'offline', 'provider_id' => $provider->provider_id, 'property_id' => $property->property_id])
+                    echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge(['func' => 'offline', 'provider_id' => $provider->provider_id, 'property_id' => $property->property_id], $csrfToken->getUrlParams()))
                         .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
                 } else {
-                    echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'online', 'provider_id' => $provider->provider_id, 'property_id' => $property->property_id])
+                    echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge(['func' => 'online', 'provider_id' => $provider->provider_id, 'property_id' => $property->property_id], $csrfToken->getUrlParams()))
                         .'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
                 }
             }

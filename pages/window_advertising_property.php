@@ -1,7 +1,15 @@
 <?php
 
+use TobiasKrais\D2UHelper\BackendHelper;
+
 $func = rex_request('func', 'string');
 $property_id = (int) rex_request('property_id', 'int');
+
+$csrfToken = BackendHelper::getPageCsrfToken();
+if ('' !== $func && !$csrfToken->isValid()) {
+    echo rex_view::error(rex_i18n::msg('csrf_token_invalid'));
+    $func = '';
+}
 
 /*
  * Do actions
@@ -33,10 +41,10 @@ if (count($properties) > 0) {
         echo '<tr>';
         echo '<td>'. $property->name .'</td>';
         if ('online' === $property->window_advertising_status) {
-            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'offline', 'property_id' => $property->property_id])
+            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge(['func' => 'offline', 'property_id' => $property->property_id], $csrfToken->getUrlParams()))
                 .'" class="rex-online"><i class="rex-icon rex-icon-online"></i> '. rex_i18n::msg('status_online') .'</a></td>';
         } else {
-            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(['func' => 'online', 'property_id' => $property->property_id])
+            echo '<td class="rex-table-action"><a href="'. rex_url::currentBackendPage(array_merge(['func' => 'online', 'property_id' => $property->property_id], $csrfToken->getUrlParams()))
                 .'" class="rex-offline"><i class="rex-icon rex-icon-offline"></i> '. rex_i18n::msg('status_offline') .'</a></td>';
         }
         echo '</tr>';

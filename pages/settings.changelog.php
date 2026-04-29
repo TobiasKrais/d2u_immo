@@ -3,6 +3,12 @@
 
 <h2>Changelog</h2>
 
+<p>1.4.6-DEV:</p>
+<ul>
+	<li>Backend: CSRF-Schutz fuer den Immobilien-Export (OpenImmo-Provider, Online/Offline-Schalter pro Immobilie und Provider, manueller Exportstart) sowie fuer die Schaufenster-Anzeige der einzelnen Immobilien ergaenzt.</li>
+	<li>Backend: CSRF-Schutz fuer Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergaenzt.</li>
+</ul>
+
 <p>1.4.5:</p>
 <ul>
 	<li>Energieeffizienzklassen im Addon im Rahmen der EU-Gebäuderichtlinie Energy Performance of Buildings Directive (EPBD) von der alten A+-bis-H-Skala auf A bis G umgestellt, damit Frontend-Ausgabe und OpenImmo-Export keine veralteten Klassen mehr verwenden.</li>
