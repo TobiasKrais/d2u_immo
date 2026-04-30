@@ -11,6 +11,7 @@
         <li>Security: Die <code>media-is-in-use</code>-Extension-Points in <code>boot.php</code> verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
         <li>Security: Die <code>save()</code>-Methoden in <code>lib/Property.php</code>, <code>lib/Category.php</code> und <code>lib/Advertisement.php</code> verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
         <li>Security: Modul-Ausgaben (<code>modules/70/1-6/output.php</code>) härten Objekt-Namen und Titel-Felder zusätzlich gegen XSS via <code>rex_escape()</code> in HTML- und Attributausgaben.</li>
+        <li>Security: Module 70-1 und 70-2 escapen <code>href</code>-URLs aus <code>$property->getUrl()</code> bzw. der Kontaktformular-Konfiguration jetzt mit <code>rex_escape()</code>.</li>
 </ul>
 
 <p>1.4.5:</p>

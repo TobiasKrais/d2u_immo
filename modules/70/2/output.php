@@ -39,7 +39,7 @@ if ($contact->contact_id > 0) {
                 if (false !== $property) {
                     echo '<a href="#tab_request_pill" data-d2u-immo-request-tab="bs4">';
                 } elseif ('' !== $contact_form_url) {
-                    echo '<a href="'. $contact_form_url .'">';
+                    echo '<a href="'. rex_escape($contact_form_url) .'">';
                 }
                 echo 'E-Mail <span class="icon mail"></span>';
                 echo '</a></span><br>';
