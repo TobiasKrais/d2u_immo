@@ -19,7 +19,7 @@ if (!function_exists('printPropertylist')) {
                     echo '<div class="reserved">';
                 }
                 echo '<img src="index.php?rex_media_type=d2u_helper_sm&rex_media_file='.
-                        $property->pictures[0] .'" alt='. $property->name .' class="listpic">';
+                        $property->pictures[0] .'" alt='. rex_escape($property->name) .' class="listpic">';
                 if ($property->object_reserved) {
                     echo '<span>'. \Sprog\Wildcard::get('d2u_immo_object_reserved') .'</span>';
                     echo '</div>';
@@ -29,7 +29,7 @@ if (!function_exists('printPropertylist')) {
 
             echo '<div class="col-12 col-sm-8 col-lg-9">';
             echo '<div class="row">';
-            echo '<div class="col-12"><strong>'. $property->name .'</strong></div>';
+            echo '<div class="col-12"><strong>'. rex_escape($property->name) .'</strong></div>';
             echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_form_city') .':</b> '. $property->city .'</div>';
             if ('KAUF' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_purchase_price') .':</b> '. number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code .'</div>';

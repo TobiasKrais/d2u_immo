@@ -961,20 +961,26 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->property_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_immo_properties_lang SET '
-                        ."property_id = '". $this->property_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
-                        ."description_equipment = '". addslashes(htmlspecialchars($this->description_equipment)) ."', "
-                        ."description_location = '". addslashes(htmlspecialchars($this->description_location)) ."', "
-                        ."description_others = '". addslashes(htmlspecialchars($this->description_others)) ."', "
+                        .'property_id = '. (int) $this->property_id .', '
+                        .'clang_id = '. (int) $this->clang_id .', '
+                        .'description = :description, '
+                        .'description_equipment = :description_equipment, '
+                        .'description_location = :description_location, '
+                        .'description_others = :description_others, '
                         ."documents = '". implode(',', $this->documents) ."', "
                         ."teaser = '". $this->teaser ."', "
-                        ."name = '". addslashes($this->name) ."', "
+                        .'name = :name, '
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
                         ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
                 $result = rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':description' => htmlspecialchars($this->description),
+                    ':description_equipment' => htmlspecialchars($this->description_equipment),
+                    ':description_location' => htmlspecialchars($this->description_location),
+                    ':description_others' => htmlspecialchars($this->description_others),
+                    ':name' => $this->name,
+                ]);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {

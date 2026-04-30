@@ -268,15 +268,18 @@ class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_advertisement = new self($this->ad_id, $this->clang_id);
             if ($pre_save_advertisement !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_immo_window_advertising_lang SET '
-                        ."ad_id = '". $this->ad_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."title = '". addslashes(htmlspecialchars($this->title)) ."', "
-                        ."description = '". addslashes(htmlspecialchars($this->description)) ."', "
+                        .'ad_id = '. (int) $this->ad_id .', '
+                        .'clang_id = '. (int) $this->clang_id .', '
+                        .'title = :title, '
+                        .'description = :description, '
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
                         ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
                 $result = rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [
+                    ':title' => htmlspecialchars($this->title),
+                    ':description' => htmlspecialchars($this->description),
+                ]);
                 $error = $result->hasError();
             }
         }

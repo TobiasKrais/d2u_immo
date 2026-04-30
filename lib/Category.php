@@ -307,16 +307,16 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
             $pre_save_object = new self($this->category_id, $this->clang_id);
             if ($pre_save_object !== $this) {
                 $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_immo_categories_lang SET '
-                        ."category_id = '". $this->category_id ."', "
-                        ."clang_id = '". $this->clang_id ."', "
-                        ."name = '". addslashes($this->name) ."', "
-                        ."teaser = '". addslashes($this->teaser) ."', "
+                        .'category_id = '. (int) $this->category_id .', '
+                        .'clang_id = '. (int) $this->clang_id .', '
+                        .'name = :name, '
+                        .'teaser = :teaser, '
                         ."translation_needs_update = '". $this->translation_needs_update ."', "
                         .'updatedate = CURRENT_TIMESTAMP, '
                         ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
 
                 $result = rex_sql::factory();
-                $result->setQuery($query);
+                $result->setQuery($query, [':name' => $this->name, ':teaser' => $this->teaser]);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {

@@ -76,7 +76,7 @@ if (!function_exists('printPropertylist')) {
 
             echo '<div class="col-12 col-sm-8 col-lg-9">';
             echo '<div class="row">';
-            echo '<div class="col-12"><strong>'. $property->name .'</strong></div>';
+            echo '<div class="col-12"><strong>'. rex_escape($property->name) .'</strong></div>';
             echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_form_city') .':</b> '. $property->city .'</div>';
             if ('KAUF' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_purchase_price') .':</b> '
@@ -295,7 +295,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '<div class="row page-break-avoid">'; // START row overview
 
     echo '<div class="col-12 print-border-h">';
-    echo '<h1>'. $property->name .'</h1>';
+    echo '<h1>'. rex_escape($property->name) .'</h1>';
     echo '</div>';
     if ($property->publish_address) {
         echo '<div class="col-12 print-border d-none d-print-inline">';
@@ -733,7 +733,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<h2>'. \Sprog\Wildcard::get('d2u_immo_tab_pictures') .'</h2>';
         echo '</div>';
         echo '<div class="col-12 d-none d-print-none">';
-        echo '<h2>'. $property->name .'</h2>';
+        echo '<h2>'. rex_escape($property->name) .'</h2>';
         echo '</div>';
         printImages($property->pictures);
 
@@ -991,7 +991,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         $interest_rate = $d2u_immo->getConfig('finance_calculator_interest_rate');
         $repayment = $d2u_immo->getConfig('finance_calculator_repayment');
 
-        echo '<h2>'. $property->name .'</h2>';
+        echo '<h2>'. rex_escape($property->name) .'</h2>';
 ?>
 		<form id="finanzierungsrechner" method="post" target="blank">
 			<input name="option" value="finanzierungsrechner" type="hidden">
@@ -1141,7 +1141,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="row">';
         echo '<div class="col-12">';
         echo '<fieldset><legend>'. \Sprog\Wildcard::get('d2u_immo_form_title') .'</legend>';
-        $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
+        $form_data = 'hidden|immo_name|'. rex_escape($property->name) .'|REQUEST
 
 				text|name|'. \Sprog\Wildcard::get('d2u_immo_form_name') .' *
 				text|address|'. \Sprog\Wildcard::get('d2u_immo_form_address') .'
@@ -1190,7 +1190,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="row">';
         echo '<div class="col-12">';
         echo '<fieldset><legend>'. \Sprog\Wildcard::get('d2u_immo_recommendation_title') .'</legend>';
-        $form_data = 'hidden|immo_name|'. $property->name .'|REQUEST
+        $form_data = 'hidden|immo_name|'. rex_escape($property->name) .'|REQUEST
 				hidden|immo_url|'. $property->getUrl(true) .'|REQUEST
 				hidden|immo_contact_mail|'. ($property->contact instanceof Contact ? $property->contact->email : '') .'|REQUEST
 				hidden|immo_contact_name|'. ($property->contact instanceof Contact ? $property->contact->firstname .' '. $property->contact->lastname : '') .'|REQUEST

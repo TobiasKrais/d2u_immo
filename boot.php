@@ -142,24 +142,24 @@ function rex_d2u_immo_media_is_in_use(rex_extension_point $ep)
 {
     $warning = $ep->getSubject();
     $params = $ep->getParams();
-    $filename = addslashes($params['filename']);
+    $filename = (string) $params['filename'];
 
     // Contacts
     $sql_contacts = rex_sql::factory();
     $sql_contacts->setQuery('SELECT contact_id, firstname, lastname FROM `' . \rex::getTablePrefix() . 'd2u_immo_contacts` '
-        .'WHERE picture = "'. $filename .'" ');
+        .'WHERE picture = :filename ', [':filename' => $filename]);
 
     // Categories
     $sql_categories = rex_sql::factory();
     $sql_categories->setQuery('SELECT lang.category_id, name FROM `' . \rex::getTablePrefix() . 'd2u_immo_categories_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_immo_categories` AS categories ON lang.category_id = categories.category_id '
-        .'WHERE picture = "'. $filename .'" ');
+        .'WHERE picture = :filename ', [':filename' => $filename]);
 
     // Properties
     $sql_properties = rex_sql::factory();
     $sql_properties->setQuery('SELECT lang.property_id, name FROM `' . \rex::getTablePrefix() . 'd2u_immo_properties_lang` AS lang '
         .'LEFT JOIN `' . \rex::getTablePrefix() . 'd2u_immo_properties` AS properties ON lang.property_id = properties.property_id '
-        .'WHERE FIND_IN_SET("'. $filename .'", pictures) OR FIND_IN_SET("'. $filename .'", ground_plans) OR FIND_IN_SET("'. $filename .'", location_plans) OR FIND_IN_SET("'. $filename .'", documents)');
+        .'WHERE FIND_IN_SET(:filename, pictures) OR FIND_IN_SET(:filename, ground_plans) OR FIND_IN_SET(:filename, location_plans) OR FIND_IN_SET(:filename, documents)', [':filename' => $filename]);
 
     // Prepare warnings
     // Categories
