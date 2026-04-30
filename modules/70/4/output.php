@@ -815,12 +815,15 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<h2>'. \Sprog\Wildcard::get('d2u_immo_tab_map') .'</h2>';
         echo '</div>';
         echo '<div class="col-12 print-border">';
-        echo '<h2 class="d-print-none">'. $property->name .'</h2>';
-        echo '<p class="d-print-none">'. $property->street .' '. $property->house_number .'<br /> '. $property->zip_code .' '. $property->city .'</p>';
+        echo '<h2 class="d-print-none">'. rex_escape($property->name) .'</h2>';
+        echo '<p class="d-print-none">'. rex_escape($property->street) .' '. rex_escape($property->house_number) .'<br /> '. rex_escape($property->zip_code) .' '. rex_escape($property->city) .'</p>';
 
         if ('google' === $map_type) { /** @phpstan-ignore-line */
+            $maps_src = 'https://maps.googleapis.com/maps/api/js?key='. rawurlencode($api_key);
+            $address = $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city;
+            $map_type_id = 'full' === $print ? 'ROADMAP' : 'HYBRID';
 ?>
-		<script src="https://maps.googleapis.com/maps/api/js?key=<?= $api_key ?>"></script>
+		<script src=<?= json_encode($maps_src, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>></script>
 		<div id="map_canvas" style="display: block; <?= '' !== $print ? 'width: 900px' : 'width: 100%' ?>; height: 500px"></div>
 		<script>
 			var map;
@@ -829,11 +832,11 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                 // if longitude and latitude are available
                 if (0.0 !== $property->longitude && 0.0 !== $property->latitude) {
             ?>
-				var myLatlng = new google.maps.LatLng(<?= $property->latitude .', '. $property->longitude ?>);
+				var myLatlng = new google.maps.LatLng(<?= (float) $property->latitude ?>, <?= (float) $property->longitude ?>);
 				var myOptions = {
 					zoom: 15,
 					center: myLatlng,
-					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>,
+					mapTypeId: google.maps.MapTypeId[<?= json_encode($map_type_id, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>],
 				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 
@@ -849,7 +852,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             } else {
             ?>
 				var geocoder = new google.maps.Geocoder();
-				var address = "<?= $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city ?>";
+				var address = <?= json_encode($address, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 				if (geocoder) {
 					geocoder.geocode( { 'address': address}, function(results, status) {
 						if (status === google.maps.GeocoderStatus.OK) {
@@ -867,7 +870,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
 				var myOptions = {
 					zoom: 15,
-					mapTypeId: google.maps.MapTypeId.<?= 'full' === $print ? 'ROADMAP' : 'HYBRID' ?>,
+					mapTypeId: google.maps.MapTypeId[<?= json_encode($map_type_id, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>],
 				};
 				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
 			<?php
@@ -881,17 +884,16 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
             $leaflet_js_file = 'modules/04-2/leaflet.js';
             echo '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
         ?>
-		<div id="map-<?= $map_id ?>" style="width:100%; height: 500px"></div>
+		<div id="map-<?= (int) $map_id ?>" style="width:100%; height: 500px"></div>
 		<script type="text/javascript" async="async">
-			<?= "var map = L.map('map-". $map_id ."').setView([". $property->latitude .', '. $property->longitude .'], 15);';
-            ?>
+			var map = L.map('map-' + <?= (int) $map_id ?>).setView([<?= (float) $property->latitude ?>, <?= (float) $property->longitude ?>], 15);
 			L.tileLayer('/?osmtype=german&z={z}&x={x}&y={y}', {
 				attribution: 'Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
 			}).addTo(map);
 			map.scrollWheelZoom.disable();
 			var myIcon = L.icon({
-				iconUrl: '<?= rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png') ?>',
-				shadowUrl: '<?= rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png') ?>',
+				iconUrl: <?= json_encode(rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+				shadowUrl: <?= json_encode(rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
 
 				iconSize:     [25, 41], // size of the icon
 				shadowSize:   [41, 41], // size of the shadow
@@ -899,7 +901,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 				shadowAnchor: [13, 40], // the same for the shadow
 				popupAnchor:  [0, -41]  // point from which the popup should open relative to the iconAnchor
 			});
-			var marker = L.marker([<?= $property->latitude ?>, <?= $property->longitude ?>], {
+			var marker = L.marker([<?= (float) $property->latitude ?>, <?= (float) $property->longitude ?>], {
 				draggable: false,
 				icon: myIcon
 			}).addTo(map);
@@ -913,7 +915,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                 }
 ?>
 <script>
-	Geolocation.default.positionColor = '<?= (string) rex_config::get('d2u_helper', 'article_color_h') ?>';
+	Geolocation.default.positionColor = <?= json_encode(\TobiasKrais\D2UHelper\BackendHelper::sanitizeHexColor((string) rex_config::get('d2u_helper', 'article_color_h')), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
 
 	// adjust zoom level
 	Geolocation.Tools.Center = class extends Geolocation.Tools.Template{
