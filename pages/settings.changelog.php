@@ -5,6 +5,7 @@
 
 <p>1.4.6-DEV:</p>
 <ul>
+	<li>Backend: Abbrechen-Buttons in Immobilien-, Kategorien-, Kontakt-, Schaufenster- und Exportformularen fuehren jetzt wieder zur Liste.</li>
 	<li>Backend: CSRF-Schutz für den Immobilien-Export (OpenImmo-Provider, Online/Offline-Schalter pro Immobilie und Provider, manueller Exportstart) sowie für die Schaufenster-Anzeige der einzelnen Immobilien ergänzt.</li>
 	<li>Backend: CSRF-Schutz für Modul-Installation, -Update und -Deinstallation auf der Setup-Seite ergänzt.</li>
 	<li>Security Modul 70-4 (Hauptausgabe BS5): Karte-Tab härtet die Ausgabe gegen XSS. Objektname, Straße/Hausnummer/PLZ/Ort werden mit <code>rex_escape()</code> ausgegeben; der Google-Maps-API-Key wird per <code>rawurlencode</code> + <code>json_encode</code> in das Script-Tag eingefügt; Latitude/Longitude in JS-Kontexten strikt als float gecastet; Adresse, Marker-Icon-URLs und Geolocation-positionColor werden via <code>json_encode</code> in JS-Strings übergeben (positionColor zusätzlich über <code>BackendHelper::sanitizeHexColor()</code> validiert); Google-Maps <code>MapTypeId</code> wird über Bracket-Notation mit <code>json_encode</code> gesetzt.</li>
