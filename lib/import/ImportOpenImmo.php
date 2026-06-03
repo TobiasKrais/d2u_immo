@@ -761,9 +761,8 @@ class ImportOpenImmo
                                             $property->energy_pass_year = $energiepass->jahrgang;
                                         }
                                     }
-                                }
 
-                                // <verkaufstatus stand="VERKAUFT">
+                                    // <verkaufstatus stand="VERKAUFT">
                                     if (count($zustand_angaben->verkaufstatus) > 0) {
                                         $verkaufstatus = $zustand_angaben->verkaufstatus[0];
                                         if (isset($verkaufstatus['stand']) && in_array(strtoupper((string) $verkaufstatus['stand']), ['VERKAUFT', 'VERMIETET', 'RESERVIERT'], true)) {
@@ -771,6 +770,7 @@ class ImportOpenImmo
                                             $property->object_reserved = 'RESERVIERT' === strtoupper((string) $verkaufstatus['stand']);
                                         }
                                     }
+                                }
 
                                 // <freitexte>
                                 // <objekttitel>Traumwohnung</objekttitel>

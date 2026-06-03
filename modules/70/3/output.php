@@ -30,7 +30,7 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="col-12 col-sm-8 col-lg-9">';
             echo '<div class="row">';
             echo '<div class="col-12"><strong>'. rex_escape($property->name) .'</strong></div>';
-            echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_form_city') .':</b> '. $property->city .'</div>';
+            echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_form_city') .':</b> '. rex_escape($property->city) .'</div>';
             if ('KAUF' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_purchase_price') .':</b> '. number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code .'</div>';
             } elseif ('MIETE_PACHT' === $property->market_type || 'ERBPACHT' === $property->market_type) {

@@ -31,10 +31,10 @@ if ($contact->contact_id > 0) {
 		<div class="infobox-content">
 			<?php
                 if ('' !== $contact->picture) {
-                    echo "<img class='contactpic' src='index.php?rex_media_type=d2u_immo_contact&rex_media_file=". $contact->picture ."' alt='". $contact->firstname .' '. $contact->lastname ."' />";
+                    echo "<img class='contactpic' src='index.php?rex_media_type=d2u_immo_contact&rex_media_file=". rex_escape(rawurlencode($contact->picture), 'html_attr') ."' alt='". rex_escape($contact->firstname .' '. $contact->lastname, 'html_attr') ."' />";
                 }
                 echo '<br>';
-                echo $contact->firstname .' '. $contact->lastname;
+                echo rex_escape($contact->firstname .' '. $contact->lastname);
                 echo "<span class='right'>";
                 if (false !== $property) {
                     echo '<a href="#tab_request_pill" data-d2u-immo-request-tab="bs4">';
@@ -44,7 +44,7 @@ if ($contact->contact_id > 0) {
                 echo 'E-Mail <span class="icon mail"></span>';
                 echo '</a></span><br>';
 
-                echo "Telefon: <span class='right'>". $contact->phone .'</span>';
+                echo "Telefon: <span class='right'>". rex_escape($contact->phone) .'</span>';
             ?>
 		</div>
 	</div>

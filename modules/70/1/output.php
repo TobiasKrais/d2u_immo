@@ -77,7 +77,7 @@ if (!function_exists('printPropertylist')) {
             echo '<div class="col-12 col-sm-8 col-lg-9">';
             echo '<div class="row">';
             echo '<div class="col-12"><strong>'. rex_escape($property->name) .'</strong></div>';
-            echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_form_city') .':</b> '. $property->city .'</div>';
+            echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_form_city') .':</b> '. rex_escape($property->city) .'</div>';
             if ('KAUF' === $property->market_type) {
                 echo '<div class="col-12 col-lg-6 nolink"><b>'. \Sprog\Wildcard::get('d2u_immo_purchase_price') .':</b> '
                 . ($property->purchase_price_on_request || $property->purchase_price === 0 ? Sprog\Wildcard::get('d2u_immo_purchase_price_on_request') : number_format($property->purchase_price, 0, ',', '.') .',- '. $property->currency_code) .'</div>';
@@ -255,9 +255,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 
         if ($property->contact instanceof Contact) {
             echo '<div class="col-12 d-none d-print-inline">';
-            echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname .'<br>';
-            echo \Sprog\Wildcard::get('d2u_immo_form_phone') .': '. $property->contact->phone .'<br>';
-            echo \Sprog\Wildcard::get('d2u_immo_form_email') .': '. $property->contact->email .'<p>';
+            echo '<p>'. rex_escape($property->contact->firstname) .' '. rex_escape($property->contact->lastname) .'<br>';
+            echo \Sprog\Wildcard::get('d2u_immo_form_phone') .': '. rex_escape($property->contact->phone) .'<br>';
+            echo \Sprog\Wildcard::get('d2u_immo_form_email') .': '. rex_escape($property->contact->email) .'<p>';
             echo '</div>';
         }
     }
@@ -296,7 +296,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
     echo '</div>';
     if ($property->publish_address) {
         echo '<div class="col-12 print-border d-none d-print-inline">';
-        echo '<p>'. $property->street .' '. $property->house_number .', '. $property->zip_code .' '. $property->city .'</p>';
+        echo '<p>'. rex_escape($property->street) .' '. rex_escape($property->house_number) .', '. rex_escape($property->zip_code) .' '. rex_escape($property->city) .'</p>';
         echo '</div>';
     }
     echo '<div class="col-12 print-border">'; // START overview picture and short info
@@ -802,7 +802,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '</div>';
         echo '<div class="col-12 print-border">';
         echo '<h2 class="d-print-none">'. rex_escape($property->name) .'</h2>';
-        echo '<p class="d-print-none">'. $property->street .' '. $property->house_number .'<br /> '. $property->zip_code .' '. $property->city .'</p>';
+        echo '<p class="d-print-none">'. rex_escape($property->street) .' '. rex_escape($property->house_number) .'<br /> '. rex_escape($property->zip_code) .' '. rex_escape($property->city) .'</p>';
 
         if ('google' === $map_type) { /** @phpstan-ignore-line */
 ?>
@@ -1228,12 +1228,12 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<div class="col-12 d-none d-print-inline">';
         echo '<p>'. \Sprog\Wildcard::get('d2u_immo_print_foot') .'</p>';
         echo '<p>'. \Sprog\Wildcard::get('d2u_immo_print_foot_greetings') .'</p>';
-        echo '<p>'. $property->contact->firstname .' '. $property->contact->lastname;
+        echo '<p>'. rex_escape($property->contact->firstname) .' '. rex_escape($property->contact->lastname);
         if ('' !== $property->contact->phone) {
-            echo '<br>'. $property->contact->phone;
+            echo '<br>'. rex_escape($property->contact->phone);
         }
         if ('' !== $property->contact->email) {
-            echo '<br>'. $property->contact->email;
+            echo '<br>'. rex_escape($property->contact->email);
         }
         echo '</p>';
         echo '</div>';

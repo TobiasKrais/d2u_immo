@@ -13,6 +13,9 @@
         <li>Security: Die <code>save()</code>-Methoden in <code>lib/Property.php</code>, <code>lib/Category.php</code> und <code>lib/Advertisement.php</code> verwenden jetzt gebundene Parameter statt SQL-String-Konkatenation mit <code>addslashes()</code>.</li>
         <li>Security: Modul-Ausgaben (<code>modules/70/1-6/output.php</code>) härten Objekt-Namen und Titel-Felder zusätzlich gegen XSS via <code>rex_escape()</code> in HTML- und Attributausgaben.</li>
         <li>Security: Module 70-1 und 70-2 escapen <code>href</code>-URLs aus <code>$property->getUrl()</code> bzw. der Kontaktformular-Konfiguration jetzt mit <code>rex_escape()</code>.</li>
+        <li>Security: Die Kontakt-Infoboxen in <code>modules/70/2/output.php</code> und <code>modules/70/5/output.php</code> härten Ansprechpartner-Daten (Vor-/Nachname, Telefon) sowie Bild-Dateiname und Alt-Text mit <code>rex_escape()</code> / <code>rawurlencode()</code>; Modul 70-5 escapt zusätzlich die Kontaktformular-URL. Die OpenImmo-Export-Fehlerausgabe in <code>lib/export/Provider.php</code> gibt Provider-Name und Fehlertext jetzt über <code>rex_escape()</code> aus.</li>
+        <li>Security: Auch die übrigen Modul-Ausgaben werden gehärtet: In <code>modules/70/1/output.php</code> und <code>modules/70/4/output.php</code> werden Objekt-Ort sowie Ansprechpartner- und Adressfelder (Vor-/Nachname, Telefon, E-Mail, Straße, Hausnummer, PLZ, Ort) mit <code>rex_escape()</code> ausgegeben; in <code>modules/70/3/output.php</code> und <code>modules/70/6/output.php</code> der Objekt-Ort. Rich-Text-Felder bleiben bewusst unverändert.</li>
+	<li>Bugfix: OpenImmo-Import (<code>lib/import/ImportOpenImmo.php</code>): Der <code>verkaufstatus</code>-Block stand außerhalb des <code>zustand_angaben</code>-Blocks und griff auf eine möglicherweise undefinierte Variable <code>$zustand_angaben</code> zu. Der Block wird jetzt korrekt innerhalb von <code>zustand_angaben</code> ausgewertet.</li>
 </ul>
 
 <p>1.4.5:</p>

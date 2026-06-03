@@ -114,7 +114,7 @@ class Provider
                     $openimmo_error = $openimmo->export();
                     if ('' !== $openimmo_error) {
                         $message[] = $provider->name .': '. $openimmo_error;
-                        echo $provider->name .': '. $openimmo_error .'; ';
+                        echo rex_escape($provider->name) .': '. rex_escape($openimmo_error) .'; ';
                         $error = true;
                     } else {
                         $message[] = $provider->name .': '. rex_i18n::msg('d2u_immo_export_success');
