@@ -3,6 +3,10 @@
 
 <h2>Changelog</h2>
 
+<p>1.4.7-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.4.6:</p>
 <ul>
 	<li>Backend: Abbrechen-Buttons in Immobilien-, Kategorien-, Kontakt-, Schaufenster- und Exportformularen fuehren jetzt wieder zur Liste.</li>
@@ -17,7 +21,6 @@
     <li>Security: Auch die übrigen Modul-Ausgaben werden gehärtet: In <code>modules/70/1/output.php</code> und <code>modules/70/4/output.php</code> werden Objekt-Ort sowie Ansprechpartner- und Adressfelder (Vor-/Nachname, Telefon, E-Mail, Straße, Hausnummer, PLZ, Ort) mit <code>rex_escape()</code> ausgegeben; in <code>modules/70/3/output.php</code> und <code>modules/70/6/output.php</code> der Objekt-Ort. Rich-Text-Felder bleiben bewusst unverändert.</li>
 	<li>Bugfix: OpenImmo-Import (<code>lib/import/ImportOpenImmo.php</code>): Der <code>verkaufstatus</code>-Block stand außerhalb des <code>zustand_angaben</code>-Blocks und griff auf eine möglicherweise undefinierte Variable <code>$zustand_angaben</code> zu. Der Block wird jetzt korrekt innerhalb von <code>zustand_angaben</code> ausgewertet.</li>
 </ul>
-
 <p>1.4.5:</p>
 <ul>
 	<li>Energieeffizienzklassen im Addon im Rahmen der EU-Gebäuderichtlinie Energy Performance of Buildings Directive (EPBD) von der alten A+-bis-H-Skala auf A bis G umgestellt, damit Frontend-Ausgabe und OpenImmo-Export keine veralteten Klassen mehr verwenden.</li>
