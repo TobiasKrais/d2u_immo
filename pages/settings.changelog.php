@@ -5,7 +5,7 @@
 
 <p>1.4.7-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Security/Bugfix: Die <code>save()</code>-Methoden in <code>lib/Property.php</code>, <code>lib/Contact.php</code>, <code>lib/Category.php</code>, <code>lib/Advertisement.php</code>, <code>lib/export/Provider.php</code> und <code>lib/export/ExportedProperty.php</code> verwenden jetzt durchgaengig gebundene Parameter statt SQL-String-Konkatenation. Damit werden sowohl SQL-Injection-Risiken als auch Speicher-Fehler (<code>rex_sql_exception</code> bei Texten mit einfachen Anfuehrungszeichen, z. B. Firmennamen wie 'Adler-Brauerei' im Teaser) behoben. Numerische Felder werden zusaetzlich strikt nach <code>int</code>/<code>float</code> gecastet.</li>
 </ul>
 <p>1.4.6:</p>
 <ul>

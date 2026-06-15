@@ -201,28 +201,42 @@ class Contact
         $error = false;
 
         $query = rex::getTablePrefix() .'d2u_immo_contacts SET '
-                ."city = '". $this->city ."', "
-                ."company = '". $this->company ."', "
-                ."country_code = '". $this->country_code ."', "
-                ."email = '". $this->email ."', "
-                ."fax = '". $this->fax ."', "
-                ."firstname = '". $this->firstname ."', "
-                ."house_number = '". $this->house_number ."', "
-                ."lastname = '". $this->lastname ."', "
-                ."mobile = '". $this->mobile ."', "
-                ."phone = '". $this->phone ."', "
-                ."picture = '". $this->picture ."', "
-                ."street = '". $this->street ."', "
-                ."zip_code = '". $this->zip_code ."' ";
+                .'city = :city, '
+                .'company = :company, '
+                .'country_code = :country_code, '
+                .'email = :email, '
+                .'fax = :fax, '
+                .'firstname = :firstname, '
+                .'house_number = :house_number, '
+                .'lastname = :lastname, '
+                .'mobile = :mobile, '
+                .'phone = :phone, '
+                .'picture = :picture, '
+                .'street = :street, '
+                .'zip_code = :zip_code ';
 
         if (0 === $this->contact_id) {
             $query = 'INSERT INTO '. $query;
         } else {
-            $query = 'UPDATE '. $query .' WHERE contact_id = '. $this->contact_id;
+            $query = 'UPDATE '. $query .' WHERE contact_id = '. (int) $this->contact_id;
         }
 
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':city' => $this->city,
+            ':company' => $this->company,
+            ':country_code' => $this->country_code,
+            ':email' => $this->email,
+            ':fax' => $this->fax,
+            ':firstname' => $this->firstname,
+            ':house_number' => $this->house_number,
+            ':lastname' => $this->lastname,
+            ':mobile' => $this->mobile,
+            ':phone' => $this->phone,
+            ':picture' => $this->picture,
+            ':street' => $this->street,
+            ':zip_code' => $this->zip_code,
+        ]);
         if (0 === $this->contact_id) {
             $this->contact_id = (int) $result->getLastId();
             $error = $result->hasError();

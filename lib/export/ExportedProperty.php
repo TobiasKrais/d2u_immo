@@ -181,13 +181,17 @@ class ExportedProperty
     public function save()
     {
         $query = 'REPLACE INTO '. rex::getTablePrefix() .'d2u_immo_export_properties SET '
-                .'property_id = '. $this->property_id .', '
-                .'provider_id = '. $this->provider_id .', '
-                ."export_action = '". $this->export_action ."', "
-                ."provider_import_id = '". $this->provider_import_id ."', "
-                ."export_timestamp = '". $this->export_timestamp ."'";
+                .'property_id = '. (int) $this->property_id .', '
+                .'provider_id = '. (int) $this->provider_id .', '
+                .'export_action = :export_action, '
+                .'provider_import_id = :provider_import_id, '
+                .'export_timestamp = :export_timestamp';
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':export_action' => $this->export_action,
+            ':provider_import_id' => $this->provider_import_id,
+            ':export_timestamp' => $this->export_timestamp,
+        ]);
 
         return !$result->hasError();
     }

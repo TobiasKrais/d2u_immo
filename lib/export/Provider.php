@@ -315,28 +315,40 @@ class Provider
         $this->clang_id = 0 === $this->clang_id ? (int) (rex_config::get('d2u_helper', 'default_lang')) : $this->clang_id;
 
         $query = rex::getTablePrefix() .'d2u_immo_export_provider SET '
-                ."name = '". $this->name ."', "
-                ."type = '". $this->type ."', "
-                .'clang_id = '. $this->clang_id .', '
-                ."company_name = '". $this->company_name ."', "
-                ."company_email = '". $this->company_email ."', "
-                ."customer_number = '". $this->customer_number ."', "
-                ."media_manager_type = '". $this->media_manager_type ."', "
-                ."online_status = '". $this->online_status ."', "
-                ."ftp_server = '". $this->ftp_server ."', "
-                ."ftp_username = '". $this->ftp_username ."', "
-                ."ftp_password = '". $this->ftp_password ."', "
-                ."ftp_filename = '". $this->ftp_filename ."', "
+                .'name = :name, '
+                .'type = :type, '
+                .'clang_id = '. (int) $this->clang_id .', '
+                .'company_name = :company_name, '
+                .'company_email = :company_email, '
+                .'customer_number = :customer_number, '
+                .'media_manager_type = :media_manager_type, '
+                .'online_status = :online_status, '
+                .'ftp_server = :ftp_server, '
+                .'ftp_username = :ftp_username, '
+                .'ftp_password = :ftp_password, '
+                .'ftp_filename = :ftp_filename, '
                 .'ftp_supports_360_pictures = '. (int) $this->ftp_supports_360_pictures;
 
         if (0 === $this->provider_id) {
             $query = 'INSERT INTO '. $query;
         } else {
-            $query = 'UPDATE '. $query .' WHERE provider_id = '. $this->provider_id;
+            $query = 'UPDATE '. $query .' WHERE provider_id = '. (int) $this->provider_id;
         }
 
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [
+            ':name' => $this->name,
+            ':type' => $this->type,
+            ':company_name' => $this->company_name,
+            ':company_email' => $this->company_email,
+            ':customer_number' => $this->customer_number,
+            ':media_manager_type' => $this->media_manager_type,
+            ':online_status' => $this->online_status,
+            ':ftp_server' => $this->ftp_server,
+            ':ftp_username' => $this->ftp_username,
+            ':ftp_password' => $this->ftp_password,
+            ':ftp_filename' => $this->ftp_filename,
+        ]);
         if (0 === $this->provider_id) {
             $this->provider_id = (int) $result->getLastId();
         }

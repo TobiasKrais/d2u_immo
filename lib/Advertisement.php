@@ -245,18 +245,21 @@ class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         if (0 === $this->ad_id || $pre_save_advertisement !== $this) {
             $query = rex::getTablePrefix() .'d2u_immo_window_advertising SET '
-                    .'priority = '. $this->priority .', '
-                    ."picture = '". $this->picture ."', "
-                    ."online_status = '". $this->online_status ."' ";
+                    .'priority = '. (int) $this->priority .', '
+                    .'picture = :picture, '
+                    .'online_status = :online_status ';
 
             if (0 === $this->ad_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE ad_id = '. $this->ad_id;
+                $query = 'UPDATE '. $query .' WHERE ad_id = '. (int) $this->ad_id;
             }
 
             $result = rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [
+                ':picture' => $this->picture,
+                ':online_status' => $this->online_status,
+            ]);
             if (0 === $this->ad_id) {
                 $this->ad_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -272,13 +275,15 @@ class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper
                         .'clang_id = '. (int) $this->clang_id .', '
                         .'title = :title, '
                         .'description = :description, '
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'translation_needs_update = :translation_needs_update, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
                 $result = rex_sql::factory();
                 $result->setQuery($query, [
                     ':title' => htmlspecialchars($this->title),
                     ':description' => htmlspecialchars($this->description),
+                    ':translation_needs_update' => $this->translation_needs_update,
+                    ':updateuser' => rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '',
                 ]);
                 $error = $result->hasError();
             }

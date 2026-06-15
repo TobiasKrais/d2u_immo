@@ -283,18 +283,18 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         if (0 === $this->category_id || $pre_save_object !== $this) {
             $query = rex::getTablePrefix() .'d2u_immo_categories SET '
-                    .'parent_category_id = '. ($this->parent_category instanceof self ? $this->parent_category->category_id : 0) .', '
-                    .'priority = '. $this->priority .', '
-                    ."picture = '". $this->picture ."' ";
+                    .'parent_category_id = '. ($this->parent_category instanceof self ? (int) $this->parent_category->category_id : 0) .', '
+                    .'priority = '. (int) $this->priority .', '
+                    .'picture = :picture ';
 
             if (0 === $this->category_id) {
                 $query = 'INSERT INTO '. $query;
             } else {
-                $query = 'UPDATE '. $query .' WHERE category_id = '. $this->category_id;
+                $query = 'UPDATE '. $query .' WHERE category_id = '. (int) $this->category_id;
             }
 
             $result = rex_sql::factory();
-            $result->setQuery($query);
+            $result->setQuery($query, [':picture' => $this->picture]);
             if (0 === $this->category_id) {
                 $this->category_id = (int) $result->getLastId();
                 $error = $result->hasError();
@@ -311,12 +311,17 @@ class Category implements \TobiasKrais\D2UHelper\ITranslationHelper
                         .'clang_id = '. (int) $this->clang_id .', '
                         .'name = :name, '
                         .'teaser = :teaser, '
-                        ."translation_needs_update = '". $this->translation_needs_update ."', "
+                        .'translation_needs_update = :translation_needs_update, '
                         .'updatedate = CURRENT_TIMESTAMP, '
-                        ."updateuser = '". (rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '') ."' ";
+                        .'updateuser = :updateuser ';
 
                 $result = rex_sql::factory();
-                $result->setQuery($query, [':name' => $this->name, ':teaser' => $this->teaser]);
+                $result->setQuery($query, [
+                    ':name' => $this->name,
+                    ':teaser' => $this->teaser,
+                    ':translation_needs_update' => $this->translation_needs_update,
+                    ':updateuser' => rex::getUser() instanceof rex_user ? rex::getUser()->getLogin() : '',
+                ]);
                 $error = $result->hasError();
 
                 if (!$error && $pre_save_object->name !== $this->name) {
