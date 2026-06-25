@@ -5,6 +5,7 @@
 
 <p>1.4.7-DEV:</p>
 <ul>
+	<li>Bugfix: Der Online/Offline-Schalter in den Backend-Listen (Immobilien, Schaufenster, Export-Provider) funktioniert wieder. Beim Erzeugen des CSRF-geschützten Status-Links wurde der Platzhalter für die Datensatz-ID URL-kodiert und dadurch nicht mehr durch die echte ID ersetzt.</li>
 	<li>Wartung: Die verschachtelten Backend-Seiten (Schaufenster, Import, Export) verzichten jetzt auf separate Inhaltsdateien mit <code>require</code>; der Inhalt steht direkt in den jeweiligen <code>pages/parent.child.php</code>-Dateien. Damit kann ein versehentliches Löschen einer Zieldatei die Seiten nicht mehr unbenutzbar machen.</li>
 	<li>Security/Bugfix: Die <code>save()</code>-Methoden in <code>lib/Property.php</code>, <code>lib/Contact.php</code>, <code>lib/Category.php</code>, <code>lib/Advertisement.php</code>, <code>lib/export/Provider.php</code> und <code>lib/export/ExportedProperty.php</code> verwenden jetzt durchgaengig gebundene Parameter statt SQL-String-Konkatenation. Damit werden sowohl SQL-Injection-Risiken als auch Speicher-Fehler (<code>rex_sql_exception</code> bei Texten mit einfachen Anfuehrungszeichen, z. B. Firmennamen wie 'Adler-Brauerei' im Teaser) behoben. Numerische Felder werden zusaetzlich strikt nach <code>int</code>/<code>float</code> gecastet.</li>
 </ul>
