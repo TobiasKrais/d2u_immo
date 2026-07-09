@@ -291,16 +291,21 @@ if (!is_bool(rex_config::get('d2u_immo', 'export_autoexport', false))) {
 
 // Update installed cronjobs to current namespaces
 if (\rex_addon::get('cronjob')->isAvailable() && rex_version::compare($this->getVersion(), '1.4.2', '<')) { /** @phpstan-ignore-line */
+    // The cronjob name is hardcoded here on purpose: during an update from
+    // 1.4.0/1.4.1 those old cronjob classes are already loaded in memory and do
+    // NOT yet define the ::NAME constant (added in 1.4.2), so accessing
+    // $cronjob::NAME would fatal with "Undefined constant ...::NAME". The name
+    // strings are stable and match ExportCronjob::NAME / ImportCronjob::NAME.
     $cronjobs = [
-        \TobiasKrais\D2UImmo\ExportCronjob::factory(),
-        \TobiasKrais\D2UImmo\ImportCronjob::factory(),
+        'D2U Immo Autoexport' => \TobiasKrais\D2UImmo\ExportCronjob::factory(),
+        'D2U Immo Autoimport' => \TobiasKrais\D2UImmo\ImportCronjob::factory(),
     ];
 
-    foreach ($cronjobs as $cronjob) {
+    foreach ($cronjobs as $cronjobName => $cronjob) {
         if ($cronjob->isInstalled()) {
             $sql->setQuery(
                 'SELECT `status` FROM '. \rex::getTable('cronjob') .' WHERE `name` = :name LIMIT 1',
-                [':name' => $cronjob::NAME]
+                [':name' => $cronjobName]
             );
             $was_active = $sql->getRows() > 0 ? 1 === (int) $sql->getValue('status') : true;
 
