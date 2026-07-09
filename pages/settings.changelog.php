@@ -3,6 +3,10 @@
 
 <h2>Changelog</h2>
 
+<p>1.4.8-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.4.7:</p>
 <ul>
 	<li>Bugfix: Beim Update von 1.4.0/1.4.1 brach die Installation mit "Undefined constant ...::NAME" in <code>install.php</code> ab. Die alten Cronjob-Klassen (ohne die erst in 1.4.2 eingeführte <code>NAME</code>-Konstante) sind zum Update-Zeitpunkt bereits geladen. Die Cronjob-Migration verwendet jetzt feste Namen statt der Klassenkonstante.</li>
