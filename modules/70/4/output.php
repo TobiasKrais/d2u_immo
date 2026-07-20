@@ -747,9 +747,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
                  */
                 function includePhotoSphereViewerJS(): void
                 {
-                    $three_js = 'modules/03-3/three.min.js';
+                    $three_js = 'photosphereviewer/three.min.js';
                     echo '<script src="'. rex_url::addonAssets('d2u_helper', $three_js) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $three_js)) .'"></script>' . PHP_EOL;
-                    $photosphereviewer_js = 'modules/03-3/photosphereviewer.min.js';
+                    $photosphereviewer_js = 'photosphereviewer/photosphereviewer.min.js';
                     echo '<script src="'. rex_url::addonAssets('d2u_helper', $photosphereviewer_js) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $photosphereviewer_js)) .'"></script>' . PHP_EOL;
 
                     $photosphereviewer_css = 'modules/03/3/style.css';
@@ -881,7 +881,7 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         } elseif ('osm' === $map_type && rex_addon::get('osmproxy')->isAvailable()) { /** @phpstan-ignore-line */
             $map_id = random_int(0, getrandmax());
 
-            $leaflet_js_file = 'modules/04-2/leaflet.js';
+            $leaflet_js_file = 'leaflet/leaflet.js';
             echo '<script src="'. rex_url::addonAssets('d2u_helper', $leaflet_js_file) .'?buster='. filemtime(rex_path::addonAssets('d2u_helper', $leaflet_js_file)) .'"></script>' . PHP_EOL;
         ?>
 		<div id="map-<?= (int) $map_id ?>" style="width:100%; height: 500px"></div>
@@ -892,8 +892,8 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
 			}).addTo(map);
 			map.scrollWheelZoom.disable();
 			var myIcon = L.icon({
-				iconUrl: <?= json_encode(rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-icon.png'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
-				shadowUrl: <?= json_encode(rex_url::addonAssets('d2u_helper', 'modules/04-2/marker-shadow.png'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+				iconUrl: <?= json_encode(rex_url::addonAssets('d2u_helper', 'leaflet/marker-icon.png'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
+				shadowUrl: <?= json_encode(rex_url::addonAssets('d2u_helper', 'leaflet/marker-shadow.png'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>,
 
 				iconSize:     [25, 41], // size of the icon
 				shadowSize:   [41, 41], // size of the shadow

@@ -5,7 +5,7 @@
 
 <p>1.4.8-DEV:</p>
 <ul>
-	<li>...</li>
+	<li>Anpassung an d2u_helper: Leaflet (jetzt <code>assets/leaflet/</code>) und PhotoSphereViewer/Three.js (jetzt <code>assets/photosphereviewer/</code>) wurden im d2u_helper-Addon in eigene Asset-Ordner verschoben. Die Hauptausgabe-Module 70-1 und 70-4 laden diese Assets über die neuen Pfade. Benötigt d2u_helper mit verschobenen Assets.</li>
 </ul>
 <p>1.4.7:</p>
 <ul>
