@@ -1044,6 +1044,13 @@ class OpenImmo extends AFTPExport
                     ++$zaehler;
                 }
             }
+            // Videodateien aus dem Medienpool auslesen
+            foreach ($property->video_files as $video) {
+                if (strlen(trim($video)) > 3 && $zaehler < $this->max_pics) {
+                    $objekt_anhaenge[$zaehler] = ['FILM' => trim($video)];
+                    ++$zaehler;
+                }
+            }
 
             foreach ($objekt_anhaenge as $objekt_anhang) {
                 foreach ($objekt_anhang as $media_type => $filename) {

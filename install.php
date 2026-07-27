@@ -105,6 +105,7 @@
     ->ensureColumn(new \rex_sql_column('including_warm_water', 'TINYINT(1)', true))
     ->ensureColumn(new \rex_sql_column('pictures', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('pictures_360', 'TEXT', true))
+    ->ensureColumn(new \rex_sql_column('video_files', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('ground_plans', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('location_plans', 'TEXT', true))
     ->ensureColumn(new \rex_sql_column('available_from', 'VARCHAR(191)', true))

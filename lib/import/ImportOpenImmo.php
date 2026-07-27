@@ -224,7 +224,7 @@ class ImportOpenImmo
                 $old_medias = [];
                 foreach ($old_properties as $old_property) {
                     // Media
-                    $property_medias = array_merge($old_property->documents, $old_property->ground_plans, $old_property->location_plans, $old_property->pictures, $old_property->pictures_360);
+                    $property_medias = array_merge($old_property->documents, $old_property->ground_plans, $old_property->location_plans, $old_property->pictures, $old_property->pictures_360, $old_property->video_files);
                     if (count($property_medias) > 0) {
                         foreach ($property_medias as $property_media) {
                             if (!in_array($property_media, $old_medias, true)) {
@@ -250,7 +250,7 @@ class ImportOpenImmo
                             // <aktion aktionart="CHANGE"/>
                             // </verwaltung_techn>
                             if ($property instanceof Property && count($xml_immobilie->verwaltung_techn[0]->aktion) > 0 && 'DELETE' === (string) $xml_immobilie->verwaltung_techn[0]->aktion['aktionart']) {
-                                $medias_to_delete = array_merge($property->documents, $property->ground_plans, $property->location_plans, $property->pictures, $property->pictures_360);
+                                $medias_to_delete = array_merge($property->documents, $property->ground_plans, $property->location_plans, $property->pictures, $property->pictures_360, $property->video_files);
                                 $property->delete();
                                 // Delete unused old pictures
                                 foreach ($medias_to_delete as $media_to_delete) {
@@ -821,6 +821,7 @@ class ImportOpenImmo
                                     $property->ground_plans = [];
                                     $property->location_plans = [];
                                     $property->documents = [];
+                                    $property->video_files = [];
 
                                     foreach ($xml_immobilie->anhaenge->anhang as $anhang) {
                                         if (count($anhang->daten) > 0 && count($anhang->daten->pfad) > 0) {
@@ -882,6 +883,8 @@ class ImportOpenImmo
                                                     $property->location_plans[] = $anhang_rex_media->getFileName();
                                                 } elseif ('DOKUMENTE' === (string) $anhang['gruppe']) {
                                                     $property->documents[] = $anhang_rex_media->getFileName();
+                                                } elseif ('FILM' === (string) $anhang['gruppe']) {
+                                                    $property->video_files[] = $anhang_rex_media->getFileName();
                                                 }
 
                                                 if (in_array($anhang_rex_media->getFileName(), $old_medias, true)) {

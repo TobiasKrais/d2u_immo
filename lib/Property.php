@@ -253,6 +253,9 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
     /** @var array<string> 360° picture filenames */
     public array $pictures_360 = [];
 
+    /** @var array<string> Media pool video filenames (mp4, webm, ...) */
+    public array $video_files = [];
+
     /** @var array<string> filenames of available ground plans */
     public array $ground_plans = [];
 
@@ -428,6 +431,8 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
             $this->pictures = is_array($pictures) ? $pictures : [];
             $pictures_360 = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('pictures_360')), PREG_GREP_INVERT);
             $this->pictures_360 = is_array($pictures_360) ? $pictures_360 : [];
+            $video_files = preg_grep('/^\s*$/s', explode(',', (string) $result->getValue('video_files')), PREG_GREP_INVERT);
+            $this->video_files = is_array($video_files) ? array_values($video_files) : [];
             $this->price_plus_vat = 1 === (int) $result->getValue('price_plus_vat') ? true : false;
             $this->priority = (int) $result->getValue('priority');
             $this->publish_address = 1 === (int) $result->getValue('publish_address') ? true : false;
@@ -922,6 +927,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
                     .'parking_type = :parking_type, '
                     .'pictures = :pictures, '
                     .'pictures_360 = :pictures_360, '
+                    .'video_files = :video_files, '
                     .'publish_address = '. ($this->publish_address ? 1 : 0) .', '
                     .'purchase_price = '. (float) $this->purchase_price .', '
                     .'purchase_price_m2 = '. (float) $this->purchase_price_m2 .', '
@@ -983,6 +989,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
                 ':parking_type' => $this->parking_type,
                 ':pictures' => implode(',', $this->pictures),
                 ':pictures_360' => implode(',', $this->pictures_360),
+                ':video_files' => implode(',', $this->video_files),
                 ':street' => $this->street,
                 ':type_of_use' => $this->type_of_use,
                 ':zip_code' => $this->zip_code,

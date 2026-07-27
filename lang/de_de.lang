@@ -215,6 +215,7 @@ d2u_immo_property_latitude = Breitengrad
 d2u_immo_property_listed_monument = Denkmalgeschützt?
 d2u_immo_property_living_area = Wohnfläche
 d2u_immo_property_location_plans = Bilder Lagepläne
+d2u_immo_property_video_files = Videos (Medienpool: MP4, WebM, OGG)
 d2u_immo_property_longitude = Längengrad
 d2u_immo_property_kitchen = Küche
 d2u_immo_property_kitchen_EBK = EBK

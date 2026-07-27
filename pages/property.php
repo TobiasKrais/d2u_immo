@@ -123,6 +123,8 @@ if (!$invalidCsrf && (1 === (int) filter_input(INPUT_POST, 'btn_save') || 1 === 
             $property->pictures = is_array($pictures) ? $pictures : [];
             $pictures_360 = preg_grep('/^\s*$/s', explode(',', $input_media_list[4]), PREG_GREP_INVERT);
             $property->pictures_360 = is_array($pictures_360) ? $pictures_360 : [];
+            $video_files = preg_grep('/^\s*$/s', explode(',', (string) ($input_media_list[5] ?? '')), PREG_GREP_INVERT);
+            $property->video_files = is_array($video_files) ? array_values($video_files) : [];
             $property->priority = (int) $form['priority'];
             $property->publish_address = array_key_exists('publish_address', $form);
             $property->purchase_price = (int) $form['purchase_price'];
@@ -645,6 +647,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             BackendHelper::form_imagelistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
                             BackendHelper::form_imagelistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);
                             BackendHelper::form_imagelistfield('d2u_immo_property_location_plans', 3, $property->location_plans, $readonly);
+                            BackendHelper::form_medialistfield('d2u_immo_property_video_files', 5, $property->video_files, $readonly);
                             BackendHelper::form_input('d2u_immo_property_openimmo_object_id', 'form[openimmo_object_id]', $property->openimmo_object_id, true, true, 'text');
                         ?>
 					</div>

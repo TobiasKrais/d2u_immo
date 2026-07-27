@@ -39,6 +39,15 @@ if (rex_version::compare($this->getVersion(), '1.1.2', '<')) { /** @phpstan-igno
     $sql->setQuery('ALTER TABLE '. \rex::getTablePrefix() .'d2u_immo_properties_lang CHANGE `updatedate_new` `updatedate` DATETIME NOT NULL;');
 }
 
+// Remove the temporary "videos" column. YouTube video support was added and reverted
+// during 1.4.8-DEV before release; only media pool videos (column "video_files") remain.
+if ($tableExists(rex::getTable('d2u_immo_properties'))) {
+    $immoPropertiesTable = \rex_sql_table::get(\rex::getTable('d2u_immo_properties'));
+    if ($immoPropertiesTable->hasColumn('videos')) {
+        $immoPropertiesTable->removeColumn('videos')->ensure();
+    }
+}
+
 // remove default lang setting
 if ($this->hasConfig('default_lang')) { /** @phpstan-ignore-line */
     $this->removeConfig('default_lang'); /** @phpstan-ignore-line */

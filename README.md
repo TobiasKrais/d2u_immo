@@ -43,6 +43,12 @@ Veraltete Klassennamen und der bisherige Namespace werden über lib/deprecated_c
 - 70-5 D2U Immo Addon - Infobox Ansprechpartner (BS5)
 - 70-6 D2U Immo Addon - Ausgabe Kategorie (BS5)
 
+## Videos
+
+Jeder Immobilie können im Bearbeitungsformular unter "Videos (Medienpool)" beliebig viele Videodateien aus dem Redaxo Medienpool (z. B. MP4, WebM, OGG) zugewiesen werden. In den Hauptausgabe-Modulen 70-1 (BS4) und 70-4 (BS5) werden vorhandene Videos in einem eigenen Tab "Videos" über den HTML5-Videoplayer als responsive 16:9-Einbettungen dargestellt.
+
+Beim OpenImmo-Export werden die Videos als `FILM`-Anhänge übertragen (die Videodatei wird mit hochgeladen), beim OpenImmo-Import werden `FILM`-Anhänge entsprechend wieder eingelesen.
+
 ## Integrierte Funktionen
 
 Die bisherigen Bereiche Export, Import und Schaufensterwerbung sind direkt in das Hauptaddon integriert.

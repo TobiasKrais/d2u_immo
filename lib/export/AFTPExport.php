@@ -141,6 +141,12 @@ abstract class AFTPExport extends AExport
                         ++$pics_counter;
                     }
                 }
+                foreach ($property->video_files as $video) {
+                    if (strlen(trim($video)) > 3 && $pics_counter < $max_pics) {
+                        $this->preparePicture(trim($video));
+                        ++$pics_counter;
+                    }
+                }
             }
         }
     }

@@ -163,6 +163,32 @@ if (!function_exists('printImages')) {
     }
 }
 
+if (!function_exists('printVideos')) {
+    /**
+     * Prints media pool video files as responsive 16:9 embeds.
+     * @param array<string> $videos Array with media pool video filenames
+     */
+    function printVideos($videos):void
+    {
+        echo '<div class="col-12">';
+        echo '<div class="row">';
+        foreach ($videos as $video) {
+            $video = trim((string) $video);
+            $media = \rex_media::get($video);
+            if (!$media instanceof \rex_media) {
+                continue;
+            }
+            echo '<div class="col-12 col-lg-6 mb-4">';
+            echo '<div class="embed-responsive embed-responsive-16by9">';
+            echo '<video class="embed-responsive-item" controls preload="metadata"><source src="'. rex_escape(rex_url::media($video), 'html_attr') .'" type="'. rex_escape((string) $media->getType(), 'html_attr') .'"></video>';
+            echo '</div>';
+            echo '</div>';
+        }
+        echo '</div>';
+        echo '</div>';
+    }
+}
+
 if (!function_exists('printRevocationNoticeLinks')) {
     /**
      * Prints print links with optional revocation notice modal trigger.
@@ -269,6 +295,9 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         echo '<li class="nav-item"><a data-toggle="tab" href="#tab_overview" class="nav-link active"><span class="icon home d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_overview') .'</span></a></li>';
         if (count($property->pictures) > 0 || count($property->pictures_360) > 0) {
             echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_pictures"><span class="icon pic d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_pictures') .'</span></a></li>';
+        }
+        if (count($property->video_files) > 0) {
+            echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_videos"><span class="icon video d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_videos') .'</span></a></li>';
         }
         if ($property->publish_address) {
             echo '<li class="nav-item"><a data-toggle="tab" class="nav-link" href="#tab_map"><span class="icon map d-md-none"></span><span class="d-none d-md-block">'. \Sprog\Wildcard::get('d2u_immo_tab_map') .'</span></a></li>';
@@ -786,6 +815,18 @@ if (filter_input(INPUT_GET, 'property_id', FILTER_VALIDATE_INT, ['options' => ['
         }
     }
     // End Pictures
+    // Videos
+    if (count($property->video_files) > 0 && null === $print) {
+        echo '<div id="tab_videos" class="tab-pane immo-tab fade">'; // START tab videos
+        echo '<div class="row">';
+        echo '<div class="col-12 print-border-h">';
+        echo '<h2>'. \Sprog\Wildcard::get('d2u_immo_tab_videos') .'</h2>';
+        echo '</div>';
+        printVideos($property->video_files);
+        echo '</div>';
+        echo '</div>'; // END tab videos
+    }
+    // End Videos
     // Map
     if ($property->publish_address && 'small' !== $print) {
         $d2u_helper = rex_addon::get('d2u_helper');

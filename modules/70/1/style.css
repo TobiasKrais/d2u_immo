@@ -297,6 +297,9 @@
 .request:before {
 	content: "\f29c";
 }
+.video:before {
+	content: "\f03d";
+}
 .reserved {
 	position: relative;
 }
