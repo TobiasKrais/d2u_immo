@@ -3,6 +3,10 @@
 
 <h2>Changelog</h2>
 
+<p>1.5.1-DEV:</p>
+<ul>
+	<li>...</li>
+</ul>
 <p>1.5.0:</p>
 <ul>
 	<li>Neu: Immobilien können jetzt Videos enthalten. Im Backend-Formular einer Immobilie steht unter den Bildern ein Medienpool-Feld für Videodateien zur Verfügung (MP4/WebM/OGG, neue Spalte <code>video_files</code>, Feld <code>Property::$video_files</code>). Die Hauptausgabe-Module 70-4 (BS5) und 70-1 (BS4) zeigen vorhandene Videos in einem eigenen Tab "Videos" als responsive 16:9-Einbettungen über den HTML5-<code>&lt;video&gt;</code>-Player an. Die Videos werden im OpenImmo-Export als <code>FILM</code>-Anhänge (inkl. FTP-Upload) exportiert und beim OpenImmo-Import entsprechend wieder eingelesen. Neuer Sprachschlüssel <code>d2u_immo_property_video_files</code> (Backend) sowie Frontend-Wildcard <code>d2u_immo_tab_videos</code> (de/en).</li>
