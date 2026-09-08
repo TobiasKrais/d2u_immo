@@ -18,7 +18,7 @@ use function is_array;
  * @api
  * Property objects.
  */
-class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Property implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int probperty ID */
     public int $property_id = 0;
@@ -845,6 +845,48 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return $this->url;
 
+    }
+
+    /**
+     * Translate this property from a source language into its own (target)
+     * language using ai_platform and store the result.
+     * @param int $sourceClangId Redaxo clang id of the source language
+     * @return bool true on success
+     */
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->property_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->property_id, $sourceClangId);
+        if ($source->property_id <= 0) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'name' => ['value' => $source->name, 'html' => false],
+                'teaser' => ['value' => $source->teaser, 'html' => true],
+                'description' => ['value' => $source->description, 'html' => true],
+                'description_equipment' => ['value' => $source->description_equipment, 'html' => true],
+                'description_location' => ['value' => $source->description_location, 'html' => true],
+                'description_others' => ['value' => $source->description_others, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        $this->name = $translated['name'];
+        $this->teaser = $translated['teaser'];
+        $this->description = $translated['description'];
+        $this->description_equipment = $translated['description_equipment'];
+        $this->description_location = $translated['description_location'];
+        $this->description_others = $translated['description_others'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns the error flag (true on error), so success is its negation.
+        return false === $this->save();
     }
 
     /**

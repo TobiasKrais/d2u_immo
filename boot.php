@@ -16,6 +16,7 @@ if (\rex::isBackend() && is_object(\rex::getUser())) {
     rex_perm::register('d2u_immo[window_advertising]', rex_i18n::msg('d2u_immo_window_advertising_rights_all'), rex_perm::OPTIONS);
 
     rex_extension::register('D2U_HELPER_TRANSLATION_LIST', rex_d2u_immo_translation_list(...));
+    rex_extension::register('D2U_HELPER_TRANSLATE_OBJECT', rex_d2u_immo_translate_object(...));
     rex_extension::register('ART_PRE_DELETED', rex_d2u_immo_article_is_in_use(...));
     rex_extension::register('CLANG_DELETED', rex_d2u_immo_clang_deleted(...));
     rex_extension::register('MEDIA_IS_IN_USE', rex_d2u_immo_media_is_in_use(...));
@@ -228,7 +229,7 @@ function rex_d2u_immo_translation_list(rex_extension_point $ep) {
             if ('' === $category->name) {
                 $category = new Category($category->category_id, $source_clang_id);
             }
-            $html_categories .= '<li><a href="'. rex_url::backendPage('d2u_immo/category', ['entry_id' => $category->category_id, 'func' => 'edit']) .'">'. $category->name .'</a></li>';
+            $html_categories .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_immo', 'category', $category->category_id, $category->name, rex_url::backendPage('d2u_immo/category', ['entry_id' => $category->category_id, 'func' => 'edit']));
         }
         $html_categories .= '</ul>';
         
@@ -246,7 +247,7 @@ function rex_d2u_immo_translation_list(rex_extension_point $ep) {
             if ('' === $property->name) {
                 $property = new Property($property->property_id, $source_clang_id);
             }
-            $html_properties .= '<li><a href="'. rex_url::backendPage('d2u_immo/property', ['entry_id' => $property->property_id, 'func' => 'edit']) .'">'. $property->name .'</a></li>';
+            $html_properties .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_immo', 'property', $property->property_id, $property->name, rex_url::backendPage('d2u_immo/property', ['entry_id' => $property->property_id, 'func' => 'edit']));
         }
         $html_properties .= '</ul>';
         
@@ -264,7 +265,7 @@ function rex_d2u_immo_translation_list(rex_extension_point $ep) {
             if ('' === $ad->title) {
                 $ad = new Advertisement($ad->ad_id, $source_clang_id);
             }
-            $html_ads .= '<li><a href="'. rex_url::backendPage('d2u_immo/window_advertising_advertisement', ['entry_id' => $ad->ad_id, 'func' => 'edit']) .'">'. $ad->title .'</a></li>';
+            $html_ads .= \TobiasKrais\D2UHelper\BackendHelper::getTranslationItem('d2u_immo', 'advertisement', $ad->ad_id, $ad->title, rex_url::backendPage('d2u_immo/window_advertising_advertisement', ['entry_id' => $ad->ad_id, 'func' => 'edit']));
         }
         $html_ads .= '</ul>';
         
@@ -278,4 +279,74 @@ function rex_d2u_immo_translation_list(rex_extension_point $ep) {
     $list[] = $list_entry;
 
     return $list;
+}
+
+/**
+ * Translate a single d2u_immo object with AI (D2U_HELPER_TRANSLATE_OBJECT).
+ * @param rex_extension_point<array<string,mixed>> $ep Redaxo extension point
+ * @return array<string,mixed> Result array with success, name and message
+ */
+function rex_d2u_immo_translate_object(rex_extension_point $ep) {
+    $params = $ep->getParams();
+    if ('d2u_immo' !== ($params['addon'] ?? '')) {
+        return $ep->getSubject();
+    }
+
+    $type = (string) ($params['type'] ?? '');
+    $id = (int) ($params['id'] ?? 0);
+    $source_clang_id = (int) ($params['source_clang_id'] ?? 0);
+    $target_clang_id = (int) ($params['target_clang_id'] ?? 0);
+
+    // These constructors only return a row when a translation for that clang
+    // exists. For missing translations load the source and retarget it.
+    $object = null;
+    $name = '';
+    switch ($type) {
+        case 'category':
+            $category = new Category($id, $target_clang_id);
+            if ($category->category_id <= 0) {
+                $category = new Category($id, $source_clang_id);
+                $category->clang_id = $target_clang_id;
+            }
+            $object = $category->category_id > 0 ? $category : null;
+            $name = null !== $object ? $category->name : '';
+            break;
+        case 'property':
+            $property = new Property($id, $target_clang_id);
+            if ($property->property_id <= 0) {
+                $property = new Property($id, $source_clang_id);
+                $property->clang_id = $target_clang_id;
+            }
+            $object = $property->property_id > 0 ? $property : null;
+            $name = null !== $object ? $property->name : '';
+            break;
+        case 'advertisement':
+            $ad = new Advertisement($id, $target_clang_id);
+            if ($ad->ad_id <= 0) {
+                $ad = new Advertisement($id, $source_clang_id);
+                $ad->clang_id = $target_clang_id;
+            }
+            $object = $ad->ad_id > 0 ? $ad : null;
+            $name = null !== $object ? $ad->title : '';
+            break;
+        default:
+            return $ep->getSubject();
+    }
+
+    if (!$object instanceof \TobiasKrais\D2UHelper\ITranslateable) {
+        return ['success' => false, 'name' => '', 'message' => rex_i18n::msg('d2u_helper_translations_ai_error')];
+    }
+
+    $success = $object->translateFrom($source_clang_id);
+    if ($object instanceof Advertisement) {
+        $name = $object->title;
+    } elseif ($object instanceof Property || $object instanceof Category) {
+        $name = $object->name;
+    }
+
+    return [
+        'success' => $success,
+        'name' => $name,
+        'message' => $success ? '' : rex_i18n::msg('d2u_helper_translations_ai_error'),
+    ];
 }

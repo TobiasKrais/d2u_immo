@@ -18,7 +18,7 @@ use rex_yrewrite;
  * @api
  * Advertisement.
  */
-class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper
+class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrais\D2UHelper\ITranslateable
 {
     /** @var int Database ID */
     public int $ad_id = 0;
@@ -225,6 +225,43 @@ class Advertisement implements \TobiasKrais\D2UHelper\ITranslationHelper
 
         return $this->url;
 
+    }
+
+    /**
+     * Translate this advertisement from a source language into its own (target)
+     * language using ai_platform and store the result.
+     * @param int $sourceClangId Redaxo clang id of the source language
+     * @return bool true on success
+     */
+    public function translateFrom(int $sourceClangId): bool
+    {
+        if ($this->ad_id <= 0 || $sourceClangId === $this->clang_id) {
+            return false;
+        }
+
+        $source = new self($this->ad_id, $sourceClangId);
+        if ($source->ad_id <= 0) {
+            return false;
+        }
+        if ('' === $source->title && '' === $source->description) {
+            return false;
+        }
+
+        try {
+            $translated = \TobiasKrais\D2UHelper\AiTranslationHelper::translateFields([
+                'title' => ['value' => $source->title, 'html' => false],
+                'description' => ['value' => $source->description, 'html' => true],
+            ], $sourceClangId, $this->clang_id);
+        } catch (\Throwable $e) {
+            return false;
+        }
+
+        $this->title = $translated['title'];
+        $this->description = $translated['description'];
+        $this->translation_needs_update = 'no';
+
+        // save() returns the error flag (true on error), so success is its negation.
+        return false === $this->save();
     }
 
     /**
