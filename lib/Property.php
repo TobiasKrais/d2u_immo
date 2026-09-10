@@ -626,7 +626,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
         $query = 'SELECT lang.property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties_lang AS lang '
             .'LEFT JOIN '. rex::getTablePrefix() .'d2u_immo_properties AS properties '
                 .'ON lang.property_id = properties.property_id AND lang.clang_id = '. $clang_id .' '
-            .'WHERE openimmo_anid = "'. $openimmo_anid .'"';
+            .'WHERE openimmo_anid = :openimmo_anid';
         if ($only_online) {
             $query .= ' AND online_status = "online"';
         }
@@ -636,7 +636,7 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
             $query .= ' ORDER BY name ASC';
         }
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [':openimmo_anid' => $openimmo_anid]);
 
         for ($i = 0; $i < $result->getRows(); ++$i) {
             $properties[(int) $result->getValue('property_id')] = new self((int) $result->getValue('property_id'), $clang_id);
@@ -681,9 +681,9 @@ class Property implements \TobiasKrais\D2UHelper\ITranslationHelper, \TobiasKrai
     public static function getByOpenImmoID($openimmo_object_id, $clang_id)
     {
         $query = 'SELECT property_id FROM '. rex::getTablePrefix() .'d2u_immo_properties '
-                .'WHERE openimmo_object_id = "'. $openimmo_object_id .'"';
+                .'WHERE openimmo_object_id = :openimmo_object_id';
         $result = rex_sql::factory();
-        $result->setQuery($query);
+        $result->setQuery($query, [':openimmo_object_id' => $openimmo_object_id]);
 
         for ($i = 0; $i < $result->getRows(); ++$i) {
             return new self((int) $result->getValue('property_id'), $clang_id);
