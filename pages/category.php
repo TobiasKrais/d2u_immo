@@ -184,7 +184,9 @@ if ('edit' === $func || 'add' === $func) {
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
                                     BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $category->name, $required, $readonly_lang, 'text');
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_immo_seo_hint_meta_title') .'</p>';
                                     BackendHelper::form_input('d2u_immo_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $category->teaser, false, $readonly_lang, 'text');
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_immo_seo_hint_meta_description') .'</p>';
                                 ?>
 							</div>
 						</div>
@@ -214,6 +216,7 @@ if ('edit' === $func || 'add' === $func) {
                             BackendHelper::form_select('d2u_immo_category_parent', 'form[parent_category_id]', $options, $category->parent_category instanceof Category ? [$category->parent_category->category_id] : [], 1, false, $readonly);
                             BackendHelper::form_input('header_priority', 'form[priority]', $category->priority, true, $readonly, 'number');
                             BackendHelper::form_mediafield('d2u_helper_picture', '1', $category->picture, $readonly);
+                            echo '<p class="rex-note">'. rex_i18n::msg('d2u_immo_seo_hint_image') .'</p>';
                         ?>
 					</div>
 				</fieldset>

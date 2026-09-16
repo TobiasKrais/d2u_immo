@@ -248,7 +248,9 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
 							<div id="details_clang_<?= $rex_clang->getId() ?>">
 								<?php
                                     BackendHelper::form_input('d2u_helper_name', 'form[lang]['. $rex_clang->getId() .'][name]', $property->name, $required, $readonly_lang, 'text');
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_immo_seo_hint_meta_title') .'</p>';
                                     BackendHelper::form_input('d2u_immo_teaser', 'form[lang]['. $rex_clang->getId() .'][teaser]', $property->teaser, $required, $readonly_lang, 'text');
+                                    echo '<p class="rex-note">'. rex_i18n::msg('d2u_immo_seo_hint_meta_description') .'</p>';
                                     BackendHelper::form_textarea('d2u_helper_description', 'form[lang]['. $rex_clang->getId() .'][description]', $property->description, 10, false, $readonly_lang, true);
                                     BackendHelper::form_textarea('d2u_immo_property_description_location', 'form[lang]['. $rex_clang->getId() .'][description_location]', $property->description_location, 5, false, $readonly_lang, true);
                                     BackendHelper::form_textarea('d2u_immo_property_description_equipment', 'form[lang]['. $rex_clang->getId() .'][description_equipment]', $property->description_equipment, 5, false, $readonly_lang, true);
@@ -644,6 +646,7 @@ if ('edit' === $func || 'clone' === $func || 'add' === $func) {
                             }
                             BackendHelper::form_select('d2u_immo_contact', 'form[contact_id]', $options_contacts, $property->contact instanceof Contact ? [$property->contact->contact_id] : [], 1, false, $readonly);
                             BackendHelper::form_imagelistfield('d2u_helper_pictures', 1, $property->pictures, $readonly);
+                            echo '<p class="rex-note">'. rex_i18n::msg('d2u_immo_seo_hint_first_image') .'</p>';
                             BackendHelper::form_imagelistfield('d2u_helper_pictures_360', 4, $property->pictures_360, $readonly);
                             BackendHelper::form_imagelistfield('d2u_immo_property_ground_plans', 2, $property->ground_plans, $readonly);
                             BackendHelper::form_imagelistfield('d2u_immo_property_location_plans', 3, $property->location_plans, $readonly);

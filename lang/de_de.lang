@@ -13,6 +13,10 @@ d2u_immo_no_selection = Keine Auswahl
 d2u_immo_status = Online Status
 d2u_immo_status_archived = Archiviert
 d2u_immo_teaser = Kurzbeschreibung
+d2u_immo_seo_hint_meta_title = Wird als Meta-Titel (Seitentitel) für Suchmaschinen verwendet.
+d2u_immo_seo_hint_meta_description = Wird als Meta-Beschreibung für Suchmaschinen verwendet.
+d2u_immo_seo_hint_first_image = Das erste Bild wird für die SEO-/Social-Media-Vorschau (og:image) verwendet.
+d2u_immo_seo_hint_image = Dieses Bild wird für die SEO-/Social-Media-Vorschau (og:image) verwendet.
 
 d2u_immo_category_parent = Elternkategorie
 d2u_immo_category_parent_none = Hat keine Elternkategorie
